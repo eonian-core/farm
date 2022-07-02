@@ -1,11 +1,18 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": ["packages/**"],
+  "workspaces": {
+    "packages": ["packages/**"],
+    "nohoist": [
+      "**/eslint-config-react-app",
+      "**/eslint-config-react-app/**"
+    ]
+  },
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
     "clean": "rimraf packages/**/lib",
-    "graph": "nx graph"
+    "graph": "nx graph",
+    "start": "lerna run start --stream"
   },
   "devDependencies": {
     "lerna": "^5.1.6",
