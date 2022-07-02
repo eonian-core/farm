@@ -2,11 +2,7 @@
   "name": "root",
   "private": true,
   "workspaces": {
-    "packages": ["packages/**"],
-    "nohoist": [
-      "**/eslint-config-react-app",
-      "**/eslint-config-react-app/**"
-    ]
+    "packages": ["packages/**"]
   },
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
