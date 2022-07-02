@@ -105,3 +105,5 @@ dist
 
 lerna-debug.log
 packages/*/lib
+
+.vscode

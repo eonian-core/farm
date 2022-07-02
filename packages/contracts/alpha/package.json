@@ -1,5 +1,5 @@
 {
-  "name": "@eonian-finance/contracts-alpha",
+  "name": "@eonian/contracts-alpha",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
