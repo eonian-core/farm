@@ -2,6 +2,8 @@ import { useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
 
+import * as deployData from '@eonian/contracts-alpha/deployments/last-local-deploy.json';
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -16,7 +18,7 @@ function App() {
           </button>
         </p>
         <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
+          <pre>{JSON.stringify(deployData, null, 2)}</pre>
         </p>
         <p>
           <a

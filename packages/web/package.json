@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@eonian/web",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@eonian/contracts-alpha": "*",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
