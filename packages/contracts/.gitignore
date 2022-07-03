@@ -9,4 +9,3 @@ cache
 artifacts
 
 deployments/localhost
-deployments/last-local-deploy.json

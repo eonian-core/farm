@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@eonian/contracts-alpha": "*",
+    "@eonian/contracts": "*",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },

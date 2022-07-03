@@ -1,5 +1,5 @@
 {
-  "name": "@eonian/contracts-alpha",
+  "name": "@eonian/contracts",
   "version": "0.1.0",
   "main": "index.js",
   "license": "MIT",
@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "hardhat compile",
-    "start-node": "hardhat node --export './deployments/last-local-deploy.json'",
+    "start-node": "hardhat node --export-all './deployments/data.json'",
     "deploy-local": "hardhat deploy --reset"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
 
-import * as deployData from '@eonian/contracts-alpha/deployments/last-local-deploy.json';
+import * as deployData from '@eonian/contracts/deployments/data.json';
 
 function App() {
   const [count, setCount] = useState(0)

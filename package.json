@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "workspaces": {
-    "packages": ["packages/**"],
+    "packages": ["packages/*"],
     "nohoist": [
       "**/ts-node",
       "**/ts-node/**",
