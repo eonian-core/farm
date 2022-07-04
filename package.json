@@ -18,7 +18,7 @@
     "bootstrap": "lerna bootstrap --use-workspaces",
     "clean": "rimraf packages/**/lib",
     "graph": "nx graph",
-    "start": "lerna run start --stream",
+    "start": "lerna exec --parallel -- yarn start",
     "build": "lerna run build",
     "build-contracts": "lerna run build --scope='@eonian/contracts-*'"
   },

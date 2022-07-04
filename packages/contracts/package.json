@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "hardhat compile",
-    "start-node": "hardhat node --export-all './deployments/data.json'",
+    "start": "hardhat node --export-all './deployments/data.json'",
     "deploy-local": "hardhat deploy --reset"
   },
   "devDependencies": {
