@@ -20,7 +20,9 @@
     "graph": "nx graph",
     "start": "lerna exec --parallel -- yarn start",
     "build": "lerna run build",
-    "build-contracts": "lerna run build --scope='@eonian/contracts-*'"
+    "build-contracts": "lerna run build --scope='@eonian/contracts-*'",
+    "test": "lerna run test",
+    "test:trace": "lerna run test:trace"
   },
   "devDependencies": {
     "lerna": "^5.1.6",

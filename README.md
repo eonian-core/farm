@@ -11,7 +11,7 @@ This monorepository contains protocol contracts and dApp code, as and all relate
 * `packages/contracts` - Protocol contracts.
 * `packages/web` - dApp package.
 
-## First Start Guide
+### First Start Guide
 
 1) Install packages:
 
@@ -24,3 +24,11 @@ yarn
 ```bash
 yarn start
 ```
+
+### Commands
+
+* `yarn start` - start development enviroment
+* `yarn test` - run tests in packages
+* `yarn test:trace` - run tests for `contracts` with tracing
+
+*
