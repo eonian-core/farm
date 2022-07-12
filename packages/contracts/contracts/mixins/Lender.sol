@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
-import "./ILender.sol";
+import "../interfaces/ILender.sol";
 
 abstract contract Lender is ILender {
     struct BorrowerData {

@@ -11,7 +11,10 @@
   "scripts": {
     "build": "hardhat compile",
     "start": "hardhat node --export-all './deployments/data.json'",
-    "deploy-local": "hardhat deploy --reset"
+    "deploy-local": "hardhat deploy --reset",
+    "test-hardhat": "hardhat test",
+    "test-forge": "forge test -vvv",
+    "test": "yarn test-hardhat && yarn test-forge"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
