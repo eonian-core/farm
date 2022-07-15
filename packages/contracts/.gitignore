@@ -13,6 +13,7 @@ deployments/localhost
 # Compiler files
 out/
 forge-cache/
+docgen/
 
 # Ignores development broadcast logs
 !/broadcast

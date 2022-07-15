@@ -14,7 +14,8 @@
     "deploy-local": "hardhat deploy --reset",
     "test-hardhat": "hardhat test",
     "test-forge": "forge test -vvv",
-    "test": "yarn test-hardhat && yarn test-forge"
+    "test": "yarn test-hardhat && yarn test-forge",
+    "docgen": "hardhat docgen"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
@@ -41,6 +42,7 @@
     "ethers": "^5.5.4",
     "hardhat": "^2.9.9",
     "hardhat-deploy": "^0.11.11",
+    "hardhat-docgen": "^1.3.0",
     "hardhat-gas-reporter": "^1.0.4",
     "prettier": "^2.3.2",
     "prettier-plugin-solidity": "^1.0.0-beta.13",

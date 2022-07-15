@@ -47,61 +47,99 @@ abstract contract Lender is ILender {
         return _getOutstandingDebt(msg.sender);
     }
 
-    function reportDebtMaintainingResult(
-        uint256 extraFreeFunds,
-        uint256 remainingOutstandingDebt
-    ) external override onlyBorrowers returns (uint256) {
-        uint256 outstandingDebt = _getOutstandingDebt(msg.sender);
-
-        // Reported "remaining" debt may be greater than outstanding debt if the borrower incurs losses that it cannot cover
-        uint256 debtPaid = remainingOutstandingDebt <= outstandingDebt
-            ? outstandingDebt - remainingOutstandingDebt
-            : 0;
+    /// @notice Reports a positive result of the borrower's debt management.
+    ///         Borrower must call this function if he has made any profit
+    ///         or/and has a free funds available to repay the outstanding debt (if any).
+    /// @param extraFreeFunds an extra amount of free funds borrower's contract has.
+    ///                       This reporting amount must be greater than the borrower's outstanding debt.
+    function reportPositiveDebtMaintainingResult(uint256 extraFreeFunds)
+        external
+        override
+        onlyBorrowers
+    {
+        // If the borrower calls this function, it can be assumed that the entire outstanding debt will be repaid
+        uint256 debtPayment = _getOutstandingDebt(msg.sender);
 
         // Checking whether the borrower is telling the truth about his available funds
         require(
-            _getBorrowerFreeAssets(msg.sender) >= extraFreeFunds + debtPaid
+            _getBorrowerFreeAssets(msg.sender) >= extraFreeFunds + debtPayment
         );
-
-        // If the borrower still has outstanding debt, we should reduce the level of confidence in him
-        if (remainingOutstandingDebt > 0) {
-            _decreaseBorrowerCredibility(msg.sender, remainingOutstandingDebt);
-        }
 
         // TODO: Assess n' pay management fees here
 
-        // Recalculate the outstanding debt after the ratio is reduced and fees are assessed (if any)
-        // TODO: [Compare gas consumption] Return ratio delta from "_decreaseBorrowerCredibility" and multiple by declared "outstandingDebt"
-        outstandingDebt = _getOutstandingDebt(msg.sender);
-        debtPaid = Math.min(debtPaid, outstandingDebt);
+        _rebalanceBorrowerFunds(msg.sender, debtPayment, extraFreeFunds);
+    }
 
-        // Calculate the amount of credit the lender can provide to the borrower
-        uint256 availableCredit = _getAvailableCredit(msg.sender);
+    /// @notice Reports a negative result of the borrower's debt management.
+    ///         The borrower must call this function if he is unable to cover his outstanding debt or if he has incurred any losses.
+    /// @param remainingDebt a number of tokens by which the borrower's balance has decreased since the last report.
+    ///                      May include a portion of the outstanding debt that the borrower was unable to repay.
+    function reportNegativeDebtMaintainingResult(uint256 remainingDebt)
+        external
+        override
+        onlyBorrowers
+    {
+        uint256 outstandingDebt = _getOutstandingDebt(msg.sender);
 
-        if (debtPaid > 0) {
-            borrowersData[msg.sender].debt -= debtPaid;
-            _totalDebt -= debtPaid;
+        // Reported "remaining" debt may be greater than outstanding debt if the borrower incurs losses that he cannot cover
+        uint256 debtPayment = remainingDebt <= outstandingDebt
+            ? outstandingDebt - remainingDebt
+            : 0;
+
+        // Checking whether the borrower has available funds for debt payment
+        require(_getBorrowerFreeAssets(msg.sender) >= debtPayment);
+
+        if (remainingDebt > 0) {
+            _decreaseBorrowerCredibility(msg.sender, remainingDebt);
         }
 
+        // Recalculate the outstanding debt after the ratio is reduced
+        // TODO: [Compare gas consumption] Return ratio delta from "_decreaseBorrowerCredibility" and multiple by declared "outstandingDebt"
+        outstandingDebt = _getOutstandingDebt(msg.sender);
+        debtPayment = Math.min(debtPayment, outstandingDebt);
+
+        _rebalanceBorrowerFunds(msg.sender, debtPayment, 0);
+    }
+
+    /// @notice Balances the borrower's account and adjusts the current amount of funds the borrower can take.
+    /// @param borrower a borrower's contract address
+    /// @param debtPayment an amount of outstanding debt since the previous report, that the borrower managed to cover. Can be zero.
+    /// @param borrowerFreeFunds a funds that the borrower has earned since the previous report. Can be zero.
+    function _rebalanceBorrowerFunds(
+        address borrower,
+        uint256 debtPayment,
+        uint256 borrowerFreeFunds
+    ) internal {
+        // Calculate the amount of credit the lender can provide to the borrower (if any)
+        uint256 availableCredit = _getAvailableCredit(borrower);
+
+        // Take into account repaid debt, if any
+        if (debtPayment > 0) {
+            borrowersData[borrower].debt -= debtPayment;
+            _totalDebt -= debtPayment;
+        }
+
+        // Allocate some funds to the borrower if possible
         if (availableCredit > 0) {
-            borrowersData[msg.sender].debt += availableCredit;
+            borrowersData[borrower].debt += availableCredit;
             _totalDebt += availableCredit;
         }
 
-        uint256 freeBorrowerBalance = extraFreeFunds + debtPaid;
+        // Now we need to compare the allocated funds to the borrower and his current free balance.
+        // If the number of unrealized tokens on the borrower's contract is less than the available credit, the lender must give that difference to the borrower.
+        // Otherwise (if the amount of the borrower's available funds is greater than he should have according to his share), the lender must take that portion of the funds for himself.
+        uint256 freeBorrowerBalance = borrowerFreeFunds + debtPayment;
         if (freeBorrowerBalance < availableCredit) {
             _transferFundsToBorrower(
-                msg.sender,
+                borrower,
                 availableCredit - freeBorrowerBalance
             );
         } else if (freeBorrowerBalance > availableCredit) {
             _takeFundsFromBorrower(
-                msg.sender,
+                borrower,
                 freeBorrowerBalance - availableCredit
             );
         }
-
-        return 0;
     }
 
     /// @notice Returns the unrealized amount of the lender's tokens (lender's contract balance)

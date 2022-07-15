@@ -6,8 +6,9 @@ interface ILender {
 
     function getOutstandingDebt() external view returns (uint256);
 
-    function reportDebtMaintainingResult(
-        uint256 extraFreeFunds,
-        uint256 remainingOutstandingDebt
-    ) external returns (uint256);
+    function reportPositiveDebtMaintainingResult(uint256 extraFreeFunds)
+        external;
+
+    function reportNegativeDebtMaintainingResult(uint256 remainingDebt)
+        external;
 }
