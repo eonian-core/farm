@@ -2,10 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
 import "../interfaces/ILender.sol";
 
-abstract contract Lender is ILender {
+abstract contract Lender is ILender, Pausable {
     struct BorrowerData {
         // Timestamp of the block in which the borrower was activated
         uint256 activationTimestamp;
@@ -24,14 +25,14 @@ abstract contract Lender is ILender {
     // Debt ratio for the Lender across all borrowers (in BPS, <= 10k)
     uint256 internal _debtRatio = 0;
 
-    // Determines the lender's operating status. If "true", borrowers cannot take any loans
-    bool internal _isHalted = false;
-
     // Records with information on each borrower using the lender's services
     mapping(address => BorrowerData) public borrowersData;
 
     modifier onlyBorrowers() {
-        require(borrowersData[msg.sender].activationTimestamp > 0, "!borrower");
+        require(
+            borrowersData[msg.sender].activationTimestamp > 0,
+            "Not a borrower"
+        );
         _;
     }
 
@@ -204,8 +205,8 @@ abstract contract Lender is ILender {
         view
         returns (uint256)
     {
-        // Lender is halted, no funds available for the borrower
-        if (_isHalted) {
+        // Lender is paused, no funds available for the borrower
+        if (paused()) {
             return 0;
         }
 
@@ -247,7 +248,7 @@ abstract contract Lender is ILender {
         returns (uint256)
     {
         uint256 borrowerDebt = borrowersData[borrower].debt;
-        if (_isHalted || _debtRatio == 0) {
+        if (paused() || _debtRatio == 0) {
             return borrowerDebt;
         }
 
