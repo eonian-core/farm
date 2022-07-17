@@ -14,12 +14,13 @@ This monorepository contains protocol contracts and dApp code, as and all relate
 ### Requirements
 
 Install required tools for development
+
 * [foundry](https://book.getfoundry.sh/getting-started/installation.html) - Testing framework for solidity
 * [NodeJS](https://nodejs.org/) - Execution environment for JS
 
 ### First Start Guide
 
-1) Install packages:
+1) Install packages from npm and forge:
 
 ```bash
 $ yarn
