@@ -28,6 +28,15 @@ abstract contract Lender is ILender, Pausable {
     // Records with information on each borrower using the lender's services
     mapping(address => BorrowerData) public borrowersData;
 
+    // Event that must occur when the borrower reported the results of his debt management
+    event BorrowerDebtManagementReported(
+        address indexed borrower, // Borrower's contract address
+        uint256 debtPayment, // Amount of outstanding debt repaid by the borrower
+        uint256 freeFunds, // Free funds on the borrower's contract that remain after the debt is paid
+        uint256 fundsTaken, // Funds that have been taken from the borrower by the lender
+        uint256 fundsGiven // Funds issued to the borrower by this lender
+    );
+
     modifier onlyBorrowers() {
         require(
             borrowersData[msg.sender].activationTimestamp > 0,
@@ -121,17 +130,23 @@ abstract contract Lender is ILender, Pausable {
         // If the number of unrealized tokens on the borrower's contract is less than the available credit, the lender must give that difference to the borrower.
         // Otherwise (if the amount of the borrower's available funds is greater than he should have according to his share), the lender must take that portion of the funds for himself.
         uint256 freeBorrowerBalance = borrowerFreeFunds + debtPayment;
+        uint256 fundsGiven = 0;
+        uint256 fundsTaken = 0;
         if (freeBorrowerBalance < borrowerAvailableCredit) {
-            _transferFundsToBorrower(
-                borrower,
-                borrowerAvailableCredit - freeBorrowerBalance
-            );
+            fundsGiven = borrowerAvailableCredit - freeBorrowerBalance;
+            _transferFundsToBorrower(borrower, fundsGiven);
         } else if (freeBorrowerBalance > borrowerAvailableCredit) {
-            _takeFundsFromBorrower(
-                borrower,
-                freeBorrowerBalance - borrowerAvailableCredit
-            );
+            fundsTaken = freeBorrowerBalance - borrowerAvailableCredit;
+            _takeFundsFromBorrower(borrower, fundsTaken);
         }
+
+        emit BorrowerDebtManagementReported(
+            borrower,
+            debtPayment,
+            borrowerFreeFunds,
+            fundsGiven,
+            fundsTaken
+        );
     }
 
     /// @notice Returns the unrealized amount of the lender's tokens (lender's contract balance)
@@ -250,5 +265,51 @@ abstract contract Lender is ILender, Pausable {
         }
 
         return borrowerDebt - borrowerDebtLimit;
+    }
+
+    /// @notice Registers a new borrower and sets for him a certain debt ratio
+    function _registerBorrower(address borrower, uint256 borrowerDebtRatio)
+        internal
+    {
+        require(
+            borrowersData[borrower].activationTimestamp == 0,
+            "This borrower has already registered"
+        );
+
+        require(
+            debtRatio + borrowerDebtRatio <= MAX_BPS,
+            "Resulted debt ratio is greater than the maximum value"
+        );
+
+        borrowersData[borrower] = BorrowerData(
+            block.timestamp,
+            0,
+            borrowerDebtRatio
+        );
+
+        debtRatio += borrowerDebtRatio;
+    }
+
+    /// @notice Disables the borrower by setting his ratio of the debt to 0.
+    ///         Thus, the borrower's current debt becomes an outstanding debt that the borrower must repay to the lender.
+    function _shutdownBorrower(address borrower) internal {
+        require(
+            borrowersData[borrower].activationTimestamp > 0,
+            "Borrower doesn't exist"
+        );
+
+        debtRatio -= borrowersData[borrower].debtRatio;
+        borrowersData[borrower].debtRatio = 0;
+    }
+
+    /// @notice Deletes the borrower from the list.
+    ///         We don't do this in the "_shutdownBorrower" function, because we need to be able to take any funds from that borrower.
+    function _unregisterBorrower(address borrower) internal {
+        require(
+            borrowersData[borrower].debtRatio == 0,
+            "Borrower still has a debt"
+        );
+
+        delete borrowersData[borrower];
     }
 }
