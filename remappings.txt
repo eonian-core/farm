@@ -1,4 +1,4 @@
 ds-test/=packages/contracts/lib/forge-std/lib/ds-test/src/
 forge-std/=packages/contracts/lib/forge-std/src/
-@openzeppelin/contracts/=packages/contractslib/openzeppelin-contracts/contracts/
-@openzeppelin/contracts-upgradeable/=packages/contractslib/openzeppelin-contracts-upgradeable/contracts/
+@openzeppelin/contracts/=node_modules/@openzeppelin/contracts/
+@openzeppelin/contracts-upgradeable/=node_modules/@openzeppelin/contracts-upgradeable/

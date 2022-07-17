@@ -26,7 +26,9 @@ Install required tools for development
 $ yarn
 ```
 
-2) Run local node, compile and deploy contracts, start dApp:
+2) Fill in `packages/contract/foundry.toml` and `packages/contract/.env` with your etherscan url and API key
+
+3) Run local node, compile and deploy contracts, start dApp:
 
 ```bash
 $ yarn start
@@ -38,4 +40,3 @@ $ yarn start
 * `yarn test` - run tests in packages
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
-
