@@ -1,6 +1,16 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "bootstrap": "lerna bootstrap --use-workspaces",
+    "clean": "rimraf packages/**/lib",
+    "graph": "nx graph",
+    "start": "lerna exec --parallel -- yarn start",
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "build:contracts": "lerna run build --scope='@eonian/contracts-*'",
+    "test:contracts": "lerna run test --scope='@eonian/contracts-*'"
+  },
   "workspaces": {
     "packages": ["packages/*"],
     "nohoist": [
@@ -13,16 +23,6 @@
       "**/@typechain",
       "**/@typechain/**"
     ]
-  },
-  "scripts": {
-    "bootstrap": "lerna bootstrap --use-workspaces",
-    "clean": "rimraf packages/**/lib",
-    "graph": "nx graph",
-    "start": "lerna exec --parallel -- yarn start",
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "build-contracts": "lerna run build --scope='@eonian/contracts-*'",
-    "test-contracts": "lerna run test --scope='@eonian/contracts-*'"
   },
   "devDependencies": {
     "lerna": "^5.1.6",

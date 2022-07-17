@@ -104,6 +104,6 @@ dist
 .tern-port
 
 lerna-debug.log
-packages/*/lib
+
 
 .vscode
