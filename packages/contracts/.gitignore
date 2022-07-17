@@ -4,8 +4,18 @@ coverage
 coverage.json
 typechain
 
-#Hardhat files
+# Hardhat files
 cache
 artifacts
 
 deployments/localhost
+
+# Compiler files
+out/
+forge-cache/
+docgen/
+
+# Ignores development broadcast logs
+!/broadcast
+/broadcast/*
+/broadcast/*/31337/
