@@ -16,7 +16,10 @@
     "test:forge": "forge test -vvv",
     "test": "yarn test:hardhat && yarn test:forge",
     "docgen": "hardhat docgen",
-    "postinstall": "forge install && cp .env.example .env"
+    "postinstall": "forge install && cp .env.example .env",
+    "clean": "forge clean",
+    "test:fuzz": "forge test -vvv --fuzz-runs 10000",
+    "dev": "forge test --watch -vvv"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",

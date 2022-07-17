@@ -40,3 +40,4 @@ $ yarn start
 * `yarn test` - run tests in packages
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
+* `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
