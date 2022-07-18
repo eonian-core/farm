@@ -12,7 +12,7 @@ import {FixedPointMathLib} from "../math/FixedPointMathLib.sol";
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
 /// Based on Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/mixins/ERC4626.sol)
 /// 
-/// ERC-777 and ERC-20 token represents "shares"
+/// ERC-777 and ERC-20 tokens represent "shares"
 /// Vault “shares” which represent a claim to ownership on a fraction of the Vault’s underlying holdings.
 /// -
 /// @notice Rationale 
