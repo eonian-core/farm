@@ -4,7 +4,7 @@ Yield Aggregator dApp and protocol for safe and high reward liquidity mining
 
 ## Development
 
-This monorepository contains protocol contracts and dApp code, as and all related packages.
+This monorepository contains protocol contracts and dApp code, as well as all related packages.
 
 ### Structure
 
