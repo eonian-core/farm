@@ -7,12 +7,13 @@ import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ER
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {FixedPointMathLib} from "../math/FixedPointMathLib.sol";
 
-/// ERC-4626 standard allow deposit and withdraw not for message sender.
-/// It commonly known issue, which hardly to test and much error prune. 
-/// Such interfaces caused vulnarabilities, which resulted in million dollars hacks.
-/// On anther hand, this interfaces not have any use cases which cannot be implemented without `transferFrom` method.
-/// This implementation prevent spends and allowances from any methods except transferFrom/send
-/// Also main business logic simplified to reduce gas consumption.
+/// @title Safier and limited implementation of ERC-4626
+/// @notice ERC-4626 standard allow deposit and withdraw not for message sender.
+///  It commonly known issue, which hardly to test and much error prune. 
+///  Such interfaces caused vulnarabilities, which resulted in million dollars hacks.
+///  On anther hand, this interfaces not have any use cases which cannot be implemented without `transferFrom` method.
+///  This implementation prevent spends and allowances from any methods except transferFrom/send
+///  Also main business logic simplified to reduce gas consumption.
 abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using FixedPointMathLib for uint256;
@@ -31,7 +32,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     }
 
 
-    /// Mints shares Vault shares to msg.sender by depositing exactly amount of underlying tokens.
+    /// @notice Mints the Vault shares for msg.sender, according to the number of deposited base tokens.
     /// - emits the Deposit event.
     /// - support ERC-20 approve / transferFrom on asset as a deposit flow. 
     ///   MAY support an additional flow in which the underlying tokens are owned by the Vault contract 
@@ -46,7 +47,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         _receiveAndDeposit(assets, shares);
     }
 
-    /// Mints exactly shares Vault shares to msg.sender by depositing amount of underlying tokens.
+    /// @notice Mints exactly requested Vault shares to msg.sender by depositing any required amount of underlying tokens.
     /// - emits the Deposit event.
     /// - support ERC-20 approve / transferFrom on asset as a deposit flow. 
     ///   MAY support an additional flow in which the underlying tokens are owned by the Vault contract 
@@ -60,7 +61,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         _receiveAndDeposit(assets, shares);
     }
 
-    /// Base deposit logic which common for public deposit and mint function
+    /// @notice Base deposit logic which common for public deposit and mint function
     /// Trasfer assets from msg.sender and mint shares for msg.sender
     function _receiveAndDeposit(uint256 assets, uint256 shares) private {
         // Implementation of deposit logic which use only msg.sender as actor
@@ -75,7 +76,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         afterDeposit(assets, shares);
     }
 
-    /// Burns shares from msg.sender and sends exactly assets of underlying tokens to msg.sender.
+    /// @notice Burns shares from msg.sender and sends exactly assets of underlying tokens to msg.sender.
     /// - emit the Withdraw event.
     /// - support a withdraw flow where the shares are burned from owner directly where owner is msg.sender.
     /// - MAY support an additional flow in which the shares are transferred to the Vault contract 
@@ -91,7 +92,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         _withdrawAndSend(assets, shares);
     }
 
-    /// Burns exactly shares from msg.sender and sends assets of underlying tokens to msg.sender.
+    /// @notice Burns exactly shares from msg.sender and sends assets of underlying tokens to msg.sender.
     /// - emit the Withdraw event.
     /// - support a redeem flow where the shares are burned from owner directly where owner is msg.sender.
     /// - MAY support an additional flow in which the shares are transferred to the Vault contract 
@@ -109,7 +110,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     }
 
 
-    /// Burn msg.sender shares and send tokens to msg.sender.
+    /// @notice Burn msg.sender shares and send tokens to msg.sender.
     /// Work little bit more gas efficient than default implementation.
     function _withdrawAndSend(uint256 assets, uint256 shares) private {
         // Implementation of witdraw logic which use only msg.sender as actor
@@ -125,16 +126,19 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
 
     /* //////////////////// Backwards compatible methods ////////////////////////// */
 
+    /// @inheritdoc ERC4626Upgradeable
     function deposit(uint256 assets, address receiver) public virtual override returns (uint256 shares) {
         // nonReentrant under the hood
         return deposit(assets);
     }
 
+    /// @inheritdoc ERC4626Upgradeable
     function mint(uint256 shares, address receiver) public virtual override returns (uint256 assets) {
         // nonReentrant under the hood
         return mint(shares);
     }
 
+    /// @inheritdoc ERC4626Upgradeable
     function withdraw(
         uint256 assets,
         address receiver,
@@ -144,6 +148,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         return withdraw(assets);
     }
 
+    /// @inheritdoc ERC4626Upgradeable
     function redeem(
         uint256 shares,
         address receiver,

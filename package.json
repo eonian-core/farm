@@ -8,9 +8,9 @@
     "start": "lerna exec --parallel -- yarn start",
     "build": "lerna run build",
     "test": "lerna run test",
-    "build:contracts": "lerna run build --scope='@eonian/contracts-*'",
-    "test:contracts": "lerna run test --scope='@eonian/contracts-*'",
-    "dev:contracts": "lerna run dev --scope='@eonian/contracts-*'"
+    "build:contracts": "lerna run build --scope='@eonian/contracts'",
+    "test:contracts": "lerna run test --scope='@eonian/contracts'",
+    "dev:contracts": "lerna run dev --scope='@eonian/contracts'"
   },
   "workspaces": {
     "packages": ["packages/*"],

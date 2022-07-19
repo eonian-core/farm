@@ -8,7 +8,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 
 import {FixedPointMathLib} from "../math/FixedPointMathLib.sol";
 
-/// ERC4626 upgradable tokenized Vault implementation based on ERC-777. 
+/// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777. 
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
 /// Based on Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/mixins/ERC4626.sol)
 /// 
@@ -71,7 +71,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
 
     /* ///////////////////////////// DEPOSIT / WITHDRAWAL ///////////////////////////// */
 
-    /// Mints Vault shares to receiver by depositing exactly amount of underlying tokens.
+    /// @notice Mints Vault shares to receiver by depositing exactly amount of underlying tokens.
     /// - emits the Deposit event.
     /// - support ERC-20 approve / transferFrom on asset as a deposit flow. 
     ///   MAY support an additional flow in which the underlying tokens are owned by the Vault contract 
@@ -87,7 +87,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         _receiveAndDeposit(assets, shares, receiver);
     }
 
-    /// Mints exactly shares Vault shares to receiver by depositing amount of underlying tokens.
+    /// @notice Mints exactly shares Vault shares to receiver by depositing amount of underlying tokens.
     /// - emits the Deposit event.
     /// - support ERC-20 approve / transferFrom on asset as a deposit flow. 
     ///   MAY support an additional flow in which the underlying tokens are owned by the Vault contract 
@@ -101,7 +101,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         _receiveAndDeposit(assets, shares, receiver);
     }
 
-    /// Base deposit logic which common for public deposit and mint function
+    /// @notice Base deposit logic which common for public deposit and mint function
     /// Trasfer assets from sender and mint shares for receiver
     function _receiveAndDeposit(uint256 assets, uint256 shares, address receiver) private {
         // cases when msg.sender != receiver is error prune
@@ -117,7 +117,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         afterDeposit(assets, shares);
     }
 
-    /// Burns shares from owner and sends exactly assets of underlying tokens to receiver.
+    /// @notice Burns shares from owner and sends exactly assets of underlying tokens to receiver.
     /// - emit the Withdraw event.
     /// - support a withdraw flow where the shares are burned from owner directly where owner is msg.sender.
     /// - support a withdraw flow where the shares are burned from owner directly where msg.sender 
@@ -139,7 +139,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         _withdrawAndSend(assets, shares, receiver, owner);
     }
 
-    /// Burns exactly shares from owner and sends assets of underlying tokens to receiver.
+    /// @notice Burns exactly shares from owner and sends assets of underlying tokens to receiver.
     /// - emit the Withdraw event.
     /// - support a redeem flow where the shares are burned from owner directly where owner is msg.sender.
     /// - support a redeem flow where the shares are burned from owner directly where msg.sender 
@@ -162,7 +162,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         _withdrawAndSend(assets, shares, receiver, owner);
     }
 
-    /// Burn owner shares and send tokens to receiver.
+    /// @notice Burn owner shares and send tokens to receiver.
     function _withdrawAndSend(uint256 assets, uint256 shares, address receiver, address owner) private {
         // cases when msg.sender != receiver != owner is error prune
         // but they allowed by standard... take care of it by self
@@ -181,7 +181,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
 
     /* ///////////////////////////// ACCOUNTING ///////////////////////////// */
 
-    /// Allows an on-chain or off-chain user to simulate the effects of their deposit at the current block, 
+    /// @notice Allows an on-chain or off-chain user to simulate the effects of their deposit at the current block, 
     /// given current on-chain conditions.
     /// - return as close to and no more than the exact amount of Vault shares that would be minted 
     ///   in a deposit call in the same transaction. 
@@ -198,7 +198,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return convertToShares(assets);
     }
 
-    /// Allows an on-chain or off-chain user to simulate the effects of their mint at the current block, 
+    /// @notice Allows an on-chain or off-chain user to simulate the effects of their mint at the current block, 
     /// given current on-chain conditions.
     /// - return as close to and no fewer than the exact amount of assets that would be deposited 
     ///   in a mint call in the same transaction. 
@@ -221,7 +221,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return shares.mulDivUp(totalAssets(), supply);
     }
 
-    /// Allows an on-chain or off-chain user to simulate the effects of their withdrawal 
+    /// @notice Allows an on-chain or off-chain user to simulate the effects of their withdrawal 
     /// at the current block, given current on-chain conditions.
     /// - return as close to and no fewer than the exact amount of Vault shares 
     ///   that would be burned in a withdraw call in the same transaction. 
@@ -244,7 +244,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return assets.mulDivUp(supply, totalAssets());
     }
 
-    /// Allows an on-chain or off-chain user to simulate the effects of their 
+    /// @notice Allows an on-chain or off-chain user to simulate the effects of their 
     /// redeemption at the current block, given current on-chain conditions.
     /// - return as close to and no more than the exact amount of assets that would be withdrawn 
     ///   in a redeem call in the same transaction. 
@@ -263,7 +263,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return convertToAssets(shares);
     }
 
-    /// The amount of shares that the Vault would exchange for the amount of assets provided, 
+    /// @notice The amount of shares that the Vault would exchange for the amount of assets provided, 
     /// in an ideal scenario where all the conditions are met.
     /// - is NOT inclusive of any fees that are charged against assets in the Vault.
     /// - do NOT show any variations depending on the caller.
@@ -282,7 +282,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return assets.mulDivDown(supply, totalAssets());
     }
 
-    /// The amount of assets that the Vault would exchange for the amount of shares provided, in an ideal scenario where all the conditions are met.
+    /// @notice The amount of assets that the Vault would exchange for the amount of shares provided, in an ideal scenario where all the conditions are met.
     /// - is NOT inclusive of any fees that are charged against assets in the Vault.
     /// - do NOT show any variations depending on the caller.
     /// - do NOT reflect slippage or other on-chain conditions, when performing the actual exchange.
@@ -300,7 +300,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return shares.mulDivDown(totalAssets(), supply);
     }
 
-    /// Total amount of the underlying asset that is “managed” by Vault.
+    /// @notice Total amount of the underlying asset that is “managed” by Vault.
     /// - include any compounding that occurs from yield.
     /// - inclusive of any fees that are charged against assets in the Vault.
     /// - is NOT revert
@@ -309,7 +309,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
 
     /* //////////////////////////////// DEPOSIT / WITHDRAWAL LIMIT //////////////////////////////// */
 
-    /// Maximum amount of the underlying asset that can be deposited into the Vault for the receiver, 
+    /// @notice Maximum amount of the underlying asset that can be deposited into the Vault for the receiver, 
     /// through a deposit call. 
     /// - returns the maximum amount of assets deposit would allow to be deposited 
     ///   for receiver and not cause a revert, which MUST NOT be higher than the actual maximum 
@@ -321,7 +321,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return type(uint256).max;
     }
 
-    /// Maximum amount of shares that can be minted from the Vault for the receiver, through a mint call.
+    /// @notice Maximum amount of shares that can be minted from the Vault for the receiver, through a mint call.
     /// - return the maximum amount of shares mint would allow to be deposited to receiver 
     ///   and not cause a revert, which MUST NOT be higher than the actual maximum 
     ///   that would be accepted (it should underestimate if necessary). 
@@ -333,7 +333,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return type(uint256).max;
     }
 
-    /// Maximum amount of the underlying asset that can be withdrawn from the owner balance in the Vault, 
+    /// @notice Maximum amount of the underlying asset that can be withdrawn from the owner balance in the Vault, 
     /// through a withdraw call.
     /// - return the maximum amount of assets that could be transferred from owner through withdraw 
     ///   and not cause a revert, which MUST NOT be higher than the actual maximum 
@@ -344,7 +344,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         return convertToAssets(balanceOf(owner));
     }
 
-    /// Maximum amount of Vault shares that can be redeemed from the owner balance in the Vault, 
+    /// @notice Maximum amount of Vault shares that can be redeemed from the owner balance in the Vault, 
     /// through a redeem call.
     /// - return the maximum amount of shares that could be transferred from owner through redeem 
     ///   and not cause a revert, which MUST NOT be higher than the actual maximum 
@@ -357,7 +357,11 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
 
     /* //////////////////////////////// INTERNAL HOOKS //////////////////////////////// */
 
+    /// @notice Called before withdraw will be made the Vault.
+    /// @dev allow implement additional logic for withdraw, hooks a prefered way rather then wrapping
     function beforeWithdraw(uint256 assets, uint256 shares) internal virtual {}
 
+    /// @notice Called when a deposit is made to the Vault.
+    /// @dev allow implement additional logic for withdraw, hooks a prefered way rather then wrapping
     function afterDeposit(uint256 assets, uint256 shares) internal virtual {}
 }
