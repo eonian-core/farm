@@ -22,6 +22,7 @@ abstract contract Job {
     ///  Expect all timestamp can be adgasted by minters in a range of 900 seconds.
     /// More info at: https://www.getsecureworld.com/blog/what-is-timestamp-dependence-vulnerability/
     // TODO: find a way to fix this vulnarability. 
+    // TODO: setup it in constructor
     uint256 public lastExecutionTime;
 
     /// @notice Time which pass from last exection
