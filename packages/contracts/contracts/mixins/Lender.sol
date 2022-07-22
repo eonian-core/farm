@@ -3,8 +3,11 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-
 import "../interfaces/ILender.sol";
+
+error BorrowerAlreadyExists();
+error LenderRatioExceeded(uint256 pointsLeft);
+error FalsePositiveReport();
 
 abstract contract Lender is ILender, Pausable {
     struct BorrowerData {
@@ -33,8 +36,8 @@ abstract contract Lender is ILender, Pausable {
         address indexed borrower, // Borrower's contract address
         uint256 debtPayment, // Amount of outstanding debt repaid by the borrower
         uint256 freeFunds, // Free funds on the borrower's contract that remain after the debt is paid
-        uint256 fundsTaken, // Funds that have been taken from the borrower by the lender
-        uint256 fundsGiven // Funds issued to the borrower by this lender
+        uint256 fundsGiven, // Funds issued to the borrower by this lender
+        uint256 fundsTaken // Funds that have been taken from the borrower by the lender
     );
 
     modifier onlyBorrowers() {
@@ -65,9 +68,9 @@ abstract contract Lender is ILender, Pausable {
         uint256 debtPayment = _outstandingDebt(msg.sender);
 
         // Checking whether the borrower is telling the truth about his available funds
-        require(
-            _borrowerFreeAssets(msg.sender) >= extraFreeFunds + debtPayment
-        );
+        if (_borrowerFreeAssets(msg.sender) < extraFreeFunds + debtPayment) {
+            revert FalsePositiveReport();
+        }
 
         // TODO: Assess n' pay management fees here
 
@@ -271,15 +274,14 @@ abstract contract Lender is ILender, Pausable {
     function _registerBorrower(address borrower, uint256 borrowerDebtRatio)
         internal
     {
-        require(
-            borrowersData[borrower].activationTimestamp == 0,
-            "This borrower has already registered"
-        );
+        // Check if specified borrower has already registered
+        if (borrowersData[borrower].activationTimestamp > 0) {
+            revert BorrowerAlreadyExists();
+        }
 
-        require(
-            debtRatio + borrowerDebtRatio <= MAX_BPS,
-            "Resulted debt ratio is greater than the maximum value"
-        );
+        if (debtRatio + borrowerDebtRatio > MAX_BPS) {
+            revert LenderRatioExceeded(MAX_BPS - debtRatio);
+        }
 
         borrowersData[borrower] = BorrowerData(
             block.timestamp,
