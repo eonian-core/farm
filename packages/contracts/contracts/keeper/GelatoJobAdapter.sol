@@ -1,41 +1,27 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import { Job } from './Job.sol';
 import {IResolver} from '../libs/gelato/IResolver.sol';
 import {OpsReady} from '../libs/gelato/OpsReady.sol';
 
 /// @title Implementation of mixin which add support for Gelato (keepers operator)
-abstract contract GelatoJobAdapter is Job, ReentrancyGuard, IResolver, OpsReady {
+abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
 
-    /// @notice Mininmal time which must pass between executions of the job in seconds.
-    /// Must be greater then 900 seconds, or node opperators will be able to manipulate.
-    uint256 public minimumBetweenExecutions = 1000;
-
+    // TODO: rewrite it to upgradable implementation
     // solhint-disable no-empty-blocks
     constructor(address _ops) OpsReady(_ops) {}
 
+    /// @notice Resolver checker which say if work can be performed and with which params.
     function checker() public view returns (bool canExec, bytes memory execPayload) {
-        // TODO: maybe move it to Job contract itself
-        canExec = isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
+        canExec = canWork();
 
         execPayload = abi.encodeWithSelector(this.work.selector);
     }
 
-    modifier allowedByChecker() { 
-        (bool canExec, bytes memory execPayload) = checker();
+    function work() public override onlyOps {
+        super.work();
 
-        require(canExec, "Not allowed by checker");
-        _;
-    }
-
-    // TODO: possible do not use nonReentrant if we have isTimePassFromLastExecution check
-    function work() external nonReentrant onlyOps allowedByChecker {
-        refreshExecutionTime();
-        
-        _work();
-        
         _payGalatoFee();
     }
 }

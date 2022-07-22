@@ -1,11 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.0;
 
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+
 /// @title Abstract contract by implementation of which 
 ///  possible to make child contract support of one of keeper providers.
 /// @notice This contract is only define interface, 
 ///  for add support of specific provider need add specific mixin contract.
-abstract contract Job {
+abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgradeable {
+
+    event Worked(address keeper);
+    
+    error CannotWorkNow(); 
 
     /// @notice Method which will be executed by keeper
     function _work() internal virtual;
@@ -25,6 +33,10 @@ abstract contract Job {
     // TODO: setup it in constructor
     uint256 public lastExecutionTime;
 
+    /// @notice Mininmal time which must pass between executions of the job in seconds.
+    /// Must be greater then 900 seconds, or node opperators will be able to manipulate.
+    uint256 public minimumBetweenExecutions = 1000;
+
     /// @notice Time which pass from last exection
     /// @return seconds from last execution in a range of 900 seconds
     function timeFromLastExecution() public view returns (uint256) {
@@ -42,7 +54,46 @@ abstract contract Job {
     function isTimePassFromLastExecution(uint256 second) internal view returns (bool){
         return timeFromLastExecution() > second;
     }
+
+    // ------------------------------------------ Constructors ------------------------------------------
  
 
+    /**
+     * @notice Constructor of Job contract.
+     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+     */
+    function __Job_init(uint256 _minimumBetweenExecutions) internal onlyInitializing {
+        __Context_init();
+        __ReentrancyGuard_init();
+
+        minimumBetweenExecutions = _minimumBetweenExecutions;
+
+        refreshExecutionTime();
+    }
+
+    // ------------------------------------------ Public methods  ------------------------------------------
+
+    /// @notice If work can be executed by keeper at this moment returns true
+    /// @dev Will be executed by keeper and before `work` method execution.
+    function canWork() public view returns (bool) {
+        return isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
+    }
+
+    /// @notice allow execution only if `canWork` return true
+    modifier onlyIfCanWork() { 
+        if(!canWork()){
+            revert CannotWorkNow();
+        }
+
+        _;
+    }
+
+    /// @notice Important work which will be executed by keeper.
+    // TODO: possible do not use nonReentrant if we have isTimePassFromLastExecution check
+    function work() public nonReentrant onlyIfCanWork {
+        refreshExecutionTime();
+        
+        _work();
+    }
 
 }

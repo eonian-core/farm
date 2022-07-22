@@ -25,6 +25,7 @@ abstract contract OpsReady {
         _;
     }
 
+    // TODO: rewrite it to upgradable implementation
     constructor(address _ops) {
         ops = IOps(_ops);
         gelato = ops.gelato();

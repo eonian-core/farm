@@ -66,6 +66,7 @@ abstract contract ERC4626Upgradeable is ERC777Upgradeable, ReentrancyGuardUpgrad
         address[] memory defaultOperators_
     ) internal onlyInitializing {
         __ERC777_init(name_, symbol_, defaultOperators_);
+        __ReentrancyGuard_init();
         asset = _asset;
     }
 
