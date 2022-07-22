@@ -20,21 +20,15 @@ Install required tools for development
 
 ### First Start Guide
 
-1) Make sure that all git submodules are installed:
-
-```bash
-$ git submodule update --init --recursive
-```
-
-2) Install packages from npm and forge:
+1) Install packages from npm and forge:
 
 ```bash
 $ yarn
 ```
 
-3) Fill in `packages/contract/foundry.toml` and `packages/contract/.env` with your etherscan url and API key
+2) Fill in `packages/contract/foundry.toml` and `packages/contract/.env` with your etherscan url and API key
 
-4) Run local node, compile and deploy contracts, start dApp:
+3) Run local node, compile and deploy contracts, start dApp:
 
 ```bash
 $ yarn start
