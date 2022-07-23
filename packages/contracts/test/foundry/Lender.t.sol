@@ -303,11 +303,15 @@ contract LenderTest is Test {
     function testMultipleBorrowersReports(
         uint192 initialBalance,
         uint256 borrowerARatio,
-        uint256 borrowerBRatio
+        uint256 borrowerBRatio,
+        uint64 borrowerAGain,
+        uint64 borrowerBLoss
     ) public {
         vm.assume(borrowerARatio <= MAX_BPS);
         vm.assume(borrowerBRatio <= MAX_BPS);
         vm.assume(borrowerARatio + borrowerBRatio <= MAX_BPS);
+        vm.assume(borrowerAGain < (initialBalance * borrowerARatio) / MAX_BPS);
+        vm.assume(borrowerBLoss < (initialBalance * borrowerBRatio) / MAX_BPS);
 
         lenderMock.setBalance(initialBalance);
 
@@ -344,9 +348,6 @@ contract LenderTest is Test {
         );
 
         // Preparing for the second report
-        uint256 borrowerAGain = borrowerABalance / 2;
-        uint256 borrowerBLoss = borrowerBBalance / 2;
-
         lenderMock.increaseBorrowerBalance(borrowerA, borrowerAGain);
         lenderMock.decreaseBorrowerBalance(borrowerB, borrowerBLoss);
 
