@@ -15,13 +15,20 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     
     error CannotWorkNow(); 
 
-    /// @notice Method which will be executed by keeper
-    function _work() internal virtual;
+    // ------------------------------------------ Constructors ------------------------------------------
+ 
 
-    /// @notice Method which identify if work can be executed at this moment.
-    /// @dev Will be executed by keeper and before `work` method execution.
-    /// @return true if `work` method can be called.
-    function _canWork() internal virtual view returns (bool);
+    /**
+     * @notice Constructor of Job contract.
+     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+     */
+    function __Job_init(uint256 _minimumBetweenExecutions) internal onlyInitializing {
+        __Context_init();
+        __ReentrancyGuard_init();
+
+        _setMinimumBetweenExecutions(_minimumBetweenExecutions);
+        refreshExecutionTime();
+    }
 
     // ------------------------------------------ Time check logic ------------------------------------------
 
@@ -35,7 +42,13 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
 
     /// @notice Mininmal time which must pass between executions of the job in seconds.
     /// Must be greater then 900 seconds, or node opperators will be able to manipulate.
-    uint256 public minimumBetweenExecutions = 1000;
+    uint256 public minimumBetweenExecutions;
+
+    function _setMinimumBetweenExecutions(uint256 _minimumBetweenExecutions) private {
+        require(_minimumBetweenExecutions > 1000, 'minimumBetweenExecutions must be greater then 1000');
+
+        minimumBetweenExecutions = _minimumBetweenExecutions;
+    }
 
     /// @notice Time which pass from last exection
     /// @return seconds from last execution in a range of 900 seconds
@@ -53,22 +66,6 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @return true if enough time pass
     function isTimePassFromLastExecution(uint256 second) internal view returns (bool){
         return timeFromLastExecution() > second;
-    }
-
-    // ------------------------------------------ Constructors ------------------------------------------
- 
-
-    /**
-     * @notice Constructor of Job contract.
-     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
-     */
-    function __Job_init(uint256 _minimumBetweenExecutions) internal onlyInitializing {
-        __Context_init();
-        __ReentrancyGuard_init();
-
-        minimumBetweenExecutions = _minimumBetweenExecutions;
-
-        refreshExecutionTime();
     }
 
     // ------------------------------------------ Public methods  ------------------------------------------
@@ -95,5 +92,15 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
         
         _work();
     }
+
+    // ------------------------------------------ Busines methods to override  ------------------------------
+
+    /// @notice Method which will be executed by keeper
+    function _work() internal virtual;
+
+    /// @notice Method which identify if work can be executed at this moment.
+    /// @dev Will be executed by keeper and before `work` method execution.
+    /// @return true if `work` method can be called.
+    function _canWork() internal virtual view returns (bool);
 
 }

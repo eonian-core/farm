@@ -5,18 +5,18 @@ import {
     SafeERC20,
     IERC20
 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import {IOps} from './IOps.sol';
-
+import {_ErcOrEthTransfer} from './ErcOrEthTransfer.sol';
 
 
 /// Based on https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
-abstract contract OpsReady {
+/// @notice Give basic methods to pay for Gelato operations.
+abstract contract OpsReady is Initializable {
 
-    IOps public immutable ops;
-    address payable public immutable gelato;
-
-    address public constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    IOps public ops;
+    address payable public gelato;
 
     using SafeERC20 for IERC20;
 
@@ -25,26 +25,15 @@ abstract contract OpsReady {
         _;
     }
 
-    // TODO: rewrite it to upgradable implementation
-    constructor(address _ops) {
+    function __OpsReady_init(address _ops) internal onlyInitializing {
         ops = IOps(_ops);
         gelato = ops.gelato();
     }
 
+    /// @notice Will pay bot for executed task through galato
     function _payGalatoFee() internal {
         (uint256 fee, address feeToken) = ops.getFeeDetails();
 
-        _payGalato(fee, feeToken);
-    }
-
-    function _payGalato(uint256 _amount, address _paymentToken) internal {
-        if (_paymentToken == ETH) {
-            (bool success, ) = gelato.call{value: _amount}("");
-            require(success, "_transfer: ETH transfer failed");
-            
-            return;
-        }
-        
-        IERC20(_paymentToken).safeTransfer(gelato, _amount);
+        _ErcOrEthTransfer(gelato, feeToken, fee);
     }
 }

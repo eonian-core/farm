@@ -9,9 +9,10 @@ import {
 address constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
 /// Copy of https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/FGelato.sol
+/// Backcombatible transfer to given address, will use ERC20 transfer if given token is ERC20.
 // solhint-disable private-vars-leading-underscore
 // solhint-disable func-visibility
-function _transfer(
+function _ErcOrEthTransfer(
     address payable _to,
     address _paymentToken,
     uint256 _amount
