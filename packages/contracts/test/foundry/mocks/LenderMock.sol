@@ -93,6 +93,12 @@ contract LenderMock is Lender {
         totalDebt = debt;
     }
 
+    function decreaseBorrowerCredibility(address borrower, uint256 loss)
+        external
+    {
+        _decreaseBorrowerCredibility(borrower, loss);
+    }
+
     function pause() external {
         _pause();
     }

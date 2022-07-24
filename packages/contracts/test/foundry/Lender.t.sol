@@ -169,7 +169,7 @@ contract LenderTest is Test {
 
         vm.expectCall(
             address(lenderMock),
-            abi.encodeCall(lenderMock.reportPositiveDebtManagement, (0))
+            abi.encodeCall(lenderMock.reportPositiveDebtManagement, (0, 0))
         );
 
         _testInitialBorrowerReport(
@@ -186,7 +186,7 @@ contract LenderTest is Test {
 
         vm.expectCall(
             address(lenderMock),
-            abi.encodeCall(lenderMock.reportNegativeDebtManagement, (0))
+            abi.encodeCall(lenderMock.reportNegativeDebtManagement, (0, 0))
         );
 
         _testInitialBorrowerReport(
@@ -221,7 +221,7 @@ contract LenderTest is Test {
         vm.expectRevert(FalsePositiveReport.selector);
 
         // Report extra funds that borrower doesn't have
-        lenderMock.reportPositiveDebtManagement(1);
+        lenderMock.reportPositiveDebtManagement(1, 0);
     }
 
     // Should have expected state after positive report
@@ -248,7 +248,7 @@ contract LenderTest is Test {
 
         // Let's report this gain on behalf of the borrower
         vm.prank(borrowerA);
-        lenderMock.reportPositiveDebtManagement(gain);
+        lenderMock.reportPositiveDebtManagement(gain, 0);
 
         // Since the lender's balance (free assets) and the borrower's debt ratio haven't changed,
         // no additional credit funds are available to the borrower.
@@ -291,7 +291,7 @@ contract LenderTest is Test {
 
         // Let's report this gain on behalf of the borrower
         vm.prank(borrowerA);
-        lenderMock.reportNegativeDebtManagement(remainingDebt);
+        lenderMock.reportNegativeDebtManagement(remainingDebt, 0);
 
         // Checking balance integrity after the loss occured
         assertEq(
@@ -320,10 +320,10 @@ contract LenderTest is Test {
 
         // Make an initial reports to take some funds from the lender
         vm.prank(borrowerA);
-        lenderMock.reportPositiveDebtManagement(0);
+        lenderMock.reportPositiveDebtManagement(0, 0);
 
         vm.prank(borrowerB);
-        lenderMock.reportPositiveDebtManagement(0);
+        lenderMock.reportPositiveDebtManagement(0, 0);
 
         uint256 borrowerABalance = lenderMock.borrowerBalance(borrowerA);
         uint256 borrowerBBalance = lenderMock.borrowerBalance(borrowerB);
@@ -352,18 +352,82 @@ contract LenderTest is Test {
         lenderMock.decreaseBorrowerBalance(borrowerB, borrowerBLoss);
 
         vm.prank(borrowerA);
-        lenderMock.reportPositiveDebtManagement(borrowerAGain);
+        lenderMock.reportPositiveDebtManagement(borrowerAGain, 0);
 
         vm.prank(borrowerB);
-        lenderMock.reportNegativeDebtManagement(borrowerBLoss);
+        lenderMock.reportNegativeDebtManagement(borrowerBLoss, 0);
 
-        // Ensure we didn't lost any funds from calculation
+        // Make sure we don't lose funds in the calculations
         assertEq(
             initialBalance,
             lenderMock.balance() +
                 lenderMock.totalDebt() -
                 borrowerAGain +
                 borrowerBLoss
+        );
+    }
+
+    // Checking a case where the borrower has a debt that needs to be repaid, and also received some profit
+    function testPositiveReportWithOutstandingDebtPayment(
+        uint192 initialBalance,
+        uint64 borrowerRatio,
+        uint64 loss,
+        uint64 gain
+    ) public {
+        vm.assume(borrowerRatio <= MAX_BPS);
+
+        uint256 borrowerFunds = (uint256(initialBalance) * borrowerRatio) /
+            MAX_BPS;
+        vm.assume(loss < borrowerFunds);
+        vm.assume(gain < borrowerFunds);
+
+        // Initial setup
+        _testInitialBorrowerReport(initialBalance, borrowerRatio);
+
+        // Adding a second borrower, just to take an excess balance from the lender
+        lenderMock.addBorrower(borrowerB, MAX_BPS - borrowerRatio);
+        vm.prank(borrowerB);
+        lenderMock.reportPositiveDebtManagement(0, 0);
+
+        // In some cases, when "loss" or "borrowerRatio" are small and/or odd numbers,
+        // some amount of tokens is left on the lender's balance (due to inaccurate arithmetic operations).
+        // We need to take this balance into account in order to use it in further checks.
+        uint256 leftoverBalance = lenderMock.balance();
+        if (leftoverBalance > 0) {
+            lenderMock.setBalance(0);
+        }
+
+        // Decreasing borrower's credibility to create outstanding debt
+        lenderMock.decreaseBorrowerCredibility(borrowerA, loss);
+
+        // Let's simulate a situation where the borrower has invested available funds,
+        // received some profit, and freed up the necessary funds to repay the debt.
+        uint256 debtPayment = lenderMock.outstandingDebt(borrowerA);
+        lenderMock.setBorrowerBalance(borrowerA, uint256(gain) + debtPayment);
+
+        // In this case, when the borrower's ratio is reduced,
+        // the lender must take his profits and his debt payment funds
+        vm.expectEmit(true, true, true, true);
+        vm.prank(borrowerA);
+        lenderMock.emitReportEvent(
+            borrowerA,
+            debtPayment,
+            gain,
+            0,
+            uint256(gain) + debtPayment // Taken funds
+        );
+
+        vm.prank(borrowerA);
+        lenderMock.reportPositiveDebtManagement(gain, debtPayment);
+
+        // Make sure we don't lose funds in the calculations
+        assertEq(
+            initialBalance,
+            lenderMock.balance() +
+                lenderMock.totalDebt() -
+                gain +
+                loss +
+                leftoverBalance
         );
     }
 
@@ -382,7 +446,7 @@ contract LenderTest is Test {
         address borrower,
         uint192 balance,
         uint256 borrowerRatio,
-        function(uint256) external report
+        function(uint256, uint256) external report
     ) private {
         // "Give" some amount of funds to the lender
         lenderMock.setBalance(balance);
@@ -394,13 +458,17 @@ contract LenderTest is Test {
         assertEq(lenderMock.debtRatio(), borrowerRatio);
         assertEq(lenderMock.borrowerDebtRatio(borrower), borrowerRatio);
 
-        // Lets assume it's a first report (no gains yet)
-        vm.prank(borrower);
-        report(0);
-
-        // Check whether the borrower's balance corresponds to his ratio
+        // Make sure that the lender has provided the borrower with the necessary amount of funds at the first report
         uint256 expectedBorrowerBalance = (uint256(balance) * borrowerRatio) /
             MAX_BPS;
+        vm.expectEmit(true, true, true, true);
+        lenderMock.emitReportEvent(borrowerA, 0, 0, expectedBorrowerBalance, 0);
+
+        // Lets assume it's a first report (no gains yet)
+        vm.prank(borrower);
+        report(0, 0);
+
+        // Check whether the borrower's balance corresponds to his ratio
         assertEq(lenderMock.borrowerBalance(borrower), expectedBorrowerBalance);
 
         // After the report, the lender should have some funds if the borrower's ratio != MAX_BPS

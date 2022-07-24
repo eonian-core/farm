@@ -59,14 +59,10 @@ abstract contract Lender is ILender, Pausable {
     }
 
     /// @inheritdoc ILender
-    function reportPositiveDebtManagement(uint256 extraFreeFunds)
-        external
-        override
-        onlyBorrowers
-    {
-        // If the borrower calls this function, it can be assumed that the entire outstanding debt will be repaid
-        uint256 debtPayment = _outstandingDebt(msg.sender);
-
+    function reportPositiveDebtManagement(
+        uint256 extraFreeFunds,
+        uint256 debtPayment
+    ) external override onlyBorrowers {
         // Checking whether the borrower is telling the truth about his available funds
         if (_borrowerFreeAssets(msg.sender) < extraFreeFunds + debtPayment) {
             revert FalsePositiveReport();
@@ -78,29 +74,16 @@ abstract contract Lender is ILender, Pausable {
     }
 
     /// @inheritdoc ILender
-    function reportNegativeDebtManagement(uint256 remainingDebt)
-        external
-        override
-        onlyBorrowers
-    {
-        uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
-
-        // Reported "remaining" debt may be greater than outstanding debt if the borrower incurs losses that he cannot cover
-        uint256 debtPayment = remainingDebt <= borrowerOutstandingDebt
-            ? borrowerOutstandingDebt - remainingDebt
-            : 0;
-
+    function reportNegativeDebtManagement(
+        uint256 remainingDebt,
+        uint256 debtPayment
+    ) external override onlyBorrowers {
         // Checking whether the borrower has available funds for debt payment
         require(_borrowerFreeAssets(msg.sender) >= debtPayment);
 
         if (remainingDebt > 0) {
             _decreaseBorrowerCredibility(msg.sender, remainingDebt);
         }
-
-        // Recalculate the outstanding debt after the ratio is reduced
-        // TODO: [Compare gas consumption] Return ratio delta from "_decreaseBorrowerCredibility" and multiple by declared "outstandingDebt"
-        borrowerOutstandingDebt = _outstandingDebt(msg.sender);
-        debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
 
         _rebalanceBorrowerFunds(msg.sender, debtPayment, 0);
     }
@@ -116,6 +99,9 @@ abstract contract Lender is ILender, Pausable {
     ) internal {
         // Calculate the amount of credit the lender can provide to the borrower (if any)
         uint256 borrowerAvailableCredit = _availableCredit(borrower);
+
+        uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
+        debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
 
         // Take into account repaid debt, if any
         if (debtPayment > 0) {
@@ -183,8 +169,9 @@ abstract contract Lender is ILender, Pausable {
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
+    /// @dev This function has "internal" visibility because it's used in tests
     function _decreaseBorrowerCredibility(address borrower, uint256 loss)
-        private
+        internal
     {
         uint256 debt = borrowersData[borrower].debt;
 
