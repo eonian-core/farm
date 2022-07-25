@@ -8,6 +8,7 @@
     "start": "lerna exec --parallel -- yarn start",
     "build": "lerna run build",
     "test": "lerna run test",
+    "postinstall": "git submodule update --init --recursive",
     "build:contracts": "lerna run build --scope='@eonian/contracts'",
     "test:contracts": "lerna run test --scope='@eonian/contracts'",
     "dev:contracts": "lerna run dev --scope='@eonian/contracts'"
