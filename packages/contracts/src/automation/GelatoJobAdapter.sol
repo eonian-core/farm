@@ -2,8 +2,8 @@
 pragma solidity >=0.8.0;
 
 import { Job } from './Job.sol';
-import {IResolver} from '../libs/gelato/IResolver.sol';
-import {OpsReady} from '../libs/gelato/OpsReady.sol';
+import {IResolver} from './gelato/IResolver.sol';
+import {OpsReady} from './gelato/OpsReady.sol';
 
 /// @title Implementation of mixin which add support for Gelato (keepers operator)
 abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
