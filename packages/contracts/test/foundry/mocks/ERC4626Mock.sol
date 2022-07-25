@@ -1,10 +1,10 @@
 /// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "../../../contracts/standard/SafeERC4626Upgradeable.sol";
+import "contracts/tokens/ERC4626Upgradeable.sol";
 
-/// Testing implementation of SafeERC4626
-contract ImplementSafeERC4626 is SafeERC4626Upgradeable {
+/// Testing implementation of ERC4626
+contract ERC4626Mock is ERC4626Upgradeable {
 
     uint256 public beforeWithdrawHookCalledCounter;
     uint256 public afterDepositHookCalledCounter;
@@ -16,7 +16,7 @@ contract ImplementSafeERC4626 is SafeERC4626Upgradeable {
         string memory symbol_,
         address[] memory defaultOperators_
     ) initializer {
-        __SafeERC4626_init(_asset, name_, symbol_, defaultOperators_);
+        __ERC4626_init(_asset, name_, symbol_, defaultOperators_);
 
         beforeWithdrawHookCalledCounter = 0;
         afterDepositHookCalledCounter = 0;

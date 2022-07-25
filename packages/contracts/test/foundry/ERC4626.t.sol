@@ -4,22 +4,22 @@ pragma solidity >=0.8.10;
 import "forge-std/Test.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
-import {MockERC20} from "./mocks/MockERC20.sol";
-import {ImplementERC4626} from "./implementations/ImplementERC4626.sol";
+import {ERC20Mock} from "./mocks/ERC20Mock.sol";
+import {ERC4626Mock} from "./mocks/ERC4626Mock.sol";
 
 contract ERC4626Test is Test {
-    MockERC20 underlying;
-    ImplementERC4626 vault;
+    ERC20Mock underlying;
+    ERC4626Mock vault;
 
     address alice;
     address bob;
     address carl;
 
     function setUp() public {
-        underlying = new MockERC20("Mock Token", "TKN");
+        underlying = new ERC20Mock("Mock Token", "TKN");
         
         address[] memory defaultOperators;
-        vault = new ImplementERC4626(IERC20Upgradeable(address(underlying)), "Mock Token Vault", "vwTKN", defaultOperators);
+        vault = new ERC4626Mock(IERC20Upgradeable(address(underlying)), "Mock Token Vault", "vwTKN", defaultOperators);
 
         alice = address(0xAAAA);
         bob = address(0xBBBB);
@@ -34,7 +34,7 @@ contract ERC4626Test is Test {
 
     function testMetadata(string calldata name, string calldata symbol) public {
         address[] memory defaultOperators;
-        ImplementERC4626 vlt = new ImplementERC4626(IERC20Upgradeable(address(underlying)), name, symbol, defaultOperators);
+        ERC4626Mock vlt = new ERC4626Mock(IERC20Upgradeable(address(underlying)), name, symbol, defaultOperators);
 
         assertEq(vlt.name(), name);
         assertEq(vlt.symbol(), symbol);

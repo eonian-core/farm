@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "../interfaces/ILender.sol";
+import "./ILender.sol";
 
 error BorrowerAlreadyExists();
 error LenderRatioExceeded(uint256 pointsLeft);

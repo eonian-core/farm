@@ -3,7 +3,7 @@ pragma solidity >=0.8.10;
 
 import "forge-std/Test.sol";
 
-import {FixedPointMathLib} from "../../contracts/math/FixedPointMathLib.sol";
+import {FixedPointMathLib} from "contracts/math/FixedPointMathLib.sol";
 
 contract FixedPointMathLibTest is Test {
     function testMulWadDown() public {

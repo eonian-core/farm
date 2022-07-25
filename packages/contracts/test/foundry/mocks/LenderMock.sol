@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "contracts/mixins/Lender.sol";
+import "contracts/lending/Lender.sol";
 import {console as cnsl} from "hardhat/console.sol";
 
 contract LenderMock is Lender {

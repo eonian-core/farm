@@ -1,5 +1,5 @@
 [default]
-src = 'contracts'
+src = 'src'
 out = 'out'
 libs = ['../../node_modules', 'node_modules', 'lib']
 test = 'test/foundry'

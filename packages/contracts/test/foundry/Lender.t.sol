@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 import "./mocks/LenderMock.sol";
-import {BorrowerAlreadyExists, LenderRatioExceeded, FalsePositiveReport} from "contracts/mixins/Lender.sol";
+import {BorrowerAlreadyExists, LenderRatioExceeded, FalsePositiveReport} from "contracts/lending/Lender.sol";
 
 contract LenderTest is Test {
     LenderMock lenderMock;
