@@ -11,16 +11,30 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 ///  for add support of specific provider need add specific mixin contract.
 abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgradeable {
 
+    /// Job work function was executed by keeper
     event Worked(address keeper);
     
+    /// Someone tried to execute work function while `canWork` is `false`
     error CannotWorkNow(); 
 
+    /// @notice Timestamp of last work execution block in seconds.
+    /// @dev Logic of checking and manupulating execution must be only in this contract (not in child) 
+    ///  to control timestamp dependce vularability.
+    /// Important: Expect all timestamp can be adgasted by miners.
+    /// More info at: https://www.getsecureworld.com/blog/what-is-timestamp-dependence-vulnerability/
+    uint256 public lastExecutionTime;
+
+    /// @notice Mininmal time which must pass between executions of the job in seconds.
+    /// Better set hours, but at least set to greater then 900 seconds, 
+    /// node opperators able to manipulate timestamp in 900 seconds range, on some blockchains maybe bigger.
+    uint256 public minimumBetweenExecutions;
+
     // ------------------------------------------ Constructors ------------------------------------------
- 
 
     /**
      * @notice Constructor of Job contract.
-     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds. 
+     *  Set in hours to prevent block timestamp vularability
      */
     function __Job_init(uint256 _minimumBetweenExecutions) internal onlyInitializing {
         __Context_init();
@@ -30,20 +44,38 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
         refreshExecutionTime();
     }
 
+    // ------------------------------------------ Public methods  ------------------------------------------
+
+    /// @notice If work can be executed by keeper at this moment returns true
+    /// @dev Will be executed by keeper and before `work` method execution.
+    function canWork() public view returns (bool) {
+        return isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
+    }
+
+    /// @notice allow execution only if `canWork` return true
+    modifier onlyWhenCanWork() { 
+        if(!canWork()){
+            revert CannotWorkNow();
+        }
+
+        _;
+    }
+
+    /// @notice Important work which will be executed by keeper.
+    /// @dev possible do not use nonReentrant if we have isTimePassFromLastExecution check and refreshExecutionTime at start
+    ///  But do not will delete it as `canWork` can be ovverriden.
+    ///  Possible to optimize this at the end contact
+    function work() public nonReentrant onlyWhenCanWork {
+        refreshExecutionTime();
+        
+        _work();
+    }
+
     // ------------------------------------------ Time check logic ------------------------------------------
 
-    /// @notice Timestamp of last work execution block in seconds.
-    /// @dev Logic related to block.timestamp there to allow futher fix logic related timestamp dependency vulnarability.
-    ///  Expect all timestamp can be adgasted by minters in a range of 900 seconds.
-    /// More info at: https://www.getsecureworld.com/blog/what-is-timestamp-dependence-vulnerability/
-    // TODO: find a way to fix this vulnarability. 
-    // TODO: setup it in constructor
-    uint256 public lastExecutionTime;
-
-    /// @notice Mininmal time which must pass between executions of the job in seconds.
-    /// Must be greater then 900 seconds, or node opperators will be able to manipulate.
-    uint256 public minimumBetweenExecutions;
-
+    /// @notice Set minimum time between executions.
+    /// @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+    /// Set in hours to prevent block timestamp vularability
     function _setMinimumBetweenExecutions(uint256 _minimumBetweenExecutions) private {
         require(_minimumBetweenExecutions > 1000, 'minimumBetweenExecutions must be greater then 1000');
 
@@ -66,31 +98,6 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @return true if enough time pass
     function isTimePassFromLastExecution(uint256 second) internal view returns (bool){
         return timeFromLastExecution() > second;
-    }
-
-    // ------------------------------------------ Public methods  ------------------------------------------
-
-    /// @notice If work can be executed by keeper at this moment returns true
-    /// @dev Will be executed by keeper and before `work` method execution.
-    function canWork() public view returns (bool) {
-        return isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
-    }
-
-    /// @notice allow execution only if `canWork` return true
-    modifier onlyWhenCanWork() { 
-        if(!canWork()){
-            revert CannotWorkNow();
-        }
-
-        _;
-    }
-
-    /// @notice Important work which will be executed by keeper.
-    // TODO: possible do not use nonReentrant if we have isTimePassFromLastExecution check and refreshExecutionTime at start
-    function work() public nonReentrant onlyWhenCanWork {
-        refreshExecutionTime();
-        
-        _work();
     }
 
     // ------------------------------------------ Busines methods to override  ------------------------------
