@@ -8,7 +8,7 @@ import {
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import {IOps} from './IOps.sol';
-import {_ErcOrEthTransfer} from './ErcOrEthTransfer.sol';
+import {_ercOrNativeTransfer} from './ercOrNativeTransfer.sol';
 
 
 /// Based on https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
@@ -34,6 +34,6 @@ abstract contract OpsReady is Initializable {
     function _payGalatoFee() internal {
         (uint256 fee, address feeToken) = ops.getFeeDetails();
 
-        _ErcOrEthTransfer(gelato, feeToken, fee);
+        _ercOrNativeTransfer(gelato, feeToken, fee);
     }
 }

@@ -86,7 +86,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     }
 
     /// @notice Important work which will be executed by keeper.
-    // TODO: possible do not use nonReentrant if we have isTimePassFromLastExecution check
+    // TODO: possible do not use nonReentrant if we have isTimePassFromLastExecution check and refreshExecutionTime at start
     function work() public nonReentrant onlyWhenCanWork {
         refreshExecutionTime();
         

@@ -12,15 +12,21 @@ address constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 /// Backcombatible transfer to given address, will use ERC20 transfer if given token is ERC20.
 // solhint-disable private-vars-leading-underscore
 // solhint-disable func-visibility
-function _ErcOrEthTransfer(
-    address payable _to,
-    address _paymentToken,
-    uint256 _amount
+function _ercOrNativeTransfer(
+    address payable to,
+    address paymentToken,
+    uint256 amount
 ) {
-    if (_paymentToken == ETH) {
-        (bool success, ) = _to.call{value: _amount}("");
-        require(success, "_transfer: ETH transfer failed");
-    } else {
-        SafeERC20.safeTransfer(IERC20(_paymentToken), _to, _amount);
-    }
+    if (paymentToken == ETH) {
+        _safeTransfer(to, amount);
+        return;
+    } 
+
+    SafeERC20.safeTransfer(IERC20(paymentToken), to, amount);
+}
+
+function _safeTransfer(address payable to, uint256 amount){
+    // Not use `transfer` or `send` as they considered as bad praqctice after Istanbul hardfork.
+    (bool success, ) = to.call{ value: amount }("");
+    require(success, "Native transfer failed");
 }

@@ -36,6 +36,8 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
     function payableWork() public onlyOps {
         super.work();
 
+        // Check -> Effect -> Interaction
+        // To prevent exploits pay only at the end of operations
         _payGalatoFee();
     }
 }
