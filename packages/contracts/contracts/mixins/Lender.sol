@@ -3,8 +3,11 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
-
 import "../interfaces/ILender.sol";
+
+error BorrowerAlreadyExists();
+error LenderRatioExceeded(uint256 pointsLeft);
+error FalsePositiveReport();
 
 abstract contract Lender is ILender, Pausable {
     struct BorrowerData {
@@ -33,8 +36,8 @@ abstract contract Lender is ILender, Pausable {
         address indexed borrower, // Borrower's contract address
         uint256 debtPayment, // Amount of outstanding debt repaid by the borrower
         uint256 freeFunds, // Free funds on the borrower's contract that remain after the debt is paid
-        uint256 fundsTaken, // Funds that have been taken from the borrower by the lender
-        uint256 fundsGiven // Funds issued to the borrower by this lender
+        uint256 fundsGiven, // Funds issued to the borrower by this lender
+        uint256 fundsTaken // Funds that have been taken from the borrower by the lender
     );
 
     modifier onlyBorrowers() {
@@ -56,18 +59,14 @@ abstract contract Lender is ILender, Pausable {
     }
 
     /// @inheritdoc ILender
-    function reportPositiveDebtManagement(uint256 extraFreeFunds)
-        external
-        override
-        onlyBorrowers
-    {
-        // If the borrower calls this function, it can be assumed that the entire outstanding debt will be repaid
-        uint256 debtPayment = _outstandingDebt(msg.sender);
-
+    function reportPositiveDebtManagement(
+        uint256 extraFreeFunds,
+        uint256 debtPayment
+    ) external override onlyBorrowers {
         // Checking whether the borrower is telling the truth about his available funds
-        require(
-            _borrowerFreeAssets(msg.sender) >= extraFreeFunds + debtPayment
-        );
+        if (_borrowerFreeAssets(msg.sender) < extraFreeFunds + debtPayment) {
+            revert FalsePositiveReport();
+        }
 
         // TODO: Assess n' pay management fees here
 
@@ -75,29 +74,16 @@ abstract contract Lender is ILender, Pausable {
     }
 
     /// @inheritdoc ILender
-    function reportNegativeDebtManagement(uint256 remainingDebt)
-        external
-        override
-        onlyBorrowers
-    {
-        uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
-
-        // Reported "remaining" debt may be greater than outstanding debt if the borrower incurs losses that he cannot cover
-        uint256 debtPayment = remainingDebt <= borrowerOutstandingDebt
-            ? borrowerOutstandingDebt - remainingDebt
-            : 0;
-
+    function reportNegativeDebtManagement(
+        uint256 remainingDebt,
+        uint256 debtPayment
+    ) external override onlyBorrowers {
         // Checking whether the borrower has available funds for debt payment
         require(_borrowerFreeAssets(msg.sender) >= debtPayment);
 
         if (remainingDebt > 0) {
             _decreaseBorrowerCredibility(msg.sender, remainingDebt);
         }
-
-        // Recalculate the outstanding debt after the ratio is reduced
-        // TODO: [Compare gas consumption] Return ratio delta from "_decreaseBorrowerCredibility" and multiple by declared "outstandingDebt"
-        borrowerOutstandingDebt = _outstandingDebt(msg.sender);
-        debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
 
         _rebalanceBorrowerFunds(msg.sender, debtPayment, 0);
     }
@@ -113,6 +99,10 @@ abstract contract Lender is ILender, Pausable {
     ) internal {
         // Calculate the amount of credit the lender can provide to the borrower (if any)
         uint256 borrowerAvailableCredit = _availableCredit(borrower);
+
+        // Make sure that the borrower's debt payment doesn't exceed his actual outstanding debt
+        uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
+        debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
 
         // Take into account repaid debt, if any
         if (debtPayment > 0) {
@@ -170,18 +160,19 @@ abstract contract Lender is ILender, Pausable {
         virtual;
 
     /// @notice Returns the total amount of all tokens (including those on the contract balance and taken by borrowers)
-    function _totalAssets() internal view returns (uint256) {
+    function totalAssets() public view virtual returns (uint256) {
         return _freeAssets() + totalDebt;
     }
 
     /// @notice Returns the total number of tokens borrowers can take
     function _debtLimit() private view returns (uint256) {
-        return (debtRatio * _totalAssets()) / MAX_BPS;
+        return (debtRatio * totalAssets()) / MAX_BPS;
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
+    /// @dev This function has "internal" visibility because it's used in tests
     function _decreaseBorrowerCredibility(address borrower, uint256 loss)
-        private
+        internal
     {
         uint256 debt = borrowersData[borrower].debt;
 
@@ -219,7 +210,7 @@ abstract contract Lender is ILender, Pausable {
         uint256 lenderDebtLimit = _debtLimit();
         uint256 lenderDebt = totalDebt;
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            _totalAssets()) / MAX_BPS;
+            totalAssets()) / MAX_BPS;
         uint256 borrowerDebt = borrowersData[borrower].debt;
 
         // There're no more funds for the borrower because he has outstanding debt or the lender's available funds have been exhausted
@@ -259,7 +250,7 @@ abstract contract Lender is ILender, Pausable {
         }
 
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            _totalAssets()) / MAX_BPS;
+            totalAssets()) / MAX_BPS;
         if (borrowerDebt <= borrowerDebtLimit) {
             return 0;
         }
@@ -271,15 +262,14 @@ abstract contract Lender is ILender, Pausable {
     function _registerBorrower(address borrower, uint256 borrowerDebtRatio)
         internal
     {
-        require(
-            borrowersData[borrower].activationTimestamp == 0,
-            "This borrower has already registered"
-        );
+        // Check if specified borrower has already registered
+        if (borrowersData[borrower].activationTimestamp > 0) {
+            revert BorrowerAlreadyExists();
+        }
 
-        require(
-            debtRatio + borrowerDebtRatio <= MAX_BPS,
-            "Resulted debt ratio is greater than the maximum value"
-        );
+        if (debtRatio + borrowerDebtRatio > MAX_BPS) {
+            revert LenderRatioExceeded(MAX_BPS - debtRatio);
+        }
 
         borrowersData[borrower] = BorrowerData(
             block.timestamp,

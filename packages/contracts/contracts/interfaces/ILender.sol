@@ -15,11 +15,19 @@ interface ILender {
     ///         or/and has a free funds available to repay the outstanding debt (if any).
     /// @param extraFreeFunds an extra amount of free funds borrower's contract has.
     ///                       This reporting amount must be greater than the borrower's outstanding debt.
-    function reportPositiveDebtManagement(uint256 extraFreeFunds) external;
+    /// @param debtPayment is the funds that the borrower must release in order to pay off his outstanding debt (if any).
+    function reportPositiveDebtManagement(
+        uint256 extraFreeFunds,
+        uint256 debtPayment
+    ) external;
 
     /// @notice Reports a negative result of the borrower's debt management.
     ///         The borrower must call this function if he is unable to cover his outstanding debt or if he has incurred any losses.
     /// @param remainingDebt a number of tokens by which the borrower's balance has decreased since the last report.
     ///                      May include a portion of the outstanding debt that the borrower was unable to repay.
-    function reportNegativeDebtManagement(uint256 remainingDebt) external;
+    /// @param debtPayment is the funds that the borrower must release in order to pay off his outstanding debt (if any).
+    function reportNegativeDebtManagement(
+        uint256 remainingDebt,
+        uint256 debtPayment
+    ) external;
 }
