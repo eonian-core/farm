@@ -315,6 +315,9 @@ contract LenderTest is Test {
             lenderMock.balance() + lenderMock.totalDebt() + remainingDebt,
             balance
         );
+
+        // Due to negative report, the borrower should have no available credit
+        assertEq(lenderMock.availableCredit(borrowerA), 0);
     }
 
     function testMultipleBorrowersReports(
