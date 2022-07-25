@@ -2,14 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "../interfaces/ILender.sol";
 
 error BorrowerAlreadyExists();
 error LenderRatioExceeded(uint256 pointsLeft);
 error FalsePositiveReport();
 
-abstract contract Lender is ILender, Pausable {
+abstract contract Lender is ILender, PausableUpgradeable {
     struct BorrowerData {
         // Timestamp of the block in which the borrower was activated
         uint256 activationTimestamp;
@@ -23,10 +23,10 @@ abstract contract Lender is ILender, Pausable {
     uint256 constant MAX_BPS = 10_000;
 
     // Amount of tokens that all borrowers have taken
-    uint256 public totalDebt = 0;
+    uint256 public totalDebt;
 
     // Debt ratio for the Lender across all borrowers (in BPS, <= 10k)
-    uint256 public debtRatio = 0;
+    uint256 public debtRatio;
 
     // Records with information on each borrower using the lender's services
     mapping(address => BorrowerData) public borrowersData;
@@ -46,6 +46,10 @@ abstract contract Lender is ILender, Pausable {
             "Not a borrower"
         );
         _;
+    }
+
+    function __Lender_init() internal onlyInitializing {
+        __Pausable_init();
     }
 
     /// @inheritdoc ILender
