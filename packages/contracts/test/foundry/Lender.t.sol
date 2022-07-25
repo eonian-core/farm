@@ -94,6 +94,23 @@ contract LenderTest is Test {
         assertEq(availableCredit, lenderBalance);
     }
 
+    function testAvailableCreditCalculation(
+        uint192 lenderBalance,
+        uint64 borrowerRatio
+    ) public {
+        vm.assume(borrowerRatio <= MAX_BPS);
+
+        lenderMock.setBalance(lenderBalance);
+
+        lenderMock.addBorrower(borrowerA, borrowerRatio);
+
+        uint256 availableCredit = lenderMock.availableCredit(borrowerA);
+        assertEq(
+            availableCredit,
+            (uint256(lenderBalance) * borrowerRatio) / MAX_BPS
+        );
+    }
+
     // Suspended lender has no funds for borrowers
     function testAvailableCreditCalculationPaused(
         uint192 lenderBalance,
@@ -390,14 +407,15 @@ contract LenderTest is Test {
         lenderMock.reportPositiveDebtManagement(0, 0);
 
         // In some cases, when "loss" or "borrowerRatio" are small and/or odd numbers,
-        // some amount of tokens is left on the lender's balance (due to inaccurate arithmetic operations).
+        // some amount of tokens is left on the lender's balance (due to rounding error).
         // We need to take this balance into account in order to use it in further checks.
         uint256 leftoverBalance = lenderMock.balance();
         if (leftoverBalance > 0) {
+            assertEq(leftoverBalance, 1);
             lenderMock.setBalance(0);
         }
 
-        // Decreasing borrower's credibility to create outstanding debt
+        // Decreasing borrower's credibility to produce outstanding debt
         lenderMock.decreaseBorrowerCredibility(borrowerA, loss);
 
         // Let's simulate a situation where the borrower has invested available funds,
@@ -427,6 +445,130 @@ contract LenderTest is Test {
                 lenderMock.totalDebt() -
                 gain +
                 loss +
+                leftoverBalance
+        );
+    }
+
+    // Testing "_testNegativeReportWithDebtPayment" with static values,
+    // because sometimes rounding errors occur and it is difficult to make an assertion for the emitted event.
+    function testNegativeReportWithDebtPayment() public {
+        uint192 balance = 10000;
+        uint256 ratio = MAX_BPS / 2;
+        uint256 loss = 100;
+        uint256 debt = 250;
+
+        _testNegativeReportWithDebtPayment(balance, ratio, loss, debt, true);
+
+        _resetMocks();
+        balance = 22222;
+        ratio = MAX_BPS;
+        loss = 1000;
+        debt = 500;
+
+        _testNegativeReportWithDebtPayment(balance, ratio, loss, debt, true);
+
+        _resetMocks();
+        balance = 0;
+        ratio = MAX_BPS;
+        loss = 0;
+        debt = 0;
+
+        _testNegativeReportWithDebtPayment(balance, ratio, loss, debt, true);
+
+        _resetMocks();
+        balance = 22222;
+        ratio = 0;
+        loss = 0;
+        debt = 0;
+
+        _testNegativeReportWithDebtPayment(balance, ratio, loss, debt, true);
+    }
+
+    function testNegativeReportWithDebtPaymentFuzz(
+        uint192 initialBalance,
+        uint64 borrowerRatio,
+        uint64 borrowerLoss,
+        uint64 lossRealizedAsDebt
+    ) public {
+        vm.assume(borrowerRatio <= MAX_BPS);
+
+        uint256 borrowerFunds = (uint256(initialBalance) * borrowerRatio) /
+            MAX_BPS;
+        vm.assume(uint256(borrowerLoss) + lossRealizedAsDebt < borrowerFunds);
+
+        _testNegativeReportWithDebtPayment(
+            initialBalance,
+            borrowerRatio,
+            borrowerLoss,
+            lossRealizedAsDebt,
+            false
+        );
+    }
+
+    // Checking a case where the borrower has a debt that needs to be repaid and there are losses incurred
+    function _testNegativeReportWithDebtPayment(
+        uint192 initialBalance,
+        uint256 borrowerRatio,
+        uint256 borrowerLoss,
+        uint256 lossRealizedAsDebt,
+        bool assertEventEmit
+    ) public {
+        // Initial setup
+        _testInitialBorrowerReport(initialBalance, borrowerRatio);
+
+        // Adding a second borrower, just to take an excess balance from the lender
+        lenderMock.addBorrower(borrowerB, MAX_BPS - borrowerRatio);
+        vm.prank(borrowerB);
+        lenderMock.reportPositiveDebtManagement(0, 0);
+
+        // In some cases, when "loss" or "borrowerRatio" are small and/or odd numbers,
+        // some amount of tokens is left on the lender's balance (due to rounding error).
+        // We need to take this balance into account in order to use it in further checks.
+        uint256 leftoverBalance = lenderMock.balance();
+        if (leftoverBalance > 0) {
+            assertEq(leftoverBalance, 1);
+            lenderMock.setBalance(0);
+        }
+
+        // Decreasing borrower's credibility to produce outstanding debt
+        if (lossRealizedAsDebt > 0) {
+            lenderMock.decreaseBorrowerCredibility(
+                borrowerA,
+                lossRealizedAsDebt
+            );
+        }
+
+        // Assume that the borrower is able to pay the entire outstanding debt
+        uint256 debtPayment = lenderMock.outstandingDebt(borrowerA);
+
+        // Let's simulate a situation where the borrower has invested available funds,
+        // got some loss, and freed up the necessary funds to repay the debt.
+        lenderMock.setBorrowerBalance(borrowerA, debtPayment);
+
+        if (assertEventEmit) {
+            // In this case, when the borrower's ratio is reduced,
+            // the lender must take his profits and his debt payment funds
+            vm.expectEmit(true, true, true, true);
+            vm.prank(borrowerA);
+            lenderMock.emitReportEvent(
+                borrowerA,
+                debtPayment,
+                0,
+                0,
+                debtPayment
+            );
+        }
+
+        vm.prank(borrowerA);
+        lenderMock.reportNegativeDebtManagement(borrowerLoss, debtPayment);
+
+        // Make sure we don't lose funds in the calculations
+        assertEq(
+            initialBalance,
+            lenderMock.balance() +
+                lenderMock.totalDebt() +
+                borrowerLoss +
+                lossRealizedAsDebt +
                 leftoverBalance
         );
     }

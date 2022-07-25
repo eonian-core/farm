@@ -100,6 +100,7 @@ abstract contract Lender is ILender, Pausable {
         // Calculate the amount of credit the lender can provide to the borrower (if any)
         uint256 borrowerAvailableCredit = _availableCredit(borrower);
 
+        // Make sure that the borrower's debt payment doesn't exceed his actual outstanding debt
         uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
         debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
 
@@ -159,13 +160,13 @@ abstract contract Lender is ILender, Pausable {
         virtual;
 
     /// @notice Returns the total amount of all tokens (including those on the contract balance and taken by borrowers)
-    function _totalAssets() internal view returns (uint256) {
+    function totalAssets() public view virtual returns (uint256) {
         return _freeAssets() + totalDebt;
     }
 
     /// @notice Returns the total number of tokens borrowers can take
     function _debtLimit() private view returns (uint256) {
-        return (debtRatio * _totalAssets()) / MAX_BPS;
+        return (debtRatio * totalAssets()) / MAX_BPS;
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
@@ -209,7 +210,7 @@ abstract contract Lender is ILender, Pausable {
         uint256 lenderDebtLimit = _debtLimit();
         uint256 lenderDebt = totalDebt;
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            _totalAssets()) / MAX_BPS;
+            totalAssets()) / MAX_BPS;
         uint256 borrowerDebt = borrowersData[borrower].debt;
 
         // There're no more funds for the borrower because he has outstanding debt or the lender's available funds have been exhausted
@@ -249,7 +250,7 @@ abstract contract Lender is ILender, Pausable {
         }
 
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            _totalAssets()) / MAX_BPS;
+            totalAssets()) / MAX_BPS;
         if (borrowerDebt <= borrowerDebtLimit) {
             return 0;
         }

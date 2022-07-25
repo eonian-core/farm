@@ -40,10 +40,6 @@ contract LenderMock is Lender {
         balance = amount;
     }
 
-    function totalAssets() external view returns (uint256) {
-        return _totalAssets();
-    }
-
     function outstandingDebt(address borrower) external view returns (uint256) {
         return _outstandingDebt(borrower);
     }
