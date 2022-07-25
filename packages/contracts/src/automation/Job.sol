@@ -77,7 +77,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     }
 
     /// @notice allow execution only if `canWork` return true
-    modifier onlyIfCanWork() { 
+    modifier onlyWhenCanWork() { 
         if(!canWork()){
             revert CannotWorkNow();
         }
@@ -87,7 +87,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
 
     /// @notice Important work which will be executed by keeper.
     // TODO: possible do not use nonReentrant if we have isTimePassFromLastExecution check
-    function work() public nonReentrant onlyIfCanWork {
+    function work() public nonReentrant onlyWhenCanWork {
         refreshExecutionTime();
         
         _work();
