@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 import "./mocks/LenderMock.sol";
-import {BorrowerAlreadyExists, LenderRatioExceeded, FalsePositiveReport} from "contracts/lending/Lender.sol";
+import {BorrowerAlreadyExists, LenderRatioExceeded, FalsePositiveReport, BorrowerDoesNotExist} from "contracts/lending/Lender.sol";
 
 contract LenderTest is Test {
     LenderMock lenderMock;
@@ -78,6 +78,109 @@ contract LenderTest is Test {
 
         uint256 outstandingDebt = lenderMock.outstandingDebt(borrowerA);
         assertEq(outstandingDebt, expected);
+    }
+
+    function testSetBorrowerDebtRatioRevertWithBorrowerDoesNotExist(
+        uint256 borrowerDebtRatio
+    ) public {
+        vm.assume(borrowerDebtRatio <= MAX_BPS);
+
+        vm.expectRevert(BorrowerDoesNotExist.selector);
+
+        lenderMock.setBorrowerDebtRatio(borrowerA, borrowerDebtRatio);
+    }
+
+    function testSetBorrowerDebtRatioRevertWithExceededRatio(
+        uint256 initialBorrowerDebtRatio,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(initialBorrowerDebtRatio <= MAX_BPS);
+        vm.assume(borrowerDebtRatio > MAX_BPS);
+
+        lenderMock.addBorrower(borrowerA, initialBorrowerDebtRatio);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(LenderRatioExceeded.selector, MAX_BPS)
+        );
+
+        lenderMock.setBorrowerDebtRatio(borrowerA, borrowerDebtRatio);
+    }
+
+    function testSetMultipleBorrowersDebtRatioRevertWithExceededRatio(
+        uint64 borrowerADebtRatio,
+        uint64 borrowerBDebtRatio
+    ) public {
+        vm.assume(borrowerADebtRatio <= MAX_BPS);
+        vm.assume(borrowerBDebtRatio <= MAX_BPS);
+
+        lenderMock.addBorrower(borrowerA, borrowerADebtRatio);
+        lenderMock.addBorrower(borrowerB, 0);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                LenderRatioExceeded.selector,
+                MAX_BPS - borrowerADebtRatio
+            )
+        );
+
+        lenderMock.setBorrowerDebtRatio(
+            borrowerB,
+            MAX_BPS - borrowerADebtRatio + 1
+        );
+    }
+
+    function testSetBorrowerDebtRatio(
+        uint64 initialBorrowerDebtRatio,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(initialBorrowerDebtRatio <= MAX_BPS);
+        vm.assume(borrowerDebtRatio <= MAX_BPS);
+
+        lenderMock.addBorrower(borrowerA, initialBorrowerDebtRatio);
+        assertEq(
+            lenderMock.borrowerDebtRatio(borrowerA),
+            initialBorrowerDebtRatio
+        );
+
+        lenderMock.setBorrowerDebtRatio(borrowerA, borrowerDebtRatio);
+        assertEq(lenderMock.borrowerDebtRatio(borrowerA), borrowerDebtRatio);
+        assertEq(lenderMock.debtRatio(), borrowerDebtRatio);
+    }
+
+    function testSetBorrowerDebtRatioWithMultipleBorrowers(
+        uint64 initialBorrowerADebtRatio,
+        uint64 initialBorrowerBDebtRatio,
+        uint64 borrowerADebtRatio
+    ) public {
+        uint256 ratioAmount = uint256(initialBorrowerADebtRatio) +
+            initialBorrowerBDebtRatio;
+        vm.assume(ratioAmount <= MAX_BPS);
+        vm.assume(borrowerADebtRatio <= MAX_BPS - ratioAmount);
+
+        lenderMock.addBorrower(borrowerA, initialBorrowerADebtRatio);
+        lenderMock.addBorrower(borrowerB, initialBorrowerBDebtRatio);
+
+        assertEq(
+            lenderMock.borrowerDebtRatio(borrowerA),
+            initialBorrowerADebtRatio
+        );
+
+        assertEq(
+            lenderMock.borrowerDebtRatio(borrowerB),
+            initialBorrowerBDebtRatio
+        );
+
+        lenderMock.setBorrowerDebtRatio(borrowerA, borrowerADebtRatio);
+
+        assertEq(lenderMock.borrowerDebtRatio(borrowerA), borrowerADebtRatio);
+        assertEq(
+            lenderMock.borrowerDebtRatio(borrowerB),
+            initialBorrowerBDebtRatio
+        );
+        assertEq(
+            lenderMock.debtRatio(),
+            initialBorrowerBDebtRatio + borrowerADebtRatio
+        );
     }
 
     // If there is one borrower with the maximum ratio, the borrower can take the entire balance of the lender
