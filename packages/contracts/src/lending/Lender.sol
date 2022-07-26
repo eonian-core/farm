@@ -4,9 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./ILender.sol";
+import "forge-std/console.sol";
 
 error BorrowerAlreadyExists();
-error LenderRatioExceeded(uint256 pointsLeft);
+error BorrowerDoesNotExist();
+error LenderRatioExceeded(uint256 freeRatio);
 error FalsePositiveReport();
 
 abstract contract Lender is ILender, PausableUpgradeable {
@@ -284,20 +286,29 @@ abstract contract Lender is ILender, PausableUpgradeable {
         debtRatio += borrowerDebtRatio;
     }
 
-    /// @notice Disables the borrower by setting his ratio of the debt to 0.
-    ///         Thus, the borrower's current debt becomes an outstanding debt that the borrower must repay to the lender.
-    function _shutdownBorrower(address borrower) internal {
-        require(
-            borrowersData[borrower].activationTimestamp > 0,
-            "Borrower doesn't exist"
-        );
+    /// @notice Sets the borrower's debt ratio. Will be reverted if the borrower doesn't exist or the total debt ratio is exceeded.
+    /// @dev In the case where you want to disable the borrower, you need to set its ratio to 0.
+    ///      Thus, the borrower's current debt becomes an outstanding debt, which he must repay to the lender.
+    function _setBorrowerDebtRatio(address borrower, uint256 borrowerDebtRatio)
+        internal
+    {
+        if (borrowersData[borrower].activationTimestamp == 0) {
+            revert BorrowerDoesNotExist();
+        }
 
         debtRatio -= borrowersData[borrower].debtRatio;
-        borrowersData[borrower].debtRatio = 0;
+        borrowersData[borrower].debtRatio = borrowerDebtRatio;
+        debtRatio += borrowerDebtRatio;
+
+        if (debtRatio > MAX_BPS) {
+            revert LenderRatioExceeded(
+                MAX_BPS - (debtRatio - borrowerDebtRatio)
+            );
+        }
     }
 
-    /// @notice Deletes the borrower from the list.
-    ///         We don't do this in the "_shutdownBorrower" function, because we need to be able to take any funds from that borrower.
+    /// @notice Deletes the borrower from the list
+    /// @dev Should be called after the borrower's debt ratio is changed to 0, because the lender must take back all the released funds.
     function _unregisterBorrower(address borrower) internal {
         require(
             borrowersData[borrower].debtRatio == 0,
