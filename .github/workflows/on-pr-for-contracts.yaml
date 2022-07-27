@@ -32,4 +32,4 @@ jobs:
       - name: Run tests
         run: |-
           cd packages/contracts
-          forge test -vvv --fuzz-runs 1000
+          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv
