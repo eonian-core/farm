@@ -22,7 +22,7 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --ignore-scripts
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -30,4 +30,6 @@ jobs:
           version: nightly
 
       - name: Run tests
-        run: forge test -vvv --fuzz-runs 1000
+        run: |-
+          cd packages/contracts
+          forge test -vvv --fuzz-runs 1000
