@@ -5,17 +5,21 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
+
+/// Someone tried to execute work function while `canWork` is `false`
+error CannotWorkNow(); 
+
+/// Given time minimum between execution must be greater then 1000
+error TimeMinimumBetweenExecutionsIncorrect(uint256 _givenTime);
+
 /// @title Abstract contract by implementation of which 
 ///  possible to make child contract support of one of keeper providers.
 /// @notice This contract is only define interface, 
 ///  for add support of specific provider need add specific mixin contract.
 abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgradeable {
 
-    /// Job work function was executed by keeper
-    event Worked(address keeper);
-    
-    /// Someone tried to execute work function while `canWork` is `false`
-    error CannotWorkNow(); 
+    /// Job work function was executed by worker bot
+    event Worked(address indexed worker);
 
     /// @notice Timestamp of last work execution block in seconds.
     /// @dev Logic of checking and manupulating execution must be only in this contract (not in child) 
@@ -58,28 +62,35 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
             revert CannotWorkNow();
         }
 
+        // refresh execution works like `nonReentrant` 
+        // if we have `isTimePassFromLastExecution` inside `canWork`
+        refreshExecutionTime();
+
         _;
     }
 
     /// @notice Important work which will be executed by keeper.
-    /// @dev possible do not use nonReentrant if we have isTimePassFromLastExecution check and refreshExecutionTime at start
-    ///  But do not will delete it as `canWork` can be ovverriden.
+    /// @dev possible do not use `nonReentrant` modifier if we have isTimePassFromLastExecution check and refreshExecutionTime at start
+    ///  as it inside `onlyWhenCanWork` modifier.
+    ///  But do not will delete it as `canWork` can be overriden.
     ///  Possible to optimize this at the end contact
     function work() public nonReentrant onlyWhenCanWork {
-        refreshExecutionTime();
-        
         _work();
+
+        emit Worked(msg.sender);
     }
 
     // ------------------------------------------ Time check logic ------------------------------------------
 
     /// @notice Set minimum time between executions.
-    /// @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+    /// @param time - required time which must pass between executions of the job in seconds.
     /// Set in hours to prevent block timestamp vularability
-    function _setMinimumBetweenExecutions(uint256 _minimumBetweenExecutions) private {
-        require(_minimumBetweenExecutions > 1000, 'minimumBetweenExecutions must be greater then 1000');
+    function _setMinimumBetweenExecutions(uint256 time) internal {
+        if(time <= 1000){
+            revert TimeMinimumBetweenExecutionsIncorrect(time);
+        }
 
-        minimumBetweenExecutions = _minimumBetweenExecutions;
+        minimumBetweenExecutions = time;
     }
 
     /// @notice Time which pass from last exection
