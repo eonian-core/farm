@@ -45,4 +45,10 @@ $ yarn start
 
 ## TODO
 
-[] Add event tests for ERC4626
+[x] Add event tests for ERC4626
+[] add solhint in CI process
+[] add test coverage in CI process
+[] add more security validators in CI process
+[] add optimizations in compilation process
+[] add foundry to hardhat remappings support
+[] silent warning for unused arguments in SafeERC4626 contract
