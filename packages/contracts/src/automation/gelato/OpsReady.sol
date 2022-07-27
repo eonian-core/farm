@@ -8,7 +8,7 @@ import {
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 import {IOps} from './IOps.sol';
-import {_ercOrNativeTransfer} from './ercOrNativeTransfer.sol';
+import {BackCombatibleTransfer} from './BackCombatibleTransfer.sol';
 
 
 /// Based on https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
@@ -18,6 +18,7 @@ abstract contract OpsReady is Initializable {
     IOps public ops;
     address payable public gelato;
 
+    using BackCombatibleTransfer for address payable;
     using SafeERC20 for IERC20;
 
     modifier onlyOps() {
@@ -34,6 +35,6 @@ abstract contract OpsReady is Initializable {
     function _payGalatoFee() internal {
         (uint256 fee, address feeToken) = ops.getFeeDetails();
 
-        _ercOrNativeTransfer(gelato, feeToken, fee);
+        gelato.backCombatibleTransfer(feeToken, fee);
     }
 }

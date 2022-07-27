@@ -13,7 +13,7 @@ contract JobTest is Test {
     JobMock job;
 
     address alice = vm.addr(1);
-    address bob = vm.addr(1);
+    address bob = vm.addr(2);
 
     uint256 initialTime;
 
