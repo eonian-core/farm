@@ -18,7 +18,7 @@
     "docgen": "hardhat docgen",
     "postinstall": "forge install && cp -u .env.example .env",
     "clean": "forge clean",
-    "test:fuzz": "forge test -vvv --fuzz-runs 10000",
+    "test:fuzz": "FOUNDRY_FUZZ_RUNS=1000 forge test -vvv",
     "dev": "forge test --watch -vvv"
   },
   "devDependencies": {
