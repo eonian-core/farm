@@ -41,3 +41,8 @@ $ yarn start
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
+
+
+## TODO
+
+[] Add event tests for ERC4626
