@@ -21,17 +21,6 @@ contract OpsReadyTest is Test {
     // allow sending eth to the test contract
     receive() external payable {}
 
-    function testInvariant(address gelato) public {
-
-        OpsMock _ops = new OpsMock();
-        _ops.setGelato(payable(gelato));
-
-        OpsReadyMock _opsReady = new OpsReadyMock();
-        _opsReady.__OpsReadyMock_init(address(_ops));
-
-        assertEq(_opsReady.gelato(), gelato);
-    }
-
     function setUp() public {
         token = new ERC20Mock("Mock Token", "TKN");
 
@@ -44,6 +33,17 @@ contract OpsReadyTest is Test {
         opsReady = new OpsReadyMock();
         opsReady.__OpsReadyMock_init(address(ops));
 
+    }
+    
+    function testInvariant(address gelato) public {
+
+        OpsMock _ops = new OpsMock();
+        _ops.setGelato(payable(gelato));
+
+        OpsReadyMock _opsReady = new OpsReadyMock();
+        _opsReady.__OpsReadyMock_init(address(_ops));
+
+        assertEq(_opsReady.gelato(), gelato);
     }
 
     function testOnlyOpsProtected() public {

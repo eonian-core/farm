@@ -5,6 +5,9 @@ import { Job } from './Job.sol';
 import {IResolver} from './gelato/IResolver.sol';
 import {OpsReady} from './gelato/OpsReady.sol';
 
+/// @notice Contract expect work will be prepayd, so it cannot pay for work
+error PaybleWorkNotAllowed();
+
 /// @title Implementation of mixin which add support for Gelato (keepers operator)
 abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
 
@@ -34,6 +37,10 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
     /// Will pay caller
     /// `work` method stay as it is, to allow call id of-chain
     function payableWork() public onlyOps {
+        if(isPrepayd){
+            revert PaybleWorkNotAllowed();
+        }
+        
         super.work();
 
         // Check -> Effect -> Interaction
