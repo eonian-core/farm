@@ -4,7 +4,7 @@ pragma solidity >=0.8.10;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
-import {ERC20Mock} from "./mocks/ERC20Mock.sol";
+import {ERC20Mock} from "../mocks/ERC20Mock.sol";
 import {BackCombatibleTransfer} from "contracts/automation/gelato/BackCombatibleTransfer.sol";
 
 contract BackCombatibleTransferTest is Test {
