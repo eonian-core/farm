@@ -5,8 +5,6 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
-import "forge-std/console.sol";
-
 /// Someone tried to execute work function while `canWork` is `false`
 error CannotWorkNow(); 
 
