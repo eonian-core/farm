@@ -27,7 +27,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     ///  to control timestamp dependce vularability.
     /// Important: Expect all timestamp can be adgasted by miners.
     /// More info at: https://www.getsecureworld.com/blog/what-is-timestamp-dependence-vulnerability/
-    uint256 public lastExecutionTime;
+    uint256 public lastWorkTime;
 
     /// @notice Mininmal time which must pass between executions of the job in seconds.
     /// Better set hours, but at least set to greater then 900 seconds, 
@@ -46,7 +46,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
         __ReentrancyGuard_init();
 
         _setMinimumBetweenExecutions(_minimumBetweenExecutions);
-        // Not will set lastExecutionTime to allow first work immediately after contract deploy
+        // Not will set lastWorkTime to allow first work immediately after contract deploy
     }
 
     // ------------------------------------------ Public methods  ------------------------------------------
@@ -65,13 +65,13 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
 
         // refresh execution works like `nonReentrant` 
         // if we have `isTimePassFromLastExecution` inside `canWork`
-        _refreshExecutionTime();
+        _refreshLastWorkTime();
 
         _;
     }
 
     /// @notice Important work which will be executed by keeper.
-    /// @dev possible do not use `nonReentrant` modifier if we have isTimePassFromLastExecution check and refreshExecutionTime at start
+    /// @dev possible do not use `nonReentrant` modifier if we have isTimePassFromLastExecution check and refreshLastWorkTime at start
     ///  as it inside `onlyWhenCanWork` modifier.
     ///  But do not will delete it as `canWork` can be overriden.
     ///  Possible to optimize this at the end contact
@@ -97,13 +97,13 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @notice Time which pass from last exection
     /// @return seconds from last execution in a range of 900 seconds
     function timeFromLastExecution() public view returns (uint256) {
-        // lastExecutionTime will be zero before first execution
-        return block.timestamp - lastExecutionTime;
+        // lastWorkTime will be zero before first execution
+        return block.timestamp - lastWorkTime;
     }
 
     /// @notice Set time of last execution to current block
-    function _refreshExecutionTime() internal {
-        lastExecutionTime = block.timestamp;
+    function _refreshLastWorkTime() internal {
+        lastWorkTime = block.timestamp;
     }
 
     /// @notice Check if given time from last execution is passed

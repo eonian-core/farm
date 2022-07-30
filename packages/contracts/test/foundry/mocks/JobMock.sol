@@ -24,8 +24,8 @@ contract JobMock is Job {
         canWorkResult = _canWorkResult;
     }
 
-    function refreshExecutionTime() public {
-        _refreshExecutionTime();
+    function refreshLastWorkTime() public {
+        _refreshLastWorkTime();
     }
 
     function setMinimumBetweenExecutions(uint256 _time) public {

@@ -39,7 +39,7 @@ contract GelatoJobAdapterMock is GelatoJobAdapter {
         isPrepayd = _isPrepayd;
     }
 
-    function refreshExecutionTime() public {
-        _refreshExecutionTime();
+    function refreshLastWorkTime() public {
+        _refreshLastWorkTime();
     }
 }

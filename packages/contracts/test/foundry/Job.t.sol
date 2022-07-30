@@ -55,7 +55,7 @@ contract JobTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // _canWork is false + time is true before first work
@@ -66,8 +66,8 @@ contract JobTest is Test {
         assertTrue(job.canWork());
 
         // Set current block as last work time
-        job.refreshExecutionTime();
-        assertEq(job.lastExecutionTime(), initialTime);
+        job.refreshLastWorkTime();
+        assertEq(job.lastWorkTime(), initialTime);
         // _canWork is true + time not came
         assertFalse(job.canWork());
         
@@ -109,7 +109,7 @@ contract JobTest is Test {
         uint256 thirdCall = _thirdCall;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -130,7 +130,7 @@ contract JobTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastWorkTime(), initialTime);
 
         // Will try second call after some time
         vm.warp(initialTime + secondCall);
@@ -144,7 +144,7 @@ contract JobTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 2);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + secondCall);
+        assertEq(job.lastWorkTime(), initialTime + secondCall);
 
         // Will try third call after some time
         vm.warp(initialTime + secondCall + thirdCall);
@@ -159,7 +159,7 @@ contract JobTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 3);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + secondCall + thirdCall);
+        assertEq(job.lastWorkTime(), initialTime + secondCall + thirdCall);
     }
 
     function testCannotWorkfNotPassEnoughTimeFromStartOfBlockchain(uint96 _minTime) public {
@@ -169,7 +169,7 @@ contract JobTest is Test {
         uint256 minTime = _minTime;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -192,7 +192,7 @@ contract JobTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -214,14 +214,14 @@ contract JobTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
 
         // _canWork is true + time not came
         vm.warp(initialTime + time - 1);

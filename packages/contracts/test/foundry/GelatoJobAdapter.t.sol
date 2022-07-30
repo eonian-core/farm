@@ -55,7 +55,7 @@ contract GelatoJobAdapterTest is Test {
             _isPrepayd ? job.work.selector : job.payableWork.selector
         ));
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
         (bool canExec2, bytes memory execPayload2) = job.checker();
 
         // just executed job, not enough time pass anyway
@@ -81,7 +81,7 @@ contract GelatoJobAdapterTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // _canWork is false + time is true before first work
@@ -92,8 +92,8 @@ contract GelatoJobAdapterTest is Test {
         assertTrue(job.canWork());
 
         // Set current block as last work time
-        job.refreshExecutionTime();
-        assertEq(job.lastExecutionTime(), initialTime);
+        job.refreshLastWorkTime();
+        assertEq(job.lastWorkTime(), initialTime);
         // _canWork is true + time not came
         assertFalse(job.canWork());
         
@@ -135,7 +135,7 @@ contract GelatoJobAdapterTest is Test {
         uint256 thirdCall = _thirdCall;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -156,7 +156,7 @@ contract GelatoJobAdapterTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastWorkTime(), initialTime);
 
         // Will try second call after some time
         vm.warp(initialTime + secondCall);
@@ -170,7 +170,7 @@ contract GelatoJobAdapterTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 2);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + secondCall);
+        assertEq(job.lastWorkTime(), initialTime + secondCall);
 
         // Will try third call after some time
         vm.warp(initialTime + secondCall + thirdCall);
@@ -185,7 +185,7 @@ contract GelatoJobAdapterTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 3);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + secondCall + thirdCall);
+        assertEq(job.lastWorkTime(), initialTime + secondCall + thirdCall);
     }
 
     function testWorkHaveCheckForCanWork(uint96 _time) public {
@@ -195,7 +195,7 @@ contract GelatoJobAdapterTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -217,14 +217,14 @@ contract GelatoJobAdapterTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), 0);
+        assertEq(job.lastWorkTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
 
         // _canWork is true + time not came
         vm.warp(initialTime + time - 1);
@@ -247,10 +247,10 @@ contract GelatoJobAdapterTest is Test {
         (bool success, ) = address(job).call{ value: amount }("");
         require(success, "Native transfer failed");
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastWorkTime(), initialTime);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -278,7 +278,7 @@ contract GelatoJobAdapterTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + time + 1);
+        assertEq(job.lastWorkTime(), initialTime + time + 1);
         assertEq(postBalance, preBalance - amount);
         assertEq(alice.balance, alicePreBalance + amount);
     }
@@ -294,10 +294,10 @@ contract GelatoJobAdapterTest is Test {
         // set initial state
         token.mint(address(job), amount + 1);
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastWorkTime(), initialTime);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -324,7 +324,7 @@ contract GelatoJobAdapterTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + time + 1);
+        assertEq(job.lastWorkTime(), initialTime + time + 1);
         assertEq(postBalance, preBalance - amount);
         assertEq(token.balanceOf(alice), alicePreBalance + amount);
     }
@@ -342,10 +342,10 @@ contract GelatoJobAdapterTest is Test {
         (bool success, ) = address(job).call{ value: amount }("");
         require(success, "Native transfer failed");
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastWorkTime(), initialTime);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -379,10 +379,10 @@ contract GelatoJobAdapterTest is Test {
         (bool success, ) = address(job).call{ value: amount }("");
         require(success, "Native transfer failed");
 
-        job.refreshExecutionTime();
+        job.refreshLastWorkTime();
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastWorkTime(), initialTime);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
