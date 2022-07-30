@@ -46,7 +46,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
         __ReentrancyGuard_init();
 
         _setMinimumBetweenExecutions(_minimumBetweenExecutions);
-        refreshExecutionTime();
+        // Not will set lastExecutionTime to allow first work immediately after contract deploy
     }
 
     // ------------------------------------------ Public methods  ------------------------------------------
@@ -65,7 +65,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
 
         // refresh execution works like `nonReentrant` 
         // if we have `isTimePassFromLastExecution` inside `canWork`
-        refreshExecutionTime();
+        _refreshExecutionTime();
 
         _;
     }
@@ -97,11 +97,12 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @notice Time which pass from last exection
     /// @return seconds from last execution in a range of 900 seconds
     function timeFromLastExecution() public view returns (uint256) {
+        // lastExecutionTime will be zero before first execution
         return block.timestamp - lastExecutionTime;
     }
 
     /// @notice Set time of last execution to current block
-    function refreshExecutionTime() internal {
+    function _refreshExecutionTime() internal {
         lastExecutionTime = block.timestamp;
     }
 

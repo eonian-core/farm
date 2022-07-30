@@ -46,13 +46,32 @@ contract GelatoJobAdapterTest is Test {
         job.setCanWorkResult(_canWork);
         job.setIsPrepayd(_isPrepayd);
 
-        vm.warp(initialTime + time);
-        (bool canExec, bytes memory execPayload) = job.checker();
+        (bool canExec1, bytes memory execPayload1) = job.checker();
 
-        assertEq(canExec, time > 1001 && _canWork);
-        assertEq(execPayload, abi.encodeWithSelector(
+        // before first execution we have last execution time equal 0
+        // so anyway enough time is passed
+        assertEq(canExec1, _canWork);
+        assertEq(execPayload1, abi.encodeWithSelector(
             _isPrepayd ? job.work.selector : job.payableWork.selector
         ));
+
+        job.refreshExecutionTime();
+        (bool canExec2, bytes memory execPayload2) = job.checker();
+
+        // just executed job, not enough time pass anyway
+        assertEq(canExec2, false);
+        assertEq(execPayload2, abi.encodeWithSelector(
+            _isPrepayd ? job.work.selector : job.payableWork.selector
+        ));
+
+        vm.warp(initialTime + time);
+        (bool canExec3, bytes memory execPayload3) = job.checker();
+
+        assertEq(canExec3, time > 1001 && _canWork);
+        assertEq(execPayload3, abi.encodeWithSelector(
+            _isPrepayd ? job.work.selector : job.payableWork.selector
+        ));
+
     }
 
     function testCanWorkReturnTrueOnlyWhenTimeCame(uint96 _time) public {
@@ -62,14 +81,20 @@ contract GelatoJobAdapterTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastExecutionTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
-        // _canWork is false + time not came yet
+        // _canWork is false + time is true before first work
         assertFalse(job.canWork());
 
-        // _canWork is true + time not came yet
+        // _canWork is true + time is true before first work
         job.setCanWorkResult(true);
+        assertTrue(job.canWork());
+
+        // Set current block as last work time
+        job.refreshExecutionTime();
+        assertEq(job.lastExecutionTime(), initialTime);
+        // _canWork is true + time not came
         assertFalse(job.canWork());
         
         // _canWork is true + time came
@@ -98,28 +123,28 @@ contract GelatoJobAdapterTest is Test {
         assertTrue(job.canWork());
     }
 
-    function testWorkCallsRefreshTheTimeout(uint96 _minTime, uint96 _firstCall, uint96 _secondCall) public {
+    function testWorkCallsRefreshTheTimeout(uint96 _minTime, uint96 _secondCall, uint96 _thirdCall) public {
         vm.assume(_minTime > 1001);
-        vm.assume(_firstCall > _minTime);
-        vm.assume(_secondCall > _firstCall);
+        vm.assume(_minTime < block.timestamp);
+        vm.assume(_secondCall > _minTime);
+        vm.assume(_thirdCall > _minTime);
 
         // Prevent arifmetic errors
         uint256 minTime = _minTime;
-        uint256 firstCall = _firstCall;
         uint256 secondCall = _secondCall;
+        uint256 thirdCall = _thirdCall;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastExecutionTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
         job.setMinimumBetweenExecutions(minTime);
         job.setCanWorkResult(true);
         assertEq(job.minimumBetweenExecutions(), minTime);
+        assertEq(job.timeFromLastExecution(), block.timestamp);
 
-        // Will try first call after some time
-        vm.warp(initialTime + firstCall);
-
+        // Will try first call immidiatly after deploy
         assertTrue(job.canWork());
         assertEq(job.workMethodCalledCounter(), 0);
         
@@ -131,10 +156,24 @@ contract GelatoJobAdapterTest is Test {
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + firstCall);
+        assertEq(job.lastExecutionTime(), initialTime);
 
         // Will try second call after some time
-        vm.warp(initialTime + firstCall + secondCall);
+        vm.warp(initialTime + secondCall);
+        assertTrue(job.canWork());
+        
+        vm.expectEmit(true, true, true, true);
+        job.emitWorked(alice);
+        
+        vm.prank(alice);
+        job.work();
+
+        assertEq(job.workMethodCalledCounter(), 2);
+        assertFalse(job.canWork());
+        assertEq(job.lastExecutionTime(), initialTime + secondCall);
+
+        // Will try third call after some time
+        vm.warp(initialTime + secondCall + thirdCall);
 
         assertTrue(job.canWork());
 
@@ -144,9 +183,9 @@ contract GelatoJobAdapterTest is Test {
         vm.prank(bob);
         job.work();
 
-        assertEq(job.workMethodCalledCounter(), 2);
+        assertEq(job.workMethodCalledCounter(), 3);
         assertFalse(job.canWork());
-        assertEq(job.lastExecutionTime(), initialTime + firstCall + secondCall);
+        assertEq(job.lastExecutionTime(), initialTime + secondCall + thirdCall);
     }
 
     function testWorkHaveCheckForCanWork(uint96 _time) public {
@@ -156,7 +195,7 @@ contract GelatoJobAdapterTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastExecutionTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
@@ -178,14 +217,16 @@ contract GelatoJobAdapterTest is Test {
         uint256 time = _time;
 
         // Check we in correct state
-        assertEq(job.lastExecutionTime(), initialTime);
+        assertEq(job.lastExecutionTime(), 0);
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
 
-        // _canWork is true + time came
+        job.refreshExecutionTime();
+
+        // _canWork is true + time not came
         vm.warp(initialTime + time - 1);
         assertFalse(job.canWork());
 
@@ -205,6 +246,8 @@ contract GelatoJobAdapterTest is Test {
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
         (bool success, ) = address(job).call{ value: amount }("");
         require(success, "Native transfer failed");
+
+        job.refreshExecutionTime();
 
         // Check we in correct state
         assertEq(job.lastExecutionTime(), initialTime);
@@ -250,6 +293,8 @@ contract GelatoJobAdapterTest is Test {
 
         // set initial state
         token.mint(address(job), amount + 1);
+
+        job.refreshExecutionTime();
 
         // Check we in correct state
         assertEq(job.lastExecutionTime(), initialTime);
@@ -297,6 +342,8 @@ contract GelatoJobAdapterTest is Test {
         (bool success, ) = address(job).call{ value: amount }("");
         require(success, "Native transfer failed");
 
+        job.refreshExecutionTime();
+
         // Check we in correct state
         assertEq(job.lastExecutionTime(), initialTime);
         assertEq(job.minimumBetweenExecutions(), 1001);
@@ -331,6 +378,8 @@ contract GelatoJobAdapterTest is Test {
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
         (bool success, ) = address(job).call{ value: amount }("");
         require(success, "Native transfer failed");
+
+        job.refreshExecutionTime();
 
         // Check we in correct state
         assertEq(job.lastExecutionTime(), initialTime);
