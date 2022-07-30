@@ -14,13 +14,19 @@ The project comes with a sample contract, a test for that contract, a sample scr
 
 ### Commands
 
-Try running some of the following tasks:
+* `npx hardhat compile` - Compile contracts
+* `npx hardhat accounts` - List development accounts
+* `yarn test` - Run test
+* `yarn dev` - Run tests in watch mode
+* `npx hardhat test --trace` - shows logs + calls
+* `npx hardhat test --fulltrace` - shows logs + calls + sloads + sstores
+* `npx hardhat --network <networkName> deploy` - deploy contracts to specific network
+* `npx hardhat --network <networkName> deploy --gasprice <number>` - deploy contracts to specific network with gas price
+
+#### Rest of commands
 
 ```shell
-npx hardhat accounts
-npx hardhat compile
 npx hardhat clean
-npx hardhat test
 npx hardhat node
 npx hardhat help
 REPORT_GAS=true npx hardhat test
@@ -34,6 +40,16 @@ npx prettier '**/*.{json,sol,md}' --write
 npx solhint 'contracts/**/*.sol'
 npx solhint 'contracts/**/*.sol' --fix
 ```
+
+## Local Server
+
+For start local server with contracts (for example for dApp development) need start local node by command
+
+```bash
+yarn node
+```
+
+all scripts from `./deploy` folder will be executed during startup sequence
 
 ## Etherscan verification
 

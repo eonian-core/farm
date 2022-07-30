@@ -14,7 +14,7 @@ library BackCombatibleTransfer {
     address constant ETH = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     /// @notice Backcombatible transfer to given address, will use ERC20 transfer if given token is ERC20.
-    function backCombatibleTransfer(address payable to, address paymentToken, uint256 amount) public {
+    function backCombatibleTransfer(address payable to, address paymentToken, uint256 amount) internal {
         if (paymentToken == ETH) {
             safeNativeTransfer(to, amount);
             return;
@@ -24,7 +24,7 @@ library BackCombatibleTransfer {
     }
 
     /// @notice Native token transfer, which check `call` result.
-    function safeNativeTransfer(address payable to, uint256 amount) public {
+    function safeNativeTransfer(address payable to, uint256 amount) internal {
         // Not use `transfer` or `send` as they considered as bad praqctice after Istanbul hardfork.
         (bool success, ) = to.call{ value: amount }("");
         require(success, "Native transfer failed");
