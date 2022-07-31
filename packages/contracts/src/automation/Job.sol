@@ -80,7 +80,7 @@ abstract contract Job is
     /// @notice Important work which will be executed by keeper.
     /// @dev possible do not use `nonReentrant` modifier if we have isTimePassFromLastExecution check and refreshLastWorkTime at start
     ///  as it inside `onlyWhenCanWork` modifier.
-    ///  But do not will delete it as `canWork` can be overriden.
+    ///  But do not delete it, as `canWork` can be overridden.
     ///  Possible to optimize this at the end contact
     function work() public nonReentrant onlyWhenCanWork {
         _work();
@@ -92,7 +92,7 @@ abstract contract Job is
 
     /// @notice Set minimum time between executions.
     /// @param time - required time which must pass between executions of the job in seconds.
-    /// Set in hours to prevent block timestamp vularability
+    /// Set in hours to prevent block timestamp vulnerability
     function _setMinimumBetweenExecutions(uint256 time) internal {
         if (time <= 1000) {
             revert TimeMinimumBetweenExecutionsIncorrect(time);
@@ -101,7 +101,7 @@ abstract contract Job is
         minimumBetweenExecutions = time;
     }
 
-    /// @notice Time which pass from last exection
+    /// @notice Time that passed since the last exection
     /// @return seconds from last execution in a range of 900 seconds
     function timeFromLastExecution() public view returns (uint256) {
         // lastWorkTime will be zero before first execution

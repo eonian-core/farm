@@ -8,7 +8,7 @@ import {OpsReady} from "./gelato/OpsReady.sol";
 /// @notice Contract expect work will be prepayd, so it cannot pay for work
 error PayableWorkNotAllowed();
 
-/// @title Implementation of mixin which add support for Gelato (keepers operator)
+/// @title Implementation of the mixin that adds support for Gelato (keepers operator)
 abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
     /// @notice If job is preaped, then it not will try to pay on executed work.
     bool public isPrepaid;
@@ -28,7 +28,7 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
         _isPrepaid = isPrepaid;
     }
 
-    /// @notice Resolver checker which say if work can be performed and with which params.
+    /// @notice Resolver checker that says if the work can be performed and with what params.
     function checker()
         public
         view
@@ -43,7 +43,7 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
 
     /// @notice Bot will call this method when `checker` returns `true`.
     /// Will pay caller
-    /// `work` method stay as it is, to allow call id of-chain
+    /// `work` method stay as it is, to allow a call off-chain
     function payableWork() public onlyOps {
         if (isPrepaid) {
             revert PayableWorkNotAllowed();
