@@ -1,7 +1,8 @@
 import * as dotenv from "dotenv";
 
 import fs from "fs";
-import { HardhatUserConfig, task } from "hardhat/config";
+import { task } from "hardhat/config";
+import { HardhatUserConfig } from "hardhat/types/config";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
@@ -28,7 +29,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // You need to export an object to set up your config
 // Go to https://hardhat.org/config/ to learn more
 
-const config: HardhatUserConfig & { preprocess: any } = {
+const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
     ropsten: {
