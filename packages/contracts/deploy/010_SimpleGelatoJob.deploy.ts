@@ -2,15 +2,18 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 
 // Contracts constructor args
-const GelatoOpsContractAddress = '0x0000000000000000000000000000000000000000';
+// Etherium Mainned
+const GelatoOpsContractAddress = '0xB3f5503f93d5Ef84b06993a1975B9D21B962892F';
 const MinimumTimeBetweenExecutions = 1001; // seconds
 const IsPrepayd = false;
 
+// More contract addresses at https://docs.gelato.network/developer-products/gelato-ops-smart-contract-automation-hub/contract-addresses
+
 const func: DeployFunction = async function ({
   getNamedAccounts,
-  deployments: {deploy},
+  deployments: { deploy },
 }: HardhatRuntimeEnvironment) {
-  
+
   const { deployer } = await getNamedAccounts();
 
 
