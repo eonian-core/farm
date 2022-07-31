@@ -41,3 +41,14 @@ $ yarn start
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
+
+
+## TODO
+
+[x] Add event tests for ERC4626
+[] add solhint in CI process
+[] add test coverage in CI process
+[] add more security validators in CI process
+[] add optimizations in compilation process
+[] add foundry to hardhat remappings support
+[] silent warning for unused arguments in SafeERC4626 contract
