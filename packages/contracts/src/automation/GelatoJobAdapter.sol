@@ -18,7 +18,7 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[41] private __gap;
+    uint256[50] private __gap;
 
     /**
      * @notice Constructor of Job adapter contract.
