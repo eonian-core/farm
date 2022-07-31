@@ -4,15 +4,18 @@ pragma solidity >=0.8.0;
 import "contracts/automation/GelatoJobAdapter.sol";
 
 contract GelatoJobAdapterMock is GelatoJobAdapter {
-
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;
 
     // allow sending eth to the test contract
     receive() external payable {}
 
-    function __GelatoJobAdapterMock_init(address _ops, uint256 _minimumBetweenExecutions, bool _isPrepayd) public initializer {
-        __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepayd);
+    function __GelatoJobAdapterMock_init(
+        address _ops,
+        uint256 _minimumBetweenExecutions,
+        bool _isPrepaid
+    ) public initializer {
+        __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepaid);
     }
 
     function _work() internal override {
@@ -35,8 +38,8 @@ contract GelatoJobAdapterMock is GelatoJobAdapter {
         emit Worked(worker);
     }
 
-    function setIsPrepayd(bool _isPrepayd) public {
-        isPrepayd = _isPrepayd;
+    function setisPrepaid(bool _isPrepaid) public {
+        isPrepaid = _isPrepaid;
     }
 
     function refreshLastWorkTime() public {

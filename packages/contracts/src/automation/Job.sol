@@ -8,29 +8,32 @@ import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/Cont
 import "forge-std/console.sol";
 
 /// Someone tried to execute work function while `canWork` is `false`
-error CannotWorkNow(); 
+error CannotWorkNow();
 
 /// Given time minimum between execution must be greater then 1000
 error TimeMinimumBetweenExecutionsIncorrect(uint256 _givenTime);
 
-/// @title Abstract contract by implementation of which 
+/// @title Abstract contract by implementation of which
 ///  possible to make child contract support of one of keeper providers.
-/// @notice This contract is only define interface, 
+/// @notice This contract is only define interface,
 ///  for add support of specific provider need add specific mixin contract.
-abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgradeable {
-
+abstract contract Job is
+    Initializable,
+    ContextUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     /// Job work function was executed by worker bot
     event Worked(address indexed worker);
 
     /// @notice Timestamp of last work execution block in seconds.
-    /// @dev Logic of checking and manupulating execution must be only in this contract (not in child) 
+    /// @dev Logic of checking and manupulating execution must be only in this contract (not in child)
     ///  to control timestamp dependce vularability.
     /// Important: Expect all timestamp can be adgasted by miners.
     /// More info at: https://www.getsecureworld.com/blog/what-is-timestamp-dependence-vulnerability/
     uint256 public lastWorkTime;
 
     /// @notice Mininmal time which must pass between executions of the job in seconds.
-    /// Better set hours, but at least set to greater then 900 seconds, 
+    /// Better set hours, but at least set to greater then 900 seconds,
     /// node opperators able to manipulate timestamp in 900 seconds range, on some blockchains maybe bigger.
     uint256 public minimumBetweenExecutions;
 
@@ -38,10 +41,13 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
 
     /**
      * @notice Constructor of Job contract.
-     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds. 
+     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
      *  Set in hours to prevent block timestamp vularability
      */
-    function __Job_init(uint256 _minimumBetweenExecutions) internal onlyInitializing {
+    function __Job_init(uint256 _minimumBetweenExecutions)
+        internal
+        onlyInitializing
+    {
         __Context_init();
         __ReentrancyGuard_init();
 
@@ -54,16 +60,17 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @notice If work can be executed by keeper at this moment returns true
     /// @dev Will be executed by keeper and before `work` method execution.
     function canWork() public view returns (bool) {
-        return isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
+        return
+            isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
     }
 
     /// @notice allow execution only if `canWork` return true
-    modifier onlyWhenCanWork() { 
-        if(!canWork()){
+    modifier onlyWhenCanWork() {
+        if (!canWork()) {
             revert CannotWorkNow();
         }
 
-        // refresh execution works like `nonReentrant` 
+        // refresh execution works like `nonReentrant`
         // if we have `isTimePassFromLastExecution` inside `canWork`
         _refreshLastWorkTime();
 
@@ -87,7 +94,7 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @param time - required time which must pass between executions of the job in seconds.
     /// Set in hours to prevent block timestamp vularability
     function _setMinimumBetweenExecutions(uint256 time) internal {
-        if(time <= 1000){
+        if (time <= 1000) {
             revert TimeMinimumBetweenExecutionsIncorrect(time);
         }
 
@@ -107,9 +114,13 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     }
 
     /// @notice Check if given time from last execution is passed
-    /// @param second - amount of time which mast pass from last execution 
+    /// @param second - amount of time which mast pass from last execution
     /// @return true if enough time pass
-    function isTimePassFromLastExecution(uint256 second) internal view returns (bool){
+    function isTimePassFromLastExecution(uint256 second)
+        internal
+        view
+        returns (bool)
+    {
         return timeFromLastExecution() > second;
     }
 
@@ -121,6 +132,5 @@ abstract contract Job is Initializable, ContextUpgradeable, ReentrancyGuardUpgra
     /// @notice Method which identify if work can be executed at this moment.
     /// @dev Will be executed by keeper and before `work` method execution.
     /// @return true if `work` method can be called.
-    function _canWork() internal virtual view returns (bool);
-
+    function _canWork() internal view virtual returns (bool);
 }

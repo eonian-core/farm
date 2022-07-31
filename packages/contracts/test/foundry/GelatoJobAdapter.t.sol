@@ -7,13 +7,12 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 
 import {GelatoJobAdapterMock} from "./mocks/GelatoJobAdapterMock.sol";
 import {TimeMinimumBetweenExecutionsIncorrect, Job, CannotWorkNow} from "contracts/automation/Job.sol";
-import {GelatoJobAdapter, PaybleWorkNotAllowed} from "contracts/automation/GelatoJobAdapter.sol";
+import {GelatoJobAdapter, PayableWorkNotAllowed} from "contracts/automation/GelatoJobAdapter.sol";
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
 import {BackCombatibleTransfer} from "contracts/automation/gelato/BackCombatibleTransfer.sol";
 import {OpsMock} from "./mocks/OpsMock.sol";
 
 contract GelatoJobAdapterTest is Test {
-
     GelatoJobAdapterMock job;
     ERC20Mock token;
     OpsMock ops;
@@ -41,37 +40,48 @@ contract GelatoJobAdapterTest is Test {
         vm.label(bob, "bob");
     }
 
-    function testChecker(uint96 time, bool _canWork, bool _isPrepayd) public {
-
+    function testChecker(
+        uint96 time,
+        bool _canWork,
+        bool _isPrepaid
+    ) public {
         job.setCanWorkResult(_canWork);
-        job.setIsPrepayd(_isPrepayd);
+        job.setisPrepaid(_isPrepaid);
 
         (bool canExec1, bytes memory execPayload1) = job.checker();
 
         // before first execution we have last execution time equal 0
         // so anyway enough time is passed
         assertEq(canExec1, _canWork);
-        assertEq(execPayload1, abi.encodeWithSelector(
-            _isPrepayd ? job.work.selector : job.payableWork.selector
-        ));
+        assertEq(
+            execPayload1,
+            abi.encodeWithSelector(
+                _isPrepaid ? job.work.selector : job.payableWork.selector
+            )
+        );
 
         job.refreshLastWorkTime();
         (bool canExec2, bytes memory execPayload2) = job.checker();
 
         // just executed job, not enough time pass anyway
         assertEq(canExec2, false);
-        assertEq(execPayload2, abi.encodeWithSelector(
-            _isPrepayd ? job.work.selector : job.payableWork.selector
-        ));
+        assertEq(
+            execPayload2,
+            abi.encodeWithSelector(
+                _isPrepaid ? job.work.selector : job.payableWork.selector
+            )
+        );
 
         vm.warp(initialTime + time);
         (bool canExec3, bytes memory execPayload3) = job.checker();
 
         assertEq(canExec3, time > 1001 && _canWork);
-        assertEq(execPayload3, abi.encodeWithSelector(
-            _isPrepayd ? job.work.selector : job.payableWork.selector
-        ));
-
+        assertEq(
+            execPayload3,
+            abi.encodeWithSelector(
+                _isPrepaid ? job.work.selector : job.payableWork.selector
+            )
+        );
     }
 
     function testCanWorkReturnTrueOnlyWhenTimeCame(uint96 _time) public {
@@ -96,7 +106,7 @@ contract GelatoJobAdapterTest is Test {
         assertEq(job.lastWorkTime(), initialTime);
         // _canWork is true + time not came
         assertFalse(job.canWork());
-        
+
         // _canWork is true + time came
         vm.warp(initialTime + time);
         assertTrue(job.canWork());
@@ -123,7 +133,11 @@ contract GelatoJobAdapterTest is Test {
         assertTrue(job.canWork());
     }
 
-    function testWorkCallsRefreshTheTimeout(uint96 _minTime, uint96 _secondCall, uint96 _thirdCall) public {
+    function testWorkCallsRefreshTheTimeout(
+        uint96 _minTime,
+        uint96 _secondCall,
+        uint96 _thirdCall
+    ) public {
         vm.assume(_minTime > 1001);
         vm.assume(_minTime < block.timestamp);
         vm.assume(_secondCall > _minTime);
@@ -147,10 +161,10 @@ contract GelatoJobAdapterTest is Test {
         // Will try first call immidiatly after deploy
         assertTrue(job.canWork());
         assertEq(job.workMethodCalledCounter(), 0);
-        
+
         vm.expectEmit(true, true, true, true);
         job.emitWorked(alice);
-        
+
         vm.prank(alice);
         job.work();
 
@@ -161,10 +175,10 @@ contract GelatoJobAdapterTest is Test {
         // Will try second call after some time
         vm.warp(initialTime + secondCall);
         assertTrue(job.canWork());
-        
+
         vm.expectEmit(true, true, true, true);
         job.emitWorked(alice);
-        
+
         vm.prank(alice);
         job.work();
 
@@ -244,7 +258,7 @@ contract GelatoJobAdapterTest is Test {
 
         // set initial state
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
-        (bool success, ) = address(job).call{ value: amount }("");
+        (bool success, ) = address(job).call{value: amount}("");
         require(success, "Native transfer failed");
 
         job.refreshLastWorkTime();
@@ -256,25 +270,25 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(false);
+        job.setisPrepaid(false);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
 
         assertTrue(job.canWork());
-        assertFalse(job.isPrepayd());
+        assertFalse(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 
-        uint preBalance = address(job).balance;
-        uint alicePreBalance = alice.balance;
+        uint256 preBalance = address(job).balance;
+        uint256 alicePreBalance = alice.balance;
 
         vm.expectEmit(true, true, true, true);
         job.emitWorked(address(ops));
-        
+
         vm.prank(address(ops));
         job.payableWork();
 
-        uint postBalance = address(job).balance;
+        uint256 postBalance = address(job).balance;
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
@@ -303,7 +317,7 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(false);
+        job.setisPrepaid(false);
         ops.setFeeDetails(amount, address(token));
 
         vm.warp(initialTime + time + 1);
@@ -311,16 +325,16 @@ contract GelatoJobAdapterTest is Test {
         assertTrue(job.canWork());
         assertEq(job.workMethodCalledCounter(), 0);
 
-        uint preBalance = token.balanceOf(address(job));
-        uint alicePreBalance = token.balanceOf(alice);
+        uint256 preBalance = token.balanceOf(address(job));
+        uint256 alicePreBalance = token.balanceOf(alice);
 
         vm.expectEmit(true, true, true, true);
         job.emitWorked(address(ops));
-        
+
         vm.prank(address(ops));
         job.payableWork();
-        
-        uint postBalance = token.balanceOf(address(job));
+
+        uint256 postBalance = token.balanceOf(address(job));
 
         assertEq(job.workMethodCalledCounter(), 1);
         assertFalse(job.canWork());
@@ -329,7 +343,10 @@ contract GelatoJobAdapterTest is Test {
         assertEq(token.balanceOf(alice), alicePreBalance + amount);
     }
 
-    function testPaybleWorkNotAllowedWhenIsPrepaid(uint96 _time, uint96 _amount) public {
+    function testPayableWorkNotAllowedWhenIsPrepaid(
+        uint96 _time,
+        uint96 _amount
+    ) public {
         vm.assume(_time > 1001);
         vm.assume(_amount > 0);
 
@@ -339,7 +356,7 @@ contract GelatoJobAdapterTest is Test {
 
         // set initial state
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
-        (bool success, ) = address(job).call{ value: amount }("");
+        (bool success, ) = address(job).call{value: amount}("");
         require(success, "Native transfer failed");
 
         job.refreshLastWorkTime();
@@ -351,17 +368,17 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(true);
+        job.setisPrepaid(true);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
 
         assertTrue(job.canWork());
-        assertTrue(job.isPrepayd());
+        assertTrue(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 
-        vm.expectRevert(PaybleWorkNotAllowed.selector);
-        
+        vm.expectRevert(PayableWorkNotAllowed.selector);
+
         vm.prank(address(ops));
         job.payableWork();
     }
@@ -376,7 +393,7 @@ contract GelatoJobAdapterTest is Test {
 
         // set initial state
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
-        (bool success, ) = address(job).call{ value: amount }("");
+        (bool success, ) = address(job).call{value: amount}("");
         require(success, "Native transfer failed");
 
         job.refreshLastWorkTime();
@@ -388,16 +405,15 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(false);
+        job.setisPrepaid(false);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
 
         assertTrue(job.canWork());
-        assertFalse(job.isPrepayd());
+        assertFalse(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 
         job.payableWork();
     }
-
 }
