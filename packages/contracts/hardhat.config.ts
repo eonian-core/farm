@@ -91,7 +91,7 @@ const config: HardhatUserConfig & { preprocess: any } = {
           const importPartsRegExp = /(.+)"(.+)"/g;
           const [, prefix, path] = importPartsRegExp.exec(line) ?? [];
           for (const [find, replace] of remappings) {
-            if (!path.startsWith(find)) {
+            if (!path || !path.startsWith(find)) {
               continue;
             }
             line = `${prefix} "${replace + path.slice(find.length)}";`;
