@@ -5,6 +5,6 @@ import "./lending/ILender.sol";
 
 interface IVault is ILender {
     /// @notice Returns the current version of this vault contract
-    /// @return a verstion in semantic versioning format
+    /// @return a version in semantic versioning format
     function version() external pure returns (string memory);
 }
