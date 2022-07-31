@@ -53,6 +53,7 @@ const config: HardhatUserConfig & { preprocess: any } = {
   preprocess: {
     eachLine: () => ({
       transform: (line: string) => {
+        // Import preprocessing to add support forge libraries for hardhat
         if (line.match(/^\s*import /i)) {
           const remappings = getRemappings();
           const importPartsRegExp = /(.+)"(.+)"/g;
