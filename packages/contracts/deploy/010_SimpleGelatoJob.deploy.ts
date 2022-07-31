@@ -3,9 +3,9 @@ import { DeployFunction } from "hardhat-deploy/types";
 
 // Contracts constructor args
 // Etherium Mainned
-// const GelatoOpsContractAddress = '0xB3f5503f93d5Ef84b06993a1975B9D21B962892F';
+const GelatoOpsContractAddress = '0xB3f5503f93d5Ef84b06993a1975B9D21B962892F';
 // Etherium Ropsten Testnet
-const GelatoOpsContractAddress = '0x9C4771560d84222fD8B7d9f15C59193388cC81B3';
+// const GelatoOpsContractAddress = '0x9C4771560d84222fD8B7d9f15C59193388cC81B3';
 const MinimumTimeBetweenExecutions = 1001; // seconds
 const IsPrepayd = false;
 

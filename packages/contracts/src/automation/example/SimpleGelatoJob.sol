@@ -14,9 +14,9 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
     function initialize(
         address _ops,
         uint256 _minimumBetweenExecutions,
-        bool _isPrepayd
+        bool _isPrepaid
     ) public initializer {
-        __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepayd);
+        __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepaid);
 
         __Ownable_init();
     }
@@ -37,8 +37,8 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
         _setMinimumBetweenExecutions(_time);
     }
 
-    function setIsPrepayd(bool _isPrepayd) public onlyOwner {
-        isPrepayd = _isPrepayd;
+    function setIsPrepaid(bool _isPrepaid) public onlyOwner {
+        isPrepaid = _isPrepaid;
     }
 
     function allowWorkNow() public onlyOwner {

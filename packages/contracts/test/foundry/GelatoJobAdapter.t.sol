@@ -7,7 +7,7 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 
 import {SimpleGelatoJob} from "contracts/automation/example/SimpleGelatoJob.sol";
 import {TimeMinimumBetweenExecutionsIncorrect, Job, CannotWorkNow} from "contracts/automation/Job.sol";
-import {GelatoJobAdapter, PaybleWorkNotAllowed} from "contracts/automation/GelatoJobAdapter.sol";
+import {GelatoJobAdapter, PayableWorkNotAllowed} from "contracts/automation/GelatoJobAdapter.sol";
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
 import {BackCombatibleTransfer} from "contracts/automation/gelato/BackCombatibleTransfer.sol";
 import {OpsMock} from "./mocks/OpsMock.sol";
@@ -43,10 +43,10 @@ contract GelatoJobAdapterTest is Test {
     function testChecker(
         uint96 time,
         bool _canWork,
-        bool _isPrepayd
+        bool _isPrepaid
     ) public {
         job.setCanWorkResult(_canWork);
-        job.setIsPrepayd(_isPrepayd);
+        job.setIsPrepaid(_isPrepaid);
 
         (bool canExec1, bytes memory execPayload1) = job.checker();
 
@@ -56,7 +56,7 @@ contract GelatoJobAdapterTest is Test {
         assertEq(
             execPayload1,
             abi.encodeWithSelector(
-                _isPrepayd ? job.work.selector : job.payableWork.selector
+                _isPrepaid ? job.work.selector : job.payableWork.selector
             )
         );
 
@@ -68,7 +68,7 @@ contract GelatoJobAdapterTest is Test {
         assertEq(
             execPayload2,
             abi.encodeWithSelector(
-                _isPrepayd ? job.work.selector : job.payableWork.selector
+                _isPrepaid ? job.work.selector : job.payableWork.selector
             )
         );
 
@@ -79,7 +79,7 @@ contract GelatoJobAdapterTest is Test {
         assertEq(
             execPayload3,
             abi.encodeWithSelector(
-                _isPrepayd ? job.work.selector : job.payableWork.selector
+                _isPrepaid ? job.work.selector : job.payableWork.selector
             )
         );
     }
@@ -270,13 +270,13 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(false);
+        job.setIsPrepaid(false);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
 
         assertTrue(job.canWork());
-        assertFalse(job.isPrepayd());
+        assertFalse(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 
         uint256 preBalance = address(job).balance;
@@ -317,7 +317,7 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(false);
+        job.setIsPrepaid(false);
         ops.setFeeDetails(amount, address(token));
 
         vm.warp(initialTime + time + 1);
@@ -343,9 +343,10 @@ contract GelatoJobAdapterTest is Test {
         assertEq(token.balanceOf(alice), alicePreBalance + amount);
     }
 
-    function testPaybleWorkNotAllowedWhenIsPrepaid(uint96 _time, uint96 _amount)
-        public
-    {
+    function testPayableWorkNotAllowedWhenIsPrepaid(
+        uint96 _time,
+        uint96 _amount
+    ) public {
         vm.assume(_time > 1001);
         vm.assume(_amount > 0);
 
@@ -367,16 +368,15 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(true);
+        job.setIsPrepaid(true);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
 
         assertTrue(job.canWork());
-        assertTrue(job.isPrepayd());
+        assertTrue(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
-
-        vm.expectRevert(PaybleWorkNotAllowed.selector);
+        vm.expectRevert(PayableWorkNotAllowed.selector);
 
         vm.prank(address(ops));
         job.payableWork();
@@ -404,13 +404,13 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setIsPrepayd(false);
+        job.setIsPrepaid(false);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
 
         assertTrue(job.canWork());
-        assertFalse(job.isPrepayd());
+        assertFalse(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 
         job.payableWork();
