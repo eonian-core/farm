@@ -37,6 +37,13 @@ abstract contract Job is
     /// node opperators able to manipulate timestamp in 900 seconds range, on some blockchains maybe bigger.
     uint256 public minimumBetweenExecutions;
 
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[41] private __gap;
+
     // ------------------------------------------ Constructors ------------------------------------------
 
     /**
@@ -51,6 +58,18 @@ abstract contract Job is
         __Context_init();
         __ReentrancyGuard_init();
 
+        __Job_init_unchained(_minimumBetweenExecutions);
+    }
+
+    /**
+     * @notice Unchained constructor of Job contract without rest of the contracts init
+     * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+     *  Set in hours to prevent block timestamp vularability
+     */
+    function __Job_init_unchained(uint256 _minimumBetweenExecutions)
+        internal
+        onlyInitializing
+    {
         _setMinimumBetweenExecutions(_minimumBetweenExecutions);
         // Not will set lastWorkTime to allow first work immediately after contract deploy
     }

@@ -10,12 +10,21 @@ error PayableWorkNotAllowed();
 
 /// @title Implementation of the mixin that adds support for Gelato (keepers operator)
 abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
-    /// @notice If job is preaped, then it not will try to pay on executed work.
+    /// @notice If job is prepaid, then it not will try to pay on executed work.
     bool public isPrepaid;
 
     /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[41] private __gap;
+
+    /**
      * @notice Constructor of Job adapter contract.
+     * @param _ops - address of the Ops contract.
      * @param _minimumBetweenExecutions - required time which must pass between executions of the job in seconds.
+     * @param _isPrepaid - If job is prepaid, then it not will try to pay on executed work
      */
     function __GelatoJobAdapter_init(
         address _ops,
@@ -25,7 +34,18 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
         __OpsReady_init(_ops);
         __Job_init(_minimumBetweenExecutions);
 
-        _isPrepaid = isPrepaid;
+        __GelatoJobAdapter_init_unchained(_isPrepaid);
+    }
+
+    /**
+     * @notice Unchained constructor of Job adapter contract without rest of the contracts init
+     * @param _isPrepaid - If job is prepaid, then it not will try to pay on executed work
+     */
+    function __GelatoJobAdapter_init_unchained(bool _isPrepaid)
+        internal
+        onlyInitializing
+    {
+        isPrepaid = _isPrepaid;
     }
 
     /// @notice Resolver checker that says if the work can be performed and with what params.
