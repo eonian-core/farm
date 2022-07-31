@@ -140,4 +140,13 @@ contract LenderMock is Lender {
     function _freeAssets() internal view override returns (uint256) {
         return balance;
     }
+
+    function _chargeFees(uint256 extraFreeFunds)
+        internal
+        pure
+        override
+        returns (uint256)
+    {
+        return extraFreeFunds;
+    }
 }

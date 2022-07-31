@@ -329,7 +329,7 @@ contract LenderTest is Test {
 
         // "Give" some amount of funds to the lender
         lenderMock.setBalance(balance);
-        assertEq(lenderMock.totalAssets(), balance);
+        assertEq(lenderMock.lendingAssets(), balance);
 
         // Register a new borrower
         lenderMock.addBorrower(borrowerA, borrowerRatio);
@@ -698,7 +698,7 @@ contract LenderTest is Test {
     ) private {
         // "Give" some amount of funds to the lender
         lenderMock.setBalance(balance);
-        assertEq(lenderMock.totalAssets(), balance);
+        assertEq(lenderMock.lendingAssets(), balance);
 
         // Register a new borrower
         lenderMock.addBorrower(borrower, borrowerRatio);
