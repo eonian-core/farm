@@ -24,7 +24,9 @@
       "**/typechain",
       "**/typechain/**",
       "**/@typechain",
-      "**/@typechain/**"
+      "**/@typechain/**",
+      "**/@openzeppelin",
+      "**/@openzeppelin/**"
     ]
   },
   "devDependencies": {

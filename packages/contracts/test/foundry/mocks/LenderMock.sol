@@ -89,6 +89,12 @@ contract LenderMock is Lender {
         totalDebt = debt;
     }
 
+    function setBorrowerDebtRatio(address borrower, uint256 debtRatio)
+        external
+    {
+        _setBorrowerDebtRatio(borrower, debtRatio);
+    }
+
     function decreaseBorrowerCredibility(address borrower, uint256 loss)
         external
     {
