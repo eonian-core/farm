@@ -44,4 +44,13 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
     function allowWorkNow() public onlyOwner {
         lastWorkTime = 0;
     }
+
+    function refreshLastWorkTime() public onlyOwner {
+        _refreshLastWorkTime();
+    }
+
+    // for tests only
+    function emitWorked(address worker) public onlyOwner {
+        emit Worked(worker);
+    }
 }
