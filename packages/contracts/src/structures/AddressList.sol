@@ -20,11 +20,11 @@ library AddressList {
         returns (bool)
     {
         bool addressFound;
-        for (uint256 i = 0; i < list.length - 1; i++) {
+        for (uint256 i = 0; i < list.length; i++) {
             if (list[i] == addr) {
                 addressFound = true;
             }
-            if (addressFound) {
+            if (addressFound && i < list.length - 1) {
                 list[i] = list[i + 1];
             }
         }
@@ -50,9 +50,11 @@ library AddressList {
         for (uint256 i = 0; i < length; i++) {
             address existingAddress = list[i];
             for (uint256 j = 0; j < length; j++) {
-                if (existingAddress == list[j]) {
+                // Address is found, move to the next item
+                if (existingAddress == reoderedList[j]) {
                     break;
                 }
+                // If this is the last iteration, then the address is not found
                 if (j == length - 1) {
                     revert ListsDoNotMatch();
                 }
