@@ -100,17 +100,13 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     /// @inheritdoc ERC4626Upgradeable
     function beforeWithdraw(uint256 assets, uint256 shares) internal override {
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
-        if (_assetVaultBalance() >= assets) {
+        if (_freeAssets() >= assets) {
             return;
         }
 
         for (uint256 i = 0; i < withdrawalQueue.length; i++) {
             // If the vault already has the required amount of funds, we need to finish the withdrawal
-            uint256 vaultBalance = _assetVaultBalance();
-            if (assets <= vaultBalance) {
-                break;
-            }
-
+            uint256 vaultBalance = _freeAssets();
             address strategy = withdrawalQueue[i];
 
             // We can only withdraw the amount that the strategy has as debt,
@@ -135,7 +131,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         }
 
         // Revert if insufficient assets remain in the vault after withdrawal from all strategies
-        if (_assetVaultBalance() < assets) {
+        if (_freeAssets() < assets) {
             revert InsufficientVaultBalance(assets, shares);
         }
     }
@@ -275,10 +271,5 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         override
     {
         asset.safeTransferFrom(borrower, address(this), amount);
-    }
-
-    /// @notice Returns the vault balance of the underlying tokens
-    function _assetVaultBalance() private view returns (uint256) {
-        return asset.balanceOf(address(this));
     }
 }
