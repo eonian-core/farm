@@ -19,6 +19,14 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     using FixedPointMathLib for uint256;
 
     /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
+    /**
+     * Constructor for the SafeERC4626Upgradeable contract
      * @param _asset which will be stored in this Vault
      * @dev `defaultOperators` may be an empty array.
      */
@@ -29,6 +37,17 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         address[] memory defaultOperators_
     ) internal onlyInitializing {
         __ERC4626_init(_asset, name_, symbol_, defaultOperators_);
+    }
+
+    /**
+     * Unchained constructor for the SafeERC4626Upgradeable contract, without parents contracts init
+     * @param _asset which will be stored in this Vault
+     */
+    function __SafeERC4626Upgradeable_init_unchained(IERC20Upgradeable _asset)
+        internal
+        onlyInitializing
+    {
+        __ERC4626_init_unchained(_asset);
     }
 
     /// @notice Mints the Vault shares for msg.sender, according to the number of deposited base tokens.
@@ -145,23 +164,19 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     /* //////////////////// Backwards compatible methods ////////////////////////// */
 
     /// @inheritdoc ERC4626Upgradeable
-    function deposit(uint256 assets, address receiver)
-        public
-        virtual
-        override
-        returns (uint256 shares)
-    {
+    function deposit(
+        uint256 assets,
+        address /* receiver */
+    ) public virtual override returns (uint256 shares) {
         // nonReentrant under the hood
         return deposit(assets);
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function mint(uint256 shares, address receiver)
-        public
-        virtual
-        override
-        returns (uint256 assets)
-    {
+    function mint(
+        uint256 shares,
+        address /* receiver */
+    ) public virtual override returns (uint256 assets) {
         // nonReentrant under the hood
         return mint(shares);
     }
@@ -169,8 +184,8 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     /// @inheritdoc ERC4626Upgradeable
     function withdraw(
         uint256 assets,
-        address receiver,
-        address owner
+        address, /* receiver */
+        address /* owner */
     ) public virtual override returns (uint256 shares) {
         // nonReentrant under the hood
         return withdraw(assets);
@@ -179,8 +194,8 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     /// @inheritdoc ERC4626Upgradeable
     function redeem(
         uint256 shares,
-        address receiver,
-        address owner
+        address, /* receiver */
+        address /* owner */
     ) public virtual override returns (uint256 assets) {
         // nonReentrant under the hood
         return redeem(shares);

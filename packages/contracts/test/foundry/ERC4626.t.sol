@@ -24,6 +24,10 @@ contract ERC4626Test is Test {
         alice = address(0xAAAA);
         bob = address(0xBBBB);
         carl = address(0xCCCC);
+
+        vm.label(alice, "alice");
+        vm.label(bob, "bob");
+        vm.label(carl, "carl");
     }
 
     function invariantMetadata() public {
@@ -60,6 +64,9 @@ contract ERC4626Test is Test {
         uint256 expectedShares = vault.previewDeposit(depositAmount);
         assertEq(vault.convertToShares(depositAmount), expectedShares);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, depositAmount, expectedShares);
+
         // Alise deposit money
         vm.prank(alice);
         uint256 aliceShareAmount = vault.deposit(depositAmount, alice);
@@ -82,6 +89,9 @@ contract ERC4626Test is Test {
         assertEq(underlying.balanceOf(address(vault)), depositAmount);
 
         uint256 expectedWithdrawShares = vault.previewWithdraw(depositAmount);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(alice, alice, alice, depositAmount, expectedWithdrawShares);
 
         // Alise withdraw money
         vm.prank(alice);
@@ -121,6 +131,9 @@ contract ERC4626Test is Test {
         uint256 expectedUnderlying = vault.previewMint(shareAmount);
         assertEq(vault.convertToAssets(shareAmount), expectedUnderlying);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, expectedUnderlying, shareAmount);
+
         // Alice mint shares in exchange to money
         vm.prank(alice);
         uint256 aliceUnderlyingAmount = vault.mint(shareAmount, alice);
@@ -143,6 +156,9 @@ contract ERC4626Test is Test {
         assertEq(underlying.balanceOf(address(vault)), aliceUnderlyingAmount);
 
         uint256 expectedRedeemUnderlying = vault.previewRedeem(shareAmount);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(alice, alice, alice, expectedRedeemUnderlying, shareAmount);
 
         // Alice redeem shares to recive money
         vm.prank(alice);
@@ -235,6 +251,10 @@ contract ERC4626Test is Test {
 
         // 1. Alice mints 2000 shares (costs 2000 tokens)
         uint256 aliceExpectedUnderlyingAmount = vault.previewMint(2000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, aliceExpectedUnderlyingAmount, 2000);
+
         vm.prank(alice);
         uint256 aliceUnderlyingAmount = vault.mint(2000, alice);
 
@@ -260,6 +280,10 @@ contract ERC4626Test is Test {
 
         // 2. Bob deposits 4000 tokens (mints 4000 shares)
         uint256 bobExpectedUnderlyingAmount = vault.previewDeposit(4000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(bob, bob, 4000, bobExpectedUnderlyingAmount);
+
         vm.prank(bob);
         uint256 bobShareAmount = vault.deposit(4000, bob);
         uint256 bobUnderlyingAmount = vault.previewWithdraw(bobShareAmount);
@@ -327,6 +351,10 @@ contract ERC4626Test is Test {
 
         // 4. Alice deposits 2000 tokens (mints 1333 shares)
         uint256 aliceExpectedSharesAmount = vault.previewDeposit(2000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, 2000, aliceExpectedSharesAmount);
+
         vm.prank(alice);
         uint256 aliceDepositedShares = vault.deposit(2000, alice);
 
@@ -359,6 +387,10 @@ contract ERC4626Test is Test {
         // NOTE: Bob's assets spent got rounded up
         // NOTE: Alices's vault assets got rounded up
         bobExpectedUnderlyingAmount = vault.previewMint(2000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(bob, bob, bobExpectedUnderlyingAmount, 2000);
+
         vm.prank(bob);
         uint256 bobMintedUnderlyingAmount = vault.mint(2000, bob);
 
@@ -410,6 +442,10 @@ contract ERC4626Test is Test {
 
         // 7. Alice redeem 1333 shares (2428 assets)
         uint256 aliceExpectedRedeemUnderlying = vault.previewRedeem(1333);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(alice, alice, alice, aliceExpectedRedeemUnderlying, 1333);
+
         vm.prank(alice);
         uint256 aliceRedeemUnderlyting = vault.redeem(1333, alice, alice);
 
@@ -435,6 +471,10 @@ contract ERC4626Test is Test {
 
         // 8. Bob withdraws 2929 assets (1608 shares)
         uint256 bobExpectedWithdrawShares = vault.previewWithdraw(2929);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(bob, bob, bob, 2929, bobExpectedWithdrawShares);
+
         vm.prank(bob);
         uint256 bobWithdrawShares = vault.withdraw(2929, bob, bob);
 
@@ -459,6 +499,10 @@ contract ERC4626Test is Test {
         // 9. Alice withdraws 3643 assets (2000 shares)
         // NOTE: Bob's assets have been rounded back up
         uint256 aliceExpectedWithdrawShares = vault.previewWithdraw(3643);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(alice, alice, alice, 3643, aliceExpectedWithdrawShares);
+
         vm.prank(alice);
         uint256 aliceWithdrawShares = vault.withdraw(3643, alice, alice);
 
@@ -480,6 +524,10 @@ contract ERC4626Test is Test {
 
         // 10. Bob redeem 4392 shares (8001 tokens)
         uint256 bobExpectedRedeemUnderlying = vault.previewRedeem(4392);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(bob, bob, bob, bobExpectedRedeemUnderlying, 4392);
+
         vm.prank(bob);
         uint256 bobRedeemUnderlying = vault.redeem(4392, bob, bob);
 
@@ -585,6 +633,9 @@ contract ERC4626Test is Test {
     }
 
     function testMintZeroAllowed() public {
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, 0, 0);
+
         vm.prank(alice);
         vault.mint(0, alice);
 
@@ -595,6 +646,9 @@ contract ERC4626Test is Test {
     }
 
     function testWithdrawZeroAllowed() public {
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(alice, alice, alice, 0, 0);
+
         vm.prank(alice);
         vault.withdraw(0, alice, alice);
 
@@ -618,6 +672,9 @@ contract ERC4626Test is Test {
         vm.prank(bob);
         underlying.approve(address(vault), bobAmount);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, bob, aliceAmount, aliceAmount);
+
         // alice deposits 1 ether for bob
         vm.prank(alice);
         vault.deposit(aliceAmount, bob);
@@ -627,6 +684,9 @@ contract ERC4626Test is Test {
         assertEq(underlying.balanceOf(alice), 0);
         assertEq(underlying.balanceOf(bob), bobAmount);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(bob, alice, bobAmount, bobAmount);
+
         // bob mint 1 ether for alice
         vm.prank(bob);
         vault.mint(bobAmount, alice);
@@ -634,6 +694,9 @@ contract ERC4626Test is Test {
         assertEq(vault.balanceOf(bob), aliceAmount);
         assertEq(underlying.balanceOf(alice), 0);
         assertEq(underlying.balanceOf(bob), 0);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(alice, bob, alice, bobAmount, bobAmount);
 
         // alice redeem 1 ether for bob
         vm.prank(alice);
@@ -643,6 +706,9 @@ contract ERC4626Test is Test {
         assertEq(vault.balanceOf(bob), aliceAmount);
         assertEq(underlying.balanceOf(alice), 0);
         assertEq(underlying.balanceOf(bob), bobAmount);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(bob, alice, bob, aliceAmount, aliceAmount);
 
         // bob withdraw 1 ether for alice
         vm.prank(bob);
@@ -668,6 +734,9 @@ contract ERC4626Test is Test {
         vm.prank(bob);
         underlying.approve(address(vault), bobAmount);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, aliceAmount, aliceAmount);
+
         // alice deposits 1 ether
         vm.prank(alice);
         vault.deposit(aliceAmount, alice);
@@ -678,6 +747,9 @@ contract ERC4626Test is Test {
         assertEq(underlying.balanceOf(alice), 0);
         assertEq(underlying.balanceOf(bob), bobAmount);
         assertEq(underlying.balanceOf(carl), 0);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(bob, bob, bobAmount, bobAmount);
 
         // bob mint 1 ether
         vm.prank(bob);
@@ -695,6 +767,9 @@ contract ERC4626Test is Test {
 
         assertEq(vault.allowance(bob, carl), bobAmount);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(carl, alice, bob, bobAmount, bobAmount);
+
         // carl redeem 1 ether from bob to alice
         vm.prank(carl);
         vault.redeem(bobAmount, alice, bob);
@@ -711,6 +786,9 @@ contract ERC4626Test is Test {
         vault.approve(bob, aliceAmount);
 
         assertEq(vault.allowance(alice, bob), aliceAmount);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitWithdraw(bob, carl, alice, aliceAmount, aliceAmount);
 
         // bob withdraw 1 ether for carl from alice
         vm.prank(bob);
@@ -738,9 +816,15 @@ contract ERC4626Test is Test {
         vm.prank(bob);
         underlying.approve(address(vault), bobAmount);
 
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(alice, alice, aliceAmount, aliceAmount);
+
         // alice deposits 1 ether
         vm.prank(alice);
         vault.deposit(aliceAmount, alice);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitDeposit(bob, bob, bobAmount, bobAmount);
 
         // bob mint 1 ether
         vm.prank(bob);

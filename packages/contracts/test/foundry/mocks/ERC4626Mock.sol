@@ -34,4 +34,12 @@ contract ERC4626Mock is ERC4626Upgradeable {
         afterDepositHookCalledCounter++;
     }
 
+    function emitDeposit(address caller, address owner, uint256 assets, uint256 shares) public {
+        emit Deposit(caller, owner, assets, shares);
+    }
+
+    function emitWithdraw(address caller, address receiver, address owner, uint256 assets, uint256 shares) public {
+        emit Withdraw(caller, receiver, owner, assets, shares);
+    }
+
 }

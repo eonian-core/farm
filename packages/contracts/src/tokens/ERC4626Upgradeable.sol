@@ -7,6 +7,8 @@ import {ERC777Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC77
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
+import {FixedPointMathLib} from "../math/FixedPointMathLib.sol";
+
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
 /// Based on Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/mixins/ERC4626.sol)
@@ -35,6 +37,13 @@ abstract contract ERC4626Upgradeable is
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using FixedPointMathLib for uint256;
 
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
     /* ///////////////////////////// EVENTS ///////////////////////////// */
 
     /// `sender` has exchanged `assets` for `shares`, and transferred those `shares` to `owner`.
@@ -56,13 +65,14 @@ abstract contract ERC4626Upgradeable is
         uint256 shares
     );
 
-    /* ///////////////////////////// CONSTRUCTOR ///////////////////////////// */
+    /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
     /// The underlying token managed by the Vault. Has units defined by the corresponding ERC-20 contract.
     /// Stored as address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
     IERC20Upgradeable public asset;
 
     /**
+     * Constructor for the ERC4626Upgradeable contract
      * @param _asset which will be stored in this Vault
      * @dev `defaultOperators` may be an empty array.
      */
@@ -73,6 +83,19 @@ abstract contract ERC4626Upgradeable is
         address[] memory defaultOperators_
     ) internal onlyInitializing {
         __ERC777_init(name_, symbol_, defaultOperators_);
+        __ReentrancyGuard_init();
+
+        __ERC4626_init_unchained(_asset);
+    }
+
+    /**
+     * Unchained constructor for the ERC4626Upgradeable contract, without parents contracts init
+     * @param _asset which will be stored in this Vault
+     */
+    function __ERC4626_init_unchained(IERC20Upgradeable _asset)
+        internal
+        onlyInitializing
+    {
         asset = _asset;
     }
 
