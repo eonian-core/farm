@@ -196,10 +196,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     /// @notice Sets the withdrawal queue.
     /// @param queue a new queue that will replace the existing one.
     ///        Should contain only those elements that already present in the existing queue.
-    function reorderWithdrawalQueue(address[] calldata queue)
-        external
-        onlyOwner
-    {
+    function reorderWithdrawalQueue(address[] memory queue) external onlyOwner {
         withdrawalQueue = withdrawalQueue.reorder(queue);
     }
 

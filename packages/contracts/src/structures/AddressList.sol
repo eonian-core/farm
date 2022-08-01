@@ -38,7 +38,7 @@ library AddressList {
     /// @param list the list of addresses.
     /// @param reoderedList the desired reordered list, which must have the same content as the existing list.
     /// @return A reordered list
-    function reorder(address[] storage list, address[] calldata reoderedList)
+    function reorder(address[] storage list, address[] memory reoderedList)
         internal
         view
         returns (address[] memory)
