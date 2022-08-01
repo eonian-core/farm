@@ -107,6 +107,10 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         for (uint256 i = 0; i < withdrawalQueue.length; i++) {
             // If the vault already has the required amount of funds, we need to finish the withdrawal
             uint256 vaultBalance = _freeAssets();
+            if (assets <= vaultBalance) {
+                break;
+            }
+
             address strategy = withdrawalQueue[i];
 
             // We can only withdraw the amount that the strategy has as debt,
