@@ -11,6 +11,22 @@ library AddressList {
         list.push(addr);
     }
 
+    /// @notice Checks if the list contains the specified item.
+    /// @param list the list of addresses.
+    /// @param addr the address to find.
+    function contains(address[] storage list, address addr)
+        internal
+        view
+        returns (bool)
+    {
+        for (uint256 i = 0; i < list.length; i++) {
+            if (list[i] == addr) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /// @notice Removes an address from the list and fills the gap with the following items by moving them up.
     /// @param list the list of addresses.
     /// @param addr the address to remove.

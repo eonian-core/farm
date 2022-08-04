@@ -15,6 +15,7 @@ error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
 error InappropriateStrategy();
 error StrategyNotFound();
+error StrategyAlreadyExists();
 error InsufficientVaultBalance(uint256 assets, uint256 shares);
 error WrongQueueSize(uint256 size);
 
@@ -45,21 +46,30 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     /// @param fromQueueOnly If "true", then the strategy has only been removed from the withdrawal queue.
     event StrategyRemoved(address indexed strategy, bool fromQueueOnly);
 
-    function __Vault_init(
+    /// @notice Event that should happen when the strategy has been returned to the withdrawal queue.
+    /// @param strategy Address of the strategy contract.
+    event StrategyReturnedToQueue(address indexed strategy);
+
+    /// @dev This empty reserved space is put in place to allow future versions to add new
+    ///      variables without shifting down storage in the inheritance chain.
+    ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+    uint256[50] private __gap;
+
+    function initialize(
         address _asset,
         address _rewards,
         uint256 _managementFee,
         string memory _name,
         string memory _symbol,
         address[] memory _defaultOperators
-    ) internal onlyInitializing {
+    ) public initializer {
         __Ownable_init();
         __Lender_init();
         __SafeERC4626_init(
             IERC20Upgradeable(_asset),
             bytes(_name).length == 0
                 ? string.concat(
-                    IERC20Metadata(_asset).name(),
+                    IERC20Metadata(_asset).symbol(),
                     " Eonian Vault Shares"
                 )
                 : _name,
@@ -68,13 +78,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
                 : _symbol,
             _defaultOperators
         );
-        __Vault_init_unchained(_rewards, _managementFee);
-    }
 
-    function __Vault_init_unchained(address _rewards, uint256 _managementFee)
-        internal
-        onlyInitializing
-    {
         setRewards(_rewards);
         setManagementFee(_managementFee);
     }
@@ -164,6 +168,26 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         withdrawalQueue.add(strategy);
 
         emit StrategyAdded(strategy, debtRatio);
+    }
+
+    /// @notice Adds a strategy to the withdrawal queue. The strategy must already be registered as a borrower.
+    /// @param strategy a strategy address.
+    function addStrategyToQueue(address strategy) external onlyOwner {
+        if (strategy == address(0)) {
+            revert UnexpectedZeroAddress();
+        }
+
+        if (withdrawalQueue.contains(strategy)) {
+            revert StrategyAlreadyExists();
+        }
+
+        if (borrowersData[strategy].activationTimestamp == 0) {
+            revert BorrowerDoesNotExist();
+        }
+
+        withdrawalQueue.add(strategy);
+
+        emit StrategyReturnedToQueue(strategy);
     }
 
     /// @notice Revokes a strategy from the vault.

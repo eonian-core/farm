@@ -9,6 +9,10 @@ contract LenderMock is Lender {
 
     mapping(address => uint256) public borrowersBalances;
 
+    constructor() initializer {
+        __Lender_init();
+    }
+
     // ==========================
     // Test methods
     // ==========================
@@ -62,6 +66,22 @@ contract LenderMock is Lender {
 
     function borrowerDebt(address borrower) external view returns (uint256) {
         return borrowersData[borrower].debt;
+    }
+
+    function borrowerLastReportTimestamp(address borrower)
+        external
+        view
+        returns (uint256)
+    {
+        return borrowersData[borrower].lastReportTimestamp;
+    }
+
+    function borrowerActivationTimestamp(address borrower)
+        external
+        view
+        returns (uint256)
+    {
+        return borrowersData[borrower].activationTimestamp;
     }
 
     function borrowerBalance(address borrower) external view returns (uint256) {

@@ -22,6 +22,32 @@ contract AddressListTest is Test {
         assertEq(list.length, length);
     }
 
+    function testContains() public {
+        list = [
+            address(0x1),
+            address(0x2),
+            address(0x3),
+            address(0x4),
+            address(0x5)
+        ];
+
+        assertEq(list.contains(address(0x1)), true);
+        assertEq(list.contains(address(0x2)), true);
+        assertEq(list.contains(address(0x5)), true);
+
+        assertEq(list.contains(address(0x0)), false);
+        assertEq(list.contains(address(0x8)), false);
+    }
+
+    function testContainsFuzz(uint8 length, uint8 index) public {
+        vm.assume(length < 64);
+        vm.assume(index < length);
+        for (uint256 i = 0; i < length; i++) {
+            list.add(vm.addr(i + 1));
+        }
+        assertEq(list.contains(vm.addr(index + 1)), true);
+    }
+
     function testRemove() public {
         list = [
             address(0x0),

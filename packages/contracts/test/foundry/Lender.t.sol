@@ -6,7 +6,7 @@ import "forge-std/console.sol";
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 import "./mocks/LenderMock.sol";
-import {BorrowerAlreadyExists, LenderRatioExceeded, FalsePositiveReport, BorrowerDoesNotExist} from "contracts/lending/Lender.sol";
+import {CallerIsNotABorrower, BorrowerAlreadyExists, LenderRatioExceeded, FalsePositiveReport, BorrowerDoesNotExist} from "contracts/lending/Lender.sol";
 
 contract LenderTest is Test {
     LenderMock lenderMock;
@@ -15,12 +15,14 @@ contract LenderTest is Test {
 
     address borrowerA = vm.addr(1);
     address borrowerB = vm.addr(2);
+    address culprit = vm.addr(3);
 
     function setUp() public {
         _resetMocks();
 
         vm.label(borrowerA, "borrower_A");
         vm.label(borrowerB, "borrower_B");
+        vm.label(culprit, "culprit");
     }
 
     function testOutstandingDebtCalculationZeroRatio(
@@ -383,6 +385,16 @@ contract LenderTest is Test {
         );
     }
 
+    function testBorrowerReportWithWrongCaller() public {
+        vm.prank(culprit);
+        vm.expectRevert(CallerIsNotABorrower.selector);
+        lenderMock.reportNegativeDebtManagement(0, 0);
+
+        vm.prank(culprit);
+        vm.expectRevert(CallerIsNotABorrower.selector);
+        lenderMock.reportPositiveDebtManagement(0, 0);
+    }
+
     // Should have expected state after negative report
     function testBorrowerNegativeReport(
         uint192 balance,
@@ -487,6 +499,37 @@ contract LenderTest is Test {
                 lenderMock.totalDebt() -
                 borrowerAGain +
                 borrowerBLoss
+        );
+    }
+
+    function testReportShouldChangeLastReportTime(bool positiveReport) public {
+        lenderMock.setBalance(10_000_000);
+        lenderMock.addBorrower(borrowerA, MAX_BPS);
+
+        assertEq(lenderMock.lastReportTimestamp(), block.timestamp);
+        assertEq(
+            lenderMock.borrowerLastReportTimestamp(borrowerA),
+            block.timestamp
+        );
+        assertEq(
+            lenderMock.borrowerActivationTimestamp(borrowerA),
+            block.timestamp
+        );
+
+        uint256 newTimestamp = block.timestamp + 1000;
+        vm.warp(newTimestamp);
+
+        vm.prank(borrowerA);
+        if (positiveReport) {
+            lenderMock.reportPositiveDebtManagement(0, 0);
+        } else {
+            lenderMock.reportNegativeDebtManagement(0, 0);
+        }
+
+        assertEq(lenderMock.lastReportTimestamp(), newTimestamp);
+        assertEq(
+            lenderMock.borrowerLastReportTimestamp(borrowerA),
+            newTimestamp
         );
     }
 
