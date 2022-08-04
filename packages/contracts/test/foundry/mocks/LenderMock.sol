@@ -9,6 +9,8 @@ contract LenderMock is Lender {
 
     mapping(address => uint256) public borrowersBalances;
 
+    uint256[] public feesCharges;
+
     constructor() initializer {
         __Lender_init();
     }
@@ -125,6 +127,10 @@ contract LenderMock is Lender {
         _pause();
     }
 
+    function getFeesCharges() external view returns (uint256) {
+        return feesCharges.length;
+    }
+
     // ==========================
     // Overrided/Virtual methods
     // ==========================
@@ -163,10 +169,10 @@ contract LenderMock is Lender {
 
     function _chargeFees(uint256 extraFreeFunds)
         internal
-        pure
         override
         returns (uint256)
     {
+        feesCharges.push(extraFreeFunds);
         return extraFreeFunds;
     }
 }

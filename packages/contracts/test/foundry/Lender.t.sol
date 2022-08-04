@@ -722,6 +722,57 @@ contract LenderTest is Test {
         );
     }
 
+    /// @dev For testing purposes, we will take all gains as management fees. See LenderMock.sol.
+    function testFeesCharged(
+        uint192 initialBalance,
+        uint256 borrowerRatio,
+        uint64 borrowerGain
+    ) public {
+        vm.assume(borrowerRatio <= MAX_BPS);
+        vm.assume(
+            borrowerGain > 0 &&
+                borrowerGain < (initialBalance * borrowerRatio) / MAX_BPS
+        );
+
+        lenderMock.setBalance(initialBalance);
+        lenderMock.addBorrower(borrowerA, borrowerRatio);
+
+        vm.warp(block.timestamp + 1000);
+        vm.prank(borrowerA);
+        lenderMock.reportPositiveDebtManagement(0, 0);
+
+        // Should not charge fees if reported gain is 0
+        assertEq(lenderMock.getFeesCharges(), 0);
+
+        lenderMock.increaseBorrowerBalance(borrowerA, borrowerGain);
+
+        vm.warp(block.timestamp + 1000);
+        vm.prank(borrowerA);
+        lenderMock.reportPositiveDebtManagement(borrowerGain, 0);
+
+        assertEq(lenderMock.getFeesCharges(), 1);
+        assertEq(lenderMock.feesCharges(0), borrowerGain);
+    }
+
+    function testFeesNotChargedIfReportedTwice() public {
+        lenderMock.setBalance(10_000);
+        lenderMock.addBorrower(borrowerA, MAX_BPS);
+
+        vm.warp(block.timestamp + 1000);
+        vm.prank(borrowerA);
+        lenderMock.reportPositiveDebtManagement(0, 0);
+
+        // Should not charge fees if reported gain is 0
+        assertEq(lenderMock.getFeesCharges(), 0);
+
+        lenderMock.increaseBorrowerBalance(borrowerA, 1000);
+
+        vm.prank(borrowerA);
+        lenderMock.reportPositiveDebtManagement(1000, 0);
+
+        assertEq(lenderMock.getFeesCharges(), 0);
+    }
+
     function _testInitialBorrowerReport(uint192 balance, uint256 borrowerRatio)
         private
     {
