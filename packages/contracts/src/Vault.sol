@@ -253,10 +253,10 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     {
         uint256 fee = (extraFreeFunds * managementFee) / MAX_BPS;
         if (fee > 0) {
-            _mint(address(this), convertToShares(fee), "", "");
+            _mint(address(this), convertToShares(fee), "", "", false);
             uint256 balance = balanceOf(address(this));
             if (balance > 0) {
-                transfer(rewards, balance);
+                _send(address(this), rewards, balance, "", "", false);
             }
         }
         return fee;

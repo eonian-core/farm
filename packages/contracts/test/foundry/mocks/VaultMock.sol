@@ -40,6 +40,10 @@ contract VaultMock is Vault {
         emit Unpaused(msg.sender);
     }
 
+    function emitTransferEvent(address to, uint256 amount) external {
+        emit Transfer(address(this), to, amount);
+    }
+
     function hasStrategyAsBorrower(address strategy)
         external
         view
@@ -58,5 +62,9 @@ contract VaultMock is Vault {
 
     function getQueueSize() external view returns (uint256) {
         return withdrawalQueue.length;
+    }
+
+    function freeAssets() external view returns (uint256) {
+        return _freeAssets();
     }
 }

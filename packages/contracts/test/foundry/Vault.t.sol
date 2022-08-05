@@ -18,14 +18,14 @@ contract VaultTest is Test {
     address rewards = vm.addr(1);
     address culprit = vm.addr(2);
 
-    uint256 fee = 1000;
+    uint256 defaultFee = 1000;
 
     function setUp() public {
         vm.label(rewards, "rewards");
         vm.label(culprit, "culprit");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vault = new VaultMock(address(underlying), rewards, fee);
+        vault = new VaultMock(address(underlying), rewards, defaultFee);
 
         strategy = new StrategyMock(address(underlying), address(vault));
     }
@@ -42,7 +42,7 @@ contract VaultTest is Test {
         vault.initialize(
             address(underlying),
             rewards,
-            fee,
+            defaultFee,
             "",
             "",
             new address[](0)
@@ -279,7 +279,7 @@ contract VaultTest is Test {
         assertEq(vault.rewards(), newRewardsAddress);
     }
 
-    function testSetRewardsAddressFromNonOwnerAccount() public {
+    function testRevertWhenSetRewardsAddressFromNonOwnerAccount() public {
         address newRewardsAddress = vm.addr(3);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
         vm.prank(culprit);
@@ -289,17 +289,24 @@ contract VaultTest is Test {
     function testSetManagementFee(uint256 newFee) public {
         vm.assume(newFee <= MAX_BPS);
 
-        assertEq(vault.managementFee(), fee);
+        assertEq(vault.managementFee(), defaultFee);
 
         vault.setManagementFee(newFee);
         assertEq(vault.managementFee(), newFee);
     }
 
-    function testSetManagementFeeFromNonOwnerAccount(uint256 newFee) public {
+    function testRevertWhenSetManagementFeeFromNonOwnerAccount(uint256 newFee)
+        public
+    {
         vm.assume(newFee <= MAX_BPS);
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
         vm.prank(culprit);
         vault.setManagementFee(newFee);
+    }
+
+    function testRevertWhenSetManagementFeeOverMaxAmount() public {
+        vm.expectRevert(ExceededMaximumFeeValue.selector);
+        vault.setManagementFee(MAX_BPS + 1);
     }
 
     function testSetEmergencyShutdown() public {
@@ -322,5 +329,47 @@ contract VaultTest is Test {
         vm.expectRevert(bytes("Ownable: caller is not the owner"));
         vm.prank(culprit);
         vault.setEmergencyShutdown(true);
+    }
+
+    function testChargingFees(
+        uint192 initialVaultBalance,
+        uint16 fee,
+        uint16 strategyRatio,
+        uint256 strategyGain
+    ) public {
+        vm.assume(fee <= MAX_BPS);
+        vm.assume(strategyRatio <= MAX_BPS);
+        vm.assume(
+            strategyGain <
+                (uint256(initialVaultBalance) * strategyRatio) / MAX_BPS
+        );
+
+        vault = new VaultMock(address(underlying), rewards, fee);
+        strategy = new StrategyMock(address(underlying), address(vault));
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), initialVaultBalance);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        assertEq(vault.freeAssets(), initialVaultBalance);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), strategyRatio);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        uint256 expectedFee = (strategyGain * fee) / MAX_BPS;
+        if (expectedFee > 0) {
+            uint256 expectedShares = vault.convertToShares(expectedFee);
+            vm.expectEmit(true, true, true, true);
+            vault.emitTransferEvent(rewards, expectedShares);
+        }
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(vault), strategyGain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(strategyGain, 0);
     }
 }
