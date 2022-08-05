@@ -399,10 +399,97 @@ contract VaultTest is Test {
 
         // Assume some time passed and strategy got a profit
         vm.warp(block.timestamp + 1000);
-        underlying.mint(address(vault), strategyGain);
+        underlying.mint(address(strategy), strategyGain);
         vm.prank(address(strategy));
         vault.reportPositiveDebtManagement(strategyGain, 0);
 
         assertEq(vault.balanceOf(rewards), expectedShares);
+    }
+
+    function testTotalAssetsAmountStaysTheConsistent(
+        uint192 initialVaultBalance
+    ) public {
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), initialVaultBalance);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS / 2);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+
+        // Initialize the second strategy
+        StrategyMock strategyB = new StrategyMock(
+            address(underlying),
+            address(vault)
+        );
+        vault.addStrategy(address(strategyB), MAX_BPS / 4);
+        vm.prank(address(strategyB));
+        vault.reportNegativeDebtManagement(0, 0);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+    }
+
+    function testTotalAssetsAmountAfterPositiveReport(
+        uint192 initialVaultBalance,
+        uint256 gain
+    ) public {
+        vm.assume(gain < initialVaultBalance / 10);
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), initialVaultBalance);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(strategy), gain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(gain, 0);
+
+        assertEq(vault.totalAssets(), initialVaultBalance + gain);
+    }
+
+    function testTotalAssetsAmountAfterNegativeReport(
+        uint192 initialVaultBalance,
+        uint256 loss
+    ) public {
+        vm.assume(loss < initialVaultBalance / 10);
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), initialVaultBalance);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        assertEq(vault.totalAssets(), initialVaultBalance);
+
+        // Assume some time passed and strategy realized a loss
+        vm.warp(block.timestamp + 1000);
+        underlying.burn(address(strategy), loss);
+        vm.prank(address(strategy));
+        vault.reportNegativeDebtManagement(loss, 0);
+
+        assertEq(vault.totalAssets(), initialVaultBalance - loss);
     }
 }
