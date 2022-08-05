@@ -331,7 +331,36 @@ contract VaultTest is Test {
         vault.setEmergencyShutdown(true);
     }
 
-    function testChargingFees(
+    function testChargingFees() public {
+        uint256 fee = MAX_BPS;
+
+        vault = new VaultMock(address(underlying), rewards, fee);
+        strategy = new StrategyMock(address(underlying), address(vault));
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), 10_000_000);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitTransferEvent(rewards, 10_000);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(vault), 10_000);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(10_000, 0);
+
+        // The full amount must be transferred to the rewards address, as the fee factor is 100%
+        assertEq(vault.balanceOf(rewards), 10_000);
+    }
+
+    function testChargingFeesFuzz(
         uint192 initialVaultBalance,
         uint16 fee,
         uint16 strategyRatio,
@@ -360,8 +389,10 @@ contract VaultTest is Test {
         vault.reportPositiveDebtManagement(0, 0);
 
         uint256 expectedFee = (strategyGain * fee) / MAX_BPS;
-        if (expectedFee > 0) {
-            uint256 expectedShares = vault.convertToShares(expectedFee);
+        uint256 expectedShares = expectedFee > 0
+            ? vault.convertToShares(expectedFee)
+            : 0;
+        if (expectedShares > 0) {
             vm.expectEmit(true, true, true, true);
             vault.emitTransferEvent(rewards, expectedShares);
         }
@@ -371,5 +402,7 @@ contract VaultTest is Test {
         underlying.mint(address(vault), strategyGain);
         vm.prank(address(strategy));
         vault.reportPositiveDebtManagement(strategyGain, 0);
+
+        assertEq(vault.balanceOf(rewards), expectedShares);
     }
 }
