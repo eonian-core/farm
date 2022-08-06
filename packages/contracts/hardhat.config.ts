@@ -55,10 +55,16 @@ const config: HardhatUserConfig & { preprocess: any } = {
       // gasPrice: 5,
       accounts: [process.env.BSC_MAINNET_PRIVATE_KEY].filter(Boolean) as Array<string>,
     },
-    // https://ropsten.etherscan.io/
+
     ropsten: {
       url: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
       accounts: [process.env.ROPSTEN_PRIVATE_KEY].filter(Boolean) as Array<string>,
+      verify: {
+        etherscan: {
+          apiUrl: "https://api-ropsten.etherscan.io/",
+          apiKey: process.env.ROPSTEN_ETHERSCAN_API_KEY,
+        }
+      }
     },
   },
   gasReporter: {

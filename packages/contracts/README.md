@@ -51,20 +51,32 @@ yarn node
 
 all scripts from `./deploy` folder will be executed during startup sequence
 
-## Etherscan verification
+## Deploy
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
+Fill in .env with enviroment variables required for deployment to your network
 
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
+Then run deployment command, in example we will dpeloy to ropstein network
 
-```shell
-hardhat run --network ropsten scripts/deploy.ts
+```bash
+npx hardhat --netowrk ropstein deploy
 ```
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+Deploy source files of contracts to etherscan
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
+```bash
+npx hardhat --network ropsten etherscan-verify
+```
+
+Deploy source files of contracts to sourcify
+
+```bash
+npx hardhat --network ropsten sourcify
+```
+
+Export abi and address in json format. Usefull for dApps
+
+```bash
+npx hardhat --network ropsten export './some-path'
 ```
 
 ## Performance optimizations
