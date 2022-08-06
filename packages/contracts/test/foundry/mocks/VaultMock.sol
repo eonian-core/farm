@@ -71,4 +71,12 @@ contract VaultMock is Vault {
     function reentrantDeposit(uint256 amount) external nonReentrant {
         super.deposit(amount);
     }
+
+    function reentrantWithdraw(uint256 amount) external nonReentrant {
+        super.withdraw(amount);
+    }
+
+    function mint(address to, uint256 amount) external {
+        _mint(to, amount, "", "", false);
+    }
 }

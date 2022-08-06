@@ -4,7 +4,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "./ILender.sol";
-import "forge-std/console.sol";
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();

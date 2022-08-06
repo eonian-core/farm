@@ -645,6 +645,134 @@ contract VaultTest is Test {
         assertEq(vault.balanceOf(alice), deposit);
     }
 
+    function testWithdrawWithSufficeVaultUnderlyingBalance(
+        uint128 withdrawAmount
+    ) public {
+        vm.assume(withdrawAmount > 0);
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), withdrawAmount);
+        assertEq(vault.freeAssets(), withdrawAmount);
+
+        // Provide 1:1 shares of this amount to Alice
+        vault.mint(alice, withdrawAmount);
+        assertEq(vault.balanceOf(alice), withdrawAmount);
+
+        vm.prank(alice);
+        vault.withdraw(withdrawAmount);
+
+        assertEq(vault.freeAssets(), 0);
+        assertEq(vault.balanceOf(alice), 0);
+        assertEq(underlying.balanceOf(alice), withdrawAmount);
+    }
+
+    function testWithdrawWithoutUserShareBalance(uint128 withdrawAmount)
+        public
+    {
+        vm.assume(withdrawAmount > 0);
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), withdrawAmount);
+        assertEq(vault.freeAssets(), withdrawAmount);
+
+        vm.expectRevert(bytes("ERC777: burn amount exceeds balance"));
+
+        vm.prank(alice);
+        vault.withdraw(withdrawAmount);
+    }
+
+    function testRevertWithdrawWhenVaultAndStrategiesHasNoBalance(
+        uint128 withdrawAmount
+    ) public {
+        // Vault balance (withdrawAmount / 2) should be > 0, otherwise there will be a revert.
+        vm.assume(withdrawAmount > 1);
+
+        // Mint some initial funds for the vault
+        uint256 vaultBalance = withdrawAmount / 2;
+        underlying.mint(address(vault), vaultBalance);
+        assertEq(vault.freeAssets(), vaultBalance);
+        assertEq(vault.totalAssets(), vaultBalance);
+
+        // Provide 1:1 shares of this amount to Alice
+        vault.mint(alice, withdrawAmount);
+        assertEq(vault.balanceOf(alice), withdrawAmount);
+
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                InsufficientVaultBalance.selector,
+                withdrawAmount,
+                vault.previewWithdraw(withdrawAmount)
+            )
+        );
+
+        vm.prank(alice);
+        vault.withdraw(withdrawAmount);
+    }
+
+    function testWithdrawWhenVaultShouldTakeFundsFromStrategies(
+        uint128 vaultBalance,
+        uint128 strategyBalance,
+        uint128 withdrawAmount
+    ) public {
+        vm.assume(withdrawAmount > 0);
+        vm.assume(vaultBalance > 0);
+        vm.assume(withdrawAmount > vaultBalance);
+        vm.assume(strategyBalance >= withdrawAmount - vaultBalance);
+
+        address vaultAddress = address(vault);
+        address strategyAddress = address(strategy);
+
+        // Mint the initial funds as "strategyBalance" for the vault to give this full amount to the strategy
+        underlying.mint(vaultAddress, strategyBalance);
+        assertEq(vault.freeAssets(), strategyBalance);
+        assertEq(vault.totalAssets(), strategyBalance);
+
+        // Provide 1:1 shares of this amount to Alice
+        vault.mint(alice, withdrawAmount);
+        assertEq(vault.balanceOf(alice), withdrawAmount);
+
+        // Setup strategy and add some funds to it
+        vm.prank(strategyAddress);
+        underlying.increaseAllowance(vaultAddress, type(uint256).max);
+        vault.addStrategy(strategyAddress, MAX_BPS);
+        vm.prank(strategyAddress);
+        vault.reportPositiveDebtManagement(0, 0);
+
+        // Check that strategy recived all the funds after the report
+        _assertEqWithRoundingError(
+            underlying.balanceOf(strategyAddress),
+            strategyBalance
+        );
+        _assertEqWithRoundingError(vault.freeAssets(), 0);
+
+        // Mint some initial funds for the vault
+        underlying.mint(vaultAddress, vaultBalance);
+        _assertEqWithRoundingError(vault.freeAssets(), vaultBalance);
+
+        uint256 aliceSharesToReturn = vault.previewWithdraw(withdrawAmount);
+
+        vm.prank(alice);
+        vault.withdraw(withdrawAmount);
+
+        // Sometimes, if "withdrawAmount" is small value, Alice still has 1 share
+        assertEq(vault.balanceOf(alice), withdrawAmount - aliceSharesToReturn);
+        assertEq(underlying.balanceOf(alice), withdrawAmount);
+    }
+
+    function testWithdrawReentrance(uint192 withdraw) public {
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        vault.mint(alice, withdraw);
+
+        vm.expectRevert(bytes("ReentrancyGuard: reentrant call"));
+
+        vm.prank(alice);
+        vault.reentrantWithdraw(withdraw);
+    }
+
     function _assertEqWithRoundingError(uint256 a, uint256 b) private {
         uint256 max = Math.max(a, b);
         uint256 min = Math.min(a, b);
