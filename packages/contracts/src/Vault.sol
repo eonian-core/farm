@@ -93,7 +93,6 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     function deposit(uint256 assets)
         public
         override
-        nonReentrant
         whenNotPaused
         returns (uint256 shares)
     {

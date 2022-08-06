@@ -67,4 +67,8 @@ contract VaultMock is Vault {
     function freeAssets() external view returns (uint256) {
         return _freeAssets();
     }
+
+    function reentrantDeposit(uint256 amount) external nonReentrant {
+        super.deposit(amount);
+    }
 }

@@ -18,11 +18,17 @@ contract VaultTest is Test {
     address rewards = vm.addr(1);
     address culprit = vm.addr(2);
 
+    address alice = vm.addr(10);
+    address bob = vm.addr(11);
+
     uint256 defaultFee = 1000;
 
     function setUp() public {
         vm.label(rewards, "rewards");
         vm.label(culprit, "culprit");
+
+        vm.label(alice, "Alice");
+        vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
         vault = new VaultMock(address(underlying), rewards, defaultFee);
@@ -561,6 +567,82 @@ contract VaultTest is Test {
             underlying.balanceOf(address(vault)),
             initialVaultBalance - strategyBalance + 10_000
         );
+    }
+
+    function testDepositWithoutBalance(uint192 deposit) public {
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        vm.expectRevert(
+            bytes(
+                deposit > 0
+                    ? "ERC20: transfer amount exceeds balance"
+                    : "Given assets result in 0 shares."
+            )
+        );
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+    }
+
+    function testDepositWithoutAllowance(uint192 deposit) public {
+        vm.assume(deposit > 0);
+
+        vm.expectRevert(bytes("ERC20: insufficient allowance"));
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+    }
+
+    function testDepositWhenVaultIsPaused(uint192 deposit) public {
+        vault.setEmergencyShutdown(true);
+
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        vm.expectRevert(bytes("Pausable: paused"));
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+    }
+
+    function testDepositReentrance(uint192 deposit) public {
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        vm.expectRevert(bytes("ReentrancyGuard: reentrant call"));
+
+        vm.prank(alice);
+        vault.reentrantDeposit(deposit);
+    }
+
+    function testDepositAndAssessShares(uint192 deposit) public {
+        vm.assume(deposit > 0);
+
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Check if Alice has the initial balance
+        assertEq(underlying.balanceOf(alice), deposit);
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Check if Alice's funds were transferred to the vault
+        assertEq(underlying.balanceOf(alice), 0);
+
+        // Check if Alice got the vault shares
+        assertEq(vault.balanceOf(alice), deposit);
     }
 
     function _assertEqWithRoundingError(uint256 a, uint256 b) private {
