@@ -492,4 +492,80 @@ contract VaultTest is Test {
 
         assertEq(vault.totalAssets(), initialVaultBalance - loss);
     }
+
+    /// @dev Testing redistribution of the amount of underlying assets between the vault and the strategies
+    ///      This particaular case is for Vault -> Strategy transfer
+    function testVaultToStrategyLendingFunctionality(
+        uint192 initialVaultBalance,
+        uint16 ratio
+    ) public {
+        vm.assume(ratio <= MAX_BPS);
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), initialVaultBalance);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Vault should have the initial amount of tokens
+        assertEq(underlying.balanceOf(address(vault)), initialVaultBalance);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), ratio);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        // Check the leftover amount in the vault (taking the rounding error into account)
+        uint256 strategyBalance = (uint256(initialVaultBalance) * ratio) /
+            MAX_BPS;
+        uint256 vaultBalance = initialVaultBalance - strategyBalance;
+        _assertEqWithRoundingError(
+            vaultBalance,
+            underlying.balanceOf(address(vault))
+        );
+
+        // Check the strategy balance
+        assertEq(underlying.balanceOf(address(strategy)), strategyBalance);
+    }
+
+    /// @dev Testing redistribution of the amount of underlying assets between the vault and the strategies
+    ///      This particaular case is for Strategy -> Vault transfer
+    function testVaultFromStrategyLendingFunctionality() public {
+        uint192 initialVaultBalance = 1_000_000;
+        uint16 ratio = uint16(MAX_BPS);
+
+        // We can use the previous test to setup this one
+        testVaultToStrategyLendingFunctionality(initialVaultBalance, ratio);
+
+        // Strategy has no free funds, skip this run
+        uint256 strategyBalance = underlying.balanceOf(address(strategy));
+        if (strategyBalance < 0) {
+            return;
+        }
+
+        // Check if the vault has other part of the initial funds
+        assertEq(
+            underlying.balanceOf(address(vault)),
+            initialVaultBalance - strategyBalance
+        );
+
+        // Assume that the strategy realized a profit and reported it to the vault
+        underlying.mint(address(strategy), 10_000);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(10_000, 0);
+
+        // Strategy has the same amount of tokens, because a profit was transferred to the vault
+        uint256 strategyBalanceAfter = underlying.balanceOf(address(strategy));
+        assertEq(strategyBalance, strategyBalanceAfter);
+
+        // Vault now has a "profit" amount from the strategy
+        assertEq(
+            underlying.balanceOf(address(vault)),
+            initialVaultBalance - strategyBalance + 10_000
+        );
+    }
+
+    function _assertEqWithRoundingError(uint256 a, uint256 b) private {
+        uint256 max = Math.max(a, b);
+        uint256 min = Math.min(a, b);
+        assertLe(max - min, 1);
+    }
 }
