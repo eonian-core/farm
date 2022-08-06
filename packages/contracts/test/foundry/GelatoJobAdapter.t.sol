@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
-import {SimpleGelatoJob} from "contracts/automation/example/SimpleGelatoJob.sol";
+import {GelatoJobAdapterMock} from "./mocks/GelatoJobAdapterMock.sol";
 import {TimeMinimumBetweenExecutionsIncorrect, Job, CannotWorkNow} from "contracts/automation/Job.sol";
 import {GelatoJobAdapter, PayableWorkNotAllowed} from "contracts/automation/GelatoJobAdapter.sol";
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
@@ -13,7 +13,7 @@ import {BackCombatibleTransfer} from "contracts/automation/gelato/BackCombatible
 import {OpsMock} from "./mocks/OpsMock.sol";
 
 contract GelatoJobAdapterTest is Test {
-    SimpleGelatoJob job;
+    GelatoJobAdapterMock job;
     ERC20Mock token;
     OpsMock ops;
 
@@ -31,7 +31,7 @@ contract GelatoJobAdapterTest is Test {
         ops = new OpsMock();
         ops.setGelato(payable(alice));
 
-        job = new SimpleGelatoJob();
+        job = new GelatoJobAdapterMock();
         job.initialize(address(ops), 1001, false);
 
         initialTime = block.timestamp;
