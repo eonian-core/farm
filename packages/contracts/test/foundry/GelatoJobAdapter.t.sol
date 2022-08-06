@@ -32,7 +32,7 @@ contract GelatoJobAdapterTest is Test {
         ops.setGelato(payable(alice));
 
         job = new GelatoJobAdapterMock();
-        job.__GelatoJobAdapterMock_init(address(ops), 1001, false);
+        job.initialize(address(ops), 1001, false);
 
         initialTime = block.timestamp;
 
@@ -46,7 +46,7 @@ contract GelatoJobAdapterTest is Test {
         bool _isPrepaid
     ) public {
         job.setCanWorkResult(_canWork);
-        job.setisPrepaid(_isPrepaid);
+        job.setIsPrepaid(_isPrepaid);
 
         (bool canExec1, bytes memory execPayload1) = job.checker();
 
@@ -270,7 +270,7 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setisPrepaid(false);
+        job.setIsPrepaid(false);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
@@ -317,7 +317,7 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setisPrepaid(false);
+        job.setIsPrepaid(false);
         ops.setFeeDetails(amount, address(token));
 
         vm.warp(initialTime + time + 1);
@@ -368,7 +368,7 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setisPrepaid(true);
+        job.setIsPrepaid(true);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);
@@ -376,7 +376,6 @@ contract GelatoJobAdapterTest is Test {
         assertTrue(job.canWork());
         assertTrue(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
-
         vm.expectRevert(PayableWorkNotAllowed.selector);
 
         vm.prank(address(ops));
@@ -405,7 +404,7 @@ contract GelatoJobAdapterTest is Test {
         // Reset to initial values
         job.setMinimumBetweenExecutions(time);
         job.setCanWorkResult(true);
-        job.setisPrepaid(false);
+        job.setIsPrepaid(false);
         ops.setFeeDetails(amount, BackCombatibleTransfer.ETH);
 
         vm.warp(initialTime + time + 1);

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
 pragma solidity >=0.8.0;
 
 /// @notice Arithmetic library with operations for fixed-point numbers.
@@ -41,7 +41,12 @@ library FixedPointMathLib {
             z := mul(x, y)
 
             // Equivalent to require(denominator != 0 && (x == 0 || (x * y) / x == y))
-            if iszero(and(iszero(iszero(denominator)), or(iszero(x), eq(div(z, x), y)))) {
+            if iszero(
+                and(
+                    iszero(iszero(denominator)),
+                    or(iszero(x), eq(div(z, x), y))
+                )
+            ) {
                 revert(0, 0)
             }
 
@@ -60,7 +65,12 @@ library FixedPointMathLib {
             z := mul(x, y)
 
             // Equivalent to require(denominator != 0 && (x == 0 || (x * y) / x == y))
-            if iszero(and(iszero(iszero(denominator)), or(iszero(x), eq(div(z, x), y)))) {
+            if iszero(
+                and(
+                    iszero(iszero(denominator)),
+                    or(iszero(x), eq(div(z, x), y))
+                )
+            ) {
                 revert(0, 0)
             }
 
