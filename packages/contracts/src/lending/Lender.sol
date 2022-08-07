@@ -3,6 +3,8 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+
 import "./ILender.sol";
 
 error BorrowerAlreadyExists();
@@ -12,7 +14,11 @@ error CallerIsNotABorrower();
 error LenderRatioExceeded(uint256 freeRatio);
 error FalsePositiveReport();
 
-abstract contract Lender is ILender, PausableUpgradeable {
+abstract contract Lender is
+    ILender,
+    PausableUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     struct BorrowerData {
         /// Timestamp of the block in which the borrower was activated
         uint256 activationTimestamp;
@@ -60,8 +66,17 @@ abstract contract Lender is ILender, PausableUpgradeable {
         _;
     }
 
+    /// @notice Updates the last report timestamp for the specified borrower and this lender.
+    modifier updateLastReportTime() {
+        _;
+        borrowersData[msg.sender]
+            .lastReportTimestamp = lastReportTimestamp = block.timestamp;
+    }
+
     function __Lender_init() internal onlyInitializing {
         __Pausable_init();
+        __ReentrancyGuard_init();
+
         __Lender_init_unchained();
     }
 
@@ -83,7 +98,7 @@ abstract contract Lender is ILender, PausableUpgradeable {
     function reportPositiveDebtManagement(
         uint256 extraFreeFunds,
         uint256 debtPayment
-    ) external override onlyBorrowers {
+    ) external override onlyBorrowers updateLastReportTime nonReentrant {
         // Checking whether the borrower is telling the truth about his available funds
         if (_borrowerFreeAssets(msg.sender) < extraFreeFunds + debtPayment) {
             revert FalsePositiveReport();
@@ -99,8 +114,6 @@ abstract contract Lender is ILender, PausableUpgradeable {
             _chargeFees(extraFreeFunds);
         }
 
-        _updateLastReportTime(msg.sender);
-
         _rebalanceBorrowerFunds(msg.sender, debtPayment, extraFreeFunds);
     }
 
@@ -108,7 +121,7 @@ abstract contract Lender is ILender, PausableUpgradeable {
     function reportNegativeDebtManagement(
         uint256 remainingDebt,
         uint256 debtPayment
-    ) external override onlyBorrowers {
+    ) external override onlyBorrowers updateLastReportTime nonReentrant {
         // Checking whether the borrower has available funds for debt payment
         require(_borrowerFreeAssets(msg.sender) >= debtPayment);
 
@@ -116,8 +129,6 @@ abstract contract Lender is ILender, PausableUpgradeable {
         if (remainingDebt > 0) {
             _decreaseBorrowerCredibility(msg.sender, remainingDebt);
         }
-
-        _updateLastReportTime(msg.sender);
 
         _rebalanceBorrowerFunds(msg.sender, debtPayment, 0);
     }
@@ -171,13 +182,6 @@ abstract contract Lender is ILender, PausableUpgradeable {
             fundsGiven,
             fundsTaken
         );
-    }
-
-    /// @notice Updates the last report timestamp for the specified borrower and this lender.
-    /// @param borrower Address of the borrower for whom we need to update the last report time.
-    function _updateLastReportTime(address borrower) private {
-        borrowersData[borrower]
-            .lastReportTimestamp = lastReportTimestamp = block.timestamp;
     }
 
     /// @notice Returns the unrealized amount of the lender's tokens (lender's contract balance)
