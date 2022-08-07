@@ -52,18 +52,6 @@ contract VaultMock is Vault {
         return borrowersData[strategy].activationTimestamp > 0;
     }
 
-    function strategyDebt(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debt;
-    }
-
-    function strategyRatio(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debtRatio;
-    }
-
-    function getQueueSize() external view returns (uint256) {
-        return withdrawalQueue.length;
-    }
-
     function freeAssets() external view returns (uint256) {
         return _freeAssets();
     }

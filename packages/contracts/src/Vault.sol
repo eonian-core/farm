@@ -261,6 +261,23 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         return fee;
     }
 
+    /// @notice Returns the current debt of the strategy.
+    /// @param strategy the strategy address.
+    function strategyDebt(address strategy) external view returns (uint256) {
+        return borrowersData[strategy].debt;
+    }
+
+    /// @notice Returns the debt ratio of the strategy.
+    /// @param strategy the strategy address.
+    function strategyRatio(address strategy) external view returns (uint256) {
+        return borrowersData[strategy].debtRatio;
+    }
+
+    /// @notice Returns the size of the withdrawal queue.
+    function getQueueSize() external view returns (uint256) {
+        return withdrawalQueue.length;
+    }
+
     /// @inheritdoc Lender
     function _freeAssets() internal view override returns (uint256) {
         return asset.balanceOf(address(this));

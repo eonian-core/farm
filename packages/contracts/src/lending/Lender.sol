@@ -14,38 +14,43 @@ error FalsePositiveReport();
 
 abstract contract Lender is ILender, PausableUpgradeable {
     struct BorrowerData {
-        // Timestamp of the block in which the borrower was activated
+        /// Timestamp of the block in which the borrower was activated
         uint256 activationTimestamp;
-        // Last time a borrower made a report
+        /// Last time a borrower made a report
         uint256 lastReportTimestamp;
-        // Amount of tokens taken by the borrower
+        /// Amount of tokens taken by the borrower
         uint256 debt;
-        // Maximum portion of the loan that the borrower can take (in BPS)
-        // Represents credibility of the borrower
+        /// Maximum portion of the loan that the borrower can take (in BPS)
+        /// Represents credibility of the borrower
         uint256 debtRatio;
     }
 
     uint256 constant MAX_BPS = 10_000;
 
-    // Amount of tokens that all borrowers have taken
+    /// @notice Amount of tokens that all borrowers have taken
     uint256 public totalDebt;
 
-    // Debt ratio for the Lender across all borrowers (in BPS, <= 10k)
+    /// @notice Debt ratio for the Lender across all borrowers (in BPS, <= 10k)
     uint256 public debtRatio;
 
-    // Last time a report occurred by any borrower
+    /// @notice Last time a report occurred by any borrower
     uint256 public lastReportTimestamp;
 
-    // Records with information on each borrower using the lender's services
+    /// @notice Records with information on each borrower using the lender's services
     mapping(address => BorrowerData) public borrowersData;
 
-    // Event that must occur when the borrower reported the results of his debt management
+    /// @notice Event that must occur when the borrower reported the results of his debt management
+    /// @param borrower Borrower's contract address
+    /// @param debtPayment Amount of outstanding debt repaid by the borrower
+    /// @param freeFunds Free funds on the borrower's contract that remain after the debt is paid
+    /// @param fundsGiven Funds issued to the borrower by this lender
+    /// @param fundsTaken Funds that have been taken from the borrower by the lender
     event BorrowerDebtManagementReported(
-        address indexed borrower, // Borrower's contract address
-        uint256 debtPayment, // Amount of outstanding debt repaid by the borrower
-        uint256 freeFunds, // Free funds on the borrower's contract that remain after the debt is paid
-        uint256 fundsGiven, // Funds issued to the borrower by this lender
-        uint256 fundsTaken // Funds that have been taken from the borrower by the lender
+        address indexed borrower,
+        uint256 debtPayment,
+        uint256 freeFunds,
+        uint256 fundsGiven,
+        uint256 fundsTaken
     );
 
     modifier onlyBorrowers() {
