@@ -9,6 +9,12 @@ contract LenderMock is Lender {
 
     mapping(address => uint256) public borrowersBalances;
 
+    uint256[] public feesCharges;
+
+    constructor() initializer {
+        __Lender_init();
+    }
+
     // ==========================
     // Test methods
     // ==========================
@@ -64,6 +70,22 @@ contract LenderMock is Lender {
         return borrowersData[borrower].debt;
     }
 
+    function borrowerLastReportTimestamp(address borrower)
+        external
+        view
+        returns (uint256)
+    {
+        return borrowersData[borrower].lastReportTimestamp;
+    }
+
+    function borrowerActivationTimestamp(address borrower)
+        external
+        view
+        returns (uint256)
+    {
+        return borrowersData[borrower].activationTimestamp;
+    }
+
     function borrowerBalance(address borrower) external view returns (uint256) {
         return _borrowerFreeAssets(borrower);
     }
@@ -105,6 +127,10 @@ contract LenderMock is Lender {
         _pause();
     }
 
+    function getFeesCharges() external view returns (uint256) {
+        return feesCharges.length;
+    }
+
     // ==========================
     // Overrided/Virtual methods
     // ==========================
@@ -139,5 +165,14 @@ contract LenderMock is Lender {
 
     function _freeAssets() internal view override returns (uint256) {
         return balance;
+    }
+
+    function _chargeFees(uint256 extraFreeFunds)
+        internal
+        override
+        returns (uint256)
+    {
+        feesCharges.push(extraFreeFunds);
+        return extraFreeFunds;
     }
 }

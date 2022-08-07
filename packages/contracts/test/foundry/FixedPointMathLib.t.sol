@@ -3,8 +3,9 @@ pragma solidity >=0.8.10;
 
 import "forge-std/Test.sol";
 
-import {FixedPointMathLib} from "contracts/math/FixedPointMathLib.sol";
+import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
+/// @dev Since it's a crucial part of all calculation, we decided to keep our own tests of this "FixedPointMathLib" library
 contract FixedPointMathLibTest is Test {
     function testMulWadDown() public {
         assertEq(FixedPointMathLib.mulWadDown(2.5e18, 0.5e18), 1.25e18);
@@ -147,7 +148,10 @@ contract FixedPointMathLibTest is Test {
             if (x != 0 && (x * y) / x != y) return;
         }
 
-        assertEq(FixedPointMathLib.mulWadUp(x, y), x * y == 0 ? 0 : (x * y - 1) / 1e18 + 1);
+        assertEq(
+            FixedPointMathLib.mulWadUp(x, y),
+            x * y == 0 ? 0 : (x * y - 1) / 1e18 + 1
+        );
     }
 
     function testFailMulWadUpOverflow(uint256 x, uint256 y) public pure {
@@ -187,7 +191,10 @@ contract FixedPointMathLibTest is Test {
             if (y == 0 || (x != 0 && (x * 1e18) / 1e18 != x)) return;
         }
 
-        assertEq(FixedPointMathLib.divWadUp(x, y), x == 0 ? 0 : (x * 1e18 - 1) / y + 1);
+        assertEq(
+            FixedPointMathLib.divWadUp(x, y),
+            x == 0 ? 0 : (x * 1e18 - 1) / y + 1
+        );
     }
 
     function testFailDivWadUpOverflow(uint256 x, uint256 y) public pure {
@@ -213,7 +220,10 @@ contract FixedPointMathLibTest is Test {
             if (denominator == 0 || (x != 0 && (x * y) / x != y)) return;
         }
 
-        assertEq(FixedPointMathLib.mulDivDown(x, y, denominator), (x * y) / denominator);
+        assertEq(
+            FixedPointMathLib.mulDivDown(x, y, denominator),
+            (x * y) / denominator
+        );
     }
 
     function testFailMulDivDownOverflow(
@@ -229,7 +239,10 @@ contract FixedPointMathLibTest is Test {
         FixedPointMathLib.mulDivDown(x, y, denominator);
     }
 
-    function testFailMulDivDownZeroDenominator(uint256 x, uint256 y) public pure {
+    function testFailMulDivDownZeroDenominator(uint256 x, uint256 y)
+        public
+        pure
+    {
         FixedPointMathLib.mulDivDown(x, y, 0);
     }
 
@@ -243,7 +256,10 @@ contract FixedPointMathLibTest is Test {
             if (denominator == 0 || (x != 0 && (x * y) / x != y)) return;
         }
 
-        assertEq(FixedPointMathLib.mulDivUp(x, y, denominator), x * y == 0 ? 0 : (x * y - 1) / denominator + 1);
+        assertEq(
+            FixedPointMathLib.mulDivUp(x, y, denominator),
+            x * y == 0 ? 0 : (x * y - 1) / denominator + 1
+        );
     }
 
     function testFailMulDivUpOverflow(

@@ -3,55 +3,85 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+
 import "./ILender.sol";
-import "forge-std/console.sol";
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();
+error BorrowerHasDebt();
+error CallerIsNotABorrower();
 error LenderRatioExceeded(uint256 freeRatio);
 error FalsePositiveReport();
 
-abstract contract Lender is ILender, PausableUpgradeable {
+abstract contract Lender is
+    ILender,
+    PausableUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     struct BorrowerData {
-        // Timestamp of the block in which the borrower was activated
+        /// Timestamp of the block in which the borrower was activated
         uint256 activationTimestamp;
-        // Amount of tokens taken by the borrower
+        /// Last time a borrower made a report
+        uint256 lastReportTimestamp;
+        /// Amount of tokens taken by the borrower
         uint256 debt;
-        // Maximum portion of the loan that the borrower can take (in BPS)
-        // Represents credibility of the borrower
+        /// Maximum portion of the loan that the borrower can take (in BPS)
+        /// Represents credibility of the borrower
         uint256 debtRatio;
     }
 
     uint256 constant MAX_BPS = 10_000;
 
-    // Amount of tokens that all borrowers have taken
+    /// @notice Amount of tokens that all borrowers have taken
     uint256 public totalDebt;
 
-    // Debt ratio for the Lender across all borrowers (in BPS, <= 10k)
+    /// @notice Debt ratio for the Lender across all borrowers (in BPS, <= 10k)
     uint256 public debtRatio;
 
-    // Records with information on each borrower using the lender's services
+    /// @notice Last time a report occurred by any borrower
+    uint256 public lastReportTimestamp;
+
+    /// @notice Records with information on each borrower using the lender's services
     mapping(address => BorrowerData) public borrowersData;
 
-    // Event that must occur when the borrower reported the results of his debt management
+    /// @notice Event that must occur when the borrower reported the results of his debt management
+    /// @param borrower Borrower's contract address
+    /// @param debtPayment Amount of outstanding debt repaid by the borrower
+    /// @param freeFunds Free funds on the borrower's contract that remain after the debt is paid
+    /// @param fundsGiven Funds issued to the borrower by this lender
+    /// @param fundsTaken Funds that have been taken from the borrower by the lender
     event BorrowerDebtManagementReported(
-        address indexed borrower, // Borrower's contract address
-        uint256 debtPayment, // Amount of outstanding debt repaid by the borrower
-        uint256 freeFunds, // Free funds on the borrower's contract that remain after the debt is paid
-        uint256 fundsGiven, // Funds issued to the borrower by this lender
-        uint256 fundsTaken // Funds that have been taken from the borrower by the lender
+        address indexed borrower,
+        uint256 debtPayment,
+        uint256 freeFunds,
+        uint256 fundsGiven,
+        uint256 fundsTaken
     );
 
     modifier onlyBorrowers() {
-        require(
-            borrowersData[msg.sender].activationTimestamp > 0,
-            "Not a borrower"
-        );
+        if (borrowersData[msg.sender].activationTimestamp == 0) {
+            revert CallerIsNotABorrower();
+        }
         _;
+    }
+
+    /// @notice Updates the last report timestamp for the specified borrower and this lender.
+    modifier updateLastReportTime() {
+        _;
+        borrowersData[msg.sender]
+            .lastReportTimestamp = lastReportTimestamp = block.timestamp;
     }
 
     function __Lender_init() internal onlyInitializing {
         __Pausable_init();
+        __ReentrancyGuard_init();
+
+        __Lender_init_unchained();
+    }
+
+    function __Lender_init_unchained() internal onlyInitializing {
+        lastReportTimestamp = block.timestamp;
     }
 
     /// @inheritdoc ILender
@@ -68,13 +98,21 @@ abstract contract Lender is ILender, PausableUpgradeable {
     function reportPositiveDebtManagement(
         uint256 extraFreeFunds,
         uint256 debtPayment
-    ) external override onlyBorrowers {
+    ) external override onlyBorrowers updateLastReportTime nonReentrant {
         // Checking whether the borrower is telling the truth about his available funds
         if (_borrowerFreeAssets(msg.sender) < extraFreeFunds + debtPayment) {
             revert FalsePositiveReport();
         }
 
-        // TODO: Assess n' pay management fees here
+        // We can only charge a fees if the borrower has reported extra free funds,
+        // if it's the first report at this block and only if the borrower was registered some time ago
+        if (
+            extraFreeFunds > 0 &&
+            borrowersData[msg.sender].lastReportTimestamp < block.timestamp &&
+            borrowersData[msg.sender].activationTimestamp < block.timestamp
+        ) {
+            _chargeFees(extraFreeFunds);
+        }
 
         _rebalanceBorrowerFunds(msg.sender, debtPayment, extraFreeFunds);
     }
@@ -83,10 +121,11 @@ abstract contract Lender is ILender, PausableUpgradeable {
     function reportNegativeDebtManagement(
         uint256 remainingDebt,
         uint256 debtPayment
-    ) external override onlyBorrowers {
+    ) external override onlyBorrowers updateLastReportTime nonReentrant {
         // Checking whether the borrower has available funds for debt payment
         require(_borrowerFreeAssets(msg.sender) >= debtPayment);
 
+        // Debt wasn't repaid, we need to decrease the ratio of this borrower
         if (remainingDebt > 0) {
             _decreaseBorrowerCredibility(msg.sender, remainingDebt);
         }
@@ -95,14 +134,14 @@ abstract contract Lender is ILender, PausableUpgradeable {
     }
 
     /// @notice Balances the borrower's account and adjusts the current amount of funds the borrower can take.
-    /// @param borrower a borrower's contract address
+    /// @param borrower a borrower's contract address.
     /// @param debtPayment an amount of outstanding debt since the previous report, that the borrower managed to cover. Can be zero.
     /// @param borrowerFreeFunds a funds that the borrower has earned since the previous report. Can be zero.
     function _rebalanceBorrowerFunds(
         address borrower,
         uint256 debtPayment,
         uint256 borrowerFreeFunds
-    ) internal {
+    ) private {
         // Calculate the amount of credit the lender can provide to the borrower (if any)
         uint256 borrowerAvailableCredit = _availableCredit(borrower);
 
@@ -166,13 +205,13 @@ abstract contract Lender is ILender, PausableUpgradeable {
         virtual;
 
     /// @notice Returns the total amount of all tokens (including those on the contract balance and taken by borrowers)
-    function totalAssets() public view virtual returns (uint256) {
+    function lendingAssets() public view virtual returns (uint256) {
         return _freeAssets() + totalDebt;
     }
 
     /// @notice Returns the total number of tokens borrowers can take
     function _debtLimit() private view returns (uint256) {
-        return (debtRatio * totalAssets()) / MAX_BPS;
+        return (debtRatio * lendingAssets()) / MAX_BPS;
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
@@ -216,7 +255,7 @@ abstract contract Lender is ILender, PausableUpgradeable {
         uint256 lenderDebtLimit = _debtLimit();
         uint256 lenderDebt = totalDebt;
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            totalAssets()) / MAX_BPS;
+            lendingAssets()) / MAX_BPS;
         uint256 borrowerDebt = borrowersData[borrower].debt;
 
         // There're no more funds for the borrower because he has outstanding debt or the lender's available funds have been exhausted
@@ -256,7 +295,7 @@ abstract contract Lender is ILender, PausableUpgradeable {
         }
 
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            totalAssets()) / MAX_BPS;
+            lendingAssets()) / MAX_BPS;
         if (borrowerDebt <= borrowerDebtLimit) {
             return 0;
         }
@@ -278,9 +317,10 @@ abstract contract Lender is ILender, PausableUpgradeable {
         }
 
         borrowersData[borrower] = BorrowerData(
-            block.timestamp,
-            0,
-            borrowerDebtRatio
+            block.timestamp, // Activation timestamp
+            block.timestamp, // Last report timestamp
+            0, // Initial debt
+            borrowerDebtRatio // Debt ratio
         );
 
         debtRatio += borrowerDebtRatio;
@@ -310,11 +350,17 @@ abstract contract Lender is ILender, PausableUpgradeable {
     /// @notice Deletes the borrower from the list
     /// @dev Should be called after the borrower's debt ratio is changed to 0, because the lender must take back all the released funds.
     function _unregisterBorrower(address borrower) internal {
-        require(
-            borrowersData[borrower].debtRatio == 0,
-            "Borrower still has a debt"
-        );
-
+        if (borrowersData[borrower].debtRatio > 0) {
+            revert BorrowerHasDebt();
+        }
         delete borrowersData[borrower];
     }
+
+    /// @notice Charges a fee on the borrower's income.
+    /// @param extraFreeFunds an income from which the fees will be calculated.
+    /// @return The total amount of fees charged.
+    function _chargeFees(uint256 extraFreeFunds)
+        internal
+        virtual
+        returns (uint256);
 }
