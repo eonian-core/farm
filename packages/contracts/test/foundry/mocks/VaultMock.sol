@@ -44,6 +44,10 @@ contract VaultMock is Vault {
         emit Transfer(address(this), to, amount);
     }
 
+    function emitMintTransferEvent(address to, uint256 amount) external {
+        emit Transfer(address(0), to, amount);
+    }
+
     function hasStrategyAsBorrower(address strategy)
         external
         view

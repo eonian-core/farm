@@ -353,12 +353,13 @@ contract VaultTest is Test {
         vm.prank(address(strategy));
         vault.reportPositiveDebtManagement(0, 0);
 
-        vm.expectEmit(true, true, true, true);
-        vault.emitTransferEvent(rewards, 10_000);
-
         // Assume some time passed and strategy got a profit
         vm.warp(block.timestamp + 1000);
         underlying.mint(address(vault), 10_000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitMintTransferEvent(rewards, 10_000);
+
         vm.prank(address(strategy));
         vault.reportPositiveDebtManagement(10_000, 0);
 
@@ -400,7 +401,7 @@ contract VaultTest is Test {
             : 0;
         if (expectedShares > 0) {
             vm.expectEmit(true, true, true, true);
-            vault.emitTransferEvent(rewards, expectedShares);
+            vault.emitMintTransferEvent(rewards, expectedShares);
         }
 
         // Assume some time passed and strategy got a profit
