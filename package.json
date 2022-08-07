@@ -11,7 +11,8 @@
     "postinstall": "git submodule update --init --recursive && lerna exec --scope='@eonian/contracts' -- yarn postinstall",
     "build:contracts": "lerna run build --scope='@eonian/contracts'",
     "test:contracts": "lerna run test --scope='@eonian/contracts'",
-    "dev:contracts": "lerna run dev --scope='@eonian/contracts'"
+    "dev:contracts": "lerna run dev --scope='@eonian/contracts'",
+    "serve:contracts": "lerna run serve --scope='@eonian/contracts'"
   },
   "workspaces": {
     "packages": ["packages/*"],

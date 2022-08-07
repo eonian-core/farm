@@ -1,48 +1,10 @@
-// SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity >=0.8.0;
+// SPDX-License-Identifier: GPL-3.0-only
+pragma solidity >=0.8.10;
 
-import "contracts/automation/GelatoJobAdapter.sol";
+import {SimpleGelatoJob} from "contracts/automation/example/SimpleGelatoJob.sol";
 
-contract GelatoJobAdapterMock is GelatoJobAdapter {
-    uint256 public workMethodCalledCounter;
-    bool public canWorkResult = false;
-
-    // allow sending eth to the test contract
-    receive() external payable {}
-
-    function __GelatoJobAdapterMock_init(
-        address _ops,
-        uint256 _minimumBetweenExecutions,
-        bool _isPrepaid
-    ) public initializer {
-        __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepaid);
-    }
-
-    function _work() internal override {
-        workMethodCalledCounter++;
-    }
-
-    function _canWork() internal view override returns (bool) {
-        return canWorkResult;
-    }
-
-    function setCanWorkResult(bool _canWorkResult) public {
-        canWorkResult = _canWorkResult;
-    }
-
-    function setMinimumBetweenExecutions(uint256 _time) public {
-        _setMinimumBetweenExecutions(_time);
-    }
-
-    function emitWorked(address worker) public {
+contract GelatoJobAdapterMock is SimpleGelatoJob {
+    function emitWorked(address worker) public onlyOwner {
         emit Worked(worker);
-    }
-
-    function setisPrepaid(bool _isPrepaid) public {
-        isPrepaid = _isPrepaid;
-    }
-
-    function refreshLastWorkTime() public {
-        _refreshLastWorkTime();
     }
 }
