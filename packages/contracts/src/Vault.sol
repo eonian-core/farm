@@ -6,7 +6,6 @@ import "./lending/Lender.sol";
 import "./tokens/SafeERC4626Upgradeable.sol";
 import "./strategies/IStrategy.sol";
 import "./structures/AddressList.sol";
-import "forge-std/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
