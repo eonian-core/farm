@@ -277,13 +277,12 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     function _calculateLockedProfit() internal view returns (uint256) {
         uint256 ratio = (block.timestamp - lastReportTimestamp) *
             lockedProfitReleaseRate;
-        if (ratio >= LOCKED_PROFIT_RELEASE_SCALE) {
-            return 0;
+        if (ratio < LOCKED_PROFIT_RELEASE_SCALE) {
+            uint256 lockedProfitChange = (ratio * lockedProfit) /
+                LOCKED_PROFIT_RELEASE_SCALE;
+            return lockedProfit - lockedProfitChange;
         }
-
-        uint256 lockedProfitChange = (ratio * lockedProfit) /
-            LOCKED_PROFIT_RELEASE_SCALE;
-        return lockedProfit - lockedProfitChange;
+        return 0;
     }
 
     /// @inheritdoc Lender
