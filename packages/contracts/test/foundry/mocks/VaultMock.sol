@@ -7,9 +7,18 @@ contract VaultMock is Vault {
     constructor(
         address underlying,
         address rewards,
-        uint256 fee
+        uint256 fee,
+        uint256 lockedProfitReleaseDuration
     ) {
-        initialize(underlying, rewards, fee, "", "", new address[](0));
+        initialize(
+            underlying,
+            rewards,
+            fee,
+            lockedProfitReleaseDuration,
+            "",
+            "",
+            new address[](0)
+        );
     }
 
     function emitStrategyAddedEvent(address strategy, uint256 debtRatio)
@@ -48,6 +57,10 @@ contract VaultMock is Vault {
         emit Transfer(address(0), to, amount);
     }
 
+    function emitLockedProfitReleaseRateChanged(uint256 rate) external {
+        emit LockedProfitReleaseRateChanged(rate);
+    }
+
     function hasStrategyAsBorrower(address strategy)
         external
         view
@@ -70,5 +83,9 @@ contract VaultMock is Vault {
 
     function mint(address to, uint256 amount) external {
         _mint(to, amount, "", "", false);
+    }
+
+    function calculateLockedProfit() external view returns (uint256) {
+        return _calculateLockedProfit();
     }
 }

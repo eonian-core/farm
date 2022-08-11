@@ -6,6 +6,7 @@ import "./lending/Lender.sol";
 import "./tokens/SafeERC4626Upgradeable.sol";
 import "./strategies/IStrategy.sol";
 import "./structures/AddressList.sol";
+import "forge-std/console.sol";
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -18,10 +19,14 @@ error StrategyNotFound();
 error StrategyAlreadyExists();
 error InsufficientVaultBalance(uint256 assets, uint256 shares);
 error WrongQueueSize(uint256 size);
+error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 
 contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using AddressList for address[];
+
+    /// @notice Represents the maximum value of the locked-in profit ratio scale (where 1e18 is 100%).
+    uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     /// @notice Rewards contract where management fees are sent to.
     address public rewards;
@@ -31,6 +36,14 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @notice Arranged list of addresses of strategies, which defines the order for withdrawal.
     address[] public withdrawalQueue;
+
+    /// @notice The amount of funds that cannot be withdrawn by users.
+    ///         Decreases with time at the rate of "lockedProfitReleaseRate".
+    uint256 public lockedProfit;
+
+    /// @notice The rate of "lockedProfit" decline on the locked-in profit scale (scaled to 1e18).
+    ///         Represents the amount of funds that will be unlocked when one second passes.
+    uint256 public lockedProfitReleaseRate;
 
     /// @notice Event that should happen when the strategy connects to the vault.
     /// @param strategy Address of the strategy contract.
@@ -50,6 +63,9 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     /// @param strategy Address of the strategy contract.
     event StrategyReturnedToQueue(address indexed strategy);
 
+    /// @notice Event that should happen when the locked-in profit release rate changed.
+    event LockedProfitReleaseRateChanged(uint256 rate);
+
     /// @dev This empty reserved space is put in place to allow future versions to add new
     ///      variables without shifting down storage in the inheritance chain.
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
@@ -59,6 +75,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         address _asset,
         address _rewards,
         uint256 _managementFee,
+        uint256 _lockedProfitReleaseRate,
         string memory _name,
         string memory _symbol,
         address[] memory _defaultOperators
@@ -81,6 +98,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
         setRewards(_rewards);
         setManagementFee(_managementFee);
+        setLockedProfitReleaseRate(_lockedProfitReleaseRate);
     }
 
     /// @inheritdoc IVault
@@ -244,6 +262,30 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         shutdown ? _pause() : _unpause();
     }
 
+    /// @notice Changes the rate of release of locked-in profit.
+    /// @param rate the rate of release of locked profit (percent per second scaled to 1e18).
+    ///             The desire value of this parameter can be calculated as 1e18 / DurationInSeconds.
+    function setLockedProfitReleaseRate(uint256 rate) public onlyOwner {
+        if (rate > LOCKED_PROFIT_RELEASE_SCALE) {
+            revert InvalidLockedProfitReleaseRate(rate);
+        }
+        lockedProfitReleaseRate = rate;
+        emit LockedProfitReleaseRateChanged(rate);
+    }
+
+    /// @notice Calculates the locked profit, takes into account the change since the last report.
+    function _calculateLockedProfit() internal view returns (uint256) {
+        uint256 ratio = (block.timestamp - lastReportTimestamp) *
+            lockedProfitReleaseRate;
+        if (ratio >= LOCKED_PROFIT_RELEASE_SCALE) {
+            return 0;
+        }
+
+        uint256 lockedProfitChange = (ratio * lockedProfit) /
+            LOCKED_PROFIT_RELEASE_SCALE;
+        return lockedProfit - lockedProfitChange;
+    }
+
     /// @inheritdoc Lender
     function _chargeFees(uint256 extraFreeFunds)
         internal
@@ -255,6 +297,27 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
             _mint(rewards, convertToShares(fee), "", "", false);
         }
         return fee;
+    }
+
+    /// @notice Updates the locked-in profit value according to the positive debt management report of the strategy
+    /// @inheritdoc Lender
+    function _afterPositiveDebtManagementReport(
+        uint256 extraFreeFunds,
+        uint256 chargedFees
+    ) internal override {
+        lockedProfit = _calculateLockedProfit() + extraFreeFunds - chargedFees;
+    }
+
+    /// @notice Updates the locked-in profit value according to the negative debt management report of the strategy
+    /// @inheritdoc Lender
+    function _afterNegativeDebtManagementReport(uint256 remainingDebt)
+        internal
+        override
+    {
+        uint256 currentLockedProfit = _calculateLockedProfit();
+        lockedProfit = currentLockedProfit > remainingDebt
+            ? currentLockedProfit - remainingDebt
+            : 0;
     }
 
     /// @notice Returns the current debt of the strategy.
@@ -291,7 +354,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @inheritdoc ERC4626Upgradeable
     function totalAssets() public view override returns (uint256) {
-        return super.lendingAssets();
+        return super.lendingAssets() - _calculateLockedProfit();
     }
 
     /// @inheritdoc Lender
