@@ -5,8 +5,7 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {ERC777Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC777/ERC777Upgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-
-import {FixedPointMathLib} from "../math/FixedPointMathLib.sol";
+import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
@@ -147,8 +146,8 @@ abstract contract ERC4626Upgradeable is
         uint256 shares,
         address receiver
     ) private {
-        // cases when msg.sender != receiver is error prune
-        // but they allowed by standard... take care of it by self
+        // cases when msg.sender != receiver are error prone
+        // but they are allowed by the standard... we need take care of it ourselves
 
         // Need to transfer before minting or ERC777s could reenter.
         asset.safeTransferFrom(msg.sender, address(this), assets);
