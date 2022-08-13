@@ -19,7 +19,7 @@
     "postinstall": "forge install && cp -u .env.example .env",
     "clean": "forge clean",
     "test:fuzz": "FOUNDRY_FUZZ_RUNS=1000 forge test -vvv",
-    "dev": "forge test --watch -vvv",
+    "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node"
   },
   "devDependencies": {
