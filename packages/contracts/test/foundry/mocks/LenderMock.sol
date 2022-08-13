@@ -95,14 +95,16 @@ contract LenderMock is Lender {
         uint256 debtPayment,
         uint256 freeFunds,
         uint256 fundsGiven,
-        uint256 fundsTaken
+        uint256 fundsTaken,
+        uint256 loss
     ) external {
         emit BorrowerDebtManagementReported(
-            borrower = borrower,
-            debtPayment = debtPayment,
-            freeFunds = freeFunds,
-            fundsGiven = fundsGiven,
-            fundsTaken = fundsTaken
+            borrower,
+            debtPayment,
+            freeFunds,
+            fundsGiven,
+            fundsTaken,
+            loss
         );
     }
 
