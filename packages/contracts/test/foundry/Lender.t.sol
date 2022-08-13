@@ -366,7 +366,7 @@ contract LenderTest is Test {
         // Expect event `BorrowerDebtManagementReported` emitted:
         // `debtPayment`, `fundsTaken` = 0; `freeFunds`, `fundsTaken` = gain
         vm.expectEmit(true, true, true, true);
-        lenderMock.emitReportEvent(borrowerA, 0, gain, 0, gain);
+        lenderMock.emitReportEvent(borrowerA, 0, gain, 0, gain, 0);
 
         // Let's report this gain on behalf of the borrower
         vm.prank(borrowerA);
@@ -581,7 +581,8 @@ contract LenderTest is Test {
             debtPayment,
             gain,
             0,
-            uint256(gain) + debtPayment // Taken funds
+            uint256(gain) + debtPayment, // Taken funds
+            0
         );
 
         vm.prank(borrowerA);
@@ -704,7 +705,8 @@ contract LenderTest is Test {
                 debtPayment,
                 0,
                 0,
-                debtPayment
+                debtPayment,
+                borrowerLoss
             );
         }
 
@@ -804,7 +806,14 @@ contract LenderTest is Test {
         uint256 expectedBorrowerBalance = (uint256(balance) * borrowerRatio) /
             MAX_BPS;
         vm.expectEmit(true, true, true, true);
-        lenderMock.emitReportEvent(borrowerA, 0, 0, expectedBorrowerBalance, 0);
+        lenderMock.emitReportEvent(
+            borrowerA,
+            0,
+            0,
+            expectedBorrowerBalance,
+            0,
+            0
+        );
 
         // Lets assume it's a first report (no gains yet)
         vm.prank(borrower);

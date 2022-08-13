@@ -314,15 +314,15 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @notice Updates the locked-in profit value according to the negative debt management report of the strategy
     /// @inheritdoc Lender
-    function _afterNegativeDebtManagementReport(uint256 remainingDebt)
+    function _afterNegativeDebtManagementReport(uint256 loss)
         internal
         override
     {
         uint256 currentLockedProfit = _calculateLockedProfit();
 
         // If a loss occurs, it is necessary to release the appropriate amount of funds that users were able to withdraw it.
-        lockedProfit = currentLockedProfit > remainingDebt
-            ? currentLockedProfit - remainingDebt
+        lockedProfit = currentLockedProfit > loss
+            ? currentLockedProfit - loss
             : 0;
     }
 
