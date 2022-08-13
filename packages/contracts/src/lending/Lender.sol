@@ -51,12 +51,14 @@ abstract contract Lender is
     /// @param freeFunds Free funds on the borrower's contract that remain after the debt is paid
     /// @param fundsGiven Funds issued to the borrower by this lender
     /// @param fundsTaken Funds that have been taken from the borrower by the lender
+    /// @param loss Amount of funds that the borrower realised as loss
     event BorrowerDebtManagementReported(
         address indexed borrower,
         uint256 debtPayment,
         uint256 freeFunds,
         uint256 fundsGiven,
-        uint256 fundsTaken
+        uint256 fundsTaken,
+        uint256 loss
     );
 
     modifier onlyBorrowers() {
@@ -115,37 +117,42 @@ abstract contract Lender is
             chargedFees = _chargeFees(extraFreeFunds);
         }
 
-        _rebalanceBorrowerFunds(msg.sender, debtPayment, extraFreeFunds);
+        _rebalanceBorrowerFunds(msg.sender, debtPayment, extraFreeFunds, 0);
 
         _afterPositiveDebtManagementReport(extraFreeFunds, chargedFees);
     }
 
     /// @inheritdoc ILender
-    function reportNegativeDebtManagement(
-        uint256 remainingDebt,
-        uint256 debtPayment
-    ) external override onlyBorrowers updateLastReportTime nonReentrant {
+    function reportNegativeDebtManagement(uint256 loss, uint256 debtPayment)
+        external
+        override
+        onlyBorrowers
+        updateLastReportTime
+        nonReentrant
+    {
         // Checking whether the borrower has available funds for debt payment
         require(_borrowerFreeAssets(msg.sender) >= debtPayment);
 
         // Debt wasn't repaid, we need to decrease the ratio of this borrower
-        if (remainingDebt > 0) {
-            _decreaseBorrowerCredibility(msg.sender, remainingDebt);
+        if (loss > 0) {
+            _decreaseBorrowerCredibility(msg.sender, loss);
         }
 
-        _rebalanceBorrowerFunds(msg.sender, debtPayment, 0);
+        _rebalanceBorrowerFunds(msg.sender, debtPayment, 0, loss);
 
-        _afterNegativeDebtManagementReport(remainingDebt);
+        _afterNegativeDebtManagementReport(loss);
     }
 
     /// @notice Balances the borrower's account and adjusts the current amount of funds the borrower can take.
     /// @param borrower a borrower's contract address.
     /// @param debtPayment an amount of outstanding debt since the previous report, that the borrower managed to cover. Can be zero.
     /// @param borrowerFreeFunds a funds that the borrower has earned since the previous report. Can be zero.
+    /// @param loss a number of tokens by which the borrower's balance has decreased since the last report.
     function _rebalanceBorrowerFunds(
         address borrower,
         uint256 debtPayment,
-        uint256 borrowerFreeFunds
+        uint256 borrowerFreeFunds,
+        uint256 loss
     ) private {
         // Calculate the amount of credit the lender can provide to the borrower (if any)
         uint256 borrowerAvailableCredit = _availableCredit(borrower);
@@ -185,7 +192,8 @@ abstract contract Lender is
             debtPayment,
             borrowerFreeFunds,
             fundsGiven,
-            fundsTaken
+            fundsTaken,
+            loss
         );
     }
 
@@ -378,8 +386,6 @@ abstract contract Lender is
     ) internal virtual;
 
     /// @notice Callback that is called at the end of the negative report function.
-    /// @param remainingDebt the number of tokens by which the borrower's balance has decreased since the last report.
-    function _afterNegativeDebtManagementReport(uint256 remainingDebt)
-        internal
-        virtual;
+    /// @param loss the number of tokens by which the borrower's balance has decreased since the last report.
+    function _afterNegativeDebtManagementReport(uint256 loss) internal virtual;
 }

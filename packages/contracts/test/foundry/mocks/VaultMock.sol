@@ -86,6 +86,6 @@ contract VaultMock is Vault {
     }
 
     function calculateLockedProfit() external view returns (uint256) {
-        return _calculateLockedProfit();
+        return _lockedProfit();
     }
 }
