@@ -145,7 +145,7 @@ abstract contract ERC4626Upgradeable is
         uint256 assets,
         uint256 shares,
         address receiver
-    ) private {
+    ) internal {
         // cases when msg.sender != receiver are error prone
         // but they are allowed by the standard... we need take care of it ourselves
 
@@ -210,7 +210,7 @@ abstract contract ERC4626Upgradeable is
         uint256 shares,
         address receiver,
         address owner
-    ) private {
+    ) internal {
         // cases when msg.sender != receiver != owner is error prune
         // but they allowed by standard... take care of it by self
         if (msg.sender != owner) {
