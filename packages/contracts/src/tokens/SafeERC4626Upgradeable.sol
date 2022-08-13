@@ -67,7 +67,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         // Check for rounding error since we round down in previewDeposit.
         require(shares != 0, "Given assets result in 0 shares.");
 
-        _receiveAndDeposit(assets, shares);
+        _receiveAndDeposit(assets, shares, msg.sender);
     }
 
     /// @notice Mints exactly requested Vault shares to msg.sender by depositing any required amount of underlying tokens.
@@ -86,22 +86,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         // No need to check for rounding error, previewMint rounds up.
         assets = previewMint(shares);
 
-        _receiveAndDeposit(assets, shares);
-    }
-
-    /// @notice Base deposit logic which common for public deposit and mint function
-    /// Trasfer assets from msg.sender and mint shares for msg.sender
-    function _receiveAndDeposit(uint256 assets, uint256 shares) private {
-        // Implementation of deposit logic which use only msg.sender as actor
-
-        // Need to transfer before minting or ERC777s could reenter.
-        asset.safeTransferFrom(msg.sender, address(this), assets);
-
-        _mint(msg.sender, shares, "", "");
-
-        emit Deposit(msg.sender, msg.sender, assets, shares);
-
-        afterDeposit(assets, shares);
+        _receiveAndDeposit(assets, shares, msg.sender);
     }
 
     /// @notice Burns shares from msg.sender and sends exactly assets of underlying tokens to msg.sender.
@@ -122,7 +107,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         // No need to check for rounding error, previewWithdraw rounds up.
         shares = previewWithdraw(assets);
 
-        _withdrawAndSend(assets, shares);
+        _withdrawAndSend(assets, shares, msg.sender, msg.sender);
     }
 
     /// @notice Burns exactly shares from msg.sender and sends assets of underlying tokens to msg.sender.
@@ -144,21 +129,7 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
         // Check for rounding error since we round down in previewRedeem.
         require(assets != 0, "Given shares result in 0 assets.");
 
-        _withdrawAndSend(assets, shares);
-    }
-
-    /// @notice Burn msg.sender shares and send tokens to msg.sender.
-    /// Work little bit more gas efficient than default implementation.
-    function _withdrawAndSend(uint256 assets, uint256 shares) private {
-        // Implementation of witdraw logic which use only msg.sender as actor
-
-        beforeWithdraw(assets, shares);
-
-        _burn(msg.sender, shares, "", "");
-
-        emit Withdraw(msg.sender, msg.sender, msg.sender, assets, shares);
-
-        asset.safeTransfer(msg.sender, assets);
+        _withdrawAndSend(assets, shares, msg.sender, msg.sender);
     }
 
     /* //////////////////// Backwards compatible methods ////////////////////////// */
