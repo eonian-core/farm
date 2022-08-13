@@ -9,6 +9,7 @@ import "./mocks/StrategyMock.sol";
 
 contract VaultTest is Test {
     uint256 constant MAX_BPS = 10_000;
+    uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     ERC20Mock underlying;
     VaultMock vault;
@@ -22,6 +23,7 @@ contract VaultTest is Test {
     address bob = vm.addr(11);
 
     uint256 defaultFee = 1000;
+    uint256 defaultLPRRate = 10**18;
 
     function setUp() public {
         vm.label(rewards, "rewards");
@@ -31,7 +33,12 @@ contract VaultTest is Test {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vault = new VaultMock(address(underlying), rewards, defaultFee);
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            defaultFee,
+            defaultLPRRate
+        );
 
         strategy = new StrategyMock(address(underlying), address(vault));
     }
@@ -49,6 +56,7 @@ contract VaultTest is Test {
             address(underlying),
             rewards,
             defaultFee,
+            defaultLPRRate,
             "",
             "",
             new address[](0)
@@ -83,7 +91,12 @@ contract VaultTest is Test {
         vault.addStrategy(address(strategyWrongAsset), MAX_BPS);
 
         // Checking if vaults don't not match
-        VaultMock wrongVault = new VaultMock(address(underlying), rewards, 0);
+        VaultMock wrongVault = new VaultMock(
+            address(underlying),
+            rewards,
+            0,
+            defaultLPRRate
+        );
         StrategyMock strategyWrongVault = new StrategyMock(
             address(underlying),
             address(wrongVault)
@@ -340,7 +353,12 @@ contract VaultTest is Test {
     function testChargingFees() public {
         uint256 fee = MAX_BPS;
 
-        vault = new VaultMock(address(underlying), rewards, fee);
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            fee,
+            defaultLPRRate
+        );
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -380,7 +398,12 @@ contract VaultTest is Test {
                 (uint256(initialVaultBalance) * strategyRatio) / MAX_BPS
         );
 
-        vault = new VaultMock(address(underlying), rewards, fee);
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            fee,
+            defaultLPRRate
+        );
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -468,7 +491,10 @@ contract VaultTest is Test {
         vm.prank(address(strategy));
         vault.reportPositiveDebtManagement(gain, 0);
 
-        assertEq(vault.totalAssets(), initialVaultBalance + gain);
+        assertEq(
+            vault.totalAssets(),
+            initialVaultBalance + gain - vault.calculateLockedProfit()
+        );
     }
 
     function testTotalAssetsAmountAfterNegativeReport(
@@ -772,6 +798,183 @@ contract VaultTest is Test {
 
         vm.prank(alice);
         vault.reentrantWithdraw(withdraw);
+    }
+
+    function testSetLockedProfitReleaseRate(uint256 rate) public {
+        vm.assume(rate <= LOCKED_PROFIT_RELEASE_SCALE);
+
+        assertEq(vault.lockedProfitReleaseRate(), defaultLPRRate);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitLockedProfitReleaseRateChanged(rate);
+        vault.setLockedProfitReleaseRate(rate);
+
+        assertEq(vault.lockedProfitReleaseRate(), rate);
+    }
+
+    function testRevertWhenSetLockedProfitReleaseRateWithWrongValue() public {
+        assertEq(vault.lockedProfitReleaseRate(), defaultLPRRate);
+
+        uint256 rate = LOCKED_PROFIT_RELEASE_SCALE + 1;
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                InvalidLockedProfitReleaseRate.selector,
+                rate
+            )
+        );
+        vault.setLockedProfitReleaseRate(rate);
+    }
+
+    function testLockedProfitRelease() public {
+        uint256 initialVaultBalance = 10_000_000;
+        uint256 gain = 1_000_000;
+        uint256 fees = 0;
+        uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
+
+        _initVaultWithStrategy(
+            initialVaultBalance,
+            fees,
+            lockedProfitReleaseRate
+        );
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(strategy), gain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(gain, 0);
+
+        // Immediately after the report, all profit should be locked
+        assertEq(vault.totalAssets(), initialVaultBalance);
+        assertEq(vault.calculateLockedProfit(), gain);
+
+        // Let's assume that half of locked period passed
+        vm.warp(block.timestamp + 3 hours);
+        _assertEqWithRoundingError(
+            vault.totalAssets(),
+            initialVaultBalance + gain / 2
+        );
+        _assertEqWithRoundingError(vault.calculateLockedProfit(), gain / 2);
+
+        // Let's assume that the entire locked period passed, all profit should be released
+        vm.warp(block.timestamp + 3 hours);
+        _assertEqWithRoundingError(
+            vault.totalAssets(),
+            initialVaultBalance + gain
+        );
+        _assertEqWithRoundingError(vault.calculateLockedProfit(), 0);
+    }
+
+    function testLockedProfitReleaseWithFees() public {
+        uint256 initialVaultBalance = 10_000_000;
+        uint256 gain = 1_000_000;
+        uint256 fees = 1_000;
+        uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
+
+        _initVaultWithStrategy(
+            initialVaultBalance,
+            fees,
+            lockedProfitReleaseRate
+        );
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(strategy), gain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(gain, 0);
+
+        // Immediately after the report, all profit should be locked (except the fees)
+        uint256 feesAmount = (fees * gain) / MAX_BPS;
+        assertEq(vault.totalAssets(), initialVaultBalance + feesAmount);
+        assertEq(vault.calculateLockedProfit(), gain - feesAmount);
+
+        // Let's assume that half of locked period passed
+        vm.warp(block.timestamp + 3 hours);
+        _assertEqWithRoundingError(
+            vault.totalAssets(),
+            initialVaultBalance + (gain + feesAmount) / 2
+        );
+        _assertEqWithRoundingError(
+            vault.calculateLockedProfit(),
+            (gain - feesAmount) / 2
+        );
+
+        // Let's assume that the entire locked period passed, all profit should be released
+        vm.warp(block.timestamp + 3 hours);
+        _assertEqWithRoundingError(
+            vault.totalAssets(),
+            initialVaultBalance + gain
+        );
+        _assertEqWithRoundingError(vault.calculateLockedProfit(), 0);
+    }
+
+    function testLockedProfitReleaseWithNegativeReport() public {
+        uint256 initialVaultBalance = 10_000_000;
+        uint256 gain = 1_000_000;
+        uint256 loss = 250_000;
+        uint256 fees = 0;
+        uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
+
+        _initVaultWithStrategy(
+            initialVaultBalance,
+            fees,
+            lockedProfitReleaseRate
+        );
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(strategy), gain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(gain, 0);
+
+        // Immediately after the report, all profit should be locked
+        assertEq(vault.totalAssets(), initialVaultBalance);
+        assertEq(vault.calculateLockedProfit(), gain);
+
+        // Let's assume that half of locked period passed
+        vm.warp(block.timestamp + 3 hours);
+        _assertEqWithRoundingError(
+            vault.totalAssets(),
+            initialVaultBalance + gain / 2
+        );
+        _assertEqWithRoundingError(vault.calculateLockedProfit(), gain / 2);
+
+        // Half of the time passed and strategy reported about the loss.
+        underlying.burn(address(strategy), loss);
+        vm.prank(address(strategy));
+        vault.reportNegativeDebtManagement(loss, 0);
+
+        _assertEqWithRoundingError(
+            vault.totalAssets(),
+            initialVaultBalance + gain / 2
+        );
+        _assertEqWithRoundingError(
+            vault.calculateLockedProfit(),
+            gain / 2 - loss
+        );
+    }
+
+    function _initVaultWithStrategy(
+        uint256 initialVaultBalance,
+        uint256 fees,
+        uint256 lockedProfitReleaseRate
+    ) private {
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            fees,
+            lockedProfitReleaseRate
+        );
+        strategy = new StrategyMock(address(underlying), address(vault));
+
+        // Mint some initial funds for the vault
+        underlying.mint(address(vault), initialVaultBalance);
+        vm.prank(address(strategy));
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
     }
 
     function _assertEqWithRoundingError(uint256 a, uint256 b) private {

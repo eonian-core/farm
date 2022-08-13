@@ -104,6 +104,7 @@ abstract contract Lender is
             revert FalsePositiveReport();
         }
 
+        uint256 chargedFees = 0;
         // We can only charge a fees if the borrower has reported extra free funds,
         // if it's the first report at this block and only if the borrower was registered some time ago
         if (
@@ -111,10 +112,12 @@ abstract contract Lender is
             borrowersData[msg.sender].lastReportTimestamp < block.timestamp &&
             borrowersData[msg.sender].activationTimestamp < block.timestamp
         ) {
-            _chargeFees(extraFreeFunds);
+            chargedFees = _chargeFees(extraFreeFunds);
         }
 
         _rebalanceBorrowerFunds(msg.sender, debtPayment, extraFreeFunds);
+
+        _afterPositiveDebtManagementReport(extraFreeFunds, chargedFees);
     }
 
     /// @inheritdoc ILender
@@ -131,6 +134,8 @@ abstract contract Lender is
         }
 
         _rebalanceBorrowerFunds(msg.sender, debtPayment, 0);
+
+        _afterNegativeDebtManagementReport(remainingDebt);
     }
 
     /// @notice Balances the borrower's account and adjusts the current amount of funds the borrower can take.
@@ -363,4 +368,18 @@ abstract contract Lender is
         internal
         virtual
         returns (uint256);
+
+    /// @notice Callback that is called at the end of the positive report function.
+    /// @param extraFreeFunds the reported extra amount of borrower's funds.
+    /// @param chargedFees the total amount of charged fees.
+    function _afterPositiveDebtManagementReport(
+        uint256 extraFreeFunds,
+        uint256 chargedFees
+    ) internal virtual;
+
+    /// @notice Callback that is called at the end of the negative report function.
+    /// @param remainingDebt the number of tokens by which the borrower's balance has decreased since the last report.
+    function _afterNegativeDebtManagementReport(uint256 remainingDebt)
+        internal
+        virtual;
 }

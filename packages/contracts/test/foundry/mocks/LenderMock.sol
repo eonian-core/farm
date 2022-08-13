@@ -175,4 +175,14 @@ contract LenderMock is Lender {
         feesCharges.push(extraFreeFunds);
         return extraFreeFunds;
     }
+
+    function _afterPositiveDebtManagementReport(
+        uint256 extraFreeFunds,
+        uint256 chargedFees
+    ) internal override {}
+
+    function _afterNegativeDebtManagementReport(uint256 remainingDebt)
+        internal
+        override
+    {}
 }
