@@ -274,8 +274,13 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @notice Calculates the locked profit, takes into account the change since the last report.
     function _calculateLockedProfit() internal view returns (uint256) {
+        // Release rate should be small, since the timestamp can be manipulated by the node operator,
+        // not expected to have much impact, since the changes will be applied to all users and cannot be abused directly.
         uint256 ratio = (block.timestamp - lastReportTimestamp) *
             lockedProfitReleaseRate;
+
+        // In case the ratio >= scale, the calculation still leads to zero.
+        // For gas efficiency no early return is used
         if (ratio < LOCKED_PROFIT_RELEASE_SCALE) {
             uint256 lockedProfitChange = (ratio * lockedProfit) /
                 LOCKED_PROFIT_RELEASE_SCALE;
@@ -303,6 +308,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         uint256 extraFreeFunds,
         uint256 chargedFees
     ) internal override {
+        // Locking every reported strategy profit, taking into account the charged fees.
         lockedProfit = _calculateLockedProfit() + extraFreeFunds - chargedFees;
     }
 
@@ -313,6 +319,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         override
     {
         uint256 currentLockedProfit = _calculateLockedProfit();
+
+        // If a loss occurs, it is necessary to release the appropriate amount of funds that users were able to withdraw it.
         lockedProfit = currentLockedProfit > remainingDebt
             ? currentLockedProfit - remainingDebt
             : 0;
