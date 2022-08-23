@@ -252,6 +252,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         if (_managementFee > MAX_BPS) {
             revert ExceededMaximumFeeValue();
         }
+
         managementFee = _managementFee;
     }
 
@@ -268,6 +269,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         if (rate > LOCKED_PROFIT_RELEASE_SCALE) {
             revert InvalidLockedProfitReleaseRate(rate);
         }
+
         lockedProfitReleaseRate = rate;
         emit LockedProfitReleaseRateChanged(rate);
     }
@@ -279,17 +281,16 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         uint256 ratio = (block.timestamp - lastReportTimestamp) *
             lockedProfitReleaseRate;
 
-        // In case the ratio >= scale, the calculation still leads to zero.
-        // For gas efficiency no early return is used
-        if (ratio < LOCKED_PROFIT_RELEASE_SCALE) {
-            uint256 lockedProfitChange = (ratio * lockedProfitBaseline) /
-                LOCKED_PROFIT_RELEASE_SCALE;
-
-            // Reducing locked profits over time frees up profits for users
-            return lockedProfitBaseline - lockedProfitChange;
+        // In case the ratio >= scale, the calculation anyway leads to zero.
+        if (ratio >= LOCKED_PROFIT_RELEASE_SCALE) {
+            return 0;
         }
 
-        return 0;
+        uint256 lockedProfitChange = (ratio * lockedProfitBaseline) /
+            LOCKED_PROFIT_RELEASE_SCALE;
+
+        // Reducing locked profits over time frees up profits for users
+        return lockedProfitBaseline - lockedProfitChange;
     }
 
     /// @inheritdoc Lender
@@ -302,6 +303,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         if (fee > 0) {
             _mint(rewards, convertToShares(fee), "", "", false);
         }
+
         return fee;
     }
 
