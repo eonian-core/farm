@@ -206,9 +206,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         emit StrategyReturnedToQueue(strategy);
     }
 
-    /// @notice Revokes a strategy from the vault.
-    ///         Sets strategy's dept ratio to zero, so that the strategy cannot take funds from the vault.
-    /// @param strategy a strategy to revoke.
+    /// @inheritdoc IVault
     function revokeStrategy(address strategy) external onlyOwner {
         _setBorrowerDebtRatio(strategy, 0);
         emit StrategyRevoked(strategy);
@@ -382,5 +380,10 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         override
     {
         asset.safeTransferFrom(borrower, address(this), amount);
+    }
+
+    /// @inheritdoc IVault
+    function underlyingAsset() external view returns (address) {
+        return address(asset);
     }
 }

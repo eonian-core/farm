@@ -97,6 +97,16 @@ abstract contract Lender is
     }
 
     /// @inheritdoc ILender
+    function currentDebt() external view override returns (uint256) {
+        return _currentDebt(msg.sender);
+    }
+
+    /// @inheritdoc ILender
+    function isActivated() external view override returns (bool) {
+        return _isActivated(msg.sender);
+    }
+
+    /// @inheritdoc ILender
     function reportPositiveDebtManagement(
         uint256 extraFreeFunds,
         uint256 debtPayment
@@ -227,6 +237,16 @@ abstract contract Lender is
         return (debtRatio * lendingAssets()) / MAX_BPS;
     }
 
+    /// @notice See external implementation
+    function _currentDebt(address borrower) internal view returns (uint256) {
+        return borrowersData[borrower].debt;
+    }
+
+    /// @notice See external implementation
+    function _isActivated(address borrower) internal view returns (bool) {
+        return borrowersData[borrower].activationTimestamp > 0;
+    }
+
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
     /// @dev This function has "internal" visibility because it's used in tests
     function _decreaseBorrowerCredibility(address borrower, uint256 loss)
@@ -321,7 +341,7 @@ abstract contract Lender is
         internal
     {
         // Check if specified borrower has already registered
-        if (borrowersData[borrower].activationTimestamp > 0) {
+        if (_isActivated(borrower)) {
             revert BorrowerAlreadyExists();
         }
 
@@ -345,7 +365,7 @@ abstract contract Lender is
     function _setBorrowerDebtRatio(address borrower, uint256 borrowerDebtRatio)
         internal
     {
-        if (borrowersData[borrower].activationTimestamp == 0) {
+        if (!_isActivated(borrower)) {
             revert BorrowerDoesNotExist();
         }
 

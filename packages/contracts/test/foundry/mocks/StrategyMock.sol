@@ -27,4 +27,8 @@ contract StrategyMock is IStrategy {
             IERC20(asset).safeTransfer(msg.sender, assetBalance);
         }
     }
+
+    function name() external pure override returns (string memory) {
+        return "StrategyMock";
+    }
 }

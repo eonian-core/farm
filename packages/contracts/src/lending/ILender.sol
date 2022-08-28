@@ -10,6 +10,14 @@ interface ILender {
     /// @return Outstanding debt as amount of tokens
     function outstandingDebt() external view returns (uint256);
 
+    /// @notice Returns the amount of funds taken by the borrower (caller of this function).
+    /// @return Debt as amount of tokens
+    function currentDebt() external view returns (uint256);
+
+    /// @notice Returns the activation status of the borrower (caller of this function).
+    /// @return "true" if the borrower is active
+    function isActivated() external view returns (bool);
+
     /// @notice Reports a positive result of the borrower's debt management.
     ///         Borrower must call this function if he has made any profit
     ///         or/and has a free funds available to repay the outstanding debt (if any).

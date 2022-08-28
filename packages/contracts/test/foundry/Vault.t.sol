@@ -953,6 +953,10 @@ contract VaultTest is Test {
         );
     }
 
+    function testUnderlyingAsset() public {
+        assertEq(vault.underlyingAsset(), address(underlying));
+    }
+
     function _initVaultWithStrategy(
         uint256 initialVaultBalance,
         uint256 fees,

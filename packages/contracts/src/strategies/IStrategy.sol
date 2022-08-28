@@ -2,6 +2,9 @@
 pragma solidity ^0.8.0;
 
 interface IStrategy {
+    /// @notice Returns the name of this strategy.
+    function name() external view returns (string memory);
+
     /// @notice Returns the contract address of the underlying asset of this strategy.
     function asset() external view returns (address);
 
