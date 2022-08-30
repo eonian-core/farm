@@ -79,7 +79,7 @@ abstract contract BaseStrategy is
         if (profit > 0) {
             IVault(vault).reportPositiveDebtManagement(profit, debtPayment);
         } else {
-            IVault(vault).reportNegativeDebtManagement(profit, debtPayment);
+            IVault(vault).reportNegativeDebtManagement(loss, debtPayment);
         }
 
         outstandingDebt = IVault(vault).outstandingDebt();

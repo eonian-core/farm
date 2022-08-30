@@ -98,12 +98,12 @@ abstract contract Lender is
 
     /// @inheritdoc ILender
     function currentDebt() external view override returns (uint256) {
-        return _currentDebt(msg.sender);
+        return currentStrategyDebt(msg.sender);
     }
 
     /// @inheritdoc ILender
     function isActivated() external view override returns (bool) {
-        return _isActivated(msg.sender);
+        return isStrategyActivated(msg.sender);
     }
 
     /// @inheritdoc ILender
@@ -232,19 +232,23 @@ abstract contract Lender is
         return _freeAssets() + totalDebt;
     }
 
-    /// @notice Returns the total number of tokens borrowers can take
-    function _debtLimit() private view returns (uint256) {
-        return (debtRatio * lendingAssets()) / MAX_BPS;
-    }
-
-    /// @notice See external implementation
-    function _currentDebt(address borrower) internal view returns (uint256) {
+    /// @notice Returns the current debt that the strategy has.
+    function currentStrategyDebt(address borrower)
+        public
+        view
+        returns (uint256)
+    {
         return borrowersData[borrower].debt;
     }
 
     /// @notice See external implementation
-    function _isActivated(address borrower) internal view returns (bool) {
+    function isStrategyActivated(address borrower) public view returns (bool) {
         return borrowersData[borrower].activationTimestamp > 0;
+    }
+
+    /// @notice Returns the total number of tokens borrowers can take
+    function _debtLimit() private view returns (uint256) {
+        return (debtRatio * lendingAssets()) / MAX_BPS;
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
@@ -341,7 +345,7 @@ abstract contract Lender is
         internal
     {
         // Check if specified borrower has already registered
-        if (_isActivated(borrower)) {
+        if (isStrategyActivated(borrower)) {
             revert BorrowerAlreadyExists();
         }
 
@@ -365,7 +369,7 @@ abstract contract Lender is
     function _setBorrowerDebtRatio(address borrower, uint256 borrowerDebtRatio)
         internal
     {
-        if (!_isActivated(borrower)) {
+        if (!isStrategyActivated(borrower)) {
             revert BorrowerDoesNotExist();
         }
 
