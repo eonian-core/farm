@@ -82,6 +82,9 @@ abstract contract BaseStrategy is
             IVault(vault).reportNegativeDebtManagement(loss, debtPayment);
         }
 
+        // If the strategy needs to repay the entire debt, we need to take all available funds.
+        // We will take the current debt in the report in the previous step, but we still need to free up whatever is left.
+        // This can happen, if the ratio is reduced to 0 or if the vault has been shutted down.
         outstandingDebt = IVault(vault).outstandingDebt();
         outstandingDebt = outstandingDebt == IVault(vault).currentDebt()
             ? estimatedTotalAssets()
