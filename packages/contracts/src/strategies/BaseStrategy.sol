@@ -26,6 +26,12 @@ abstract contract BaseStrategy is
     /// @notice Use this to adjust the threshold at which running a debt causes a work trigger.
     uint256 public debtThreshold;
 
+    /// @notice The estimated amount of gas required for the "work" execution.
+    uint256 public estimatedWorkGas;
+
+    /// @notice Shows how many times higher the profit should be than the spent gas for the "work" function.
+    uint256 public profitFactor;
+
     event Harvested(
         uint256 profit,
         uint256 loss,
@@ -34,6 +40,10 @@ abstract contract BaseStrategy is
     );
 
     event DebtThresholdUpdated(uint256 debtThreshold);
+
+    event EstimatedWorkGasUpdated(uint256 estimatedWorkGas);
+
+    event UpdatedProfitFactor(uint256 profitFactor);
 
     function __BaseStrategy_init(
         address _vault,
@@ -56,6 +66,8 @@ abstract contract BaseStrategy is
         asset = IVault(vault).underlyingAsset();
 
         debtThreshold = 0;
+        estimatedWorkGas = 0;
+        profitFactor = 100;
 
         IERC20Upgradeable(asset).safeApprove(_vault, type(uint256).max);
     }
@@ -112,14 +124,22 @@ abstract contract BaseStrategy is
 
         // Trigger this job if the strategy has some loss to report
         uint256 total = estimatedTotalAssets();
-        if (total + debtThreshold < _vault.currentDebt()) {
+        uint256 debt = _vault.currentDebt();
+        if (total + debtThreshold < debt) {
             return true;
         }
 
-        // TODO: Check the gas cost against the profit (?)
-        // TODO: Check the maximum delay between job executions (?)
+        // Estimate accumulated profit
+        uint256 profit = 0;
+        if (total > debt) {
+            profit = total - debt;
+        }
 
-        return true;
+        // Check the gas cost againts the profit and available credit.
+        // There is no sense to call the "work" function, if we don't have decent amount of funds to move.
+        uint256 credit = _vault.availableCredit();
+        uint256 gasCost = tx.gasprice * estimatedWorkGas;
+        return profitFactor * gasCost < credit + profit;
     }
 
     /// @inheritdoc IStrategy
@@ -144,6 +164,16 @@ abstract contract BaseStrategy is
     function setDebtThreshold(uint256 _debtThreshold) external onlyOwner {
         debtThreshold = _debtThreshold;
         emit DebtThresholdUpdated(_debtThreshold);
+    }
+
+    function setEstimatedWorkGas(uint256 _estimatedWorkGas) external onlyOwner {
+        estimatedWorkGas = _estimatedWorkGas;
+        emit EstimatedWorkGasUpdated(_estimatedWorkGas);
+    }
+
+    function setProfitFactor(uint256 _profitFactor) external onlyOwner {
+        profitFactor = _profitFactor;
+        emit UpdatedProfitFactor(_profitFactor);
     }
 
     function _harvestAfterShutdown(uint256 outstandingDebt)
