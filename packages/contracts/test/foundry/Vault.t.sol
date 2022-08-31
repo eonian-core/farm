@@ -140,7 +140,9 @@ contract VaultTest is Test {
         address strategyAddress = address(strategy);
         vault.addStrategy(strategyAddress, MAX_BPS);
 
-        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+        vm.expectRevert(
+            abi.encodeWithSelector(AccessDeniedForCaller.selector, culprit)
+        );
 
         vm.prank(culprit);
         vault.revokeStrategy(strategyAddress);
