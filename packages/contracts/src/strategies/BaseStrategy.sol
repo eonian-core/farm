@@ -45,6 +45,13 @@ abstract contract BaseStrategy is
 
     event UpdatedProfitFactor(uint256 profitFactor);
 
+    modifier onlyVault() {
+        if (msg.sender != address(vault)) {
+            revert CallerIsNotAVault();
+        }
+        _;
+    }
+
     function __BaseStrategy_init(
         address _vault,
         address _ops,
@@ -143,10 +150,12 @@ abstract contract BaseStrategy is
     }
 
     /// @inheritdoc IStrategy
-    function withdraw(uint256 assets) external override returns (uint256 loss) {
-        if (msg.sender != address(vault)) {
-            revert CallerIsNotAVault();
-        }
+    function withdraw(uint256 assets)
+        external
+        override
+        onlyVault
+        returns (uint256 loss)
+    {
         // Liquidate the requested amount of tokens
         uint256 amountFreed;
         (amountFreed, loss) = _liquidatePosition(assets);
