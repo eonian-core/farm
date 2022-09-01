@@ -956,7 +956,7 @@ contract VaultTest is Test {
     }
 
     function testUnderlyingAsset() public {
-        assertEq(vault.underlyingAsset(), address(underlying));
+        assertEq(address(vault.asset()), address(underlying));
     }
 
     function _initVaultWithStrategy(

@@ -182,8 +182,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
         // Strategy should refer to this vault and has the same underlying asset
         if (
-            address(this) != IStrategy(strategy).vault() ||
-            address(asset) != IStrategy(strategy).asset()
+            this != IStrategy(strategy).vault() ||
+            asset != IStrategy(strategy).asset()
         ) {
             revert InappropriateStrategy();
         }
