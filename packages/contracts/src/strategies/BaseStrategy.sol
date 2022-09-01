@@ -230,20 +230,20 @@ abstract contract BaseStrategy is
     }
 
     function _gasPriceUSD() private view returns (uint256) {
-        return _convertToUSD(tx.gasprice, 18);
+        return _convertToUSD(nativeTokenPriceFeed, tx.gasprice, 18);
     }
 
     function _assetAmountUSD(uint256 amount) private view returns (uint256) {
         uint256 decimals = IERC20MetadataUpgradeable(address(asset)).decimals();
-        return _convertToUSD(amount, decimals);
+        return _convertToUSD(assetPriceFeed, amount, decimals);
     }
 
-    function _convertToUSD(uint256 amount, uint256 decimals)
-        private
-        view
-        returns (uint256)
-    {
-        (, int256 price, , , ) = nativeTokenPriceFeed.latestRoundData();
+    function _convertToUSD(
+        AggregatorV3Interface priceFeed,
+        uint256 amount,
+        uint256 decimals
+    ) private view returns (uint256) {
+        (, int256 price, , , ) = priceFeed.latestRoundData();
         uint256 priceFeedDecimals = nativeTokenPriceFeed.decimals();
         (, uint256 upToDecimals) = decimals.trySub(priceFeedDecimals);
         return (amount * uint256(price) * 10**upToDecimals) / 10**decimals;
