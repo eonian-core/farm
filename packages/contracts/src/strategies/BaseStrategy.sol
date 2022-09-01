@@ -1,16 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity ^0.8.0;
 
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
 import "./IStrategy.sol";
 import "../IVault.sol";
 import "../automation/GelatoJobAdapter.sol";
 
 error CallerIsNotAVault();
+error UncompatiblePriceFeeds();
 
 abstract contract BaseStrategy is
     IStrategy,
@@ -19,6 +23,7 @@ abstract contract BaseStrategy is
     PausableUpgradeable
 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
+    using SafeMathUpgradeable for uint256;
 
     IVault public vault;
     IERC20Upgradeable public asset;
@@ -31,6 +36,12 @@ abstract contract BaseStrategy is
 
     /// @notice Shows how many times higher the profit should be than the spent gas for the "work" function.
     uint256 public profitFactor;
+
+    /// @notice The USD price feed for the native token of the network on which this strategy works.
+    AggregatorV3Interface internal nativeTokenPriceFeed;
+
+    /// @notice The USD price feed for the strategy asset.
+    AggregatorV3Interface internal assetPriceFeed;
 
     event Harvested(
         uint256 profit,
@@ -55,6 +66,8 @@ abstract contract BaseStrategy is
     function __BaseStrategy_init(
         IVault _vault,
         address _ops,
+        address _nativeTokenPriceFeed,
+        address _assetPriceFeed,
         uint256 _minReportInterval,
         bool _isPrepaid
     ) internal onlyInitializing {
@@ -62,19 +75,30 @@ abstract contract BaseStrategy is
         __Pausable_init();
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 
-        __BaseStrategy_init_unchained(_vault);
+        __BaseStrategy_init_unchained(
+            _vault,
+            _nativeTokenPriceFeed,
+            _assetPriceFeed
+        );
     }
 
-    function __BaseStrategy_init_unchained(IVault _vault)
-        internal
-        onlyInitializing
-    {
+    function __BaseStrategy_init_unchained(
+        IVault _vault,
+        address _nativeTokenPriceFeed,
+        address _assetPriceFeed
+    ) internal onlyInitializing {
         vault = _vault;
         asset = IVault(vault).asset();
 
         debtThreshold = 0;
         estimatedWorkGas = 0;
         profitFactor = 100;
+
+        nativeTokenPriceFeed = AggregatorV3Interface(_nativeTokenPriceFeed);
+        assetPriceFeed = AggregatorV3Interface(_assetPriceFeed);
+        if (nativeTokenPriceFeed.decimals() != assetPriceFeed.decimals()) {
+            revert UncompatiblePriceFeeds();
+        }
 
         IERC20Upgradeable(asset).safeApprove(
             address(_vault),
@@ -148,8 +172,8 @@ abstract contract BaseStrategy is
         // Check the gas cost againts the profit and available credit.
         // There is no sense to call the "work" function, if we don't have decent amount of funds to move.
         uint256 credit = _vault.availableCredit();
-        uint256 gasCost = tx.gasprice * estimatedWorkGas;
-        return profitFactor * gasCost < credit + profit;
+        uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
+        return profitFactor * gasCost < _assetAmountUSD(credit + profit);
     }
 
     /// @inheritdoc IStrategy
@@ -203,6 +227,26 @@ abstract contract BaseStrategy is
             profit = amountFreed - outstandingDebt;
         }
         debtPayment = outstandingDebt - loss;
+    }
+
+    function _gasPriceUSD() private view returns (uint256) {
+        return _convertToUSD(tx.gasprice, 18);
+    }
+
+    function _assetAmountUSD(uint256 amount) private view returns (uint256) {
+        uint256 decimals = IERC20MetadataUpgradeable(address(asset)).decimals();
+        return _convertToUSD(amount, decimals);
+    }
+
+    function _convertToUSD(uint256 amount, uint256 decimals)
+        private
+        view
+        returns (uint256)
+    {
+        (, int256 price, , , ) = nativeTokenPriceFeed.latestRoundData();
+        uint256 priceFeedDecimals = nativeTokenPriceFeed.decimals();
+        (, uint256 upToDecimals) = decimals.trySub(priceFeedDecimals);
+        return (amount * uint256(price) * 10**upToDecimals) / 10**decimals;
     }
 
     function estimatedTotalAssets() public view virtual returns (uint256);

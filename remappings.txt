@@ -4,3 +4,4 @@ solmate/=packages/contracts/lib/solmate/src/
 contracts/=packages/contracts/src/
 @openzeppelin/contracts/=packages/contracts/node_modules/@openzeppelin/contracts/
 @openzeppelin/contracts-upgradeable/=packages/contracts/node_modules/@openzeppelin/contracts-upgradeable/
+@chainlink/contracts/=packages/contracts/node_modules/@chainlink/contracts/
