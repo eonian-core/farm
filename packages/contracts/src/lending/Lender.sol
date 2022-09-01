@@ -98,12 +98,12 @@ abstract contract Lender is
 
     /// @inheritdoc ILender
     function currentDebt() external view override returns (uint256) {
-        return currentStrategyDebt(msg.sender);
+        return currentDebt(msg.sender);
     }
 
     /// @inheritdoc ILender
     function isActivated() external view override returns (bool) {
-        return isStrategyActivated(msg.sender);
+        return isActivated(msg.sender);
     }
 
     /// @inheritdoc ILender
@@ -233,16 +233,12 @@ abstract contract Lender is
     }
 
     /// @notice Returns the current debt that the strategy has.
-    function currentStrategyDebt(address borrower)
-        public
-        view
-        returns (uint256)
-    {
+    function currentDebt(address borrower) public view returns (uint256) {
         return borrowersData[borrower].debt;
     }
 
     /// @notice See external implementation
-    function isStrategyActivated(address borrower) public view returns (bool) {
+    function isActivated(address borrower) public view returns (bool) {
         return borrowersData[borrower].activationTimestamp > 0;
     }
 
@@ -345,7 +341,7 @@ abstract contract Lender is
         internal
     {
         // Check if specified borrower has already registered
-        if (isStrategyActivated(borrower)) {
+        if (isActivated(borrower)) {
             revert BorrowerAlreadyExists();
         }
 
@@ -369,7 +365,7 @@ abstract contract Lender is
     function _setBorrowerDebtRatio(address borrower, uint256 borrowerDebtRatio)
         internal
     {
-        if (!isStrategyActivated(borrower)) {
+        if (!isActivated(borrower)) {
             revert BorrowerDoesNotExist();
         }
 
