@@ -392,9 +392,4 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     {
         asset.safeTransferFrom(borrower, address(this), amount);
     }
-
-    /// @inheritdoc IVault
-    function underlyingAsset() external view returns (address) {
-        return address(asset);
-    }
 }

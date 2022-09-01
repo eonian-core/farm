@@ -20,8 +20,8 @@ abstract contract BaseStrategy is
 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
-    address public vault;
-    address public asset;
+    IVault public vault;
+    IERC20Upgradeable public asset;
 
     /// @notice Use this to adjust the threshold at which running a debt causes a work trigger.
     uint256 public debtThreshold;
@@ -53,7 +53,7 @@ abstract contract BaseStrategy is
     }
 
     function __BaseStrategy_init(
-        address _vault,
+        IVault _vault,
         address _ops,
         uint256 _minReportInterval,
         bool _isPrepaid
@@ -65,18 +65,21 @@ abstract contract BaseStrategy is
         __BaseStrategy_init_unchained(_vault);
     }
 
-    function __BaseStrategy_init_unchained(address _vault)
+    function __BaseStrategy_init_unchained(IVault _vault)
         internal
         onlyInitializing
     {
         vault = _vault;
-        asset = IVault(vault).underlyingAsset();
+        asset = IVault(vault).asset();
 
         debtThreshold = 0;
         estimatedWorkGas = 0;
         profitFactor = 100;
 
-        IERC20Upgradeable(asset).safeApprove(_vault, type(uint256).max);
+        IERC20Upgradeable(asset).safeApprove(
+            address(_vault),
+            type(uint256).max
+        );
     }
 
     /// @inheritdoc Job
