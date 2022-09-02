@@ -7,11 +7,11 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
 import "./IStrategy.sol";
 import "../IVault.sol";
 import "../automation/GelatoJobAdapter.sol";
+import "../structures/PriceConverter.sol";
 
 error CallerIsNotAVault();
 error UncompatiblePriceFeeds();
@@ -23,7 +23,7 @@ abstract contract BaseStrategy is
     PausableUpgradeable
 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
-    using SafeMathUpgradeable for uint256;
+    using PriceConverter for AggregatorV3Interface;
 
     IVault public vault;
     IERC20Upgradeable public asset;
@@ -38,10 +38,13 @@ abstract contract BaseStrategy is
     uint256 public profitFactor;
 
     /// @notice The USD price feed for the native token of the network on which this strategy works.
-    AggregatorV3Interface internal nativeTokenPriceFeed;
+    AggregatorV3Interface internal _nativeTokenPriceFeed;
 
     /// @notice The USD price feed for the strategy asset.
-    AggregatorV3Interface internal assetPriceFeed;
+    AggregatorV3Interface internal _assetPriceFeed;
+
+    /// @notice The underlying asset's decimals.
+    uint256 private _assetDecimals;
 
     event Harvested(
         uint256 profit,
@@ -66,10 +69,10 @@ abstract contract BaseStrategy is
     function __BaseStrategy_init(
         IVault _vault,
         address _ops,
-        address _nativeTokenPriceFeed,
-        address _assetPriceFeed,
         uint256 _minReportInterval,
-        bool _isPrepaid
+        bool _isPrepaid,
+        address __nativeTokenPriceFeed,
+        address __assetPriceFeed
     ) internal onlyInitializing {
         __Ownable_init();
         __Pausable_init();
@@ -77,15 +80,15 @@ abstract contract BaseStrategy is
 
         __BaseStrategy_init_unchained(
             _vault,
-            _nativeTokenPriceFeed,
-            _assetPriceFeed
+            __nativeTokenPriceFeed,
+            __assetPriceFeed
         );
     }
 
     function __BaseStrategy_init_unchained(
         IVault _vault,
-        address _nativeTokenPriceFeed,
-        address _assetPriceFeed
+        address __nativeTokenPriceFeed,
+        address __assetPriceFeed
     ) internal onlyInitializing {
         vault = _vault;
         asset = IVault(vault).asset();
@@ -94,16 +97,15 @@ abstract contract BaseStrategy is
         estimatedWorkGas = 0;
         profitFactor = 100;
 
-        nativeTokenPriceFeed = AggregatorV3Interface(_nativeTokenPriceFeed);
-        assetPriceFeed = AggregatorV3Interface(_assetPriceFeed);
-        if (nativeTokenPriceFeed.decimals() != assetPriceFeed.decimals()) {
+        _nativeTokenPriceFeed = AggregatorV3Interface(__nativeTokenPriceFeed);
+        _assetPriceFeed = AggregatorV3Interface(__assetPriceFeed);
+        if (_nativeTokenPriceFeed.decimals() != _assetPriceFeed.decimals()) {
             revert UncompatiblePriceFeeds();
         }
 
-        IERC20Upgradeable(asset).safeApprove(
-            address(_vault),
-            type(uint256).max
-        );
+        _assetDecimals = IERC20MetadataUpgradeable(address(asset)).decimals();
+
+        asset.safeApprove(address(_vault), type(uint256).max);
     }
 
     /// @inheritdoc Job
@@ -230,23 +232,11 @@ abstract contract BaseStrategy is
     }
 
     function _gasPriceUSD() private view returns (uint256) {
-        return _convertToUSD(nativeTokenPriceFeed, tx.gasprice, 18);
+        return _nativeTokenPriceFeed.convertAmount(tx.gasprice, 18);
     }
 
     function _assetAmountUSD(uint256 amount) private view returns (uint256) {
-        uint256 decimals = IERC20MetadataUpgradeable(address(asset)).decimals();
-        return _convertToUSD(assetPriceFeed, amount, decimals);
-    }
-
-    function _convertToUSD(
-        AggregatorV3Interface priceFeed,
-        uint256 amount,
-        uint256 decimals
-    ) private view returns (uint256) {
-        (, int256 price, , , ) = priceFeed.latestRoundData();
-        uint256 priceFeedDecimals = nativeTokenPriceFeed.decimals();
-        (, uint256 upToDecimals) = decimals.trySub(priceFeedDecimals);
-        return (amount * uint256(price) * 10**upToDecimals) / 10**decimals;
+        return _assetPriceFeed.convertAmount(amount, _assetDecimals);
     }
 
     function estimatedTotalAssets() public view virtual returns (uint256);
