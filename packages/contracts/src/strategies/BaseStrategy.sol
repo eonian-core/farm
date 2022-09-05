@@ -14,7 +14,7 @@ import "../automation/GelatoJobAdapter.sol";
 import "../structures/PriceConverter.sol";
 
 error CallerIsNotAVault();
-error UncompatiblePriceFeeds();
+error IncompatiblePriceFeeds();
 
 abstract contract BaseStrategy is
     IStrategy,
@@ -34,7 +34,7 @@ abstract contract BaseStrategy is
     /// @notice The estimated amount of gas required for the "work" execution.
     uint256 public estimatedWorkGas;
 
-    /// @notice Shows how many times higher the profit should be than the spent gas for the "work" function.
+    /// @notice Shows how many times the gas price spent for the "work" function should be lower than the profit to trigger.
     uint256 public profitFactor;
 
     /// @notice The USD price feed for the native token of the network on which this strategy works.
@@ -100,7 +100,7 @@ abstract contract BaseStrategy is
         _nativeTokenPriceFeed = AggregatorV3Interface(__nativeTokenPriceFeed);
         _assetPriceFeed = AggregatorV3Interface(__assetPriceFeed);
         if (_nativeTokenPriceFeed.decimals() != _assetPriceFeed.decimals()) {
-            revert UncompatiblePriceFeeds();
+            revert IncompatiblePriceFeeds();
         }
 
         _assetDecimals = IERC20MetadataUpgradeable(address(asset)).decimals();
@@ -108,6 +108,7 @@ abstract contract BaseStrategy is
         asset.safeApprove(address(_vault), type(uint256).max);
     }
 
+    /// @notice Harvests the strategy, recognizing any profits or losses and adjusting the strategy's investments.
     /// @inheritdoc Job
     function _work() internal override {
         uint256 profit = 0;
@@ -148,7 +149,7 @@ abstract contract BaseStrategy is
     /// @inheritdoc Job
     function _canWork() internal view override returns (bool) {
         IVault _vault = IVault(vault);
-        if (_vault.isActivated()) {
+        if (!_vault.isActivated()) {
             return false;
         }
 
@@ -173,7 +174,18 @@ abstract contract BaseStrategy is
 
         // Check the gas cost againts the profit and available credit.
         // There is no sense to call the "work" function, if we don't have decent amount of funds to move.
-        uint256 credit = _vault.availableCredit();
+        return _checkGasPriceAgainstProfit(profit);
+    }
+
+    /// @notice Calculates the gas price of this transaction and compares it againts the specified profit.
+    /// @param profit Profit to be compared to the cost of gas.
+    /// @return "true" if the gas price (mult. to "profitFactor" is lower than the strategy profit, in USD).
+    function _checkGasPriceAgainstProfit(uint256 profit)
+        internal
+        view
+        returns (bool)
+    {
+        uint256 credit = IVault(vault).availableCredit();
         uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
         return profitFactor * gasCost < _assetAmountUSD(credit + profit);
     }
@@ -199,23 +211,33 @@ abstract contract BaseStrategy is
         IVault(vault).revokeStrategy(address(this));
     }
 
+    /// @notice Sets the debt threshold.
+    /// @param _debtThreshold The new debt threshold value.
     function setDebtThreshold(uint256 _debtThreshold) external onlyOwner {
         debtThreshold = _debtThreshold;
         emit DebtThresholdUpdated(_debtThreshold);
     }
 
+    /// @notice Sets the estimated gas that will be required for "work" function.
+    /// @param _estimatedWorkGas The estimated "work" gas value.
     function setEstimatedWorkGas(uint256 _estimatedWorkGas) external onlyOwner {
         estimatedWorkGas = _estimatedWorkGas;
         emit EstimatedWorkGasUpdated(_estimatedWorkGas);
     }
 
+    /// @notice Sets the profit factor.
+    /// @param _profitFactor The new profit factor value.
     function setProfitFactor(uint256 _profitFactor) external onlyOwner {
         profitFactor = _profitFactor;
         emit UpdatedProfitFactor(_profitFactor);
     }
 
+    /// @notice Frees up as much funds of the base protocol as possible.
+    /// @dev This function is called on harvest if the strategy was shutted down.
+    /// @param outstandingDebt The outstanding debt of the strategy.
     function _harvestAfterShutdown(uint256 outstandingDebt)
-        private
+        internal
+        virtual
         returns (
             uint256 profit,
             uint256 loss,
@@ -231,16 +253,21 @@ abstract contract BaseStrategy is
         debtPayment = outstandingDebt - loss;
     }
 
-    function _gasPriceUSD() private view returns (uint256) {
+    /// @notice Calculates the gas price of the current transaction (in USD).
+    function _gasPriceUSD() internal view returns (uint256) {
         return _nativeTokenPriceFeed.convertAmount(tx.gasprice, 18);
     }
 
-    function _assetAmountUSD(uint256 amount) private view returns (uint256) {
+    /// @notice Calculates the pice of the specified amount of "asset" (in USD).
+    function _assetAmountUSD(uint256 amount) internal view returns (uint256) {
         return _assetPriceFeed.convertAmount(amount, _assetDecimals);
     }
 
+    /// @notice Estimates the total amount of strategy funds (including those invested in the base protocol).
     function estimatedTotalAssets() public view virtual returns (uint256);
 
+    /// @notice The main function of the strategy.
+    /// By calling this function, the strategy must realize (take out) the possible profits from the underlying protocol.
     function _harvest(uint256 outstandingDebt)
         internal
         virtual
@@ -250,13 +277,19 @@ abstract contract BaseStrategy is
             uint256 debtPayment
         );
 
+    /// @notice Performs the deposit of the free funds to the underlying protocol.
     function _adjustPosition(uint256 outstandingDebt) internal virtual;
 
+    /// @notice Withdraws the specific amount of "asset" from the underlying protocol.
+    /// @param assets The amount of token to withdraw.
+    /// @return liquidatedAmount Withdrawn amount
+    /// @return loss The amount that could not be withdrawn
     function _liquidatePosition(uint256 assets)
         internal
         virtual
         returns (uint256 liquidatedAmount, uint256 loss);
 
+    /// @notice Withdraws the entire invested amount from the underlying protocol.
     function _liquidateAllPositions()
         internal
         virtual
