@@ -115,7 +115,7 @@ abstract contract BaseStrategy is
         uint256 loss = 0;
         uint256 debtPayment = 0;
 
-        uint256 outstandingDebt = IVault(vault).outstandingDebt();
+        uint256 outstandingDebt = vault.outstandingDebt();
         bool shuttedDown = paused();
         if (shuttedDown) {
             (profit, loss, debtPayment) = _harvestAfterShutdown(
@@ -126,16 +126,16 @@ abstract contract BaseStrategy is
         }
 
         if (profit > 0) {
-            IVault(vault).reportPositiveDebtManagement(profit, debtPayment);
+            vault.reportPositiveDebtManagement(profit, debtPayment);
         } else {
-            IVault(vault).reportNegativeDebtManagement(loss, debtPayment);
+            vault.reportNegativeDebtManagement(loss, debtPayment);
         }
 
         // If the strategy needs to repay the entire debt, we need to take all available funds.
-        // We will take the current debt in the report in the previous step, but we still need to free up whatever is left.
+        // We will take the current debt in the report above, but we still need to free up whatever is left.
         // This can happen, if the ratio is reduced to 0 or if the vault has been shutted down.
-        outstandingDebt = IVault(vault).outstandingDebt();
-        outstandingDebt = outstandingDebt == IVault(vault).currentDebt()
+        outstandingDebt = vault.outstandingDebt();
+        outstandingDebt = vault.currentDebtRatio() == 0 || vault.shuttedDown()
             ? estimatedTotalAssets()
             : outstandingDebt;
 
@@ -148,20 +148,19 @@ abstract contract BaseStrategy is
 
     /// @inheritdoc Job
     function _canWork() internal view override returns (bool) {
-        IVault _vault = IVault(vault);
-        if (!_vault.isActivated()) {
+        if (!vault.isActivated()) {
             return false;
         }
 
         // Trigger this job if the strategy has the outstanding debt to repay
-        uint256 outstanding = _vault.outstandingDebt();
+        uint256 outstanding = vault.outstandingDebt();
         if (outstanding > debtThreshold) {
             return true;
         }
 
         // Trigger this job if the strategy has some loss to report
         uint256 total = estimatedTotalAssets();
-        uint256 debt = _vault.currentDebt();
+        uint256 debt = vault.currentDebt();
         if (total + debtThreshold < debt) {
             return true;
         }
@@ -185,7 +184,7 @@ abstract contract BaseStrategy is
         view
         returns (bool)
     {
-        uint256 credit = IVault(vault).availableCredit();
+        uint256 credit = vault.availableCredit();
         uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
         return profitFactor * gasCost < _assetAmountUSD(credit + profit);
     }

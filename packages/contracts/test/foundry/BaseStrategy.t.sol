@@ -150,15 +150,10 @@ contract BaseStrategyTest is Test {
     function testShouldTakeIntoAccountTotalDebtWhenAdjustPosition(
         uint192 estimatedTotalAssets,
         uint192 outstandingDebt,
-        uint192 currentDebt,
-        bool shouldRepayAll
+        uint192 debtRatio,
+        bool shuttedDown
     ) public {
-        vm.assume(currentDebt < estimatedTotalAssets);
         vm.assume(outstandingDebt < estimatedTotalAssets);
-
-        if (shouldRepayAll) {
-            currentDebt = outstandingDebt;
-        }
 
         baseStrategy.setEstimatedTotalAssets(estimatedTotalAssets);
 
@@ -182,14 +177,20 @@ contract BaseStrategyTest is Test {
 
         vm.mockCall(
             address(vault),
-            abi.encodeWithSelector(IVault(vault).currentDebt.selector),
-            abi.encode(shouldRepayAll ? outstandingDebt : currentDebt)
+            abi.encodeWithSelector(IVault(vault).currentDebtRatio.selector),
+            abi.encode(debtRatio)
+        );
+
+        vm.mockCall(
+            address(vault),
+            abi.encodeWithSelector(IVault(vault).shuttedDown.selector),
+            abi.encode(shuttedDown)
         );
 
         vm.expectEmit(true, true, true, true);
 
         baseStrategy.emitAjustPositionCalled(
-            (currentDebt == outstandingDebt)
+            (shuttedDown || debtRatio == 0)
                 ? estimatedTotalAssets
                 : outstandingDebt
         );
