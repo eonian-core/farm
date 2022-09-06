@@ -116,8 +116,7 @@ abstract contract BaseStrategy is
         uint256 debtPayment = 0;
 
         uint256 outstandingDebt = vault.outstandingDebt();
-        bool shuttedDown = paused();
-        if (shuttedDown) {
+        if (paused()) {
             (profit, loss, debtPayment) = _harvestAfterShutdown(
                 outstandingDebt
             );
@@ -186,7 +185,7 @@ abstract contract BaseStrategy is
     {
         uint256 credit = vault.availableCredit();
         uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
-        return profitFactor * gasCost < _assetAmountUSD(credit + profit);
+        return profitFactor * gasCost < _convertAmountToUSD(credit + profit);
     }
 
     /// @inheritdoc IStrategy
@@ -258,7 +257,11 @@ abstract contract BaseStrategy is
     }
 
     /// @notice Calculates the pice of the specified amount of "asset" (in USD).
-    function _assetAmountUSD(uint256 amount) internal view returns (uint256) {
+    function _convertAmountToUSD(uint256 amount)
+        internal
+        view
+        returns (uint256)
+    {
         return _assetPriceFeed.convertAmount(amount, _assetDecimals);
     }
 

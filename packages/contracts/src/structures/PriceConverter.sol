@@ -7,6 +7,8 @@ import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 library PriceConverter {
     using SafeMathUpgradeable for uint256;
 
+    uint256 constant DEFAULT_DECIMALS = 18;
+
     /// @notice Calculates the price of the specified number of tokens.
     /// @dev This function allow us to compare the price of the tokens with different decimals.
     /// @param priceFeed The Chainlink's price feed aggregator.
@@ -20,7 +22,9 @@ library PriceConverter {
     ) internal view returns (uint256) {
         (, int256 price, , , ) = priceFeed.latestRoundData();
         uint256 priceFeedDecimals = priceFeed.decimals();
-        (, uint256 upToDecimals) = uint256(18).trySub(priceFeedDecimals);
+        (, uint256 upToDecimals) = uint256(DEFAULT_DECIMALS).trySub(
+            priceFeedDecimals
+        );
         return (amount * uint256(price) * 10**upToDecimals) / 10**decimals;
     }
 }

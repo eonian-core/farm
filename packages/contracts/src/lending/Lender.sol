@@ -242,7 +242,7 @@ abstract contract Lender is
         return borrowersData[borrower].debt;
     }
 
-    /// @notice See external implementation
+    /// @notice Returns the activation status of the specified borrower
     function isActivated(address borrower) public view returns (bool) {
         return borrowersData[borrower].activationTimestamp > 0;
     }
