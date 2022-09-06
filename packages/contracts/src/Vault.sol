@@ -378,7 +378,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     }
 
     /// @inheritdoc IVault
-    /// @dev Explicitly overrided here to keep this function exposed via "IVault" interface.
+    /// @dev Explicitly overridden here to keep this function exposed via "IVault" interface.
     function paused()
         public
         view
