@@ -252,11 +252,6 @@ abstract contract Lender is
         return (debtRatio * lendingAssets()) / MAX_BPS;
     }
 
-    /// @inheritdoc ILender
-    function shuttedDown() public view override returns (bool) {
-        return paused();
-    }
-
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
     /// @dev This function has "internal" visibility because it's used in tests
     function _decreaseBorrowerCredibility(address borrower, uint256 loss)
@@ -291,7 +286,7 @@ abstract contract Lender is
         returns (uint256)
     {
         // Lender is paused, no funds available for the borrower
-        if (shuttedDown()) {
+        if (paused()) {
             return 0;
         }
 
@@ -333,7 +328,7 @@ abstract contract Lender is
         returns (uint256)
     {
         uint256 borrowerDebt = borrowersData[borrower].debt;
-        if (shuttedDown() || debtRatio == 0) {
+        if (paused() || debtRatio == 0) {
             return borrowerDebt;
         }
 

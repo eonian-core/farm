@@ -377,6 +377,17 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         return super.lendingAssets() - _lockedProfit();
     }
 
+    /// @inheritdoc IVault
+    /// @dev Explicitly overrided here to keep this function exposed via "IVault" interface.
+    function paused()
+        public
+        view
+        override(IVault, PausableUpgradeable)
+        returns (bool)
+    {
+        return super.paused();
+    }
+
     /// @inheritdoc Lender
     function _transferFundsToBorrower(address borrower, uint256 amount)
         internal

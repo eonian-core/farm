@@ -135,7 +135,7 @@ abstract contract BaseStrategy is
         // We will take the current debt in the report above, but we still need to free up whatever is left.
         // This can happen, if the ratio is reduced to 0 or if the vault has been shutted down.
         outstandingDebt = vault.outstandingDebt();
-        outstandingDebt = vault.currentDebtRatio() == 0 || vault.shuttedDown()
+        outstandingDebt = vault.currentDebtRatio() == 0 || vault.paused()
             ? estimatedTotalAssets()
             : outstandingDebt;
 

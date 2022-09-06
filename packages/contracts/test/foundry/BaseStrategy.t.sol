@@ -183,7 +183,7 @@ contract BaseStrategyTest is Test {
 
         vm.mockCall(
             address(vault),
-            abi.encodeWithSelector(IVault(vault).shuttedDown.selector),
+            abi.encodeWithSelector(IVault(vault).paused.selector),
             abi.encode(shuttedDown)
         );
 
