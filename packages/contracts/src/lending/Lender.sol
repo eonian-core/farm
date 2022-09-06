@@ -97,6 +97,21 @@ abstract contract Lender is
     }
 
     /// @inheritdoc ILender
+    function currentDebt() external view override returns (uint256) {
+        return currentDebt(msg.sender);
+    }
+
+    /// @inheritdoc ILender
+    function currentDebtRatio() external view override returns (uint256) {
+        return borrowersData[msg.sender].debt;
+    }
+
+    /// @inheritdoc ILender
+    function isActivated() external view override returns (bool) {
+        return isActivated(msg.sender);
+    }
+
+    /// @inheritdoc ILender
     function reportPositiveDebtManagement(
         uint256 extraFreeFunds,
         uint256 debtPayment
@@ -222,6 +237,16 @@ abstract contract Lender is
         return _freeAssets() + totalDebt;
     }
 
+    /// @notice Returns the current debt that the strategy has.
+    function currentDebt(address borrower) public view returns (uint256) {
+        return borrowersData[borrower].debt;
+    }
+
+    /// @notice Returns the activation status of the specified borrower
+    function isActivated(address borrower) public view returns (bool) {
+        return borrowersData[borrower].activationTimestamp > 0;
+    }
+
     /// @notice Returns the total number of tokens borrowers can take
     function _debtLimit() private view returns (uint256) {
         return (debtRatio * lendingAssets()) / MAX_BPS;
@@ -321,7 +346,7 @@ abstract contract Lender is
         internal
     {
         // Check if specified borrower has already registered
-        if (borrowersData[borrower].activationTimestamp > 0) {
+        if (isActivated(borrower)) {
             revert BorrowerAlreadyExists();
         }
 
@@ -345,7 +370,7 @@ abstract contract Lender is
     function _setBorrowerDebtRatio(address borrower, uint256 borrowerDebtRatio)
         internal
     {
-        if (borrowersData[borrower].activationTimestamp == 0) {
+        if (!isActivated(borrower)) {
             revert BorrowerDoesNotExist();
         }
 

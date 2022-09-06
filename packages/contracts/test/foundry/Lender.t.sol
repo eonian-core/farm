@@ -82,6 +82,45 @@ contract LenderTest is Test {
         assertEq(outstandingDebt, expected);
     }
 
+    function testBorrowerCurrentDebt(
+        uint192 lenderBalance,
+        uint192 borrowerDebt,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(borrowerDebtRatio > 0 && borrowerDebtRatio <= MAX_BPS);
+
+        lenderMock.setBalance(lenderBalance);
+
+        lenderMock.addBorrower(borrowerA, borrowerDebtRatio);
+        lenderMock.setBorrowerDept(borrowerA, borrowerDebt);
+
+        vm.prank(borrowerA);
+        uint256 debt = lenderMock.currentDebt();
+
+        assertEq(debt, borrowerDebt);
+    }
+
+    function testBorrowerIsActivated(
+        uint192 lenderBalance,
+        uint192 borrowerDebt,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(borrowerDebtRatio > 0 && borrowerDebtRatio <= MAX_BPS);
+
+        lenderMock.setBalance(lenderBalance);
+
+        vm.prank(borrowerA);
+        bool isActivated = lenderMock.isActivated();
+        assertEq(isActivated, false);
+
+        lenderMock.addBorrower(borrowerA, borrowerDebtRatio);
+        lenderMock.setBorrowerDept(borrowerA, borrowerDebt);
+
+        vm.prank(borrowerA);
+        isActivated = lenderMock.isActivated();
+        assertEq(isActivated, true);
+    }
+
     function testSetBorrowerDebtRatioRevertWithBorrowerDoesNotExist(
         uint256 borrowerDebtRatio
     ) public {

@@ -19,6 +19,7 @@ error StrategyAlreadyExists();
 error InsufficientVaultBalance(uint256 assets, uint256 shares);
 error WrongQueueSize(uint256 size);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
+error AccessDeniedForCaller(address caller);
 
 contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -69,6 +70,13 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     ///      variables without shifting down storage in the inheritance chain.
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[50] private __gap;
+
+    modifier onlyOwnerOrStrategy(address strategy) {
+        if (msg.sender != owner() && msg.sender != strategy) {
+            revert AccessDeniedForCaller(msg.sender);
+        }
+        _;
+    }
 
     function initialize(
         address _asset,
@@ -174,8 +182,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
         // Strategy should refer to this vault and has the same underlying asset
         if (
-            address(this) != IStrategy(strategy).vault() ||
-            address(asset) != IStrategy(strategy).asset()
+            this != IStrategy(strategy).vault() ||
+            asset != IStrategy(strategy).asset()
         ) {
             revert InappropriateStrategy();
         }
@@ -206,10 +214,11 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         emit StrategyReturnedToQueue(strategy);
     }
 
-    /// @notice Revokes a strategy from the vault.
-    ///         Sets strategy's dept ratio to zero, so that the strategy cannot take funds from the vault.
-    /// @param strategy a strategy to revoke.
-    function revokeStrategy(address strategy) external onlyOwner {
+    /// @inheritdoc IVault
+    function revokeStrategy(address strategy)
+        external
+        onlyOwnerOrStrategy(strategy)
+    {
         _setBorrowerDebtRatio(strategy, 0);
         emit StrategyRevoked(strategy);
     }
@@ -366,6 +375,17 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     /// @inheritdoc ERC4626Upgradeable
     function totalAssets() public view override returns (uint256) {
         return super.lendingAssets() - _lockedProfit();
+    }
+
+    /// @inheritdoc IVault
+    /// @dev Explicitly overridden here to keep this function exposed via "IVault" interface.
+    function paused()
+        public
+        view
+        override(IVault, PausableUpgradeable)
+        returns (bool)
+    {
+        return super.paused();
     }
 
     /// @inheritdoc Lender

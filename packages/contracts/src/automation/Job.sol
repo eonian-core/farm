@@ -77,6 +77,7 @@ abstract contract Job is
     /// @notice If work can be executed by keeper at this moment returns true
     /// @dev Will be executed by keeper and before `work` method execution.
     function canWork() public view returns (bool) {
+        // TODO: Check the maximum delay between job executions (?)
         return
             isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
     }
