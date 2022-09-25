@@ -19,7 +19,7 @@ const transformInlineConst = (
   }
 
   // Line is a comment - skip
-  if (line.trim().startsWith("*")) {
+  if (line.trim().startsWith("*") || line.trim().startsWith("/")) {
     return;
   }
 
