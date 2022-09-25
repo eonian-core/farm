@@ -118,7 +118,14 @@ contract ApeLendingStrategyTest is Test {
     }
 
     function testShouldRevertIfAssetAndCTokenUnderlyingAreNotSame() public {
-        underlying.setDecimals(12);
+        underlying = new ERC20Mock("Mock Token 2", "TKN2");
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            defaultFee,
+            defaultLPRRate
+        );
 
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new ApeLendingStrategyMock(
