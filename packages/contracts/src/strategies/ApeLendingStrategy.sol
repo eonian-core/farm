@@ -133,7 +133,7 @@ contract ApeLendingStrategy is BaseStrategy {
         }
         uint256 blocksSinceLastHarvest = (block.timestamp -
             vault.lastReport()) / SECONDS_PER_BLOCK;
-        return blocksSinceLastHarvest * _estimatedAccruedBananaPerBlock();
+        return blocksSinceLastHarvest * bananaPerBlock;
     }
 
     /// @notice Returns the current banana balance of the strategy contract.
