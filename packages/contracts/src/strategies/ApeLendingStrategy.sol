@@ -149,14 +149,14 @@ contract ApeLendingStrategy is BaseStrategy {
         }
         uint256[] memory amounts = pancakeRouter.getAmountsOut(
             balance,
-            tokenSwapPath(BANANA, address(asset))
+            _tokenSwapPath(BANANA, address(asset))
         );
         uint256 amount = amounts[amounts.length - 1];
         return (amount * REWARD_ESTIMATION_ACCURACY) / 100;
     }
 
     /// @notice Prepares a chain of tokens (pair or triplet) to pass it into the router contract.
-    function tokenSwapPath(address tokenIn, address tokenOut)
+    function _tokenSwapPath(address tokenIn, address tokenOut)
         internal
         pure
         returns (address[] memory path)
@@ -192,7 +192,7 @@ contract ApeLendingStrategy is BaseStrategy {
         pancakeRouter.swapExactTokensForTokens(
             bananaBalance,
             0,
-            tokenSwapPath(BANANA, address(asset)),
+            _tokenSwapPath(BANANA, address(asset)),
             address(this),
             block.timestamp
         );

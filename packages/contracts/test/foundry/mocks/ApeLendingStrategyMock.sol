@@ -31,4 +31,39 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
     function estimatedAccruedBananaPerBlock() public view returns (uint256) {
         return super._estimatedAccruedBananaPerBlock();
     }
+
+    function currentBananaBalance() public view returns (uint256) {
+        return super._currentBananaBalance();
+    }
+
+    function totalBananaBalanceInAsset() public view returns (uint256) {
+        return super._totalBananaBalanceInAsset();
+    }
+
+    function tokenSwapPath(address tokenIn, address tokenOut)
+        public
+        pure
+        returns (address[] memory path)
+    {
+        return super._tokenSwapPath(tokenIn, tokenOut);
+    }
+
+    function claimBanana() public {
+        return super._claimBanana();
+    }
+
+    function swapBananaToAsset() public {
+        return super._swapBananaToAsset();
+    }
+
+    function harvest(uint256 outstandingDebt)
+        public
+        returns (
+            uint256 profit,
+            uint256 loss,
+            uint256 debtPayment
+        )
+    {
+        return super._harvest(outstandingDebt);
+    }
 }

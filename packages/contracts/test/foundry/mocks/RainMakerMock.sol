@@ -4,6 +4,8 @@ pragma solidity >=0.8.0;
 import "contracts/strategies/protocols/IRainMaker.sol";
 
 contract RainMakerMock is IRainMaker {
+    event ClaimCompCalled(address holder, address cToken);
+
     uint256 internal _compSupplySpeeds;
 
     function setCompSupplySpeeds(uint256 __compSupplySpeeds) public {
@@ -28,10 +30,13 @@ contract RainMakerMock is IRainMaker {
         return 0;
     }
 
-    function claimComp(
-        address, /* holder */
-        ICToken[] memory /* cTokens */
-    ) external {}
+    function emitClaimCompCalled(address holder, address cToken) public {
+        emit ClaimCompCalled(holder, cToken);
+    }
+
+    function claimComp(address holder, ICToken[] memory cTokens) external {
+        emitClaimCompCalled(holder, address(cTokens[0]));
+    }
 
     function claimComp(
         address /* holder */
