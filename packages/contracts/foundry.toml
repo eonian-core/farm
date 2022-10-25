@@ -7,6 +7,7 @@ cache_path  = 'forge-cache'
 
 solc = '0.8.15'
 
-eth-rpc-url = 'http://localhost:8545'
+# Some tests rely on a non-zero timestamp
+block_timestamp = 200000
 
 fuzz_runs = 100
