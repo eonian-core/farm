@@ -52,11 +52,11 @@ contract ERC1820Registry is IERC1820RegistryUpgradeable {
     }
 }
 
-abstract contract ERC1820RegistryInjector {
+abstract contract TestWithERC1820Registry is Test {
     address private constant _ERC1820_REGISTRY_ADDRESS =
         0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24;
 
-    constructor(Vm vm) {
+    constructor() {
         ERC1820Registry registry = new ERC1820Registry();
         vm.etch(_ERC1820_REGISTRY_ADDRESS, address(registry).code);
     }

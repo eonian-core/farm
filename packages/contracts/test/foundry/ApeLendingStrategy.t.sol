@@ -17,9 +17,9 @@ import "./mocks/RainMakerMock.sol";
 import "./mocks/PancakeRouterMock.sol";
 import "./mocks/ApeLendingStrategyMock.sol";
 
-import "./helpers/ERC1820RegistryInjector.sol";
+import "./helpers/TestWithERC1820Registry.sol";
 
-contract ApeLendingStrategyTest is Test, ERC1820RegistryInjector {
+contract ApeLendingStrategyTest is TestWithERC1820Registry {
     address private constant BANANA =
         0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95;
     address private constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
@@ -52,8 +52,6 @@ contract ApeLendingStrategyTest is Test, ERC1820RegistryInjector {
     PancakeRouterMock pancakeRouter;
 
     ApeLendingStrategyMock strategy;
-
-    constructor() ERC1820RegistryInjector(vm) {}
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");

@@ -7,9 +7,9 @@ import "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
 import "./mocks/StrategyMock.sol";
 
-import "./helpers/ERC1820RegistryInjector.sol";
+import "./helpers/TestWithERC1820Registry.sol";
 
-contract VaultTest is ERC1820RegistryInjector, Test {
+contract VaultTest is TestWithERC1820Registry {
     uint256 constant MAX_BPS = 10_000;
     uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
@@ -26,8 +26,6 @@ contract VaultTest is ERC1820RegistryInjector, Test {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
-
-    constructor() ERC1820RegistryInjector(vm) {}
 
     function setUp() public {
         vm.label(rewards, "rewards");

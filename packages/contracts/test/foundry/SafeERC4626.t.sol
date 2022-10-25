@@ -7,17 +7,15 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
 import {SafeERC4626Mock} from "./mocks/SafeERC4626Mock.sol";
 
-import "./helpers/ERC1820RegistryInjector.sol";
+import "./helpers/TestWithERC1820Registry.sol";
 
-contract ERC4626Test is Test, ERC1820RegistryInjector {
+contract ERC4626Test is TestWithERC1820Registry {
     ERC20Mock underlying;
     SafeERC4626Mock vault;
 
     address alice;
     address bob;
     address carl;
-
-    constructor() ERC1820RegistryInjector(vm) {}
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");

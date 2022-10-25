@@ -14,9 +14,9 @@ import "./mocks/AggregatorV3Mock.sol";
 import "contracts/IVault.sol";
 import "contracts/structures/PriceConverter.sol";
 
-import "./helpers/ERC1820RegistryInjector.sol";
+import "./helpers/TestWithERC1820Registry.sol";
 
-contract BaseStrategyTest is Test, ERC1820RegistryInjector {
+contract BaseStrategyTest is TestWithERC1820Registry {
     using PriceConverter for AggregatorV3Mock;
 
     ERC20Mock underlying;
@@ -37,8 +37,6 @@ contract BaseStrategyTest is Test, ERC1820RegistryInjector {
 
     uint256 minReportInterval = 3600;
     bool isPrepaid = false;
-
-    constructor() ERC1820RegistryInjector(vm) {}
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");
