@@ -7,7 +7,9 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
 import {SafeERC4626Mock} from "./mocks/SafeERC4626Mock.sol";
 
-contract ERC4626Test is Test {
+import "./helpers/ERC1820RegistryInjector.sol";
+
+contract ERC4626Test is Test, ERC1820RegistryInjector {
     ERC20Mock underlying;
     SafeERC4626Mock vault;
 
@@ -15,11 +17,18 @@ contract ERC4626Test is Test {
     address bob;
     address carl;
 
+    constructor() ERC1820RegistryInjector(vm) {}
+
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");
-        
+
         address[] memory defaultOperators;
-        vault = new SafeERC4626Mock(IERC20Upgradeable(address(underlying)), "Mock Token Vault", "vwTKN", defaultOperators);
+        vault = new SafeERC4626Mock(
+            IERC20Upgradeable(address(underlying)),
+            "Mock Token Vault",
+            "vwTKN",
+            defaultOperators
+        );
 
         alice = address(0xAAAA);
         bob = address(0xBBBB);
@@ -34,7 +43,12 @@ contract ERC4626Test is Test {
 
     function testMetadata(string calldata name, string calldata symbol) public {
         address[] memory defaultOperators;
-        SafeERC4626Mock vlt = new SafeERC4626Mock(IERC20Upgradeable(address(underlying)), name, symbol, defaultOperators);
+        SafeERC4626Mock vlt = new SafeERC4626Mock(
+            IERC20Upgradeable(address(underlying)),
+            name,
+            symbol,
+            defaultOperators
+        );
 
         assertEq(vlt.name(), name);
         assertEq(vlt.symbol(), symbol);
@@ -42,9 +56,9 @@ contract ERC4626Test is Test {
     }
 
     function testSingleDepositWithdraw(
-        uint96 _depositAmount, 
-        uint96 _depositAlowance, 
-        uint128 _keepInBalance, 
+        uint96 _depositAmount,
+        uint96 _depositAlowance,
+        uint128 _keepInBalance,
         bool useBackcombatibleDeposit,
         bool useBackcombatibleWithdraw
     ) public {
@@ -58,7 +72,7 @@ contract ERC4626Test is Test {
 
         underlying.mint(alice, depositAlowance + keepInBalance);
 
-        vm.prank(alice); 
+        vm.prank(alice);
         underlying.approve(address(vault), depositAlowance);
         assertEq(underlying.allowance(alice, address(vault)), depositAlowance);
 
@@ -68,8 +82,8 @@ contract ERC4626Test is Test {
 
         // Alise deposit money
         vm.prank(alice);
-        uint256 aliceShareAmount = useBackcombatibleDeposit 
-            ? vault.deposit(depositAmount, alice) 
+        uint256 aliceShareAmount = useBackcombatibleDeposit
+            ? vault.deposit(depositAmount, alice)
             : vault.deposit(depositAmount);
 
         assertEq(expectedShares, aliceShareAmount);
@@ -86,15 +100,18 @@ contract ERC4626Test is Test {
         assertEq(vault.balanceOf(alice), aliceShareAmount);
         assertEq(vault.convertToAssets(vault.balanceOf(alice)), depositAmount);
         assertEq(vault.convertToShares(depositAmount), vault.balanceOf(alice));
-        assertEq(underlying.balanceOf(alice), alicePreDepositBal - depositAmount);
+        assertEq(
+            underlying.balanceOf(alice),
+            alicePreDepositBal - depositAmount
+        );
         assertEq(underlying.balanceOf(address(vault)), depositAmount);
 
         uint256 expectedWithdrawShares = vault.previewWithdraw(depositAmount);
 
         // Alise withdraw money
         vm.prank(alice);
-        uint256 withdrawedShares = useBackcombatibleWithdraw 
-            ? vault.withdraw(depositAmount, alice, alice) 
+        uint256 withdrawedShares = useBackcombatibleWithdraw
+            ? vault.withdraw(depositAmount, alice, alice)
             : vault.withdraw(depositAmount);
 
         assertEq(withdrawedShares, expectedWithdrawShares);
@@ -113,7 +130,7 @@ contract ERC4626Test is Test {
     }
 
     function testSingleMintRedeem(
-        uint96 _shareAmount, 
+        uint96 _shareAmount,
         uint96 _depositAlowance,
         uint128 _keepInBalance,
         bool useBackcombatibleMint,
@@ -139,7 +156,7 @@ contract ERC4626Test is Test {
 
         // Alice mint shares in exchange to money
         vm.prank(alice);
-        uint256 aliceUnderlyingAmount = useBackcombatibleMint 
+        uint256 aliceUnderlyingAmount = useBackcombatibleMint
             ? vault.mint(shareAmount, alice)
             : vault.mint(shareAmount);
 
@@ -155,17 +172,26 @@ contract ERC4626Test is Test {
         assertEq(vault.totalSupply(), shareAmount);
         assertEq(vault.totalAssets(), aliceUnderlyingAmount);
         assertEq(vault.balanceOf(alice), shareAmount);
-        assertEq(vault.convertToAssets(vault.balanceOf(alice)), aliceUnderlyingAmount);
-        assertEq(vault.convertToShares(aliceUnderlyingAmount), vault.balanceOf(alice));
-        assertEq(underlying.balanceOf(alice), alicePreDepositBal - aliceUnderlyingAmount);
+        assertEq(
+            vault.convertToAssets(vault.balanceOf(alice)),
+            aliceUnderlyingAmount
+        );
+        assertEq(
+            vault.convertToShares(aliceUnderlyingAmount),
+            vault.balanceOf(alice)
+        );
+        assertEq(
+            underlying.balanceOf(alice),
+            alicePreDepositBal - aliceUnderlyingAmount
+        );
         assertEq(underlying.balanceOf(address(vault)), aliceUnderlyingAmount);
 
         uint256 expectedRedeemUnderlying = vault.previewRedeem(shareAmount);
 
         // Alice redeem shares to recive money
         vm.prank(alice);
-        uint256 redeemUnderlying = useBackcombatibleRedeem 
-            ? vault.redeem(shareAmount, alice, alice) 
+        uint256 redeemUnderlying = useBackcombatibleRedeem
+            ? vault.redeem(shareAmount, alice, alice)
             : vault.redeem(shareAmount);
 
         assertEq(redeemUnderlying, expectedRedeemUnderlying);
@@ -266,8 +292,14 @@ contract ERC4626Test is Test {
         // Expect to have received the requested mint amount.
         assertEq(aliceShareAmount, 2000);
         assertEq(vault.balanceOf(alice), aliceShareAmount);
-        assertEq(vault.convertToAssets(vault.balanceOf(alice)), aliceUnderlyingAmount);
-        assertEq(vault.convertToShares(aliceUnderlyingAmount), vault.balanceOf(alice));
+        assertEq(
+            vault.convertToAssets(vault.balanceOf(alice)),
+            aliceUnderlyingAmount
+        );
+        assertEq(
+            vault.convertToShares(aliceUnderlyingAmount),
+            vault.balanceOf(alice)
+        );
         assertEq(underlying.balanceOf(alice), 2000);
         assertEq(underlying.balanceOf(address(vault)), 2000);
 
@@ -283,7 +315,7 @@ contract ERC4626Test is Test {
         vm.prank(bob);
         uint256 bobShareAmount = vault.deposit(4000, bob);
         uint256 bobUnderlyingAmount = vault.previewWithdraw(bobShareAmount);
-        
+
         assertEq(bobShareAmount, bobExpectedUnderlyingAmount);
         assertEq(vault.afterDepositHookCalledCounter(), 2);
         assertEq(vault.beforeWithdrawHookCalledCounter(), 0);
@@ -292,8 +324,14 @@ contract ERC4626Test is Test {
         assertEq(bobUnderlyingAmount, 4000);
         assertEq(vault.balanceOf(bob), bobShareAmount);
         assertEq(vault.balanceOf(alice), aliceShareAmount);
-        assertEq(vault.convertToAssets(vault.balanceOf(bob)), bobUnderlyingAmount);
-        assertEq(vault.convertToShares(bobUnderlyingAmount), vault.balanceOf(bob));
+        assertEq(
+            vault.convertToAssets(vault.balanceOf(bob)),
+            bobUnderlyingAmount
+        );
+        assertEq(
+            vault.convertToShares(bobUnderlyingAmount),
+            vault.balanceOf(bob)
+        );
         assertEq(underlying.balanceOf(bob), 3001);
         assertEq(underlying.balanceOf(address(vault)), 6000);
         assertEq(vault.convertToAssets(vault.balanceOf(alice)), 2000);
@@ -321,7 +359,10 @@ contract ERC4626Test is Test {
         underlying.mint(address(vault), mutationUnderlyingAmount);
 
         assertEq(vault.totalSupply(), preMutationShareBal);
-        assertEq(vault.totalAssets(), preMutationBal + mutationUnderlyingAmount);
+        assertEq(
+            vault.totalAssets(),
+            preMutationBal + mutationUnderlyingAmount
+        );
         assertEq(vault.balanceOf(alice), aliceShareAmount);
         assertEq(
             vault.convertToAssets(vault.balanceOf(alice)),
@@ -332,18 +373,38 @@ contract ERC4626Test is Test {
             aliceUnderlyingAmount + (mutationUnderlyingAmount / 3) * 1
         );
         assertEq(
-            vault.previewWithdraw(aliceUnderlyingAmount + (mutationUnderlyingAmount / 3) * 1),
+            vault.previewWithdraw(
+                aliceUnderlyingAmount + (mutationUnderlyingAmount / 3) * 1
+            ),
             vault.balanceOf(alice)
         );
         assertEq(
-            vault.convertToShares(aliceUnderlyingAmount + (mutationUnderlyingAmount / 3) * 1), 
+            vault.convertToShares(
+                aliceUnderlyingAmount + (mutationUnderlyingAmount / 3) * 1
+            ),
             vault.balanceOf(alice)
         );
         assertEq(vault.balanceOf(bob), bobShareAmount);
-        assertEq(vault.convertToAssets(vault.balanceOf(bob)), bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2);
-        assertEq(vault.previewRedeem(vault.balanceOf(bob)), bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2);
-        assertEq(vault.previewWithdraw(bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2), vault.balanceOf(bob));
-        assertEq(vault.convertToShares(bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2), vault.balanceOf(bob));
+        assertEq(
+            vault.convertToAssets(vault.balanceOf(bob)),
+            bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2
+        );
+        assertEq(
+            vault.previewRedeem(vault.balanceOf(bob)),
+            bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2
+        );
+        assertEq(
+            vault.previewWithdraw(
+                bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2
+            ),
+            vault.balanceOf(bob)
+        );
+        assertEq(
+            vault.convertToShares(
+                bobUnderlyingAmount + (mutationUnderlyingAmount / 3) * 2
+            ),
+            vault.balanceOf(bob)
+        );
 
         // 4. Alice deposits 2000 tokens (mints 1333 shares)
         uint256 aliceExpectedSharesAmount = vault.previewDeposit(2000);
@@ -424,7 +485,7 @@ contract ERC4626Test is Test {
         assertEq(vault.convertToShares(6071), vault.balanceOf(alice) - 1); // rounding error
         assertEq(vault.convertToShares(10929), vault.balanceOf(bob) - 1); // rounding error
         assertEq(vault.previewRedeem(vault.balanceOf(alice)), 6071);
-        assertEq(vault.previewWithdraw(6071),vault.balanceOf(alice));
+        assertEq(vault.previewWithdraw(6071), vault.balanceOf(alice));
         assertEq(vault.previewRedeem(vault.balanceOf(bob)), 10929);
         assertEq(vault.previewWithdraw(10929), vault.balanceOf(bob));
 
@@ -446,7 +507,7 @@ contract ERC4626Test is Test {
         assertEq(vault.convertToAssets(vault.balanceOf(alice)), 3643);
         assertEq(vault.convertToShares(3643), vault.balanceOf(alice) - 1); // rounding error
         assertEq(vault.previewRedeem(vault.balanceOf(alice)), 3643);
-        assertEq(vault.previewWithdraw(3643),vault.balanceOf(alice));
+        assertEq(vault.previewWithdraw(3643), vault.balanceOf(alice));
         assertEq(vault.balanceOf(bob), 6000);
         assertEq(vault.convertToAssets(vault.balanceOf(bob)), 10929);
         assertEq(vault.convertToShares(10929), vault.balanceOf(bob) - 1); // rounding error
@@ -469,12 +530,12 @@ contract ERC4626Test is Test {
         assertEq(vault.convertToAssets(vault.balanceOf(alice)), 3643);
         assertEq(vault.convertToShares(3643), vault.balanceOf(alice) - 1); // rounding error
         assertEq(vault.previewRedeem(vault.balanceOf(alice)), 3643);
-        assertEq(vault.previewWithdraw(3643),vault.balanceOf(alice));
+        assertEq(vault.previewWithdraw(3643), vault.balanceOf(alice));
         assertEq(vault.balanceOf(bob), 4392);
         assertEq(vault.convertToAssets(vault.balanceOf(bob)), 8000);
         assertEq(vault.convertToShares(8000), vault.balanceOf(bob) - 1); // rounding error
         assertEq(vault.previewRedeem(vault.balanceOf(bob)), 8000);
-        assertEq(vault.previewWithdraw(8000), vault.balanceOf(bob)); 
+        assertEq(vault.previewWithdraw(8000), vault.balanceOf(bob));
 
         // 9. Alice withdraws 3643 assets (2000 shares)
         // NOTE: Bob's assets have been rounded back up
@@ -496,7 +557,7 @@ contract ERC4626Test is Test {
         assertEq(vault.convertToAssets(vault.balanceOf(bob)), 8001);
         assertEq(vault.convertToShares(8001), vault.balanceOf(bob));
         assertEq(vault.previewRedeem(vault.balanceOf(bob)), 8001);
-        assertEq(vault.previewWithdraw(8001), vault.balanceOf(bob)); 
+        assertEq(vault.previewWithdraw(8001), vault.balanceOf(bob));
 
         // 10. Bob redeem 4392 shares (8001 tokens)
         uint256 bobExpectedRedeemUnderlying = vault.previewRedeem(4392);
@@ -518,12 +579,15 @@ contract ERC4626Test is Test {
         assertEq(underlying.balanceOf(address(vault)), 0);
     }
 
-    function testFailDepositWithNotEnoughApproval(uint128 balance, uint128 deposit) public {
+    function testFailDepositWithNotEnoughApproval(
+        uint128 balance,
+        uint128 deposit
+    ) public {
         vm.assume(balance > 0);
         vm.assume(deposit > balance);
 
         underlying.mint(alice, balance);
-        
+
         vm.prank(alice);
         underlying.approve(address(vault), balance);
         assertEq(underlying.allowance(alice, address(vault)), balance);
@@ -532,12 +596,14 @@ contract ERC4626Test is Test {
         vault.deposit(deposit, alice);
     }
 
-    function testFailMintWithNotEnoughApproval(uint128 balance, uint128 deposit) public {
+    function testFailMintWithNotEnoughApproval(uint128 balance, uint128 deposit)
+        public
+    {
         vm.assume(balance > 0);
         vm.assume(deposit > balance);
 
         underlying.mint(alice, balance);
-        
+
         vm.prank(alice);
         underlying.approve(address(vault), balance);
         assertEq(underlying.allowance(alice, address(vault)), balance);
@@ -546,12 +612,15 @@ contract ERC4626Test is Test {
         vault.mint(deposit, alice);
     }
 
-    function testFailWithdrawWithNotEnoughUnderlyingAmount(uint128 balance, uint128 withdraw) public {
+    function testFailWithdrawWithNotEnoughUnderlyingAmount(
+        uint128 balance,
+        uint128 withdraw
+    ) public {
         vm.assume(balance > 0);
         vm.assume(withdraw > balance);
 
         underlying.mint(alice, balance);
-        
+
         vm.prank(alice);
         underlying.approve(address(vault), balance);
 
@@ -562,7 +631,10 @@ contract ERC4626Test is Test {
         vault.withdraw(withdraw, alice, alice);
     }
 
-    function testFailRedeemWithNotEnoughShareAmount(uint128 balance, uint128 redeem) public {
+    function testFailRedeemWithNotEnoughShareAmount(
+        uint128 balance,
+        uint128 redeem
+    ) public {
         vm.assume(balance > 0);
         vm.assume(redeem > balance);
 
@@ -624,7 +696,10 @@ contract ERC4626Test is Test {
         assertEq(vault.totalAssets(), 0);
     }
 
-    function testVaultInteractionsForSomeoneElseNotWorking(uint96 aliceAmount, uint96 bobAmount) public {
+    function testVaultInteractionsForSomeoneElseNotWorking(
+        uint96 aliceAmount,
+        uint96 bobAmount
+    ) public {
         vm.assume(aliceAmount > 0);
         vm.assume(bobAmount > 0);
 
@@ -674,7 +749,11 @@ contract ERC4626Test is Test {
         assertEq(underlying.balanceOf(bob), bobAmount);
     }
 
-    function testFailVaultInteractionsThroughApproveHaveNoEffect(uint96 aliceAmount, uint96 bobAmount, bool tryRedeem) public {
+    function testFailVaultInteractionsThroughApproveHaveNoEffect(
+        uint96 aliceAmount,
+        uint96 bobAmount,
+        bool tryRedeem
+    ) public {
         vm.assume(aliceAmount > 0);
         vm.assume(bobAmount > 0);
 
@@ -724,7 +803,11 @@ contract ERC4626Test is Test {
         }
     }
 
-    function testFailVaultWithdrawWithoutApprove(uint96 aliceAmount, uint96 bobAmount, bool tryRedeem) public {
+    function testFailVaultWithdrawWithoutApprove(
+        uint96 aliceAmount,
+        uint96 bobAmount,
+        bool tryRedeem
+    ) public {
         vm.assume(aliceAmount > 0);
         vm.assume(bobAmount > 0);
 
@@ -762,12 +845,10 @@ contract ERC4626Test is Test {
 
         // bob withdraw 1 ether for carl from alice
         vm.prank(carl);
-        if(tryRedeem) {
+        if (tryRedeem) {
             vault.redeem(aliceAmount, bob, alice);
         } else {
             vault.withdraw(aliceAmount, bob, alice);
         }
     }
-
-    
 }

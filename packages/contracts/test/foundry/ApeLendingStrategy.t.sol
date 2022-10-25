@@ -15,10 +15,11 @@ import "./mocks/AggregatorV3Mock.sol";
 import "./mocks/CTokenMock.sol";
 import "./mocks/RainMakerMock.sol";
 import "./mocks/PancakeRouterMock.sol";
-
 import "./mocks/ApeLendingStrategyMock.sol";
 
-contract ApeLendingStrategyTest is Test {
+import "./helpers/ERC1820RegistryInjector.sol";
+
+contract ApeLendingStrategyTest is Test, ERC1820RegistryInjector {
     address private constant BANANA =
         0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95;
     address private constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
@@ -51,6 +52,8 @@ contract ApeLendingStrategyTest is Test {
     PancakeRouterMock pancakeRouter;
 
     ApeLendingStrategyMock strategy;
+
+    constructor() ERC1820RegistryInjector(vm) {}
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");
@@ -574,6 +577,34 @@ contract ApeLendingStrategyTest is Test {
         assertEq(debtPayment, outstandingDebt);
         assertEq(harvestProfit, profit);
     }
+
+    // function testHarvestWithProfitCaseWhenFreeAssetsGreaterThanProfitAndDebt(
+    //     uint128 outstandingDebt,
+    //     uint128 assetBalance,
+    //     uint128 cTokenBalance,
+    //     uint128 currentDebt
+    // ) public {
+    //     vm.assume(cTokenBalance > 0);
+
+    //     // CToken balance is equal to CToken underlying balance (for testing purposes)
+    //     uint256 balance = uint256(assetBalance) + cTokenBalance;
+
+    //     // Ensure we have some profit on this harvest
+    //     vm.assume(balance > currentDebt);
+
+    //     // Ensure that the profit is greater than the amount of free assets
+    //     uint256 profit = uint256(balance) - currentDebt;
+    //     vm.assume(assetBalance > profit + outstandingDebt);
+
+    //     _setupHarvestData(assetBalance, cTokenBalance, currentDebt);
+
+    //     (uint256 harvestProfit, uint256 loss, uint256 debtPayment) = strategy
+    //         .harvest(outstandingDebt);
+
+    //     assertEq(loss, 0);
+    //     assertEq(debtPayment, outstandingDebt);
+    //     assertEq(harvestProfit, profit);
+    // }
 
     function _setupHarvestData(
         uint128 assetBalance,
