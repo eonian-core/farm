@@ -5,6 +5,7 @@ import "forge-std/Test.sol";
 import "forge-std/console.sol";
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
@@ -234,8 +235,13 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) public returns (uint256) {
         vm.assume(exchangeRate > 0);
         vm.assume(cTokenBalance > 0);
-        vm.assume(totalSupply > 1e18);
         vm.assume(supplySpeed > 0 && supplySpeed < 4e16);
+
+        // Simulate "vm.assume(totalSupply > 1e18)", but without "rejected too many inputs" error.
+        (bool success, uint256 newTS) = SafeMath.tryAdd(1e18, totalSupply);
+        if (success) {
+            totalSupply = uint192(Math.min(newTS, type(uint192).max));
+        }
 
         cToken.setExchangeRate(exchangeRate);
         cToken.setBalanceSnapshot(cTokenBalance);

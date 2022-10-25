@@ -9,5 +9,3 @@ solc = '0.8.15'
 
 # Some tests rely on a non-zero timestamp
 block_timestamp = 200000
-
-fuzz_runs = 100
