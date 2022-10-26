@@ -142,6 +142,7 @@ contract ApeLendingStrategy is BaseStrategy {
     }
 
     /// @notice Returns the current (and estimated accrued) banana balance of the strategy contract (in asset).
+    /// @dev Constant REWARD_ESTIMATION_ACCURACY is used to match accuracy expectations.
     function _totalBananaBalanceInAsset() internal view returns (uint256) {
         uint256 balance = _currentBananaBalance() + _estimatedAccruedBanana();
         if (balance == 0) {
