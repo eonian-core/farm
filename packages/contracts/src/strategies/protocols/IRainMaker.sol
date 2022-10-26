@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./ICToken.sol";
 
+/// @notice Interface for a compound-like controller used to control incentivized tokens received during interaction with the protocol.
 interface IRainMaker {
     function compSpeeds(address cToken) external view returns (uint256);
 
