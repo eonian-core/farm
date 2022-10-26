@@ -264,7 +264,7 @@ contract ApeLendingStrategy is BaseStrategy {
             return;
         }
 
-        uint256 freeBalance = outstandingDebt - assetBalance;
+        uint256 freeBalance = assetBalance - outstandingDebt;
         if (freeBalance > 0) {
             uint256 result = cToken.mint(freeBalance);
             if (result > 0) {
@@ -274,8 +274,10 @@ contract ApeLendingStrategy is BaseStrategy {
     }
 
     /// @inheritdoc BaseStrategy
+    /// @dev Tagged with the keyword "virtual" for testing purposes.
     function _liquidatePosition(uint256 assets)
         internal
+        virtual
         override
         returns (uint256 liquidatedAmount, uint256 loss)
     {

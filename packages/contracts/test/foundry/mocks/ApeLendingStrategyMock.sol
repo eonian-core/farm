@@ -4,6 +4,8 @@ pragma solidity >=0.8.0;
 import "contracts/strategies/ApeLendingStrategy.sol";
 
 contract ApeLendingStrategyMock is ApeLendingStrategy {
+    event LiquidatePositionCalled(uint256 assets);
+
     constructor(
         address _vault,
         address _cToken,
@@ -65,5 +67,34 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
         )
     {
         return super._harvest(outstandingDebt);
+    }
+
+    function adjustPosition(uint256 outstandingDebt) public {
+        return super._adjustPosition(outstandingDebt);
+    }
+
+    function emitLiquidatePositionCalled(uint256 assets) public {
+        emit LiquidatePositionCalled(assets);
+    }
+
+    function _liquidatePosition(uint256 assets)
+        internal
+        override
+        returns (uint256 liquidatedAmount, uint256 loss)
+    {
+        emitLiquidatePositionCalled(assets);
+
+        return super._liquidatePosition(assets);
+    }
+
+    function liquidatePosition(uint256 assets)
+        public
+        returns (uint256 liquidatedAmount, uint256 loss)
+    {
+        return _liquidatePosition(assets);
+    }
+
+    function liquidateAllPositions() public returns (uint256 amountFreed) {
+        return super._liquidateAllPositions();
     }
 }

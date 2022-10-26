@@ -169,7 +169,7 @@ contract CTokenMock is ERC20, ICToken {
     function mint(uint256 mintAmount) external override returns (uint256) {
         _mint(address(msg.sender), mintAmount);
 
-        return mintAmount;
+        return 0;
     }
 
     function redeem(

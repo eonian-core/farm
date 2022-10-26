@@ -237,7 +237,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vm.assume(cTokenBalance > 0);
         vm.assume(supplySpeed > 0 && supplySpeed < 4e16);
 
-        // Simulate "vm.assume(totalSupply > 1e18)", but without "rejected too many inputs" error.
+        // Simulate "vm.assume(totalSupply > 1e18)", avoiding "rejected too many inputs" error.
         (bool success, uint256 newTS) = SafeMath.tryAdd(1e18, totalSupply);
         if (success) {
             totalSupply = uint192(Math.min(newTS, type(uint192).max));
@@ -532,7 +532,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(cTokenBalance > 0);
 
-        // CToken balance is equal to CToken underlying balance (for testing purposes)
+        // CToken balance is equal to CToken underlying balance (for testing purposes, see CTokenMock)
         uint256 balance = uint256(assetBalance) + cTokenBalance;
 
         // Ensure we have some profit on this harvest
@@ -562,13 +562,13 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(cTokenBalance > 0);
 
-        // CToken balance is equal to CToken underlying balance (for testing purposes)
+        // CToken balance is equal to CToken underlying balance (for testing purposes, see CTokenMock)
         uint256 balance = uint256(assetBalance) + cTokenBalance;
 
         // Ensure we have some profit on this harvest
         vm.assume(balance > currentDebt);
 
-        // Ensure that the profit is greater than the amount of free assets
+        // Ensure that the free assets amount is greater than the profit and current debt
         uint256 profit = uint256(balance) - currentDebt;
         vm.assume(assetBalance > profit + outstandingDebt);
 
@@ -582,33 +582,147 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         assertEq(harvestProfit, profit);
     }
 
-    // function testHarvestWithProfitCaseWhenFreeAssetsGreaterThanProfitAndDebt(
-    //     uint128 outstandingDebt,
-    //     uint128 assetBalance,
-    //     uint128 cTokenBalance,
-    //     uint128 currentDebt
-    // ) public {
-    //     vm.assume(cTokenBalance > 0);
+    function testHarvestWithProfitCaseWhenFreeAssetsGreaterThanProfitButLessThanProfitAndDebt(
+        uint128 outstandingDebt,
+        uint128 assetBalance,
+        uint128 cTokenBalance,
+        uint128 currentDebt
+    ) public {
+        vm.assume(cTokenBalance > 0);
 
-    //     // CToken balance is equal to CToken underlying balance (for testing purposes)
-    //     uint256 balance = uint256(assetBalance) + cTokenBalance;
+        // CToken balance is equal to CToken underlying balance (for testing purposes, see CTokenMock)
+        uint256 balance = uint256(assetBalance) + cTokenBalance;
 
-    //     // Ensure we have some profit on this harvest
-    //     vm.assume(balance > currentDebt);
+        // Ensure we have some profit on this harvest
+        vm.assume(balance > currentDebt);
 
-    //     // Ensure that the profit is greater than the amount of free assets
-    //     uint256 profit = uint256(balance) - currentDebt;
-    //     vm.assume(assetBalance > profit + outstandingDebt);
+        // Ensure that the free assets amount is greater than the profit but less than this profit and current debt
+        uint256 profit = uint256(balance) - currentDebt;
+        vm.assume(
+            assetBalance > profit && assetBalance <= profit + outstandingDebt
+        );
 
-    //     _setupHarvestData(assetBalance, cTokenBalance, currentDebt);
+        _setupHarvestData(assetBalance, cTokenBalance, currentDebt);
 
-    //     (uint256 harvestProfit, uint256 loss, uint256 debtPayment) = strategy
-    //         .harvest(outstandingDebt);
+        (uint256 harvestProfit, uint256 loss, uint256 debtPayment) = strategy
+            .harvest(outstandingDebt);
 
-    //     assertEq(loss, 0);
-    //     assertEq(debtPayment, outstandingDebt);
-    //     assertEq(harvestProfit, profit);
-    // }
+        assertEq(loss, 0);
+        assertEq(debtPayment, assetBalance - profit);
+        assertEq(harvestProfit, profit);
+    }
+
+    function testShouldAdjustPositionWhenNotPaused(uint256 outstandingDebt)
+        public
+    {
+        underlying.setForbiddenAddress(address(strategy));
+
+        vm.expectRevert("CALLED");
+
+        strategy.adjustPosition(outstandingDebt);
+    }
+
+    function testShouldNotAdjustPositionWhenPaused(uint256 outstandingDebt)
+        public
+    {
+        strategy.shutdown();
+
+        underlying.setForbiddenAddress(address(strategy));
+
+        strategy.adjustPosition(outstandingDebt);
+    }
+
+    function testShouldLiquidatePositionIfBalanceLessThanDebt(
+        uint128 outstandingDebt,
+        uint128 assetBalance,
+        uint128 cTokenBalance
+    ) public {
+        vm.assume(cTokenBalance > 1);
+        vm.assume(assetBalance < outstandingDebt);
+
+        _setupHarvestData(assetBalance, cTokenBalance, 0);
+
+        vm.expectEmit(true, true, true, true);
+        strategy.emitLiquidatePositionCalled(outstandingDebt - assetBalance);
+
+        strategy.adjustPosition(outstandingDebt);
+    }
+
+    function testShouldMintCTokenIfBalanceGreaterThanDebt(
+        uint128 outstandingDebt,
+        uint128 assetBalance
+    ) public {
+        vm.assume(assetBalance > outstandingDebt);
+
+        _setupHarvestData(assetBalance, 0, 0);
+
+        vm.expectCall(
+            address(cToken),
+            abi.encodeCall(cToken.mint, assetBalance - outstandingDebt)
+        );
+
+        strategy.adjustPosition(outstandingDebt);
+    }
+
+    function testShouldNotLiquidatePositionIfHasSufficeBalance(
+        uint128 assets,
+        uint128 assetBalance
+    ) public {
+        vm.assume(assetBalance >= assets);
+
+        _setupHarvestData(assetBalance, 0, 0);
+
+        (uint256 liquidatedAmount, uint256 loss) = strategy.liquidatePosition(
+            assets
+        );
+        assertEq(loss, 0);
+        assertEq(liquidatedAmount, assets);
+    }
+
+    function testShouldLiquidatePosition(
+        uint128 assets,
+        uint128 deposits,
+        uint128 assetBalance
+    ) public {
+        vm.assume(assetBalance < assets);
+
+        _setupHarvestData(assetBalance, 0, 0);
+
+        vm.mockCall(
+            address(cToken),
+            abi.encodeWithSelector(cToken.balanceOfUnderlying.selector),
+            abi.encode(deposits)
+        );
+
+        uint256 amountToRedeem = MathUpgradeable.min(deposits, assets);
+        vm.expectCall(
+            address(cToken),
+            abi.encodeCall(cToken.redeemUnderlying, amountToRedeem)
+        );
+
+        (uint256 liquidatedAmount, uint256 loss) = strategy.liquidatePosition(
+            assets
+        );
+
+        assertEq(loss, assets - amountToRedeem);
+        assertEq(liquidatedAmount, amountToRedeem);
+    }
+
+    function testShouldLiquidateAll(uint128 deposits) public {
+        vm.mockCall(
+            address(cToken),
+            abi.encodeWithSelector(cToken.balanceOfUnderlying.selector),
+            abi.encode(deposits)
+        );
+
+        vm.expectCall(
+            address(cToken),
+            abi.encodeCall(cToken.redeemUnderlying, deposits)
+        );
+
+        uint256 amountFreed = strategy.liquidateAllPositions();
+        assertEq(amountFreed, deposits);
+    }
 
     function _setupHarvestData(
         uint128 assetBalance,
