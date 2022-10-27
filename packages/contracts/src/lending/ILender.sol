@@ -17,6 +17,9 @@ interface ILender {
     /// @notice Returns the debt ratio of the borrower (caller of this function).
     function currentDebtRatio() external view returns (uint256);
 
+    /// @notice Returns the last report timestamp of the borrower (caller of this function).
+    function lastReport() external view returns (uint256);
+
     /// @notice Returns the activation status of the borrower (caller of this function).
     /// @return "true" if the borrower is active
     function isActivated() external view returns (bool);

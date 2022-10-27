@@ -7,7 +7,9 @@ import "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
 import "./mocks/StrategyMock.sol";
 
-contract VaultTest is Test {
+import "./helpers/TestWithERC1820Registry.sol";
+
+contract VaultTest is TestWithERC1820Registry {
     uint256 constant MAX_BPS = 10_000;
     uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 

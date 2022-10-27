@@ -13,14 +13,14 @@ import "@openzeppelin/hardhat-upgrades";
 import "hardhat-tracer";
 import "hardhat-deploy";
 import "hardhat-docgen";
+
+import constLinePreprocessingHook from "./hardhat/const-line-preprocessing-hook";
 import "hardhat-preprocessor";
 
 import { etheriumFork, binanceSmartChainFork } from "./forks";
 
 dotenv.config();
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
 
@@ -28,9 +28,6 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
     console.log(account.address);
   }
 });
-
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
 
 const config: HardhatUserConfig = {
   solidity: "0.8.15",
@@ -40,8 +37,7 @@ const config: HardhatUserConfig = {
       accounts: {
         accountsBalance: "1000000000000000000000000", // 1 mil ether,
       },
-      // gas: 30000000,
-      // gasPrice: 30582625255,
+      allowUnlimitedContractSize: true,
     },
     bsc_testnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
@@ -61,14 +57,16 @@ const config: HardhatUserConfig = {
     },
 
     ropsten: {
-      url: 'https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-      accounts: [process.env.ROPSTEN_PRIVATE_KEY].filter(Boolean) as Array<string>,
+      url: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+      accounts: [process.env.ROPSTEN_PRIVATE_KEY].filter(
+        Boolean
+      ) as Array<string>,
       verify: {
         etherscan: {
           apiUrl: "https://api-ropsten.etherscan.io/",
           apiKey: process.env.ROPSTEN_ETHERSCAN_API_KEY,
-        }
-      }
+        },
+      },
     },
   },
   gasReporter: {
@@ -93,8 +91,8 @@ const config: HardhatUserConfig = {
     artifacts: "./artifacts",
   },
   preprocess: {
-    eachLine: () => ({
-      transform: (line: string) => {
+    eachLine: (hre) => ({
+      transform: (line: string, sourceInfo) => {
         // Import preprocessing to add support forge libraries for hardhat
         if (line.match(/^\s*import /i)) {
           const remappings = getRemappings();
@@ -108,6 +106,13 @@ const config: HardhatUserConfig = {
             break;
           }
         }
+
+        const { absolutePath } = sourceInfo;
+        const linePreprocessor = constLinePreprocessingHook(hre, absolutePath);
+        if (linePreprocessor) {
+          return linePreprocessor(line, sourceInfo);
+        }
+
         return line;
       },
     }),

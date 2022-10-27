@@ -9,7 +9,6 @@ import {JobMock} from "./mocks/JobMock.sol";
 import {TimeMinimumBetweenExecutionsIncorrect, Job, CannotWorkNow} from "contracts/automation/Job.sol";
 
 contract JobTest is Test {
-
     JobMock job;
 
     address alice = vm.addr(1);
@@ -27,7 +26,10 @@ contract JobTest is Test {
         vm.label(bob, "bob");
     }
 
-    function testCheckTimeMinimumbBetweenExecutions(uint96 time, bool tryConstructor) public {
+    function testCheckTimeMinimumbBetweenExecutions(
+        uint96 time,
+        bool tryConstructor
+    ) public {
         vm.assume(time < 1001);
 
         // Will use it only if tryConstructor is true
@@ -40,12 +42,11 @@ contract JobTest is Test {
             )
         );
 
-        if(tryConstructor) {            
+        if (tryConstructor) {
             newJob.__JobMock_init(time);
         } else {
             job.setMinimumBetweenExecutions(time);
         }
-
     }
 
     function testCanWorkReturnTrueOnlyWhenTimeCame(uint96 _time) public {
@@ -70,7 +71,7 @@ contract JobTest is Test {
         assertEq(job.lastWorkTime(), initialTime);
         // _canWork is true + time not came
         assertFalse(job.canWork());
-        
+
         // _canWork is true + time came
         vm.warp(initialTime + time);
         assertTrue(job.canWork());
@@ -97,7 +98,11 @@ contract JobTest is Test {
         assertTrue(job.canWork());
     }
 
-    function testWorkCallsRefreshTheTimeout(uint96 _minTime, uint96 _secondCall, uint96 _thirdCall) public {
+    function testWorkCallsRefreshTheTimeout(
+        uint96 _minTime,
+        uint96 _secondCall,
+        uint96 _thirdCall
+    ) public {
         vm.assume(_minTime > 1001);
         vm.assume(_minTime < block.timestamp);
         vm.assume(_secondCall > _minTime);
@@ -121,10 +126,10 @@ contract JobTest is Test {
         // Will try first call immidiatly after deploy
         assertTrue(job.canWork());
         assertEq(job.workMethodCalledCounter(), 0);
-        
+
         vm.expectEmit(true, true, true, true);
         job.emitWorked(alice);
-        
+
         vm.prank(alice);
         job.work();
 
@@ -135,10 +140,10 @@ contract JobTest is Test {
         // Will try second call after some time
         vm.warp(initialTime + secondCall);
         assertTrue(job.canWork());
-        
+
         vm.expectEmit(true, true, true, true);
         job.emitWorked(alice);
-        
+
         vm.prank(alice);
         job.work();
 
@@ -162,8 +167,10 @@ contract JobTest is Test {
         assertEq(job.lastWorkTime(), initialTime + secondCall + thirdCall);
     }
 
-    function testCannotWorkfNotPassEnoughTimeFromStartOfBlockchain(uint96 _minTime) public {
-        vm.assume(_minTime >= block.timestamp);
+    function testCannotWorkfNotPassEnoughTimeFromStartOfBlockchain(
+        uint96 _minTime
+    ) public {
+        vm.assume(_minTime > 1000 && _minTime >= block.timestamp);
 
         // Prevent arifmetic errors
         uint256 minTime = _minTime;
@@ -230,5 +237,4 @@ contract JobTest is Test {
         vm.expectRevert(CannotWorkNow.selector);
         job.work();
     }
-
 }

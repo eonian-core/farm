@@ -112,6 +112,11 @@ abstract contract Lender is
     }
 
     /// @inheritdoc ILender
+    function lastReport() external view override returns (uint256) {
+        return lastReport(msg.sender);
+    }
+
+    /// @inheritdoc ILender
     function reportPositiveDebtManagement(
         uint256 extraFreeFunds,
         uint256 debtPayment
@@ -242,18 +247,23 @@ abstract contract Lender is
         return borrowersData[borrower].debt;
     }
 
-    /// @notice Returns the activation status of the specified borrower
+    /// @notice Returns the activation status of the specified borrower.
     function isActivated(address borrower) public view returns (bool) {
         return borrowersData[borrower].activationTimestamp > 0;
     }
 
-    /// @notice Returns the total number of tokens borrowers can take
+    /// @notice Returns the last report timestamp of the specified borrower.
+    function lastReport(address borrower) public view returns (uint256) {
+        return borrowersData[borrower].lastReportTimestamp;
+    }
+
+    /// @notice Returns the total number of tokens borrowers can take.
     function _debtLimit() private view returns (uint256) {
         return (debtRatio * lendingAssets()) / MAX_BPS;
     }
 
-    /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility
-    /// @dev This function has "internal" visibility because it's used in tests
+    /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility.
+    /// @dev This function has "internal" visibility because it's used in tests.
     function _decreaseBorrowerCredibility(address borrower, uint256 loss)
         internal
     {

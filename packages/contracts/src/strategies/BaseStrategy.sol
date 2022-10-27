@@ -44,7 +44,7 @@ abstract contract BaseStrategy is
     AggregatorV3Interface internal _assetPriceFeed;
 
     /// @notice The underlying asset's decimals.
-    uint256 private _assetDecimals;
+    uint256 internal _assetDecimals;
 
     event Harvested(
         uint256 profit,
@@ -105,7 +105,7 @@ abstract contract BaseStrategy is
 
         _assetDecimals = IERC20MetadataUpgradeable(address(asset)).decimals();
 
-        asset.safeApprove(address(_vault), type(uint256).max);
+        approveTokenMax(address(asset), address(_vault));
     }
 
     /// @notice Harvests the strategy, recognizing any profits or losses and adjusting the strategy's investments.
@@ -263,6 +263,11 @@ abstract contract BaseStrategy is
         returns (uint256)
     {
         return _assetPriceFeed.convertAmount(amount, _assetDecimals);
+    }
+
+    /// @notice Sets the max token allowance for the specified spender.
+    function approveTokenMax(address token, address spender) internal {
+        IERC20Upgradeable(token).safeApprove(spender, type(uint256).max);
     }
 
     /// @notice Estimates the total amount of strategy funds (including those invested in the base protocol).

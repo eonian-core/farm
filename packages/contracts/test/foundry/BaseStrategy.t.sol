@@ -14,7 +14,9 @@ import "./mocks/AggregatorV3Mock.sol";
 import "contracts/IVault.sol";
 import "contracts/structures/PriceConverter.sol";
 
-contract BaseStrategyTest is Test {
+import "./helpers/TestWithERC1820Registry.sol";
+
+contract BaseStrategyTest is TestWithERC1820Registry {
     using PriceConverter for AggregatorV3Mock;
 
     ERC20Mock underlying;

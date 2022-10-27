@@ -3,9 +3,10 @@
     "target": "es2018",
     "module": "commonjs",
     "strict": true,
-    "esModuleInterop": true,
     "outDir": "dist",
-    "declaration": true
+    "declaration": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
   },
   "include": [
     "./scripts",
