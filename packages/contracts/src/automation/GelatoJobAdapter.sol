@@ -63,13 +63,13 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
 
     /// @notice Bot will call this method when `checker` returns `true`.
     /// Will pay caller
-    /// `work` method stay as it is, to allow a call off-chain
-    function payableWork() public onlyOps {
+    /// `_doWork` method stay as it is, to allow a call off-chain
+    function payableWork() public nonReentrant onlyOps {
         if (isPrepaid) {
             revert PayableWorkNotAllowed();
         }
 
-        super.work();
+        _doWork();
 
         // Check -> Effect -> Interaction
         // To prevent exploits pay only at the end of operations
