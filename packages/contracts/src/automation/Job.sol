@@ -87,20 +87,23 @@ abstract contract Job is
         if (!canWork()) {
             revert CannotWorkNow();
         }
-
-        // refresh execution works like `nonReentrant`
-        // if we have `isTimePassFromLastExecution` inside `canWork`
-        _refreshLastWorkTime();
-
         _;
     }
 
-    /// @notice Important work which will be executed by keeper.
-    /// @dev possible do not use `nonReentrant` modifier if we have isTimePassFromLastExecution check and refreshLastWorkTime at start
-    ///  as it inside `onlyWhenCanWork` modifier.
-    ///  But do not delete it, as `canWork` can be overridden.
-    ///  Possible to optimize this at the end contact
+    /// @notice A handle that allows the `_doWork` function to be invoked externally by everyone.
+    /// Perform a `canWork` check to avoid unnecessary and (maybe) malicious calls.
+    /// @dev `nonReentrant` modifier might be excess there, since we have `isTimePassFromLastExecution` check
+    /// and `refreshLastWorkTime` at start (see `onlyWhenCanWork` modifier). Let's keep it, as `canWork` can be overridden.
     function work() public nonReentrant onlyWhenCanWork {
+        _doWork();
+    }
+
+    /// @notice Performs `_work` call and refreshes the last execution time.
+    function _doWork() internal {
+        // Refresh execution works like `nonReentrant` modifier if we have a `isTimePassFromLastExecution` check inside `canWork`.
+        _refreshLastWorkTime();
+
+        // An important work that is meant to be executed by the keeper.
         _work();
 
         emit Worked(msg.sender);
