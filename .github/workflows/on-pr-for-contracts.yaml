@@ -42,4 +42,4 @@ jobs:
       - name: Run tests (hardhat)
         run: |-
           cd packages/contracts
-          hardhat test
+          yarn test:hardhat
