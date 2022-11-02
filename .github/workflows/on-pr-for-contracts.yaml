@@ -42,4 +42,4 @@ jobs:
       - name: Run tests (hardhat)
         run: |-
           cd packages/contracts
-          yarn test:hardhat
+          USE_BSC_FORK=true yarn test:hardhat
