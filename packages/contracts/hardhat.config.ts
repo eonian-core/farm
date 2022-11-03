@@ -19,7 +19,7 @@ import "hardhat-preprocessor";
 
 import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 
-import "./hardhat/tasks/start-ganache.ts";
+import "./hardhat/tasks/start-hardhat-node.ts";
 
 dotenv.config();
 
@@ -55,7 +55,7 @@ const config: HardhatUserConfig = {
     },
     ganache: {
       url: "http://127.0.0.1:8545",
-      forking: binanceSmartChainFork,
+      forking: ethereumFork,
     },
     bsc_testnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",

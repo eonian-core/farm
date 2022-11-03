@@ -10,30 +10,28 @@ import {
   RunSuperFunction,
 } from "hardhat/types";
 
-import { ForkData } from "../forks";
-
 const enum ErrorReason {
   RESOURCE_NOT_AVAILABLE = "RESOURCE_NOT_AVAILABLE",
   OTHER = "OTHER",
 }
 
-type GanacheError = {
+type CustomError = {
   reason: ErrorReason;
   code: number | null;
 };
 
-// Add "DEBUG" env. variable with "ganache*" to see the logs from this file.
-const log = debug("ganache");
+// Add "DEBUG" env. variable with "start-hardhat-node*" to see the logs from this file.
+const log = debug("start-hardhat-node");
 const logError = log.extend("error");
 const logDebug = log.extend("debug");
 
 /**
- * Starts the ganache on hardhat "test" command (only if the name of the current network is "ganache").
- * Kills the ganache RPC server process once all the tests are done.
+ * Starts the node on hardhat "test" command (only if the name of the current network is "hardhat").
+ * Kills the RPC server process once all the tests are done.
  */
 task(TASK_TEST, async (_args, env, runSuper) => {
-  if (env.network.name !== "ganache") {
-    log('Current network is not "ganache", skipping...');
+  if (env.network.name !== "hardhat") {
+    log('Current network is not "hardhat", skipping...');
     return await runSuper();
   }
   await runTask(env, runSuper);
@@ -46,29 +44,27 @@ async function runTask(
 ) {
   try {
     console.log(
-      `Starting ganache... ${attempt ? `Attempt: ${attempt + 1}` : ""}`.trim()
+      `Starting node... ${attempt ? `Attempt: ${attempt + 1}` : ""}`.trim()
     );
-    const childProcess = await startGanache(env);
+    const childProcess = await startNode(env);
     if (!childProcess?.pid) {
-      throw Error("Unable to start ganache!");
+      throw Error("Unable to start node!");
     }
 
     const { url } = env.network.config as HttpNetworkConfig;
-    console.log(
-      `Ganache is up and running on ${url ?? "http://127.0.0.1:8545"}!`
-    );
+    console.log(`Node is up and running on ${url ?? "http://127.0.0.1:8545"}!`);
 
     await runSuper();
 
     const { pid } = childProcess;
     if (pid) {
-      console.log(`Stopping ganache (PID: ${pid})...`);
+      console.log(`Stopping node (PID: ${pid})...`);
       await killProcess(pid);
     }
   } catch (error: unknown) {
     // Retry to start if there was a network error.
     if (
-      isGanacheError(error) &&
+      isCustomError(error) &&
       error.reason === ErrorReason.RESOURCE_NOT_AVAILABLE
     ) {
       await runTask(env, runSuper, ++attempt);
@@ -79,11 +75,11 @@ async function runTask(
 }
 
 /**
- * Starts the ganache RPC server by executing yarn command.
+ * Starts the RPC server by executing yarn command.
  * @param hre Hardhat runtime environment (configuration)
- * @returns Spawned child process of the ganache RPC server
+ * @returns Spawned child process of the RPC server
  */
-async function startGanache(
+async function startNode(
   hre: HardhatRuntimeEnvironment
 ): Promise<ChildProcessWithoutNullStreams | null> {
   const { forking } = hre.network.config as HardhatNetworkConfig;
@@ -92,50 +88,23 @@ async function startGanache(
     return null;
   }
 
-  // Don't spawn the ganache if the fork is not needed ("undefined" is considered "true").
+  // Don't spawn the node if the fork is not needed ("undefined" is considered "true").
   if (forking.enabled == false) {
     logError("Fork is disabled");
     return null;
   }
 
-  const processOptions = [
-    "ganache",
-    "--miner.blockTime",
-    "0",
-    "--fork.url",
-    forking.url,
-    "--fork.requestsPerSecond",
-    "3",
-    "--wallet.totalAccounts",
-    "3",
-  ];
-
-  if (forking.blockNumber !== undefined) {
-    processOptions.push("--fork.blockNumber", forking.blockNumber + "");
-  }
-
-  const serverOptions = getServerOptions(hre);
-  if (serverOptions) {
-    const [host, port] = serverOptions;
-    processOptions.push("--server.host", host, "--server.port", port);
-  }
-
-  const unlockedAccounts = getUnlockedAccounts(hre);
-  if (unlockedAccounts.length > 0) {
-    unlockedAccounts.forEach((account) => {
-      processOptions.push("--wallet.unlockedAccounts", account);
-    });
-  }
+  const processOptions = ["hardhat", "node", "--no-deploy"];
 
   const childProcess = spawn("yarn", processOptions);
 
-  // We should kill the ganache process when the main process has been stopped.
+  // We should kill the node process when the main process has been stopped.
   process.on("exit", function () {
     const { pid } = childProcess;
     pid !== undefined && killProcess(pid);
   });
 
-  // Sometimes the ganache process is still running after the main process has been closed with "CTRL + C".
+  // Sometimes the process is still running after the main process has been closed with "CTRL + C".
   const cleanExit = function () {
     process.exit();
   };
@@ -143,25 +112,28 @@ async function startGanache(
   process.on("SIGTERM", cleanExit);
 
   let errorReason: ErrorReason | null = null;
-  let isGanacheStarted: boolean = false;
+  let isNodeStarted: boolean = false;
 
   return new Promise<ChildProcessWithoutNullStreams | null>(
     (resolve, reject) => {
       childProcess.stdout.on("data", (data) => {
         const message = data.toString();
 
-        // Once ganache is started, we write logs to debug, to hide "eth_*" calls in the console.
-        isGanacheStarted ? logDebug(message) : log(message);
+        // Once node is started, we write logs to debug, to hide "eth_*" calls in the console.
+        isNodeStarted ? logDebug(message) : log(message);
 
-        // Sometimes ganache is failing with "Resouse is not available" error,
-        // In this case we should catch this exception and try to run ganache again.
-        if (message.includes("code: -32002")) {
+        // Sometimes node is failing with "Resource is not available" error,
+        // In this case we should catch this exception and try to run the node again.
+        if (
+          message.includes("the resource") &&
+          message.includes("is not available")
+        ) {
           errorReason = ErrorReason.RESOURCE_NOT_AVAILABLE;
         }
 
-        // If we get this message, it means that the ganache server is running.
-        if (message.includes("Listening on")) {
-          isGanacheStarted = true;
+        // If we get this message, it means that the RPC server is running.
+        if (message.includes("Started HTTP and WebSocket JSON-RPC server")) {
+          isNodeStarted = true;
           resolve(childProcess);
         }
       });
@@ -171,14 +143,14 @@ async function startGanache(
       });
 
       childProcess.on("exit", (code) => {
-        log(`Ganache stopped with code: ${code ?? -1}`);
+        log(`Node stopped with code: ${code ?? -1}`);
 
         if (code === 0) {
           resolve(null);
           return;
         }
 
-        reject(<GanacheError>{
+        reject(<CustomError>{
           reason: errorReason ?? ErrorReason.OTHER,
           code: resolveErrorCode(errorReason) ?? code,
         });
@@ -211,23 +183,6 @@ function resolveErrorCode(errorReason: ErrorReason | null): number | null {
   }
 }
 
-function isGanacheError(error: any): error is GanacheError {
+function isCustomError(error: any): error is CustomError {
   return "reason" in error;
-}
-
-function getServerOptions(
-  hre: HardhatRuntimeEnvironment
-): [string, string] | null {
-  const { url } = hre.network.config as HttpNetworkConfig;
-  if (!url) {
-    return null;
-  }
-  const [, host, port] = url.replace(/[^0-9a-zA-Z.:]/g, "").split(":");
-  return [host, port];
-}
-
-function getUnlockedAccounts(hre: HardhatRuntimeEnvironment): string[] {
-  const { forking } = hre.network.config as HardhatNetworkConfig;
-  const { accounts } = forking as ForkData;
-  return accounts ? Object.values(accounts) : [];
 }
