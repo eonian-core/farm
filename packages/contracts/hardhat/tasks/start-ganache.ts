@@ -74,7 +74,7 @@ async function runTask(
       await runTask(env, runSuper, ++attempt);
       return;
     }
-    console.error(error);
+    throw error;
   }
 }
 
