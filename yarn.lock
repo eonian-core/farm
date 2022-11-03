@@ -6375,10 +6375,10 @@ hard-rejection@^2.1.0:
   resolved "https://registry.npmjs.org/hard-rejection/-/hard-rejection-2.1.0.tgz"
   integrity sha512-VIZB+ibDhx7ObhAe7OVtoEbuP4h/MuOTHJ+J8h/eBXotJYl0fBgR72xDFCKgIh22OJZIOVNxBMWuhAr10r8HdA==
 
-hardhat-deploy@^0.11.18:
-  version "0.11.18"
-  resolved "https://registry.npmjs.org/hardhat-deploy/-/hardhat-deploy-0.11.18.tgz"
-  integrity sha512-Zs5Gr23/HEcYPjQgcSJLlXkR2/WOp24O9Af+7qA540sCDvHjuQ7WhHG/fB2cjPel0Ajf0TzXx1uVViWtbKLqTg==
+hardhat-deploy@^0.11.20:
+  version "0.11.20"
+  resolved "https://registry.yarnpkg.com/hardhat-deploy/-/hardhat-deploy-0.11.20.tgz#d95499a0d29b75f1f1d3838c9a3eb6d2d0d20f57"
+  integrity sha512-6G2aFLW0mfZxY0ljDf8rxzEJkVh57gr3Eia5H2DeBIQNJh0dhBV2Y5LDq4E4J9K4Crq0DjpxGNTshEtAB9eWxA==
   dependencies:
     "@types/qs" "^6.9.7"
     axios "^0.21.1"
@@ -6423,17 +6423,17 @@ hardhat-preprocessor@^0.1.5:
   dependencies:
     murmur-128 "^0.2.1"
 
-hardhat-tracer@^1.1.0-rc.9:
-  version "1.1.0-rc.9"
-  resolved "https://registry.npmjs.org/hardhat-tracer/-/hardhat-tracer-1.1.0-rc.9.tgz"
-  integrity sha512-R9ikCBXCf+r78gdQMyTHPUiOeqAUxhJ3JUUzYulnJ/fuB/JwbolDJ3DvdTuBy1cOXFwLVkPBtpWYEWwW1pBXKQ==
+hardhat-tracer@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/hardhat-tracer/-/hardhat-tracer-1.1.1.tgz#7ffa1affc06ef3346d7086f7cacb1718efe1a87b"
+  integrity sha512-NgOnnNAvARBtYC5x5c7Qcbw+lr+Jb+0OV1NC2tTpUUQj0ym+/0y42F0CYT/zKnHw3uf046NKg0CNTzYg1j0JWg==
   dependencies:
     ethers "^5.6.1"
 
-hardhat@^2.12.1:
-  version "2.12.1"
-  resolved "https://registry.npmjs.org/hardhat/-/hardhat-2.12.1.tgz"
-  integrity sha512-ihqYoaAKMceVWRcc3VddftFM7Q4/WL5Xan8nrklfDRwwST0W1rWWEE8SrxGikW58IJdREsC/HXVHs0zKfYpiCA==
+hardhat@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/hardhat/-/hardhat-2.12.2.tgz#6ae985007b20c1f381c6573799d66c1438c4c802"
+  integrity sha512-f3ZhzXy1uyQv0UXnAQ8GCBOWjzv++WJNb7bnm10SsyC3dB7vlPpsMWBNhq7aoRxKrNhX9tCev81KFV3i5BTeMQ==
   dependencies:
     "@ethersproject/abi" "^5.1.2"
     "@metamask/eth-sig-util" "^4.0.0"

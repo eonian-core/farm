@@ -41,10 +41,17 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: process.env.USE_BSC_FORK ? "ganache" : "hardhat",
+  defaultNetwork: process.env.USE_BSC_FORK ? "hardhat" : "ganache",
   networks: {
     hardhat: {
-      forking: ethereumFork,
+      forking: binanceSmartChainFork,
+      mining: {
+        auto: true,
+        interval: 5000,
+        mempool: {
+          order: "fifo",
+        },
+      },
     },
     ganache: {
       url: "http://127.0.0.1:8545",
