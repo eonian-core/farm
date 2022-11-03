@@ -122,6 +122,16 @@ async function startNode(
         // Once node is started, we write logs to debug, to hide "eth_*" calls in the console.
         isNodeStarted ? logDebug(message) : log(message);
 
+        // If we get this message, it means that the RPC server is running.
+        if (message.includes("Started HTTP and WebSocket JSON-RPC server")) {
+          isNodeStarted = true;
+          resolve(childProcess);
+        }
+      });
+
+      childProcess.stderr.on("data", (data) => {
+        const message = data.toString();
+
         // Sometimes node is failing with "Resource is not available" error,
         // In this case we should catch this exception and try to run the node again.
         if (
@@ -131,15 +141,7 @@ async function startNode(
           errorReason = ErrorReason.RESOURCE_NOT_AVAILABLE;
         }
 
-        // If we get this message, it means that the RPC server is running.
-        if (message.includes("Started HTTP and WebSocket JSON-RPC server")) {
-          isNodeStarted = true;
-          resolve(childProcess);
-        }
-      });
-
-      childProcess.stderr.on("data", (data) => {
-        logError(data.toString());
+        logError(message);
       });
 
       childProcess.on("exit", (code) => {
