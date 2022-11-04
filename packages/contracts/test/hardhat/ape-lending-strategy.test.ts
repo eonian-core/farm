@@ -19,7 +19,8 @@ import { binanceSmartChainFork } from "../../hardhat/forks";
 describe("Ape Lending Strategy", function () {
   const { ethers } = hre;
 
-  const holderAddress = binanceSmartChainFork.accounts["holder"]; // Holder (Binance Hot Wallet)
+  const holderAAddress = binanceSmartChainFork.accounts["holderA"]; // Holder (Binance Hot Wallet)
+  const holderBAddress = binanceSmartChainFork.accounts["holderA"]; // Holder (Binance Hot Wallet)
   const opsAddress = binanceSmartChainFork.accounts["ops"]; // Gelato BSC ops;
   const asset = "0x55d398326f99059ff775485246999027b3197955"; // USDT
   const cToken = "0xdbfd516d42743ca3f1c555311f7846095d85f6fd"; // oUSDT;
@@ -27,13 +28,15 @@ describe("Ape Lending Strategy", function () {
   const nativePriceFeed = "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee"; // Chainlink BNB/USD feed
   const assetPriceFeed = "0xb97ad0e74fa7d920791e90258a6e2085088b4320"; // Chainlink USDT/USD feed
 
-  hre.tracer.nameTags[holderAddress] = "Holder";
+  hre.tracer.nameTags[holderAAddress] = "Holder A";
+  hre.tracer.nameTags[holderBAddress] = "Holder B";
   hre.tracer.nameTags[asset] = "USDT";
   hre.tracer.nameTags[cToken] = "cToken";
   hre.tracer.nameTags[rewards] = "Rewards";
 
   let owner: SignerWithAddress;
-  let holder: SignerWithAddress;
+  let holderA: SignerWithAddress;
+  let holderB: SignerWithAddress;
   let ops: SignerWithAddress;
 
   let vault: Vault;
@@ -42,10 +45,11 @@ describe("Ape Lending Strategy", function () {
 
   async function setup() {
     [owner] = await ethers.getSigners();
-    holder = await ethers.getSigner(holderAddress);
+    holderA = await ethers.getSigner(holderAAddress);
+    holderB = await ethers.getSigner(holderBAddress);
     ops = await ethers.getSigner(opsAddress);
 
-    await helpers.impersonateAccount(holderAddress);
+    await helpers.impersonateAccount(holderAAddress);
     await helpers.impersonateAccount(opsAddress);
 
     vault = await deployVault(hre, { asset, rewards, signer: owner });
@@ -62,52 +66,70 @@ describe("Ape Lending Strategy", function () {
   });
 
   it("Should deposit and withdraw from the vault", async function () {
-    assetToken = assetToken.connect(holder);
-
     // Vault is empty, no USDT amount on the token balance
-    const startVaultBalance = await assetToken.balanceOf(vault.address);
-    expect(startVaultBalance).to.be.equal(0);
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
 
     // Make sure that the holder has some amount of USDT (e.g., >300)
-    const startHolderBalance = await assetToken.balanceOf(holderAddress);
-    expect(startHolderBalance).to.be.greaterThan(300n * 10n ** 18n);
-
-    vault = vault.connect(holder);
+    expect(await assetToken.balanceOf(holderAAddress)).to.be.greaterThan(
+      300n * 10n ** 18n
+    );
 
     // Approve and deposit 30 USDT in the vault on behalf of the holder
     const depositAmount = 30n * 10n ** 18n;
-    await assetToken.approve(vault.address, depositAmount);
-    await expect(
-      await vault["deposit(uint256)"](depositAmount)
-    ).changeTokenBalances(
-      assetToken,
-      [vault.address, holder],
-      [depositAmount, -depositAmount]
-    );
+    await deposit(holderA, depositAmount);
 
     // Withdraw 15 USDT from the vault
     const withdrawalAmount = 15n * 10n ** 18n;
-    await expect(
-      await vault["withdraw(uint256)"](withdrawalAmount)
-    ).changeTokenBalances(
-      assetToken,
-      [vault.address, holder],
-      [-withdrawalAmount, withdrawalAmount]
+    await withdraw(holderA, withdrawalAmount);
+
+    // Check the deposits of the Vault
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
+      depositAmount - withdrawalAmount
     );
   });
 
-  it("Should deposit and withdraw from the vault afther investing to the strategy", async function () {
-    assetToken = assetToken.connect(holder);
+  it("Should deposit and withdraw from the vault (multiple users)", async function () {
+    // Vault is empty, no USDT amount on the token balance
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
+
+    // Make sure that the holders have some amount of USDT (e.g., >300)
+    const min = 300n * 10n ** 18n;
+    expect(await assetToken.balanceOf(holderAAddress)).to.be.greaterThan(min);
+    expect(await assetToken.balanceOf(holderBAddress)).to.be.greaterThan(min);
+
+    // Approve and deposit 30 USDT in the vault on behalf of the holders
+    const depositAmount = 30n * 10n ** 18n;
+    await deposit(holderA, depositAmount);
+    await deposit(holderB, depositAmount);
+
+    // Check the deposits of the Vault
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
+      depositAmount * 2n
+    );
+
+    // Withdraw some USDT from the vault on behalf of the holders
+    const withdrawalAmount = 15n * 10n ** 18n;
+    await withdraw(holderA, withdrawalAmount);
+    await withdraw(holderB, withdrawalAmount);
+
+    // Check the deposits of the Vault
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
+      depositAmount * 2n - withdrawalAmount * 2n
+    );
+  });
+
+  it("Should deposit and withdraw from the vault after investing to the strategy", async function () {
+    assetToken = assetToken.connect(holderA);
 
     // Vault is empty, no USDT amount on the token balance
     const startVaultBalance = await assetToken.balanceOf(vault.address);
     expect(startVaultBalance).to.be.equal(0);
 
     // Make sure that the holder has some amount of USDT (e.g., >300)
-    const startHolderBalance = await assetToken.balanceOf(holderAddress);
+    const startHolderBalance = await assetToken.balanceOf(holderAAddress);
     expect(startHolderBalance).to.be.greaterThan(300n * 10n ** 18n);
 
-    vault = vault.connect(holder);
+    vault = vault.connect(holderA);
 
     // Approve and deposit 30 USDT in the vault on behalf of the holder
     const depositAmount = 30n * 10n ** 18n;
@@ -116,7 +138,7 @@ describe("Ape Lending Strategy", function () {
       await vault["deposit(uint256)"](depositAmount)
     ).changeTokenBalances(
       assetToken,
-      [vault.address, holder],
+      [vault.address, holderA],
       [depositAmount, -depositAmount]
     );
 
@@ -134,10 +156,41 @@ describe("Ape Lending Strategy", function () {
       await vault["withdraw(uint256)"](withdrawalAmount)
     ).changeTokenBalances(
       assetToken,
-      [vault.address, strategy.address, cToken, holder.address],
+      [vault.address, strategy.address, cToken, holderA.address],
       [0, 0, -withdrawalAmount, withdrawalAmount]
     );
   });
+
+  /**
+   * Approve and deposit some USDTs in the vault on behalf of the specified holder
+   * @param holder A signer of the transaction
+   * @param amount Amount of tokens to deposit
+   */
+  async function deposit(holder: SignerWithAddress, amount: bigint) {
+    assetToken = assetToken.connect(holder);
+    vault = vault.connect(holder);
+    await assetToken.approve(vault.address, amount);
+    await expect(await vault["deposit(uint256)"](amount)).changeTokenBalances(
+      assetToken,
+      [vault.address, holder.address],
+      [amount, -amount]
+    );
+  }
+
+  /**
+   * Withdraw some USDTs from the vault on behalf of the specified holder
+   * @param holder A signer of the transaction
+   * @param amount Amount of tokens to withdraw
+   */
+  async function withdraw(holder: SignerWithAddress, amount: bigint) {
+    assetToken = assetToken.connect(holder);
+    vault = vault.connect(holder);
+    await expect(await vault["withdraw(uint256)"](amount)).changeTokenBalances(
+      assetToken,
+      [vault.address, holder.address],
+      [-amount, amount]
+    );
+  }
 
   async function deployStrategy(options: {
     signer: SignerWithAddress;

@@ -18,6 +18,7 @@ const enum ErrorReason {
 type CustomError = {
   reason: ErrorReason;
   code: number | null;
+  message: string | null;
 };
 
 // Add "DEBUG" env. variable with "start-hardhat-node*" to see the logs from this file.
@@ -112,6 +113,7 @@ async function startNode(
   process.on("SIGTERM", cleanExit);
 
   let errorReason: ErrorReason | null = null;
+  let errorMessage: string | null = null;
   let isNodeStarted: boolean = false;
 
   return new Promise<ChildProcessWithoutNullStreams | null>(
@@ -131,6 +133,9 @@ async function startNode(
 
       childProcess.stderr.on("data", (data) => {
         const message = data.toString();
+
+        errorMessage = errorMessage ?? "";
+        errorMessage += message;
 
         // Sometimes node is failing with "Resource is not available" error,
         // In this case we should catch this exception and try to run the node again.
@@ -155,6 +160,7 @@ async function startNode(
         reject(<CustomError>{
           reason: errorReason ?? ErrorReason.OTHER,
           code: resolveErrorCode(errorReason) ?? code,
+          message: errorMessage,
         });
       });
 
