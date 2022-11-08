@@ -12,6 +12,20 @@ contract RainMakerMock is IRainMaker {
         _compSupplySpeeds = __compSupplySpeeds;
     }
 
+    function compSupplierIndex(address, address)
+        external
+        pure
+        returns (uint256)
+    {
+        return 0;
+    }
+
+    function compSupplyState(
+        address /* cToken */
+    ) external pure returns (CompMarketState memory) {
+        return CompMarketState({index: 0, block: 0});
+    }
+
     function compSpeeds(
         address /* cToken */
     ) external pure returns (uint256) {
