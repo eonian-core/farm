@@ -10,7 +10,7 @@ export const binanceSmartChainFork: ForkData = {
   blockNumber: 22600879, // 29.10.2022
   accounts: {
     holderA: "0xe2fc31f816a9b94326492132018c3aecc4a93ae1", // Holder (Binance Hot Wallet)
-    holderB: "0xe9e7cea3dedca5984780bafc599bd69add087d56", // Holder (Binance Hot Wallet)
+    holderB: "0x3c783c21a0383057d128bae431894a5c19f9cf06", // Holder (Binance Hot Wallet 8)
     ops: "0x527a819db1eb0e34426297b03bae11F2f8B3A19E", // Gelato ops
   },
 };
