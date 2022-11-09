@@ -5,7 +5,6 @@ import { task } from "hardhat/config";
 import { HardhatUserConfig } from "hardhat/types/config";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
@@ -13,11 +12,14 @@ import "@openzeppelin/hardhat-upgrades";
 import "hardhat-tracer";
 import "hardhat-deploy";
 import "hardhat-docgen";
+import "@nomicfoundation/hardhat-chai-matchers";
 
 import constLinePreprocessingHook from "./hardhat/const-line-preprocessing-hook";
 import "hardhat-preprocessor";
 
-import { etheriumFork, binanceSmartChainFork } from "./forks";
+import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
+
+import "./hardhat/tasks/start-hardhat-node.ts";
 
 dotenv.config();
 
@@ -30,19 +32,34 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 });
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.15",
+  solidity: {
+    version: "0.8.15",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
+  defaultNetwork: process.env.USE_BSC_FORK ? "hardhat" : "ganache",
   networks: {
     hardhat: {
-      forking: process.env.USE_BSC_FORK ? binanceSmartChainFork : etheriumFork,
-      accounts: {
-        accountsBalance: "1000000000000000000000000", // 1 mil ether,
+      forking: binanceSmartChainFork,
+      mining: {
+        auto: true,
+        interval: 5000,
+        mempool: {
+          order: "fifo",
+        },
       },
-      allowUnlimitedContractSize: true,
+    },
+    ganache: {
+      url: "http://127.0.0.1:8545",
+      forking: ethereumFork,
     },
     bsc_testnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
-      gasPrice: 20000000000,
       accounts: [process.env.BSC_TESTNET_PRIVATE_KEY].filter(
         Boolean
       ) as Array<string>,
@@ -50,12 +67,10 @@ const config: HardhatUserConfig = {
     bsc_mainnet: {
       url: "https://bsc-dataseed.binance.org/",
       chainId: 56,
-      // gasPrice: 5,
       accounts: [process.env.BSC_MAINNET_PRIVATE_KEY].filter(
         Boolean
       ) as Array<string>,
     },
-
     ropsten: {
       url: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
       accounts: [process.env.ROPSTEN_PRIVATE_KEY].filter(
