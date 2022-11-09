@@ -26,6 +26,8 @@ const log = debug("start-hardhat-node");
 const logError = log.extend("error");
 const logDebug = log.extend("debug");
 
+const MAX_RESTART_ATTEMPTS = 30;
+
 /**
  * Starts the node on hardhat "test" command (only if the name of the current network is "hardhat").
  * Kills the RPC server process once all the tests are done.
@@ -68,7 +70,10 @@ async function runTask(
       isCustomError(error) &&
       error.reason === ErrorReason.RESOURCE_NOT_AVAILABLE
     ) {
-      await runTask(env, runSuper, ++attempt);
+      if (++attempt >= MAX_RESTART_ATTEMPTS) {
+        throw error;
+      }
+      await runTask(env, runSuper, attempt);
       return;
     }
     throw error;
