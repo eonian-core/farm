@@ -46,7 +46,8 @@ contract ApeLendingStrategy is BaseStrategy {
             _minReportInterval,
             _isPrepaid,
             _nativeTokenPriceFeed,
-            _assetPriceFeed
+            _assetPriceFeed,
+            address(0)
         );
 
         cToken = ICToken(_cToken);
