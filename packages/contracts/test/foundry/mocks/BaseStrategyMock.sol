@@ -28,7 +28,8 @@ contract BaseStrategyMock is BaseStrategy {
             _minReportInterval,
             _isPrepaid,
             __nativeTokenPriceFeed,
-            __assetPriceFeed
+            __assetPriceFeed,
+            address(0)
         );
     }
 

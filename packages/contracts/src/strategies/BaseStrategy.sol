@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
@@ -11,6 +10,7 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "./IStrategy.sol";
 import "../IVault.sol";
 import "../automation/GelatoJobAdapter.sol";
+import "../healthcheck/HealthChecker.sol";
 import "../structures/PriceConverter.sol";
 
 error CallerIsNotAVault();
@@ -19,7 +19,7 @@ error IncompatiblePriceFeeds();
 abstract contract BaseStrategy is
     IStrategy,
     GelatoJobAdapter,
-    OwnableUpgradeable,
+    HealthChecker,
     PausableUpgradeable
 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -72,9 +72,10 @@ abstract contract BaseStrategy is
         uint256 _minReportInterval,
         bool _isPrepaid,
         address __nativeTokenPriceFeed,
-        address __assetPriceFeed
+        address __assetPriceFeed,
+        address _healthCheck
     ) internal onlyInitializing {
-        __Ownable_init();
+        __HealthChecker_init(_healthCheck);
         __Pausable_init();
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 
@@ -140,7 +141,15 @@ abstract contract BaseStrategy is
 
         _adjustPosition(outstandingDebt);
 
-        // TODO: Perform the health check (?)
+        uint256 totalDebt = vault.currentDebt();
+        performHealthCheck(
+            address(this),
+            profit,
+            loss,
+            debtPayment,
+            outstandingDebt,
+            totalDebt
+        );
 
         emit Harvested(profit, loss, debtPayment, outstandingDebt);
     }
