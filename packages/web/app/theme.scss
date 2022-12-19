@@ -1,0 +1,120 @@
+/**
+* This is default theme values for whole application.
+* It includes, at least:
+* - font sizes
+* - font families
+* - font weight
+* - line height
+* - colors
+* - margin
+* - padding
+* - width
+* - height
+* - box shadows
+* - border radius
+* - border width
+* - opacity
+*/
+
+:root {
+    // font sizes
+    --font-size-100: 0.75rem;
+    --font-size-300: 0.875rem;
+    --font-size-500: 1rem; // Default size, by default equal 16px 
+    --font-size-600: 1.125rem;
+    --font-size-700: 1.25rem;
+    --font-size-800: 1.875rem;
+    --font-size-900: 2.25rem;
+    --font-size-1000: 3rem;
+    --font-size-1100: 3.75rem;
+    --font-size-1200: 4.5rem;
+    
+
+    // colors
+
+        // Primary
+        --color-primary-100: #d0cdfa;
+        --color-primary-200: #9795b5;
+        --color-primary-300: #636175;
+        --color-primary-400: #32323a;
+        --color-primary-500: #382bf0; // Default color
+        --color-primary-600: #3223ae;
+        --color-primary-700: #291b71;
+        --color-primary-800: #1b1239;
+        --color-primary-900: #000000;
+  
+
+        // Neutral
+        --color-neutral-100: #e3e3e3;
+        --color-neutral-200: #a5a5a5;
+        --color-neutral-300: #6b6b6b;
+        --color-neutral-400: #363636;
+        --color-neutral-500: #808080; // Default color
+        --color-neutral-600: #5f5f5f;
+        --color-neutral-700: #3f3f3f;
+        --color-neutral-800: #222222;
+        --color-neutral-900: #000000;
+
+        // Accent
+
+            // Highlight
+            --color-highlight-100: #bae9ff;
+            --color-highlight-200: #88a9b9;
+            --color-highlight-300: #596d77;
+            --color-highlight-400: #2e373b;
+            --color-highlight-500: #03a9f4; // Default color
+            --color-highlight-600: #1e7cb1;
+            --color-highlight-700: #1f5172;
+            --color-highlight-800: #172b39;
+            --color-highlight-900: #000000;
+
+            // Warning
+            --color-warning-100: #fff9bf;
+            --color-warning-200: #b9b48b;
+            --color-warning-300: #77745b;
+            --color-warning-400: #3b3a2f;
+            --color-warning-500: #ffeb3b; // Default color
+            --color-warning-600: #b9aa31;
+            --color-warning-700: #786e26;
+            --color-warning-800: #3c3718;
+            --color-warning-900: #000000;
+
+            // Error
+            --color-error-100: #f5aea9;
+            --color-error-200: #b27f7c;
+            --color-error-300: #735451;
+            --color-error-400: #3a2c2b;
+            --color-error-500: #f44336; // Default color
+            --color-error-600: #b2362a;
+            --color-error-700: #74281f;
+            --color-error-800: #3c1913;
+            --color-error-900: #000000;
+  
+
+            // Success
+            --color-success-100: #a8ffab;
+            --color-success-200: #7cb97d;
+            --color-success-300: #527752;
+            --color-success-400: #2b3b2b;
+            --color-success-500: #47ff4e; // Default color
+            --color-success-600: #3cb93d;
+            --color-success-700: #2f772c;
+            --color-success-800: #1e3c1b;
+            --color-success-900: #000000;
+    
+    // margin
+    --margin-400: 20px;
+    --margin-500: 30px;
+    --margin-600: 40px;
+
+    // padding
+    --padding-400: 20px;
+    --padding-500: 30px;
+    --padding-600: 40px;
+    
+    // border radius
+    --border-radius-400: 5px;
+    --border-radius-500: 10px;
+    --border-radius-600: 15px;
+
+}

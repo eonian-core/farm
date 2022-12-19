@@ -6,6 +6,7 @@
     "clean": "rimraf packages/**/lib",
     "graph": "nx graph",
     "start": "lerna exec --parallel -- yarn start",
+    "dev": "lerna exec --parallel -- yarn dev",
     "build": "lerna run build",
     "test": "lerna run test",
     "postinstall": "git submodule update --init --recursive && lerna exec --scope='@eonian/contracts' -- yarn postinstall",
