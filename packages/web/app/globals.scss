@@ -94,6 +94,9 @@
       --color-text-800: hsl(240, 4%, 16%);
       --color-text-900: hsl(240, 6%, 10%);
 
+      --title-gradient: linear-gradient(
+        to bottom right, var(--color-text-300) 35%, var(--color-text-400) 50%, var(--color-text-200) 55%);
+
     // Background
 
       --color-background-start: hsl(200, 4%, 14%);
@@ -141,7 +144,10 @@
 
     // Accent
 
-      --accent-glow: radial-gradient(rgba(191, 148, 63, 0.404), rgba(252, 246, 186, 0.349), rgba(179, 135, 40, 0.308), rgba(251, 245, 183, 0.212), rgba(170, 118, 28, 0.116)); 
+      --accent-glow: linear-gradient(to right,
+      rgba(251, 245, 183, 0.212),
+        rgba(191, 148, 63, 0.4), rgba(252, 246, 186, 0.8), 
+        rgba(233, 191, 118, 0.5), rgba(179, 135, 40, 0.308)); 
 
       // Highlight
         --color-highlight-100: #bae9ff;
@@ -192,6 +198,8 @@
     --margin-400: 20px;
     --margin-500: 30px;
     --margin-600: 40px;
+    --margin-700: 60px;
+    --margin-800: 100px;
 
   // padding
     --padding-400: 20px;

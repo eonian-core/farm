@@ -1,3 +1,33 @@
+@keyframes shine {
+    0% {
+        
+        opacity: 0;
+        left: 38rem;
+    }
+
+    25% {
+        
+        opacity: 0.2;
+        left: 40rem;
+    }
+
+    50% {
+        opacity: 0.35;
+        left: 43rem;
+    }
+
+    75% {
+        opacity: 0.2;
+        left: 45rem;
+    }
+
+    100% {
+        
+        opacity: 0;
+        left: 46rem;
+    }
+}
+
 .hero {
     display: flex;
     flex-direction: column;
@@ -13,7 +43,9 @@
         font-weight: var(--font-black);
         line-height: var(--line-height-1200);
         text-align: center;
-        color: var(--color-text-200);
+        background: var(--title-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
         position: relative;
 
         // Glow
@@ -39,8 +71,8 @@
             width: 20rem;
             height: 15rem;
             z-index: -1;
-            left: 43rem;
             bottom: -2rem;
+            animation: shine 10s ease-in-out infinite;
         }
     }
 
@@ -48,20 +80,17 @@
         font-size: var(--font-size-700);
         line-height: var(--line-height-500);
         text-align: center;
-        margin-top: var(--margin-top-600);
-        font-weight: var(--font-light);
-        color: var(--color-text-300);
+        margin-top: var(--margin-600);
+        font-weight: var(--font-medium);
+        color: var(--color-text-400);
     }
-
-    
-      
 
 }
 
 
 
 @media (prefers-reduced-motion) {
-    .hero h1::before {
+    .hero h1::after {
         animation: none;
     }
 }
