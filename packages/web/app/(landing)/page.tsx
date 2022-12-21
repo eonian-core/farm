@@ -11,6 +11,8 @@ export default function Home() {
     <main className={styles.main}>
       <Hero />
 
+      <button className="btn">Hello daisyUI</button>
+
       <div className={styles.grid}>
         <ButtonBlock href="https://nextjs.org/docs" />
 

@@ -52,3 +52,18 @@ $ yarn start
 [] add optimizations in compilation process
 [] add foundry to hardhat remappings support
 [] silent warning for unused arguments in SafeERC4626 contract
+
+# Colors
+
+
+
+https://tailwindcss.com/docs/customizing-colors
+Primary
+* Indigo
+* Fuchsia
+* https://uigradients.com/?utm_source=pocket_saves#Celestial
+
+Accent
+* Amber
+* https://uigradients.com/?utm_source=pocket_saves#LearningandLeading
+* https://uigradients.com/?utm_source=pocket_saves#LightOrange
