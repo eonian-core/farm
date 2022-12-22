@@ -1,0 +1,250 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/**
+* This is default theme values for whole application.
+* It includes, at least:
+* - font sizes
+* - font families
+* - font weight
+* - line height
+* - colors
+* - margin
+* - padding
+* - width
+* - height
+* - box shadows
+* - border radius
+* - border width
+* - opacity
+*/
+:root {
+
+  // font sizes
+    --font-size-100: 0.75rem;
+    --font-size-300: 0.875rem;
+    --font-size-500: 1rem; // Default size, by default equal 16px 
+    --font-size-600: 1.125rem;
+    --font-size-700: 1.25rem;
+    --font-size-800: 1.875rem;
+    --font-size-900: 2.25rem;
+    --font-size-1000: 3rem;
+    --font-size-1100: 3.75rem;
+    --font-size-1200: 10.5rem;
+
+  // font families
+    --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
+    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
+    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+
+
+  // font weight
+    --font-thin: 100;
+    --font-extralight: 200;
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-extrabold: 800;
+    --font-black: 900;
+  
+  // line height
+    --line-height-100: 1.25rem;
+    --line-height-300: 1.5rem;
+    --line-height-500: 1.75rem; // Default size, by default equal 16px 
+    --line-height-600: 2rem;
+    --line-height-700: 2.25rem;
+    --line-height-800: 2.875rem;
+    --line-height-900: 3.25rem;
+    --line-height-1000: 4rem;
+    --line-height-1100: 4.75rem;
+    --line-height-1200: 11.5rem;
+  
+
+  // Colors
+
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+
+    --callout-rgb: 20, 20, 20;
+    --callout-border-rgb: 108, 108, 108;
+    --card-rgb: 100, 100, 100;
+    --card-border-rgb: 200, 200, 200;
+
+    --tile-start-color:  rgba(2, 13, 46, 1);
+    --tile-end-color: rgba(2, 5, 19, 1);
+    --tile-border-color: conic-gradient(
+      hsla(0, 0%, 100%, 0.502),
+      hsla(0, 0%, 100%, 0.251),
+      hsla(0, 0%, 100%, 0.188),
+      hsla(0, 0%, 100%, 0.125),
+      hsla(0, 0%, 100%, 0.063),
+      hsla(0, 0%, 100%, 0.063),
+      hsla(0, 0%, 100%, 0.502)
+    );
+
+    // Text
+      --color-text-50: hsl(0, 0%, 98%);
+      --color-text-100: hsl(240, 5%, 96%);
+      --color-text-200: hsl(240, 6%, 90%);
+      --color-text-300: hsl(240, 5%, 84%);
+      --color-text-400: hsl(240, 5%, 65%);
+      --color-text-500: hsl(240, 4%, 46%); // Default color
+      --color-text-600: hsl(240, 5%, 34%);
+      --color-text-700: hsl(240, 5%, 26%);
+      --color-text-800: hsl(240, 4%, 16%);
+      --color-text-900: hsl(240, 6%, 10%);
+
+      --title-gradient: linear-gradient(
+        to bottom right, var(--color-text-300) 35%, var(--color-text-400) 50%, var(--color-text-200) 55%);
+
+    // Background
+
+      --color-background-start: hsl(200, 4%, 14%);
+      --color-background-end: hsl(210, 3%, 26%);
+      --color-background-gradient: linear-gradient(
+        to bottom,
+        transparent,
+        var(--color-background-end)
+      ) var(--color-background-start);
+
+    // Primary
+      --color-primary-100: #d0cdfa;
+      --color-primary-200: #9795b5;
+      --color-primary-300: #636175;
+      --color-primary-400: #32323a;
+      --color-primary-500: #382bf0; // Default color
+      --color-primary-600: #3223ae;
+      --color-primary-700: #291b71;
+      --color-primary-800: #1b1239;
+      --color-primary-900: #000000;
+
+      --primary-glow: linear-gradient(
+        to bottom right,
+        rgba(142, 81, 195, 0.048) 0%,
+         rgba(153, 47, 202, 0.089) 29%, 
+         rgba(195, 55, 99, 0.096) 48%, 
+         rgba(36, 38, 112, 0.075) 74%, 
+         rgba(39, 45, 93, 0.034) 100%
+      );
+
+    // Secondary
+      
+    
+    // Neutral
+      --color-neutral-50: hsl(0, 0%, 98%);
+      --color-neutral-100: hsl(0, 0%, 96%);
+      --color-neutral-200: hsl(0, 0%, 90%);
+      --color-neutral-300: hsl(0, 0%, 83%);
+      --color-neutral-400: hsl(0, 0%, 64%);
+      --color-neutral-500: hsl(0, 0%, 45%); // Default color
+      --color-neutral-600: hsl(0, 0%, 32%);
+      --color-neutral-700: hsl(0, 0%, 25%);
+      --color-neutral-800: hsl(0, 0%, 15%);
+      --color-neutral-900: hsl(0, 0%, 9%);
+
+    // Accent
+
+      --accent-glow: linear-gradient(to right,
+      rgba(251, 245, 183, 0.212),
+        rgba(191, 148, 63, 0.4), rgba(252, 246, 186, 0.8), 
+        rgba(233, 191, 118, 0.5), rgba(179, 135, 40, 0.308)); 
+
+      // Highlight
+        --color-highlight-100: #bae9ff;
+        --color-highlight-200: #88a9b9;
+        --color-highlight-300: #596d77;
+        --color-highlight-400: #2e373b;
+        --color-highlight-500: #03a9f4; // Default color
+        --color-highlight-600: #1e7cb1;
+        --color-highlight-700: #1f5172;
+        --color-highlight-800: #172b39;
+        --color-highlight-900: #000000;
+
+      // Warning
+        --color-warning-100: #fff9bf;
+        --color-warning-200: #b9b48b;
+        --color-warning-300: #77745b;
+        --color-warning-400: #3b3a2f;
+        --color-warning-500: #ffeb3b; // Default color
+        --color-warning-600: #b9aa31;
+        --color-warning-700: #786e26;
+        --color-warning-800: #3c3718;
+        --color-warning-900: #000000;
+
+      // Error
+        --color-error-100: #f5aea9;
+        --color-error-200: #b27f7c;
+        --color-error-300: #735451;
+        --color-error-400: #3a2c2b;
+        --color-error-500: #f44336; // Default color
+        --color-error-600: #b2362a;
+        --color-error-700: #74281f;
+        --color-error-800: #3c1913;
+        --color-error-900: #000000;
+
+
+      // Success
+        --color-success-100: #a8ffab;
+        --color-success-200: #7cb97d;
+        --color-success-300: #527752;
+        --color-success-400: #2b3b2b;
+        --color-success-500: #47ff4e; // Default color
+        --color-success-600: #3cb93d;
+        --color-success-700: #2f772c;
+        --color-success-800: #1e3c1b;
+        --color-success-900: #000000;
+  
+  // margin
+    --margin-400: 20px;
+    --margin-500: 30px;
+    --margin-600: 40px;
+    --margin-700: 60px;
+    --margin-800: 100px;
+
+  // padding
+    --padding-400: 20px;
+    --padding-500: 30px;
+    --padding-600: 40px;
+  
+  // width
+    --max-width: 1100px;
+
+  // border radius
+    --border-radius-400: 5px;
+    --border-radius-500: 10px;
+    --border-radius-600: 15px;
+
+  // Media
+    --media-mobile: 767px;
+    --media-tablet: 1023px;
+    
+
+
+  
+
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+html {
+  color-scheme: dark;
+}
