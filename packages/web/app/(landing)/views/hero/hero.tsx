@@ -2,7 +2,7 @@ import { Roboto } from '@next/font/google'
 import Container from '../contrainer/container'
 import styles from './hero.module.scss'
 
-const roboto = Roboto({ subsets: ['latin'] , weight: ['300', '500', '700', '900']})
+const roboto = Roboto({ subsets: ['latin'] , weight: ['500', '900']})
 
 export default function Hero() {
   return (

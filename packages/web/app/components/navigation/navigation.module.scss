@@ -1,0 +1,73 @@
+@keyframes appearWithDelay {
+    0% {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+
+    50% {
+        opacity: 0;
+        transform: translateY(0.5rem);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navigation {
+    height: var(--navigation-height);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    
+}
+
+.content {
+    height: 100%;
+    width: 100%;
+    max-width: var(--max-width);
+
+    animation: appearWithDelay 1s ease-in;
+}
+
+.logo {
+    height: 100%;
+    max-width: var(--width-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+
+    a {
+        font-size: var(--font-size-500);
+        font-weight: var(--font-medium);
+        color: var(--color-text-300);
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 var(--padding-500);
+
+        text-transform: uppercase;
+
+        transition: all 0.2s ease-out;
+
+        transform: scale(1);
+
+        &:hover {
+            color: var(--color-text-200);
+            transform: scale(1.02);
+        }
+    }
+    
+}
