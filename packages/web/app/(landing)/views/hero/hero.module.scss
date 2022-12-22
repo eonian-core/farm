@@ -1,3 +1,5 @@
+@import "../../../screen.scss";
+
 @keyframes shine {
     0% {
         
@@ -12,7 +14,7 @@
     }
 
     50% {
-        opacity: 0.5;
+        opacity: 0.7;
         left: 43rem;
     }
 
@@ -51,6 +53,16 @@
         transform: scale(1);
     }
 }
+
+@keyframes rotate {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+  
 
 .hero {
     display: flex;
@@ -118,5 +130,259 @@
 @media (prefers-reduced-motion) {
     .hero h1::after {
         animation: none;
+    }
+}
+
+@keyframes shineDesktop {
+    0% {
+        
+        opacity: 0;
+        left: 29rem;
+    }
+
+    25% {
+        
+        opacity: 0.3;
+        left: 30rem;
+    }
+
+    50% {
+        opacity: 0.55;
+        left: 31rem;
+    }
+
+    75% {
+        opacity: 0.3;
+        left: 32rem;
+    }
+
+    100% {
+        
+        opacity: 0;
+        left: 36rem;
+    }
+}
+
+@media (max-width: $screen-desktop) {
+    .hero h1 {
+        font-size: var(--font-size-1100);
+        line-height: var(--line-height-1100);
+
+        &::after {
+            bottom: -3rem;
+            animation: shineDesktop 10s ease-in-out infinite;
+        }
+    }
+}
+
+@keyframes shineLaptop {
+    0% {
+        
+        opacity: 0;
+        left: 20rem;
+    }
+
+    25% {
+        
+        opacity: 0.5;
+        left: 21rem;
+    }
+
+    50% {
+        opacity: 0.8;
+        left: 22.5rem;
+    }
+
+    75% {
+        opacity: 0.5;
+        left: 23rem;
+    }
+
+    100% {
+        
+        opacity: 0;
+        left: 26rem;
+    }
+}
+
+@media (max-width: $screen-laptop) {
+    .hero {
+        h1 {
+            font-size: var(--font-size-1000);
+            line-height: var(--line-height-1000);
+
+            &::after {
+                width: 15rem;
+                height: 10rem;
+                bottom: -2rem;
+                animation: shineLaptop 10s ease-in-out infinite;
+            }
+        }
+        p {
+            max-width: var(--width-500);
+        }
+    }
+}
+
+@keyframes shineTablet {
+    0% {
+        opacity: 0;
+        left: 11rem;
+    }
+
+    25% {
+        opacity: 0.5;
+        left: 12rem;
+    }
+
+    50% {
+        opacity: 0.9;
+        left: 13rem;
+    }
+
+    75% {
+        opacity: 0.5;
+        left: 14rem;
+    }
+
+    100% {
+        
+        opacity: 0;
+        left: 15rem;
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .hero {
+
+        align-items: flex-start;
+
+        h1 {
+            text-align: left;
+            font-size: var(--font-size-1100);
+            line-height: var(--line-height-1100);
+
+            span {
+                display: block;
+            }
+            
+            &::after {
+                width: 15rem;
+                height: 10rem;
+                bottom: -1rem;
+                animation: shineTablet 10s ease-in-out infinite;
+            }
+        }
+        p {
+            font-size: var(--font-size-600);
+            line-height: var(--line-height-600);
+            color: var(--color-text-300);
+            text-align: left;
+            max-width: var(--width-400);
+            margin-top: var(--margin-400);
+        }
+    }
+}
+
+@keyframes shineMobile {
+    0% {
+        opacity: 0;
+        left: 6rem;
+    }
+
+    25% {
+        opacity: 0.5;
+        left: 7rem;
+    }
+
+    50% {
+        opacity: 0.7;
+        left: 8rem;
+    }
+
+    75% {
+        opacity: 0.5;
+        left: 9rem;
+    }
+
+    100% {
+        
+        opacity: 0;
+        left: 10rem;
+    }
+}
+
+
+@media (max-width: $screen-mobile) {
+    .hero {
+        h1 {
+            font-size: var(--font-size-1000);
+            line-height: var(--line-height-1000);
+
+            &::after {
+                width: 15rem;
+                height: 10rem;
+                bottom: -2.5rem;
+                animation: shineMobile 10s ease-in-out infinite;
+            }
+        }
+
+        p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+            margin-top: var(--margin-500);
+        }
+    }
+}
+
+@keyframes shineSmallMobile {
+    0% {
+        opacity: 0;
+        left: 3.5rem;
+    }
+
+    25% {
+        opacity: 0.5;
+        left: 4rem;
+    }
+
+    50% {
+        opacity: 0.9;
+        left: 5rem;
+    }
+
+    75% {
+        opacity: 0.5;
+        left: 6rem;
+    }
+
+    100% {
+        
+        opacity: 0;
+        left: 6.5rem;
+    }
+}
+
+
+@media (max-width: $screen-small-mobile) {
+    .hero {
+        h1 {
+            font-size: var(--font-size-850);
+            line-height: var(--line-height-850);
+
+            &::after {
+                width: 10rem;
+                height: 7rem;
+                bottom: -1.5rem;
+
+                animation: shineSmallMobile 10s ease-in-out infinite;
+            }
+        }
+
+        p {
+            font-size: var(--font-size-300);
+            line-height: var(--line-height-400);
+            margin-top: var(--margin-400);
+        }
     }
 }

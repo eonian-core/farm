@@ -21,13 +21,15 @@
   // font sizes
     --font-size-100: 0.75rem;
     --font-size-300: 0.875rem;
+    --line-size-400: 0.9rem;
     --font-size-500: 1rem; // Default size, by default equal 16px 
     --font-size-600: 1.125rem;
     --font-size-700: 1.25rem;
     --font-size-800: 1.875rem;
-    --font-size-900: 2.25rem;
-    --font-size-1000: 3rem;
-    --font-size-1100: 3.75rem;
+    --font-size-850: 4rem;
+    --font-size-900: 5rem;
+    --font-size-1000: 6rem;
+    --font-size-1100: 8rem;
     --font-size-1200: 10.5rem;
 
   // font families
@@ -50,13 +52,15 @@
   // line height
     --line-height-100: 1.25rem;
     --line-height-300: 1.5rem;
+    --line-height-400: 1.625rem;
     --line-height-500: 1.75rem; // Default size, by default equal 16px 
     --line-height-600: 2rem;
     --line-height-700: 2.25rem;
     --line-height-800: 2.875rem;
-    --line-height-900: 3.25rem;
-    --line-height-1000: 4rem;
-    --line-height-1100: 4.75rem;
+    --font-height-850: 4rem;
+    --line-height-900: 5.5rem;
+    --line-height-1000: 7rem;
+    --line-height-1100: 9rem;
     --line-height-1200: 11.5rem;
   
 
@@ -218,17 +222,17 @@
     --padding-600: 2.5rem;
   
   // width
-    --max-width: 1440px;
-
     --width-column: 60px;
     --width-gap: 40px;
+
+    --width-100: var(--width-column);
     --width-200: calc(2 * var(--width-column) + var(--width-gap));
     --width-300: calc(3 * var(--width-column) + 2 * var(--width-gap));
     --width-400: calc(4 * var(--width-column) + 3 * var(--width-gap));
     --width-500: calc(5 * var(--width-column) + 4 * var(--width-gap));
-    
-    
 
+    --max-width: calc(1360px + 2 * var(--width-gap)); // must be lower than ultra wide and bigger than desctop screen
+    
   // height
     --navigation-height: 5rem;
 
@@ -236,14 +240,6 @@
     --border-radius-400: 5px;
     --border-radius-500: 10px;
     --border-radius-600: 15px;
-
-  // Media
-    --screen-mobile: 640px;
-    --screen-tablet: 768px; // or big phones
-    --screen-laptop: 1024px; // or small size desktops
-    --screen-desktop: 1280px;
-    --screen-ultra-wide: 1536px; // or TV
-    
 }
 
 * {
