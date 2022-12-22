@@ -108,15 +108,16 @@
       ) var(--color-background-start);
 
     // Primary
-      --color-primary-100: #d0cdfa;
-      --color-primary-200: #9795b5;
-      --color-primary-300: #636175;
-      --color-primary-400: #32323a;
-      --color-primary-500: #382bf0; // Default color
-      --color-primary-600: #3223ae;
-      --color-primary-700: #291b71;
-      --color-primary-800: #1b1239;
-      --color-primary-900: #000000;
+      --color-primary-50: hsl(226, 100%, 97%);
+      --color-primary-100: hsl(226, 100%, 94%);
+      --color-primary-200: hsl(228, 96%, 89%);
+      --color-primary-300: hsl(230, 94%, 82%);
+      --color-primary-400: hsl(234, 89%, 74%);
+      --color-primary-500: hsl(239, 84%, 67%); // Default color
+      --color-primary-600: hsl(243, 75%, 59%);
+      --color-primary-700: hsl(245, 58%, 51%);
+      --color-primary-800: hsl(244, 55%, 41%);
+      --color-primary-900: hsl(242, 47%, 34%);
 
       --primary-glow: linear-gradient(
         to bottom right,
@@ -150,49 +151,53 @@
         rgba(233, 191, 118, 0.5), rgba(179, 135, 40, 0.308)); 
 
       // Highlight
-        --color-highlight-100: #bae9ff;
-        --color-highlight-200: #88a9b9;
-        --color-highlight-300: #596d77;
-        --color-highlight-400: #2e373b;
-        --color-highlight-500: #03a9f4; // Default color
-        --color-highlight-600: #1e7cb1;
-        --color-highlight-700: #1f5172;
-        --color-highlight-800: #172b39;
-        --color-highlight-900: #000000;
+        --color-highlight-50: hsl(48, 100%, 96%);
+        --color-highlight-100: hsl(48, 96%, 89%);
+        --color-highlight-200: hsl(48, 97%, 77%);
+        --color-highlight-300: hsl(46, 97%, 65%);
+        --color-highlight-400: hsl(43, 96%, 56%);
+        --color-highlight-500: hsl(38, 92%, 50%); // Default color
+        --color-highlight-600: hsl(32, 95%, 44%);
+        --color-highlight-700: hsl(26, 90%, 37%);
+        --color-highlight-800: hsl(23, 83%, 31%);
+        --color-highlight-900: hsl(22, 78%, 26%);
 
       // Warning
-        --color-warning-100: #fff9bf;
-        --color-warning-200: #b9b48b;
-        --color-warning-300: #77745b;
-        --color-warning-400: #3b3a2f;
-        --color-warning-500: #ffeb3b; // Default color
-        --color-warning-600: #b9aa31;
-        --color-warning-700: #786e26;
-        --color-warning-800: #3c3718;
-        --color-warning-900: #000000;
+        --color-warning-50: hsl(33, 100%, 96%);
+        --color-warning-100: hsl(34, 100%, 92%);
+        --color-warning-200: hsl(32, 98%, 83%);
+        --color-warning-300: hsl(31, 97%, 72%);
+        --color-warning-400: hsl(27, 96%, 61%);
+        --color-warning-500: hsl(25, 95%, 53%); // Default color
+        --color-warning-600: hsl(21, 90%, 48%);
+        --color-warning-700: hsl(17, 88%, 40%);
+        --color-warning-800: hsl(15, 79%, 34%);
+        --color-warning-900: hsl(15, 75%, 28%);
 
       // Error
-        --color-error-100: #f5aea9;
-        --color-error-200: #b27f7c;
-        --color-error-300: #735451;
-        --color-error-400: #3a2c2b;
-        --color-error-500: #f44336; // Default color
-        --color-error-600: #b2362a;
-        --color-error-700: #74281f;
-        --color-error-800: #3c1913;
-        --color-error-900: #000000;
+        --color-error-50: hsl(0, 86%, 97%);
+        --color-error-100: hsl(0, 93%, 94%);
+        --color-error-200: hsl(0, 96%, 89%);
+        --color-error-300: hsl(0, 94%, 82%);
+        --color-error-400: hsl(0, 91%, 71%);
+        --color-error-500: hsl(0, 84%, 60%); // Default color
+        --color-error-600: hsl(0, 72%, 51%);
+        --color-error-700: hsl(0, 74%, 42%);
+        --color-error-800: hsl(0, 70%, 35%);
+        --color-error-900: hsl(0, 63%, 31%);
 
 
       // Success
-        --color-success-100: #a8ffab;
-        --color-success-200: #7cb97d;
-        --color-success-300: #527752;
-        --color-success-400: #2b3b2b;
-        --color-success-500: #47ff4e; // Default color
-        --color-success-600: #3cb93d;
-        --color-success-700: #2f772c;
-        --color-success-800: #1e3c1b;
-        --color-success-900: #000000;
+        --color-success-50: hsl(138, 76%, 97%);
+        --color-success-100: hsl(141, 84%, 93%);
+        --color-success-200: hsl(141, 79%, 85%);
+        --color-success-300: hsl(142, 77%, 73%);
+        --color-success-400: hsl(142, 69%, 58%);
+        --color-success-500: hsl(142, 71%, 45%); // Default color
+        --color-success-600: hsl(142, 76%, 36%);
+        --color-success-700: hsl(142, 72%, 29%);
+        --color-success-800: hsl(143, 64%, 24%);
+        --color-success-900: hsl(144, 61%, 20%);
   
   // margin
     --margin-400: 20px;
@@ -215,13 +220,12 @@
     --border-radius-600: 15px;
 
   // Media
-    --media-mobile: 767px;
-    --media-tablet: 1023px;
+    --screen-mobile: 640px;
+    --screen-tablet: 768px; // or big phones
+    --screen-laptop: 1024px; // or small size desktops
+    --screen-desktop: 1280px;
+    --screen-ultra-wide: 1536px; // or TV
     
-
-
-  
-
 }
 
 * {
