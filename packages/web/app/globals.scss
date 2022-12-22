@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 
 /**
 * This is default theme values for whole application.
@@ -236,11 +240,6 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  color: --color-text-500;
-  background: --color-background-gradient;
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -249,4 +248,3 @@ a {
 html {
   color-scheme: dark;
 }
-
