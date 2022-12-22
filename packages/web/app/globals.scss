@@ -62,9 +62,6 @@
 
   // Colors
 
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-
     --callout-rgb: 20, 20, 20;
     --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
@@ -100,7 +97,7 @@
     // Background
 
       --color-background-start: hsl(200, 4%, 14%);
-      --color-background-end: hsl(210, 3%, 26%);
+      --color-background-end: hsl(180, 4%, 10%);
       --color-background-gradient: linear-gradient(
         to bottom,
         transparent,
@@ -121,15 +118,24 @@
 
       --primary-glow: linear-gradient(
         to bottom right,
-        rgba(142, 81, 195, 0.048) 0%,
-         rgba(153, 47, 202, 0.089) 29%, 
-         rgba(195, 55, 99, 0.096) 48%, 
-         rgba(36, 38, 112, 0.075) 74%, 
-         rgba(39, 45, 93, 0.034) 100%
+        rgba(142, 81, 195, 0.397) 0%,
+         rgba(153, 47, 202, 0.212) 29%, 
+         rgba(195, 55, 99, 0.247) 48%, 
+         rgba(36, 38, 112, 0.384) 74%, 
+         rgba(39, 45, 93, 0.342) 100%
       );
 
     // Secondary
-      
+      --color-secondary-50: hsl(289, 100%, 98%);
+      --color-secondary-100: hsl(287, 100%, 95%);
+      --color-secondary-200: hsl(288, 96%, 91%);
+      --color-secondary-300: hsl(291, 93%, 83%);
+      --color-secondary-400: hsl(292, 91%, 73%);
+      --color-secondary-500: hsl(292, 84%, 61%); // Default color
+      --color-secondary-600: hsl(293, 69%, 49%);
+      --color-secondary-700: hsl(295, 72%, 40%);
+      --color-secondary-800: hsl(295, 70%, 33%);
+      --color-secondary-900: hsl(297, 64%, 28%);
     
     // Neutral
       --color-neutral-50: hsl(0, 0%, 98%);
@@ -146,9 +152,9 @@
     // Accent
 
       --accent-glow: linear-gradient(to right,
-      rgba(251, 245, 183, 0.212),
-        rgba(191, 148, 63, 0.4), rgba(252, 246, 186, 0.8), 
-        rgba(233, 191, 118, 0.5), rgba(179, 135, 40, 0.308)); 
+      rgba(251, 245, 183, 0.514),
+        rgba(191, 148, 63, 0.651), rgba(252, 246, 186, 0.925), 
+        rgba(233, 191, 118, 0.671), rgba(179, 135, 40, 0.521)); 
 
       // Highlight
         --color-highlight-50: hsl(48, 100%, 96%);
@@ -241,8 +247,8 @@ body {
 }
 
 body {
-  color: --color-text-500;
-  background: --color-background-gradient;
+  color: var(--color-text-500);
+  background: var(--color-background-gradient);
 }
 
 a {
