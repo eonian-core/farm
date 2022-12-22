@@ -35,32 +35,30 @@
   --font-size-1400: theme(fontSize.9xl);
 
   /* Font families */
-  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  --font-mono: theme(fontFamily.mono);
 
   /* Font weights */
-  --font-thin: 100;
-  --font-extralight: 200;
-  --font-light: 300;
-  --font-normal: 400;
-  --font-medium: 500;
-  --font-semibold: 600;
-  --font-bold: 700;
-  --font-extrabold: 800;
-  --font-black: 900;
+  --font-thin: theme(fontWeight.thin);
+  --font-extralight: theme(fontWeight.extralight);
+  --font-light: theme(fontWeight.light);
+  --font-normal: theme(fontWeight.normal);
+  --font-medium: theme(fontWeight.medium);
+  --font-semibold: theme(fontWeight.semibold);
+  --font-bold: theme(fontWeight.bold);
+  --font-extrabold: theme(fontWeight.extrabold);
+  --font-black: theme(fontWeight.black);
 
   /* Line heights */
-  --line-height-100: 1.25rem;
-  --line-height-300: 1.5rem;
-  --line-height-500: 1.75rem; /* Default size, by default equal 16px */
-  --line-height-600: 2rem;
-  --line-height-700: 2.25rem;
-  --line-height-800: 2.875rem;
-  --line-height-900: 3.25rem;
-  --line-height-1000: 4rem;
-  --line-height-1100: 4.75rem;
-  --line-height-1200: 11.5rem;
+  --line-height-100: theme(lineHeight.3);
+  --line-height-300: theme(lineHeight.4);
+  --line-height-500: theme(lineHeight.5);
+  --line-height-600: theme(lineHeight.6);
+  --line-height-700: theme(lineHeight.7);
+  --line-height-800: theme(lineHeight.8);
+  --line-height-900: theme(lineHeight.9);
+  --line-height-1000: theme(lineHeight.10);
+  --line-height-1100: theme(lineHeight.11);
+  --line-height-1200: theme(lineHeight.12);
 
   /* Colors */
   --background-start-rgb: 0, 0, 0;
@@ -84,16 +82,16 @@
   );
 
   /* Text */
-  --color-text-50: hsl(0, 0%, 98%);
-  --color-text-100: hsl(240, 5%, 96%);
-  --color-text-200: hsl(240, 6%, 90%);
-  --color-text-300: hsl(240, 5%, 84%);
-  --color-text-400: hsl(240, 5%, 65%);
-  --color-text-500: hsl(240, 4%, 46%); /* Default color */
-  --color-text-600: hsl(240, 5%, 34%);
-  --color-text-700: hsl(240, 5%, 26%);
-  --color-text-800: hsl(240, 4%, 16%);
-  --color-text-900: hsl(240, 6%, 10%);
+  --color-text-50: theme(colors.text.50);
+  --color-text-100: theme(colors.text.100);
+  --color-text-200: theme(colors.text.200);
+  --color-text-300: theme(colors.text.300);
+  --color-text-400: theme(colors.text.400);
+  --color-text-500: theme(colors.text.DEFAULT);
+  --color-text-600: theme(colors.text.600);
+  --color-text-700: theme(colors.text.700);
+  --color-text-800: theme(colors.text.800);
+  --color-text-900: theme(colors.text.900);
 
   --title-gradient: linear-gradient(
     to bottom right,
@@ -113,15 +111,15 @@
     var(--color-background-start);
 
   /* Primary */
-  --color-primary-100: #d0cdfa;
-  --color-primary-200: #9795b5;
-  --color-primary-300: #636175;
-  --color-primary-400: #32323a;
-  --color-primary-500: #382bf0; /* Default color */
-  --color-primary-600: #3223ae;
-  --color-primary-700: #291b71;
-  --color-primary-800: #1b1239;
-  --color-primary-900: #000000;
+  --color-primary-100: theme(colors.blue.100);
+  --color-primary-200: theme(colors.blue.200);
+  --color-primary-300: theme(colors.blue.300);
+  --color-primary-400: theme(colors.blue.400);
+  --color-primary-500: theme(colors.blue.DEFAULT);
+  --color-primary-600: theme(colors.blue.600);
+  --color-primary-700: theme(colors.blue.700);
+  --color-primary-800: theme(colors.blue.800);
+  --color-primary-900: theme(colors.blue.900);
 
   --primary-glow: linear-gradient(
     to bottom right,
@@ -135,16 +133,16 @@
   /* Secondary */
 
   /* Neutral */
-  --color-neutral-50: hsl(0, 0%, 98%);
-  --color-neutral-100: hsl(0, 0%, 96%);
-  --color-neutral-200: hsl(0, 0%, 90%);
-  --color-neutral-300: hsl(0, 0%, 83%);
-  --color-neutral-400: hsl(0, 0%, 64%);
-  --color-neutral-500: hsl(0, 0%, 45%); /* Default color */
-  --color-neutral-600: hsl(0, 0%, 32%);
-  --color-neutral-700: hsl(0, 0%, 25%);
-  --color-neutral-800: hsl(0, 0%, 15%);
-  --color-neutral-900: hsl(0, 0%, 9%);
+  --color-neutral-50: theme(colors.gray.50);
+  --color-neutral-100: theme(colors.gray.100);
+  --color-neutral-200: theme(colors.gray.200);
+  --color-neutral-300: theme(colors.gray.300);
+  --color-neutral-400: theme(colors.gray.400);
+  --color-neutral-500: theme(colors.gray.DEFAULT);
+  --color-neutral-600: theme(colors.gray.600);
+  --color-neutral-700: theme(colors.gray.700);
+  --color-neutral-800: theme(colors.gray.800);
+  --color-neutral-900: theme(colors.gray.900);
 
   /* Accent */
   --accent-glow: linear-gradient(
@@ -157,72 +155,72 @@
   );
 
   /* Highlight */
-  --color-highlight-100: #bae9ff;
-  --color-highlight-200: #88a9b9;
-  --color-highlight-300: #596d77;
-  --color-highlight-400: #2e373b;
-  --color-highlight-500: #03a9f4; /* Default color */
-  --color-highlight-600: #1e7cb1;
-  --color-highlight-700: #1f5172;
-  --color-highlight-800: #172b39;
-  --color-highlight-900: #000000;
+  --color-highlight-100: theme(colors.lightBlue.100);
+  --color-highlight-200: theme(colors.lightBlue.200);
+  --color-highlight-300: theme(colors.lightBlue.300);
+  --color-highlight-400: theme(colors.lightBlue.400);
+  --color-highlight-500: theme(colors.lightBlue.DEFAULT);
+  --color-highlight-600: theme(colors.lightBlue.600);
+  --color-highlight-700: theme(colors.lightBlue.700);
+  --color-highlight-800: theme(colors.lightBlue.800);
+  --color-highlight-900: theme(colors.lightBlue.900);
 
   /* Warning */
-  --color-warning-100: #fff9bf;
-  --color-warning-200: #b9b48b;
-  --color-warning-300: #77745b;
-  --color-warning-400: #3b3a2f;
-  --color-warning-500: #ffeb3b; /* Default color */
-  --color-warning-600: #b9aa31;
-  --color-warning-700: #786e26;
-  --color-warning-800: #3c3718;
-  --color-warning-900: #000000;
+  --color-warning-100: theme(colors.yellowWarning.100);
+  --color-warning-200: theme(colors.yellowWarning.200);
+  --color-warning-300: theme(colors.yellowWarning.300);
+  --color-warning-400: theme(colors.yellowWarning.400);
+  --color-warning-500: theme(colors.yellowWarning.DEFAULT);
+  --color-warning-600: theme(colors.yellowWarning.600);
+  --color-warning-700: theme(colors.yellowWarning.700);
+  --color-warning-800: theme(colors.yellowWarning.800);
+  --color-warning-900: theme(colors.yellowWarning.900);
 
   /* Error */
-  --color-error-100: #f5aea9;
-  --color-error-200: #b27f7c;
-  --color-error-300: #735451;
-  --color-error-400: #3a2c2b;
-  --color-error-500: #f44336; /* Default color */
-  --color-error-600: #b2362a;
-  --color-error-700: #74281f;
-  --color-error-800: #3c1913;
-  --color-error-900: #000000;
+  --color-error-100: theme(colors.amberRed.100);
+  --color-error-200: theme(colors.amberRed.200);
+  --color-error-300: theme(colors.amberRed.300);
+  --color-error-400: theme(colors.amberRed.400);
+  --color-error-500: theme(colors.amberRed.DEFAULT);
+  --color-error-600: theme(colors.amberRed.600);
+  --color-error-700: theme(colors.amberRed.700);
+  --color-error-800: theme(colors.amberRed.800);
+  --color-error-900: theme(colors.amberRed.900);
 
   /* Success */
-  --color-success-100: #a8ffab;
-  --color-success-200: #7cb97d;
-  --color-success-300: #527752;
-  --color-success-400: #2b3b2b;
-  --color-success-500: #47ff4e; /* Default color */
-  --color-success-600: #3cb93d;
-  --color-success-700: #2f772c;
-  --color-success-800: #1e3c1b;
-  --color-success-900: #000000;
+  --color-success-100: theme(colors.lightGreen.100);
+  --color-success-200: theme(colors.lightGreen.200);
+  --color-success-300: theme(colors.lightGreen.300);
+  --color-success-400: theme(colors.lightGreen.400);
+  --color-success-500: theme(colors.lightGreen.DEFAULT);
+  --color-success-600: theme(colors.lightGreen.600);
+  --color-success-700: theme(colors.lightGreen.700);
+  --color-success-800: theme(colors.lightGreen.800);
+  --color-success-900: theme(colors.lightGreen.900);
 
   /* Margin */
-  --margin-400: 20px;
-  --margin-500: 30px;
-  --margin-600: 40px;
-  --margin-700: 60px;
-  --margin-800: 100px;
+  --margin-400: theme(margin.5);
+  --margin-500: theme(margin.7);
+  --margin-600: theme(margin.10);
+  --margin-700: theme(margin.16);
+  --margin-800: theme(margin.24);
 
   /* Padding */
-  --padding-400: 20px;
-  --padding-500: 30px;
-  --padding-600: 40px;
+  --padding-400: theme(padding.5);
+  --padding-500: theme(padding.7);
+  --padding-600: theme(padding.10);
 
   /* Width */
-  --max-width: 1100px;
+  --max-width: theme(maxWidth.6xl);
 
   /* Border radius */
-  --border-radius-400: 5px;
-  --border-radius-500: 10px;
-  --border-radius-600: 15px;
+  --border-radius-400: theme(borderRadius.DEFAULT);
+  --border-radius-500: theme(borderRadius.md);
+  --border-radius-600: theme(borderRadius.xl);
 
   /* Media */
-  --media-mobile: 767px;
-  --media-tablet: 1023px;
+  --media-mobile: theme(screens.md);
+  --media-tablet: theme(screens.lg);
 }
 
 * {

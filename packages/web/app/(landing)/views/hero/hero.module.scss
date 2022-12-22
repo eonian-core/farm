@@ -40,6 +40,7 @@
     line-height: var(--line-height-1200);
     text-align: center;
     background: var(--title-gradient);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
@@ -75,7 +76,7 @@
 
   p {
     font-size: var(--font-size-600);
-    line-height: var(--line-height-500);
+    line-height: var(--line-height-700);
     text-align: center;
     margin-top: var(--margin-600);
     font-weight: var(--font-medium);
