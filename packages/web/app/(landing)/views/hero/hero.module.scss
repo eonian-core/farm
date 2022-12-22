@@ -1,96 +1,90 @@
 @keyframes shine {
-    0% {
-        
-        opacity: 0;
-        left: 38rem;
-    }
+  0% {
+    opacity: 0;
+    left: 38rem;
+  }
 
-    25% {
-        
-        opacity: 0.2;
-        left: 40rem;
-    }
+  25% {
+    opacity: 0.2;
+    left: 40rem;
+  }
 
-    50% {
-        opacity: 0.35;
-        left: 43rem;
-    }
+  50% {
+    opacity: 0.35;
+    left: 43rem;
+  }
 
-    75% {
-        opacity: 0.2;
-        left: 45rem;
-    }
+  75% {
+    opacity: 0.2;
+    left: 45rem;
+  }
 
-    100% {
-        
-        opacity: 0;
-        left: 46rem;
-    }
+  100% {
+    opacity: 0;
+    left: 46rem;
+  }
 }
 
 .hero {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: 100%;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  min-height: 100vh;
 
+  h1 {
+    font-size: var(--font-size-1400);
+    font-weight: var(--font-black);
+    line-height: var(--line-height-1200);
+    text-align: center;
+    background: var(--title-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
 
-    h1 {
-        font-size: var(--font-size-1200);
-        font-weight: var(--font-black);
-        line-height: var(--line-height-1200);
-        text-align: center;
-        background: var(--title-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        position: relative;
-
-        // Glow
-        &::before, &::after {
-            content: '';
-            left: 50%;
-            position: absolute;
-            filter: blur(45px);
-            transform: translateZ(0);
-        }
-
-        &::before {
-            background: var(--primary-glow);
-            border-radius: 50%;
-            width: 60rem;
-            height: 60rem;
-            margin-left: -30rem;
-            margin-top: -15rem;
-        }
-
-        &::after {
-            background: var(--accent-glow);
-            width: 20rem;
-            height: 15rem;
-            z-index: -1;
-            bottom: -2rem;
-            animation: shine 10s ease-in-out infinite;
-        }
+    // Glow
+    &::before,
+    &::after {
+      content: "";
+      left: 50%;
+      position: absolute;
+      filter: blur(45px);
+      transform: translateZ(0);
     }
 
-    p {
-        font-size: var(--font-size-700);
-        line-height: var(--line-height-500);
-        text-align: center;
-        margin-top: var(--margin-600);
-        font-weight: var(--font-medium);
-        color: var(--color-text-400);
+    &::before {
+      background: var(--primary-glow);
+      border-radius: 50%;
+      width: 60rem;
+      height: 60rem;
+      margin-left: -30rem;
+      margin-top: -15rem;
     }
 
+    &::after {
+      background: var(--accent-glow);
+      width: 20rem;
+      height: 15rem;
+      z-index: -1;
+      bottom: -2rem;
+      animation: shine 10s ease-in-out infinite;
+    }
+  }
+
+  p {
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-500);
+    text-align: center;
+    margin-top: var(--margin-600);
+    font-weight: var(--font-medium);
+    color: var(--color-text-400);
+  }
 }
 
-
-
 @media (prefers-reduced-motion) {
-    .hero h1::after {
-        animation: none;
-    }
+  .hero h1::after {
+    animation: none;
+  }
 }
