@@ -2,13 +2,12 @@
 
 @keyframes shine {
     0% {
-        
         opacity: 0;
         left: 38rem;
     }
 
     25% {
-        
+
         opacity: 0.3;
         left: 40rem;
     }
@@ -24,7 +23,6 @@
     }
 
     100% {
-        
         opacity: 0;
         left: 46rem;
     }
@@ -56,13 +54,14 @@
 
 @keyframes rotate {
     from {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
+
     to {
-      transform: rotate(0deg);
+        transform: rotate(0deg);
     }
-  }
-  
+}
+
 
 .hero {
     display: flex;
@@ -81,12 +80,14 @@
         line-height: var(--line-height-1200);
         text-align: center;
         background: var(--title-gradient);
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         position: relative;
 
         // Glow
-        &::before, &::after {
+        &::before,
+        &::after {
             content: '';
             left: 50%;
             position: absolute;
@@ -102,6 +103,15 @@
             margin-left: -30rem;
             margin-top: -15rem;
             animation: appearFrom07 1s ease-out;
+        }
+
+        &::before {
+            background: var(--primary-glow);
+            border-radius: 50%;
+            width: 60rem;
+            height: 60rem;
+            margin-left: -30rem;
+            margin-top: -15rem;
         }
 
         &::after {
@@ -122,10 +132,7 @@
         font-weight: var(--font-medium);
         color: var(--color-text-400);
     }
-
 }
-
-
 
 @media (prefers-reduced-motion) {
     .hero h1::after {
@@ -135,13 +142,13 @@
 
 @keyframes shineDesktop {
     0% {
-        
+
         opacity: 0;
         left: 29rem;
     }
 
     25% {
-        
+
         opacity: 0.3;
         left: 30rem;
     }
@@ -157,7 +164,7 @@
     }
 
     100% {
-        
+
         opacity: 0;
         left: 36rem;
     }
@@ -177,13 +184,13 @@
 
 @keyframes shineLaptop {
     0% {
-        
+
         opacity: 0;
         left: 20rem;
     }
 
     25% {
-        
+
         opacity: 0.5;
         left: 21rem;
     }
@@ -199,7 +206,7 @@
     }
 
     100% {
-        
+
         opacity: 0;
         left: 26rem;
     }
@@ -218,6 +225,7 @@
                 animation: shineLaptop 10s ease-in-out infinite;
             }
         }
+
         p {
             max-width: var(--width-500);
         }
@@ -246,7 +254,7 @@
     }
 
     100% {
-        
+
         opacity: 0;
         left: 15rem;
     }
@@ -265,7 +273,7 @@
             span {
                 display: block;
             }
-            
+
             &::after {
                 width: 15rem;
                 height: 10rem;
@@ -273,6 +281,7 @@
                 animation: shineTablet 10s ease-in-out infinite;
             }
         }
+
         p {
             font-size: var(--font-size-600);
             line-height: var(--line-height-600);
@@ -306,7 +315,7 @@
     }
 
     100% {
-        
+
         opacity: 0;
         left: 10rem;
     }
@@ -357,7 +366,7 @@
     }
 
     100% {
-        
+
         opacity: 0;
         left: 6.5rem;
     }
