@@ -12,7 +12,7 @@ export default function Hero() {
           <span>Make</span> Crypto <br /> Work <span>for You.</span>
         </h1>
         <p className={roboto.className}>
-          We build passive investment strategies that cares about your money.
+          We build passive investment strategies <span>that cares about your money.</span>
         </p>
       </div>
     </Container>

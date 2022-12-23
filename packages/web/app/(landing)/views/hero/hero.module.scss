@@ -172,8 +172,8 @@
 
 @media (max-width: $screen-desktop) {
     .hero h1 {
-        font-size: var(--font-size-1100);
-        line-height: var(--line-height-1100);
+        font-size: var(--font-size-1180);
+        line-height: var(--line-height-1180);
 
         &::after {
             bottom: -3rem;
@@ -215,8 +215,8 @@
 @media (max-width: $screen-laptop) {
     .hero {
         h1 {
-            font-size: var(--font-size-1000);
-            line-height: var(--line-height-1000);
+            font-size: var(--font-size-1150);
+            line-height: var(--line-height-1150);
 
             &::after {
                 width: 15rem;
@@ -267,8 +267,8 @@
 
         h1 {
             text-align: left;
-            font-size: var(--font-size-1100);
-            line-height: var(--line-height-1100);
+            font-size: var(--font-size-1180);
+            line-height: var(--line-height-1180);
 
             span {
                 display: block;
@@ -289,6 +289,10 @@
             text-align: left;
             max-width: var(--width-400);
             margin-top: var(--margin-400);
+
+            span {
+                display: block;
+            }
         }
     }
 }
@@ -325,8 +329,8 @@
 @media (max-width: $screen-mobile) {
     .hero {
         h1 {
-            font-size: var(--font-size-1000);
-            line-height: var(--line-height-1000);
+            font-size: var(--font-size-1150);
+            line-height: var(--line-height-1150);
 
             &::after {
                 width: 15rem;
@@ -376,8 +380,8 @@
 @media (max-width: $screen-small-mobile) {
     .hero {
         h1 {
-            font-size: var(--font-size-850);
-            line-height: var(--line-height-850);
+            font-size: var(--font-size-1120);
+            line-height: var(--line-height-1120);
 
             &::after {
                 width: 10rem;
@@ -392,6 +396,11 @@
             font-size: var(--font-size-300);
             line-height: var(--line-height-400);
             margin-top: var(--margin-400);
+            max-width: var(--width-300);
+
+            span {
+                display: inline;
+            }
         }
     }
 }
