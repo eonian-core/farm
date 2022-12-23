@@ -1,0 +1,8 @@
+// Media
+  // css variables not work in media queries https://bholmes.dev/blog/alternative-to-css-variable-media-queries/
+  $screen-small-mobile: 430px;
+  $screen-mobile: 640px;
+  $screen-tablet: 768px; // or big phones
+  $screen-laptop: 1024px; // or small size desktops
+  $screen-desktop: 1280px;
+  $screen-ultra-wide: 1536px; // or TV
