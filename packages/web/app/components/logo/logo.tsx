@@ -8,7 +8,9 @@ interface Props {
   lineWidth?: number;
   numberOfPoints?: number;
 }
-
+/**
+ * Calculates X and Y coordinates of the lemniscate function using the specified theta parameter.
+ */
 const lemnisacte = (t: number, a: number = 10): [x: number, y: number] => {
   const dx = (a * Math.cos(t)) / (1 + Math.pow(Math.sin(t), 2));
   const dy = (a * Math.cos(t) * Math.sin(t)) / (1 + Math.pow(Math.sin(t), 2));
@@ -35,6 +37,7 @@ const EonianLogo: React.FC<Props> = ({
       return;
     }
 
+    // Translating to virtual pixels to make the lines smoother.
     ctx.translate(0.5, 0.5);
 
     const centerX = width / 2;
@@ -44,12 +47,15 @@ const EonianLogo: React.FC<Props> = ({
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
 
+    // Calculating the lemniscate points.
     const points = new Array(numberOfPoints).fill(0).map((_, index) => {
       const step = index / 20;
       const point = lemnisacte(step, (width / 2) * 0.9);
       const x = point[0] + centerX;
       const y = point[1] + centerY;
 
+      // If the current theta parameter is in a certain range,
+      // make this item ignored to create the interruption effect on the logo.
       const range = 0.035;
       const sin = 1 + Math.sin(step);
       return { x, y, ignore: sin <= range };
@@ -58,6 +64,7 @@ const EonianLogo: React.FC<Props> = ({
     ctx.beginPath();
     ctx.moveTo(points[0].x, points[0].y);
 
+    // Drawing the curve lines by existing points.
     for (let i = 0; i < points.length - 1; i++) {
       const p0 = i > 0 ? points[i - 1] : points[0];
       const p1 = points[i];
@@ -70,6 +77,7 @@ const EonianLogo: React.FC<Props> = ({
       const cp2x = p2.x - (p3.x - p1.x) / 6;
       const cp2y = p2.y - (p3.y - p1.y) / 6;
 
+      // If the point is ignored, just move the starting drawing point to the next.
       if (p1.ignore) {
         ctx.moveTo(cp2x, cp2y);
       } else {
