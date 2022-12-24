@@ -20,6 +20,8 @@ Install required tools for development
 
 ### First Start Guide
 
+#### Smart Contracts
+
 1) Install packages from npm and forge:
 
 ```bash
@@ -31,17 +33,39 @@ $ yarn
 3) Run local node, compile and deploy contracts, start dApp:
 
 ```bash
-$ yarn start
+yarn start
+```
+
+#### Web Application
+
+To start only Web Application
+
+1) Open web package
+
+```bash
+cd packages/web
+```
+
+2) Install dependencies
+
+```bash
+yarn
+```
+
+3) Start dev server
+
+```bash
+yarn dev
 ```
 
 ### Commands
 
-* `yarn start` - start development enviroment
+* `yarn start` - start pre-prod enviroment
+* `yarn dev` - start dev enviroment
 * `yarn test` - run tests in packages
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
-
 
 ## TODO
 
@@ -55,15 +79,15 @@ $ yarn start
 
 # Colors
 
-
-
-https://tailwindcss.com/docs/customizing-colors
+<https://tailwindcss.com/docs/customizing-colors>
 Primary
+
 * Indigo
 * Fuchsia
-* https://uigradients.com/?utm_source=pocket_saves#Celestial
+* <https://uigradients.com/?utm_source=pocket_saves#Celestial>
 
 Accent
+
 * Amber
-* https://uigradients.com/?utm_source=pocket_saves#LearningandLeading
-* https://uigradients.com/?utm_source=pocket_saves#LightOrange
+* <https://uigradients.com/?utm_source=pocket_saves#LearningandLeading>
+* <https://uigradients.com/?utm_source=pocket_saves#LightOrange>
