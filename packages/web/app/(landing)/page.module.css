@@ -7,6 +7,14 @@
   padding-bottom: 6rem;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(33%, auto));
+  width: var(--max-width);
+  max-width: 100%;
+}
+
+
 /* Mobile and Tablet */
 @media (max-width: 1023px) {
   .content {

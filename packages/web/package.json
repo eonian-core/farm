@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mdx-js/loader": "^2.2.1",
+    "@mdx-js/react": "^2.2.1",
     "@next/font": "13.0.7",
+    "@next/mdx": "^13.1.1",
     "@types/node": "18.11.17",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
@@ -17,7 +20,7 @@
     "daisyui": "^2.46.0",
     "eslint": "8.30.0",
     "eslint-config-next": "13.0.7",
-    "next": "13.0.7",
+    "next": "^13.1.1",
     "postcss": "^8.4.20",
     "react": "18.2.0",
     "react-dom": "18.2.0",
