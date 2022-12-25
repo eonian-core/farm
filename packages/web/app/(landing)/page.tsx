@@ -20,6 +20,7 @@ const components: MDXComponents = {
       {header}
     </Hero>
   },
+  Problem: dynamic(import('./views/problem/problem')),
 }
 
 
