@@ -121,7 +121,7 @@ const Footer = () => {
           {Object.values(socials).map(FooterMultiLangLink)}
         </div>
       </div>
-      <div className="mt-6 text-center">
+      <div className="mt-12 text-center">
         Copyright &copy; {new Date().getFullYear()}{" "}
         <span className="font-medium">Eonian Finance</span>
       </div>
