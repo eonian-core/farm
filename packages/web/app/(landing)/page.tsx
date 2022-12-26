@@ -13,6 +13,8 @@ const components: MDXComponents = {
   Hero,
   Problem: dynamic(import('./views/problem/problem')),
   Category: dynamic(import('../components/category/category')),
+  Solution: dynamic(import('./views/solution/solution')),
+  Card: dynamic(import('../components/card/card')),
 }
 
 
@@ -22,18 +24,10 @@ export default function Home() {
   return (
     <main className={styles.main}>
       
-
       <MDXProvider components={components}>
         <Content />
       </MDXProvider>
 
-      <div className={styles.grid}>
-        <Card href="https://nextjs.org/docs" />
-
-        <Card href="https://nextjs.org/docs" />
-
-        <Card href="https://nextjs.org/docs" />
-      </div>
     </main>
   )
 }
