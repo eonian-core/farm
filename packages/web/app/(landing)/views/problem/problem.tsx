@@ -1,4 +1,5 @@
 import Container from "../contrainer/container"
+import styles from './problem.module.scss'
 
 // Props for the Problem component
 interface ProblemProps {
@@ -8,8 +9,10 @@ interface ProblemProps {
 export const Problem = ({children}: ProblemProps) => {
     return (
         <Container>
-            <div>
-                {children}
+            <div className={styles.problem}>
+                <div className={styles.content}>
+                    {children}
+                </div>
             </div>
         </Container>
     )
