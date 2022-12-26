@@ -83,7 +83,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="mt-6 text-center">
-        Copyright © {new Date().getFullYear()}{" "}
+        Copyright &copy; {new Date().getFullYear()}{" "}
         <span className="font-medium">Eonian Finance</span>
       </div>
     </div>
