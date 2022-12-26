@@ -5,21 +5,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    
-    
 
 }
 
 .content {
     max-width: var(--width-600);
-
-    h2 {
-        font-size: var(--font-size-900);
-        font-weight: var(--font-weight-500);
-        line-height: var(--line-height-900);
-        margin-bottom: var(--margin-400);
-        color: var(--color-text-300);
-    }
 
     p {
         color: var(--color-text-400);
@@ -32,26 +22,9 @@
 
 @media (max-width: $screen-mobile) {
     .content {
-        h2 {
-            font-size: var(--font-size-800);
-            line-height: var(--line-height-800);
-        }
-
         p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);
         }
-    }
-}
-
-
-
-@media (max-width: $screen-small-mobile) {
-    .content {
-        h2 {
-            font-size: var(--font-size-700);
-            line-height: var(--line-height-700);
-        }
-
     }
 }

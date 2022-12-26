@@ -6,8 +6,10 @@ import dynamic from 'next/dynamic'
 import styles from './page.module.css'
 import Card from '../components/card/card'
 import Hero from './views/hero/hero'
+import heading from '../components/heading/heading'
 
 const components: MDXComponents = {
+  h2: heading.H2,
   Hero,
   Problem: dynamic(import('./views/problem/problem')),
   Category: dynamic(import('../components/category/category')),
