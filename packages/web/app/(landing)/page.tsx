@@ -8,19 +8,9 @@ import Card from '../components/card/card'
 import Hero from './views/hero/hero'
 
 const components: MDXComponents = {
-  h1: ({children}) => {
-    // if header contain <br /> children can be array of string and <br /> elements 
-    const last = Array.isArray(children) ? children[children.length - 1] : children
-
-    // extract last line of header as description block in hero
-    const [header, description] = last.split('\n')
-    
-    return <Hero {...{description}} >
-      {Array.isArray(children) ? children.slice(0, -1) : null}
-      {header}
-    </Hero>
-  },
+  Hero,
   Problem: dynamic(import('./views/problem/problem')),
+  Category: dynamic(import('../components/category/category')),
 }
 
 
