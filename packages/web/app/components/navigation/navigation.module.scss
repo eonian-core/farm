@@ -27,6 +27,7 @@
     align-items: center;
     justify-content: center;
 
+    z-index: 100;
     
 }
 
@@ -65,7 +66,11 @@
         &:hover {
             color: var(--color-text-200);
             transform: scale(1.02);
-        }
+        }   
     }
-    
+}
+
+.logoIcon {
+    padding-right: var(--padding-100);
+    margin-top: -0.05rem;
 }

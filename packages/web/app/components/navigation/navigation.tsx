@@ -10,9 +10,9 @@ export default function Navigation() {
     <nav className={styles.navigation}>
       <ul className={styles.content}>
         <li className={styles.logo}>
-          <Link href="/" className="flex flex-row items-center">
-            <div className="mr-3 flex-shrink-0">
-              <EonianLogo height={30} width={70} />
+          <Link href="/">
+            <div className={styles.logoIcon}>
+              <EonianLogo height={15} width={30} />
             </div>
             <span className={roboto.className}>Eonian</span>
           </Link>
