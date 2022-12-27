@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    scrollRestoration: true,
   },
   // Add mdx support
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx']

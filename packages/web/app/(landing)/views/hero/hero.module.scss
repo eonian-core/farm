@@ -71,8 +71,6 @@
     height: 100%;
     width: 100%;
     min-height: 100vh;
-    animation: appearFrom09 0.5s ease-out;
-
 
     h1 {
         font-size: var(--font-size-1200);
@@ -84,6 +82,8 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         position: relative;
+
+        animation: appearFrom09 0.5s ease-out;
 
         // Glow
         &::before,
@@ -131,6 +131,8 @@
         margin-top: var(--margin-600);
         font-weight: var(--font-medium);
         color: var(--color-text-400);
+
+        animation: appearFrom09 0.5s ease-out;
     }
 }
 

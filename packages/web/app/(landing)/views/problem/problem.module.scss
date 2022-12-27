@@ -6,6 +6,15 @@
     align-items: center;
     justify-content: center;
 
+    padding: var(--padding-600);
+
+    border: 5px solid;
+    border-image-slice: 1;
+    border-radius: var(--border-radius-400);
+    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+    
+    min-width: 1200px;
+    min-height: 800px;
 }
 
 .content {

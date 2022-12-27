@@ -106,7 +106,7 @@
       --color-background-end: hsl(180, 4%, 10%);
       --color-background-gradient: linear-gradient(
         to bottom,
-        transparent,
+        var(--color-background-start),
         var(--color-background-end)
       ) var(--color-background-start);
 
@@ -266,6 +266,8 @@ body {
 
 body {
   color: var(--color-text-500);
+  // falback background
+  background: var(--color-background-start);
   background: var(--color-background-gradient);
 }
 
