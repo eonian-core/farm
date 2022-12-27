@@ -2,10 +2,15 @@
 
 .header2 {
     font-size: var(--font-size-900);
-    font-weight: var(--font-weight-500);
+    font-weight: var(--font-bold);
     line-height: var(--line-height-900);
     margin-bottom: var(--margin-400);
     color: var(--color-text-300);
+
+    background: var(--color-primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 

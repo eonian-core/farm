@@ -110,6 +110,7 @@
         var(--color-background-end)
       ) var(--color-background-start);
 
+      --color-primary-gradient: linear-gradient(to bottom right, hsl(341, 67%, 50%), hsl(270, 35%, 50%), hsl(229, 80%, 66%), hsl(256, 77%, 60%));
       --color-accent-background-gradient: linear-gradient(to bottom right, #f79533, #f37055, #ef4e7b, #ff00cc, #a166ab, #333399, #5073b8, #2657eb, #2657eb);
 
     // Primary
