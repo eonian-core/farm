@@ -1,5 +1,17 @@
 @import "../../../screen.scss";
 
+@keyframes animatedgradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
 .problem {
     display: flex;
     flex-direction: column;
@@ -8,11 +20,26 @@
 
     padding: var(--padding-600);
 
-    border: 5px solid;
-    border-image-slice: 1;
+    background: var(--color-background-end);
+
+    position: relative;
     border-radius: var(--border-radius-400);
-    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
-    
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: calc(-1 * var(--border-radius-400));
+        left: calc(-1 * var(--border-radius-400));
+        height: calc(100% + var(--border-radius-400) * 2);
+        width: calc(100% + var(--border-radius-400) * 2);
+        
+        background: linear-gradient(to bottom right, #f79533, #f37055, #ef4e7b, #ff00cc, #a166ab, #333399, #5073b8, #2657eb, #2657eb);
+        border-radius: calc(2 * var(--border-radius-400));
+        z-index: -1;
+        animation: animatedgradient 20s ease alternate infinite;
+        background-size: 300% 300%;
+      }
+
     min-width: 1200px;
     min-height: 800px;
 }

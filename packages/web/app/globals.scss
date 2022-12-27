@@ -266,9 +266,7 @@ body {
 
 body {
   color: var(--color-text-500);
-  // falback background
-  background: var(--color-background-start);
-  background: var(--color-background-gradient);
+  background: var(--color-background-end);
 }
 
 a {
