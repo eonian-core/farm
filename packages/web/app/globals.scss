@@ -104,11 +104,13 @@
 
       --color-background-start: hsl(200, 4%, 14%);
       --color-background-end: hsl(180, 4%, 10%);
-      --color-background-gradient: linear-gradient(
+      --color-neutral-background-gradient: linear-gradient(
         to bottom,
         var(--color-background-start),
         var(--color-background-end)
       ) var(--color-background-start);
+
+      --color-accent-background-gradient: linear-gradient(to bottom right, #f79533, #f37055, #ef4e7b, #ff00cc, #a166ab, #333399, #5073b8, #2657eb, #2657eb);
 
     // Primary
       --color-primary-50: hsl(226, 100%, 97%);
@@ -247,7 +249,9 @@
     --navigation-height: 5rem;
 
   // border radius
+    --border-radius-300: 3px;
     --border-radius-400: 5px;
+    --border-radius-450: 7px;
     --border-radius-500: 10px;
     --border-radius-600: 15px;
 }

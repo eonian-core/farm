@@ -4,12 +4,12 @@ import styles from './container.module.scss'
 // props for Container component
 export interface ContainerProps {
     children: React.ReactNode
-    frame?: boolean
+    mobileFullWidth?: boolean
 }
 
-export default function Container({children, frame}: ContainerProps) {
+export default function Container({children, mobileFullWidth}: ContainerProps) {
     return (
-        <section className={`${styles.container} ${frame ? styles.frame : ''}`}>
+        <section className={`${styles.container} ${mobileFullWidth ? styles.mobileFullWidth : ''}`}>
             {children}
         </section>
     )

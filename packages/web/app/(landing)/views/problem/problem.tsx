@@ -8,7 +8,7 @@ interface ProblemProps {
 
 export const Problem = ({children}: ProblemProps) => {
     return (
-        <Container frame>
+        <Container mobileFullWidth>
             <div className={styles.problem}>
                 <div className={styles.content}>
                     {children}
