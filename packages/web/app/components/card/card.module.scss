@@ -8,6 +8,9 @@
 
     margin-top: var(--margin-500);
 
+    margin-left: calc(-1 * var(--padding-300));
+    margin-right: calc(-1 * var(--padding-300));
+
     display: block;
     cursor: pointer;
 
