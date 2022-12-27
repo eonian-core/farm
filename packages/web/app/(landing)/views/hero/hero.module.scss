@@ -1,4 +1,5 @@
 @import "../../../screen.scss";
+@import "../../styles/gradient-text.mixin.scss";
 
 @keyframes shine {
     0% {
@@ -77,12 +78,10 @@
         font-weight: var(--font-black);
         line-height: var(--line-height-1200);
         text-align: center;
-        background: var(--title-gradient);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        position: relative;
+        
+        @include gradient-text(var(--title-gradient));
 
+        position: relative;
         animation: appearFrom09 0.5s ease-out;
 
         // Glow
