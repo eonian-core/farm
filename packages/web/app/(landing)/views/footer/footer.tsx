@@ -40,7 +40,7 @@ const Footer = () => {
   return (
     <div className="w-full max-w-screen-lg p-8">
       <div className="flex flex-wrap justify-center md:justify-around">
-        <div className="p-4">
+        <div className="flex p-4 flex-col items-center md:items-start">
           <LogoWithText />
           <div className="mt-4">Hand-crafted with ❤️ by our team</div>
         </div>
