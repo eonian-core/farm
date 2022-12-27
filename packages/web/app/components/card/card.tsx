@@ -1,9 +1,14 @@
-import { Inter } from '@next/font/google'
+import React from 'react'
+
 import styles from './card.module.scss'
 
-const inter = Inter({ subsets: ['latin'] })
+// Card props
+interface CardProps {
+  href: string
+  children: React.ReactNode
+}
 
-export default function ButtonBlock({href}: {href: string}) {
+export default function Card({href, children}: CardProps) {
   return (
     <a
       href={href}
@@ -11,12 +16,7 @@ export default function ButtonBlock({href}: {href: string}) {
       target="_blank"
       rel="noopener noreferrer"
     >
-      <h2 className={inter.className}>
-        Docs <span>-&gt;</span>
-      </h2>
-      <p className={inter.className}>
-        Find in-depth information about Next.js features and API.
-      </p>
+      {children}
     </a>
   )
 }

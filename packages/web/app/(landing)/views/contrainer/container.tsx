@@ -1,9 +1,16 @@
+import React from 'react'
 import styles from './container.module.scss'
 
-export default function Container({children}: {children: any}) {
+// props for Container component
+export interface ContainerProps {
+    children: React.ReactNode
+    mobileFullWidth?: boolean
+}
+
+export default function Container({children, mobileFullWidth}: ContainerProps) {
     return (
-        <div className={styles.container}>
+        <section className={`${styles.container} ${mobileFullWidth ? styles.mobileFullWidth : ''}`}>
             {children}
-        </div>
+        </section>
     )
 }
