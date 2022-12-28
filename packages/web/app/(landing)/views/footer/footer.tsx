@@ -5,7 +5,7 @@ import socials from "./socials";
 
 const Footer = () => {
   return (
-    <footer className="w-full max-w-screen-lg p-8">
+    <footer className="w-full max-w-screen-lg p-8 pt-14">
       <div className="flex flex-wrap justify-center md:justify-around">
         <div className="flex flex-col items-center p-4 md:items-start">
           <LogoWithText />
