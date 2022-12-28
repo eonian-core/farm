@@ -7,7 +7,8 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: #000 0 7px 35px 0;
-  background-color: var(--color-background-end);
+  background-color: var(--color-background-start);
+  
 }
 
 .footer {
@@ -17,19 +18,6 @@
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: var(--color-background-end);
 
-  &::before {
-    content: "";
-    left: 50%;
-    position: absolute;
-    filter: blur(65px);
-    transform: translateZ(0);
-    background: var(--primary-glow);
-    width: 100%;
-    height: 100%;
-    margin-left: -50%;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.25;
-  }
 }

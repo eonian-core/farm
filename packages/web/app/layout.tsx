@@ -2,14 +2,18 @@
 
 import { Roboto } from "@next/font/google";
 
-import Navigation from './components/navigation/navigation'
 import './globals.scss'
 import './tailwind.css'
+
+import Navigation from './components/navigation/navigation'
+import SlidingFooter from "./components/sliding-footer/sliding-footer";
+import Footer from "./components/footer/footer";
+
 
 const roboto = Roboto({ 
   subsets: ['latin', 'cyrillic'], 
   weight: ['400', '500', '700', '900'],
-  display: 'auto' // force to show font anyway
+  display: 'block' // force to show font anyway
 })
 
 export default function RootLayout({
@@ -26,7 +30,9 @@ export default function RootLayout({
       <head />
       <body className={roboto.className}>
         <Navigation />
-        {children}
+        <SlidingFooter footer={<Footer />}>
+          {children}
+        </SlidingFooter>
       </body>
     </html>
   );

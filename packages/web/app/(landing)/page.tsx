@@ -7,8 +7,7 @@ import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
-import Footer from "./views/footer/footer";
-import SlidingFooter from "../components/sliding-footer/sliding-footer";
+
 
 const components: MDXComponents = {
   h2: heading.H2,
@@ -18,19 +17,19 @@ const components: MDXComponents = {
   Solution,
   Block,
   BigNumber,
-  Card: dynamic(import("../components/card/card")),
-};
+  Card: dynamic(import('../components/card/card')),
+  Mbr: dynamic(import('../components/mobile-break/mobile-break')),
+}
+
 
 export default function Home() {
   const Content = dynamic(import(`./content/en.mdx`));
 
   return (
     <main className={styles.main}>
-      <SlidingFooter footer={<Footer />}>
         <MDXProvider components={components}>
           <Content />
         </MDXProvider>
-      </SlidingFooter>
     </main>
   );
 }
