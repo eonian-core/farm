@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="flex flex-wrap justify-center md:justify-around">
         <div className={`${styles.logoSection} p-4`}>
           <LogoWithText />
-          <div className="mt-2">Hand-crafted with ❤️ by our team</div>
+          <div className="mt-2">Hand-crafted with <span className={styles.heart}>❤️</span> by our team</div>
         </div>
 
         <div className="flex flex-wrap p-4 md:justify-start md:align-start">
