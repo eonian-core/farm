@@ -1,15 +1,16 @@
 import React from "react";
-import LogoWithText from "../../../components/logo/logo-with-text";
+import LogoWithText from "../logo/logo-with-text";
 import FooterLink from "./footer-link";
-import socials from "./socials";
+import socials from "../../socials";
+import styles from './footer.module.scss'
 
 const Footer = () => {
   return (
     <footer className="w-full max-w-screen-lg p-8 pt-14">
       <div className="flex flex-wrap justify-center md:justify-around">
-        <div className="flex flex-col items-center p-4 md:items-start">
+        <div className={`${styles.logoSection} p-4`}>
           <LogoWithText />
-          <div className="mt-4">Hand-crafted with ❤️ by our team</div>
+          <div className="mt-2">Hand-crafted with ❤️ by our team</div>
         </div>
         <div className="flex flex-wrap p-4 md:justify-around">
           <div className="mx-12 mb-6">

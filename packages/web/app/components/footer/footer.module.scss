@@ -1,0 +1,11 @@
+
+.logoSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    a {
+        width: fit-content;
+        padding: 0;
+    }
+}

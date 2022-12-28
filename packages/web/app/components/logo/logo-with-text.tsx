@@ -1,27 +1,34 @@
-import { Roboto } from "@next/font/google";
 import clsx from "clsx";
 import Link from "next/link";
-import React from "react";
+import React, { useCallback } from "react";
 import EonianLogo from "./logo";
+import styles from "./logo-with-text.module.scss";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["500"] });
 
 const LogoWithText = () => {
+  const { isHovered, onMouseOver, onMouseOut } = useHover();
+
   return (
-    <Link href="/" className="flex flex-row items-center">
-      <div className="mr-3 flex-shrink-0">
-        <EonianLogo height={30} width={70} />
+    <Link href="/" className={styles.logo} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
+      <div className={styles.logoIcon}>
+        <EonianLogo color={isHovered ? 'hsl(240, 5%, 96%)': 'hsl(240, 5%, 84%)'} />
       </div>
-      <div
-        className={clsx(
-          roboto.className,
-          "currentColor uppercase text-gray-300"
-        )}
-      >
-        Eonian
-      </div>
+      <span>Eonian</span>
     </Link>
   );
 };
 
 export default LogoWithText;
+
+export const useHover = () => {
+  const [isHovered, setValue] = React.useState(false);
+
+  const onMouseOver = useCallback(() => setValue(true), [setValue]);
+  const onMouseOut = useCallback(() => setValue(false), [setValue]);
+
+  return {
+    isHovered,
+    onMouseOver,
+    onMouseOut
+  };
+}

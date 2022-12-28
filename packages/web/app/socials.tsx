@@ -1,8 +1,8 @@
-import IconDiscord from "../../../components/icons/icon-discord";
-import IconGithub from "../../../components/icons/icon-github";
-import IconMedium from "../../../components/icons/icon-medium";
-import IconTelegram from "../../../components/icons/icon-telegram";
-import IconTwitter from "../../../components/icons/icon-twitter";
+import IconDiscord from "./components/icons/icon-discord";
+import IconGithub from "./components/icons/icon-github";
+import IconMedium from "./components/icons/icon-medium";
+import IconTelegram from "./components/icons/icon-telegram";
+import IconTwitter from "./components/icons/icon-twitter";
 
 interface SocialLink {
   name: string;
