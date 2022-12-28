@@ -10,8 +10,8 @@
     align-items: stretch;
     min-height: 100vh;
     max-width: 90vw;
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: var(--padding-1300);
+    padding-bottom: var(--padding-1300);
 
     h2 {
         font-size: var(--font-size-1000);
