@@ -110,8 +110,8 @@
 
     // Background
 
-      --color-background-start: hsl(180, 4%, 10%);
-      --color-background-end: hsl(200, 4%, 14%);
+      --color-background-start: hsl(180, 4%, 14%);
+      --color-background-end: hsl(200, 4%, 10%);
       --color-neutral-background-gradient: linear-gradient(
         to bottom,
         var(--color-background-start),
@@ -280,7 +280,6 @@ body {
 
 body {
   color: var(--color-text-500);
-  background: var(--color-background-end);
 }
 
 a {
