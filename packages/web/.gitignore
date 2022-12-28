@@ -28,6 +28,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# .env file is considered as default by Next, therefore should be not ignored
+!.env
+
 # vercel
 .vercel
 
