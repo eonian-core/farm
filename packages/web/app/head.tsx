@@ -1,16 +1,17 @@
-import { NextSeo, NextSeoProps } from "next-seo"
-import { NEXT_SEO_DEFAULT } from "../next-seo.config"
+import { NextSeo } from "next-seo"
+import { generatePageSpecificSeo, NEXT_SEO_DEFAULT, PageSeoProps } from "../next-seo.config"
 
 export interface HeadProps {
   /** Overrode default seo */
-  seo?: Partial<NextSeoProps>
+  seo?: PageSeoProps
 }
 
-export default function Head({ seo = {} }: HeadProps = { seo: {}}) {
+export default function Head({ seo }: HeadProps = {}) {
+  const seoConfig = seo ? generatePageSpecificSeo(seo) : NEXT_SEO_DEFAULT
+  
   return (
     <>
-      <NextSeo {...{...NEXT_SEO_DEFAULT, ...seo}} useAppDir={true} />
-
+      <NextSeo {...seoConfig} useAppDir={true} />
       <Favicons />
       <Theme />
     </>
