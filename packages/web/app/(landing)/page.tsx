@@ -17,6 +17,7 @@ const components: MDXComponents = {
   Block,
   BigNumber,
   Card: dynamic(import('../components/card/card')),
+  Mbr: dynamic(import('../components/mobile-break/mobile-break')),
 }
 
 

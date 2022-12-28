@@ -50,6 +50,13 @@
     --font-bold: 700;
     --font-extrabold: 800;
     --font-black: 900;
+
+  // letter spacing
+    --letter-spacing-normal-500: 0em;
+    --letter-spacing-bold-500: 0em;
+    --letter-spacing-black-300: -1px;
+    --letter-spacing-black-400: -1.5px;
+    --letter-spacing-black-500: -2px;
   
   // line height
     --line-height-100: 1.25rem;
@@ -67,6 +74,7 @@
     --line-height-1180: 9rem;
     --line-height-1200: 11.5rem;
   
+
 
   // Colors
 

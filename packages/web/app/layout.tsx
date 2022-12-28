@@ -9,7 +9,7 @@ import './tailwind.css'
 const roboto = Roboto({ 
   subsets: ['latin', 'cyrillic'], 
   weight: ['400', '500', '700', '900'],
-  display: 'auto' // force to show font anyway
+  display: 'block' // force to show font anyway
 })
 
 export default function RootLayout({
