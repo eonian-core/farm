@@ -1,46 +1,13 @@
-import Link from "next/link";
 import React from "react";
 import LogoWithText from "../../../components/logo/logo-with-text";
+import FooterLink from "./footer-link";
 import socials from "./socials";
-
-const FooterLink = (props: {
-  name: string;
-  href?: string;
-  hrefs?: Record<string, string>;
-  icon?: React.ReactNode;
-}) => {
-  const { name, href, hrefs, icon } = props;
-  const links = hrefs ? hrefs : { en: href ?? "" };
-  const langauges = Object.keys(links);
-  return (
-    <li key={name} className="flex items-center text-slate-300">
-      {icon && <div className="translate-y-px">{icon}</div>}
-      {langauges.map((langauge, index) => {
-        const href = links[langauge];
-        const lang = langauge.toUpperCase();
-        const total = langauges.length;
-        return (
-          <React.Fragment key={langauge}>
-            <Link
-              className="ml-1 leading-7 hover:underline"
-              target={href.startsWith("/") ? "_self" : "_blank"}
-              href={href}
-            >
-              {total > 1 ? (index === 0 ? `${name} ${lang}` : lang) : name}
-            </Link>
-            {index < total - 1 ? "," : null}
-          </React.Fragment>
-        );
-      })}
-    </li>
-  );
-};
 
 const Footer = () => {
   return (
-    <div className="w-full max-w-screen-lg p-8">
+    <footer className="w-full max-w-screen-lg p-8">
       <div className="flex flex-wrap justify-center md:justify-around">
-        <div className="flex p-4 flex-col items-center md:items-start">
+        <div className="flex flex-col items-center p-4 md:items-start">
           <LogoWithText />
           <div className="mt-4">Hand-crafted with ❤️ by our team</div>
         </div>
@@ -63,7 +30,7 @@ const Footer = () => {
         Copyright &copy; {new Date().getFullYear()}{" "}
         <span className="font-medium">Eonian Finance</span>
       </div>
-    </div>
+    </footer>
   );
 };
 
