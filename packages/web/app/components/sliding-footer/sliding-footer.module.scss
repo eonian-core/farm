@@ -1,11 +1,11 @@
 .content {
   width: 100%;
   display: flex;
+  position: relative;
+  z-index: 1;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  position: relative;
-  z-index: 2;
   box-shadow: #000 0 7px 35px 0;
   background-color: var(--color-background-end);
 }
@@ -14,7 +14,6 @@
   display: flex;
   justify-content: center;
   position: fixed;
-  z-index: 1;
   left: 0;
   right: 0;
   bottom: 0;
