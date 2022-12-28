@@ -104,7 +104,7 @@ dist
 .tern-port
 
 lerna-debug.log
-
+.DS_Store
 
 .vscode
 .idea/
