@@ -1,3 +1,5 @@
+@import "../../../screen.scss";
+
 .container {
     min-height: 100vh;
     display: flex;
@@ -10,3 +12,14 @@
     padding: 0 var(--width-gap);
 }
 
+
+@media (max-width: $screen-mobile) {
+
+    .container {
+        margin-bottom: var(--margin-800);
+    }
+
+    .mobileFullWidth {
+        padding: 0;
+    }
+}
