@@ -1,0 +1,31 @@
+@import "../../screen.scss";
+
+.header2 {
+    font-size: var(--font-size-900);
+    font-weight: var(--font-bold);
+    line-height: var(--line-height-900);
+    margin-bottom: var(--margin-400);
+    color: var(--color-text-300);
+
+    background: var(--color-primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+@media (max-width: $screen-mobile) {
+    .header2 {
+        font-size: var(--font-size-800);
+        line-height: var(--line-height-800);
+    }
+}
+
+
+
+@media (max-width: $screen-small-mobile) {
+    .header2 {
+        font-size: var(--font-size-700);
+        line-height: var(--line-height-700);
+    }
+}

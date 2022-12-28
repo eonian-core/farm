@@ -1,37 +1,59 @@
+@import "../../screen.scss";
+
 .card {
-    padding: 1rem 1.2rem;
+    padding: var(--padding-300);
     border-radius: var(--border-radius);
-    background: rgba(var(--card-rgb), 0);
-    border: 1px solid rgba(var(--card-border-rgb), 0);
     transition: background 200ms, border 200ms;
+    border: 1px solid transparent;
+
+    margin-top: var(--margin-500);
+
+    display: block;
+    cursor: pointer;
 
     span {
         display: inline-block;
         transition: transform 200ms;
     }
 
-    h2 {
-        font-weight: 600;
-        margin-bottom: 0.7rem;
+    h3 {
+        font-weight: var(--font-semibold);
+        font-size: var(--font-size-700);
+        line-height: var(--line-height-700);
+        margin-bottom: var(--margin-200);
+        color: var(--color-text-400);
+        transition: transform 200ms;
+
+        &::after {
+            content: ' ->';
+        }
     }
 
     p {
-        margin: 0;
-        opacity: 0.6;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        max-width: 34ch;
+        color: var(--color-text-400);
+        font-size: var(--font-size-600);
+        line-height: var(--line-height-600);
+        margin-bottom: var(--margin-200);
     }
 }
 
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
     .card:hover {
-        background: rgba(var(--card-rgb), 0.1);
-        border: 1px solid rgba(var(--card-border-rgb), 0.15);
+        background: var(--color-neutral-800);
+        border: 1px solid var(--color-neutral-700);
     }
 
-    .card:hover span {
+    .card:hover h3 {
         transform: translateX(4px);
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .card {
+        p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+        }
     }
 }

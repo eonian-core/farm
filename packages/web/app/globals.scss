@@ -29,6 +29,7 @@
     --font-size-1000: 3rem;
     --font-size-1100: 3.75rem;
     --font-size-1120: 4rem;
+    --font-size-1130: 5rem;
     --font-size-1150: 6rem;
     --font-size-1180: 8rem;
     --font-size-1200: 10.5rem;
@@ -71,8 +72,6 @@
 
     --callout-rgb: 20, 20, 20;
     --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
 
     --tile-start-color:  rgba(2, 13, 46, 1);
     --tile-end-color: rgba(2, 5, 19, 1);
@@ -105,11 +104,14 @@
 
       --color-background-start: hsl(200, 4%, 14%);
       --color-background-end: hsl(180, 4%, 10%);
-      --color-background-gradient: linear-gradient(
+      --color-neutral-background-gradient: linear-gradient(
         to bottom,
-        transparent,
+        var(--color-background-start),
         var(--color-background-end)
       ) var(--color-background-start);
+
+      --color-primary-gradient: linear-gradient(to bottom right, hsl(341, 67%, 50%), hsl(270, 35%, 50%), hsl(229, 80%, 66%), hsl(256, 77%, 60%));
+      --color-accent-background-gradient: linear-gradient(to bottom right, #f79533, #f37055, #ef4e7b, #ff00cc, #a166ab, #333399, #5073b8, #2657eb, #2657eb);
 
     // Primary
       --color-primary-50: hsl(226, 100%, 97%);
@@ -213,6 +215,7 @@
         --color-success-900: hsl(144, 61%, 20%);
   
   // margin
+    --margin-200: 0.75rem;
     --margin-300: 1rem;
     --margin-400: 1.5rem;
     --margin-500: 2rem;
@@ -221,6 +224,8 @@
     --margin-800: 4rem;
 
   // padding
+    --padding-200: 0.75rem;
+    --padding-300: 1rem;
     --padding-400: 1.5rem;
     --padding-500: 2rem;
     --padding-600: 2.5rem;
@@ -238,10 +243,14 @@
     --width-gap: 40px;
 
     --width-100: var(--width-column);
+    --width-150: calc(var(--width-column) + var(--width-gap));
+
     --width-200: calc(2 * var(--width-column) + var(--width-gap));
     --width-300: calc(3 * var(--width-column) + 2 * var(--width-gap));
     --width-400: calc(4 * var(--width-column) + 3 * var(--width-gap));
     --width-500: calc(5 * var(--width-column) + 4 * var(--width-gap));
+    --width-600: calc(6 * var(--width-column) + 5 * var(--width-gap));
+    --width-700: calc(7 * var(--width-column) + 6 * var(--width-gap));
 
     --max-width: calc(1360px + 2 * var(--width-gap)); // must be lower than ultra wide and bigger than desctop screen
     
@@ -249,7 +258,9 @@
     --navigation-height: 5rem;
 
   // border radius
+    --border-radius-300: 3px;
     --border-radius-400: 5px;
+    --border-radius-450: 7px;
     --border-radius-500: 10px;
     --border-radius-600: 15px;
 }
@@ -268,7 +279,7 @@ body {
 
 body {
   color: var(--color-text-500);
-  background: var(--color-background-gradient);
+  background: var(--color-background-end);
 }
 
 a {
