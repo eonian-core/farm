@@ -11,7 +11,7 @@ export default function FAQ() {
   return (
     <main className={styles.main}>
       <Head />
-      <h2 className={roboto.className}>FAQ</h2>
+      <h1 className={roboto.className}>FAQ</h1>
       <p className={inter.className}>Answers on common questions about project, DeFi and crypto</p>
       <Collapse
         index={0}
