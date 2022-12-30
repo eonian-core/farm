@@ -1,5 +1,18 @@
 @import "../../screen.scss";
 
+.header1 {
+    font-size: var(--font-size-1000);
+    font-weight: var(--font-bold);
+    line-height: var(--line-height-1000);
+    margin-bottom: var(--margin-400);
+    color: var(--color-text-300);
+
+    background: var(--color-primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
 .header2 {
     font-size: var(--font-size-900);
     font-weight: var(--font-bold);
@@ -15,6 +28,11 @@
 
 
 @media (max-width: $screen-mobile) {
+    .header1 {
+        font-size: var(--font-size-900);
+        line-height: var(--line-height-900);
+    }
+
     .header2 {
         font-size: var(--font-size-800);
         line-height: var(--line-height-800);
@@ -24,6 +42,11 @@
 
 
 @media (max-width: $screen-small-mobile) {
+    .header1 {
+        font-size: var(--font-size-800);
+        line-height: var(--line-height-800);
+    }
+
     .header2 {
         font-size: var(--font-size-700);
         line-height: var(--line-height-700);

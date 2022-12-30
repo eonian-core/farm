@@ -1,0 +1,24 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+
+  max-width: var(--max-width);
+  padding: 0 var(--width-gap);
+  padding-top: var(--navigation-height);
+
+  h1 {
+    width: 100%;
+    max-width: var(--width-500);
+  }
+
+  p {
+    max-width: var(--width-500);
+    margin-bottom: var(--margin-500);
+  }
+
+}
