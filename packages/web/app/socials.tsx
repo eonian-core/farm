@@ -4,7 +4,7 @@ import IconMedium from "./components/icons/icon-medium";
 import IconTelegram from "./components/icons/icon-telegram";
 import IconTwitter from "./components/icons/icon-twitter";
 
-interface SocialLink {
+export interface SocialLink {
   name: string;
   hrefs: Record<string, string>;
   icon?: React.ReactNode;

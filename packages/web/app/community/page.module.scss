@@ -8,17 +8,18 @@
   height: 100%;
 
   max-width: var(--max-width);
-  padding: 0 var(--width-gap);
+  margin: 0 var(--width-gap);
   padding-top: var(--navigation-height);
 
   h1 {
     width: 100%;
+    margin-bottom: var(--margin-500);
     max-width: var(--width-500);
   }
 
   p {
+    margin-bottom: var(--margin-300);
     max-width: var(--width-500);
-    margin-bottom: var(--margin-500);
   }
 
 }

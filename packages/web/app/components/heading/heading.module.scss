@@ -1,4 +1,5 @@
 @import "../../screen.scss";
+@import "../styles/gradient-text.mixin.scss";
 
 .header1 {
     font-size: var(--font-size-1000);
@@ -7,10 +8,7 @@
     margin-bottom: var(--margin-400);
     color: var(--color-text-300);
 
-    background: var(--color-primary-gradient);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    @include gradient-text(var(--color-primary-gradient));
 }
 
 .header2 {
@@ -20,10 +18,7 @@
     margin-bottom: var(--margin-400);
     color: var(--color-text-300);
 
-    background: var(--color-primary-gradient);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    @include gradient-text(var(--color-primary-gradient));
 }
 
 

@@ -1,5 +1,5 @@
 @import "../../../screen.scss";
-@import "../../styles/gradient-text.mixin.scss";
+@import "../../../components/styles/gradient-text.mixin.scss";
 
 @keyframes shine {
     0% {
@@ -104,15 +104,6 @@
             margin-left: -30rem;
             margin-top: -15rem;
             animation: appearFrom07 1s ease-out;
-        }
-
-        &::before {
-            background: var(--primary-glow);
-            border-radius: 50%;
-            width: 60rem;
-            height: 60rem;
-            margin-left: -30rem;
-            margin-top: -15rem;
         }
 
         &::after {
