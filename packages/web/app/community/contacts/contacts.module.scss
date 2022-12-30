@@ -65,12 +65,12 @@
     &::before {
         left: 0;
         background: linear-gradient(
-            to bottom right,
-            rgba(140, 44, 224, 0.808) 0%,
-             rgba(36, 53, 209, 0.493) 29%, 
+            to right,
+            rgba(129, 28, 218, 0.808) 0%,
+             rgba(47, 211, 69, 0.527) 29%, 
              rgba(219, 38, 96, 0.644) 48%, 
-             rgba(47, 211, 69, 0.527) 74%, 
-             rgba(53, 71, 211, 0.767) 100%
+             rgba(207, 226, 36, 0.493) 74%, 
+             rgba(36, 57, 218, 0.767) 100%
           );
         border-radius: 50%;
         width: 30rem;
