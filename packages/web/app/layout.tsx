@@ -1,6 +1,7 @@
 'use client';
 
 import { Roboto } from "@next/font/google";
+import { GoogleAnalytics } from "nextjs-google-analytics";
 
 import './globals.scss'
 import './tailwind.css'
@@ -23,6 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <GoogleAnalytics trackPageViews />
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
