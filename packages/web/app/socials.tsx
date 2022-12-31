@@ -3,11 +3,12 @@ import IconGithub from "./components/icons/icon-github";
 import IconMedium from "./components/icons/icon-medium";
 import IconTelegram from "./components/icons/icon-telegram";
 import IconTwitter from "./components/icons/icon-twitter";
+import IconYoutube from "./components/icons/icon-youtube";
 
 export interface SocialLink {
   name: string;
   hrefs: Record<string, string>;
-  icon?: React.ReactNode;
+  icon: React.ReactNode;
 }
 
 const socials: SocialLink[] = [
@@ -47,6 +48,13 @@ const socials: SocialLink[] = [
       en: "https://discord.gg/nsvDz7EA",
     },
   },
+  {
+    name: "YouTube",
+    icon: <IconYoutube />,
+    hrefs: {
+      ru: "https://www.youtube.com/@eonian3304"
+    },
+  }
 ];
 
 export default socials;

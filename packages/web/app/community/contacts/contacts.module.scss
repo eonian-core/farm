@@ -3,19 +3,20 @@
 
 .contacts {
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
 
     position: relative;
 
+    font-size: var(--font-size-800);
 
     ul {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        font-size: var(--font-size-800);
+        
     }
 
     li {
@@ -41,6 +42,22 @@
         &:hover {
             color: var(--color-text-200);
         }
+    }
+}
+
+.otherLanguages {
+    font-size: var(--font-size-600);
+    font-weight: var(--font-normal);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    &:hover {
+        color: var(--color-text-200);
     }
 }
 

@@ -12,7 +12,7 @@ import Footer from "./components/footer/footer";
 
 const roboto = Roboto({ 
   subsets: ['latin', 'cyrillic'], 
-  weight: ['400', '500', '700', '900'],
+  weight: ['300', '400', '500', '700', '900'],
   display: 'block' // force to show font anyway
 })
 
