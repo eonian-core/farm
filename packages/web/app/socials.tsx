@@ -44,7 +44,7 @@ const socials: SocialLink[] = [
     name: "Discord",
     icon: <IconDiscord />,
     hrefs: {
-      en: "https://discord.gg/x8drxKw6",
+      en: "https://discord.gg/nsvDz7EA",
     },
   },
 ];
