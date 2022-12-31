@@ -1,3 +1,5 @@
+@import "../../screen.scss";
+
 
 .contacts {
     display: flex;
@@ -13,14 +15,12 @@
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-
         font-size: var(--font-size-800);
     }
 
     li {
         margin-top: 0;
         margin-bottom: var(--margin-400);
-
         color: var(--color-text-400);
 
         a {
@@ -42,4 +42,44 @@
             color: var(--color-text-200);
         }
     }
+}
+
+@media (max-width: $screen-desktop) {
+
+    .contacts {
+        ul {
+            font-size: var(--font-size-600);
+        }
+
+        svg {
+            width: var(--font-size-600);
+            height: var(--font-size-600);
+        }
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .contacts {
+        margin-top: var(--margin-500);
+        
+        ul {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: var(--width-gap);
+            row-gap: var(--margin-500);
+
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+
+            li {
+                margin-bottom: 0;
+            }
+        }
+
+        svg {
+            width: var(--font-size-500);
+            height: var(--font-size-500);
+        }
+    }
+
 }

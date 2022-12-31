@@ -1,3 +1,5 @@
+@import "../../screen.scss";
+
 .column {
     display: flex;
     flex-direction: column;
@@ -16,5 +18,16 @@
         justify-content: flex-start;
 
 
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .column {
+        align-items: flex-start;
+
+        &:first-child {
+            justify-content: flex-end;
+            grid-column: 1;
+        }
     }
 }

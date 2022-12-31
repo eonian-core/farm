@@ -25,9 +25,11 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
+      <div className={styles.content}>
         <MDXProvider components={components}>
           <Content />
         </MDXProvider>
+      </div>
     </main>
   );
 }
