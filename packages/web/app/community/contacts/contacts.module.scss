@@ -1,5 +1,5 @@
 @import "../../screen.scss";
-
+@import "../../components/styles/appear.animation.scss";
 
 .contacts {
     display: flex;
@@ -45,9 +45,36 @@
     }
 }
 
-.otherLanguages {
+.otherLanguagesCollapse {
+    @extend .contacts;
+
+    min-height: calc(var(--font-size-800) * 10);
+
+    justify-content: flex-start;
+    margin-top: var(--margin-100);
+}
+
+
+.otherLanguagesHighLevelList {
+    margin-top: var(--margin-200);
+
+    animation: appearFrom09 0.3s ease-out;;
+
+    h5 {
+        text-transform: capitalize;
+        margin-bottom: var(--margin-100);
+        font-weight: var(--font-bold);
+        color: var(--color-text-300);
+
+
+    }
+
+}
+
+.otherLanguagesTrigger {
     font-size: var(--font-size-600);
     font-weight: var(--font-normal);
+    margin-top: 0;
 
     display: flex;
     flex-direction: row;
@@ -56,47 +83,88 @@
 
     cursor: pointer;
 
+    position: relative;
+    left: -0.6rem;
+
+    button {
+        margin-left: var(--margin-50);
+    }
+
     &:hover {
         color: var(--color-text-200);
     }
+
+
 }
+
 
 @media (max-width: $screen-desktop) {
 
-    .contacts {
-        ul {
-            font-size: var(--font-size-600);
-        }
+    .contacts, .otherLanguagesCollapse {
+        font-size: var(--font-size-600);
+        
 
-        svg {
-            width: var(--font-size-600);
-            height: var(--font-size-600);
+        li span svg {
+            width: var(--font-size-700);
+            height: var(--font-size-700);
         }
+    }
+
+    .otherLanguagesTrigger {
+        font-size: var(--font-size-500);
+        position: initial;
     }
 }
 
 @media (max-width: $screen-mobile) {
+    .contacts, .otherLanguagesCollapse {
+        font-size: var(--font-size-500);
+        line-height: var(--line-height-500);
+
+        li span svg {
+            width: var(--font-size-700);
+            height: var(--font-size-700);
+        }
+    }
+
+    .otherLanguagesCollapse {
+        min-height: calc(var(--font-size-800) * 5);
+    }
+
     .contacts {
         margin-top: var(--margin-500);
+
+    }
+
+
+
+    .contacts, .otherLanguagesHighLevelList {
         
+
         ul {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-gap: var(--width-gap);
-            row-gap: var(--margin-500);
-
-            font-size: var(--font-size-500);
-            line-height: var(--line-height-500);
+            row-gap: var(--margin-500);            
 
             li {
                 margin-bottom: 0;
             }
         }
+        
+    }
 
-        svg {
-            width: var(--font-size-500);
-            height: var(--font-size-500);
-        }
+    ul.otherLanguagesHighLevelList {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+
+    .otherLanguagesTrigger {
+        font-size: var(--font-size-400);
+        position: initial;
     }
 
 }

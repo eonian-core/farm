@@ -68,7 +68,7 @@ const useLocalSocialLinks = (locale: string, socialLinks: Array<SocialLink>): [A
 
 export const OtherLanguages = ({ otherLocales }: { otherLocales: Record<string, Array<LocalSocialLink>>}) => (
     <OtherLanguagesCollapse>
-        <ul>
+        <ul className={styles.otherLanguagesHighLevelList}>
             {Object.keys(otherLocales).map(locale => (
                 <li key={locale}>
                     <h5>{locale}</h5>
@@ -89,10 +89,10 @@ export const OtherLanguagesCollapse = ({ children }: { children: React.ReactNode
     const [open, setOpen] = React.useState(false);
 
     return (
-        <Collapsible.Root open={open} onOpenChange={setOpen}>
+        <Collapsible.Root open={open} onOpenChange={setOpen} className={styles.otherLanguagesCollapse}>
             <Collapsible.Trigger asChild>
-                <div className={styles.otherLanguages}>
-                    <span>Other languages</span>
+                <div className={styles.otherLanguagesTrigger}>
+                    <span>Other Languages</span>
                     
                     <button className={styles.icon}>{
                         !open ? 
