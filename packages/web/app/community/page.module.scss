@@ -1,8 +1,9 @@
 .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
+  display: grid;
+  grid-template-columns: var(--width-800) var(--width-300);
+  grid-gap: var(--width-gap);
+  justify-content: center;
+
   min-height: 100vh;
   width: 100%;
   height: 100%;
@@ -13,13 +14,26 @@
 
   h1 {
     width: 100%;
-    margin-bottom: var(--margin-500);
-    max-width: var(--width-500);
+    margin-bottom: 0;
+
+    font-size: var(--font-size-1180);
+    font-weight: var(--font-black);
+    line-height: var(--line-height-1165);
+    letter-spacing: var(--letter-black-400);
+
+    text-align: center;
+    
   }
 
   p {
     margin-bottom: var(--margin-300);
-    max-width: var(--width-500);
+    max-width: var(--width-800);
+
+    font-size: var(--font-size-800);
+    line-height: var(--line-height-800);
+    
   }
+
+
 
 }

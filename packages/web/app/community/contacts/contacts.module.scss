@@ -1,107 +1,11 @@
-@keyframes appearFrom07 {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg) scale(0.8);
-        opacity: 0.7;
-    }
-
-    25% {
-        transform: rotate(90deg) scale(1);
-        opacity: 0.8;
-    }
-
-    50% {
-        transform: rotate(45deg) scale(0.8);
-        opacity: 1;
-    }
-
-    75% {
-        transform: rotate(65deg) scale(1);
-        opacity: 0.8;
-    }
-
-    100% {
-        transform: rotate(0deg) scale(0.8);
-        opacity: 0.7;
-    }
-}
-
 
 .contacts {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 
-    width: 100%;
-    max-width: var(--width-700);
-    margin-top: var(--margin-500);
-    margin-bottom: var(--margin-500);
-
     position: relative;
-
-    animation: appearFrom07 3s ease-in-out;
-
-    // Glow
-    &::before,
-    &::after {
-        content: '';
-        position: absolute;
-        filter: blur(45px);
-        transform: translateZ(0);
-
-        z-index: -1;
-    }
-
-    &::before {
-        left: 0;
-        background: linear-gradient(
-            to right,
-            rgba(129, 28, 218, 0.808) 0%,
-             rgba(47, 211, 69, 0.527) 29%, 
-             rgba(219, 38, 96, 0.644) 48%, 
-             rgba(207, 226, 36, 0.493) 74%, 
-             rgba(36, 57, 218, 0.767) 100%
-          );
-        border-radius: 50%;
-        width: 30rem;
-        height: 25rem;
-        top: -0.5rem;
-        animation: rotate 30s ease-out infinite;
-    }
-
-    &::after {
-        left: 0;
-        bottom: -0.5rem;
-        background: linear-gradient(to right,
-                rgba(34, 202, 98, 0.397),
-                rgba(199, 41, 94, 0.397),
-                rgba(142, 81, 195, 0.397),
-                rgba(30, 49, 201, 0.877));
-        border-radius: 50%;
-        width: 30rem;
-        height: 5rem;
-
-        animation: appearFrom07 10s ease-out;
-    }
-
-
-    img {
-        max-width: var(--width-500);
-
-        position: relative;
-
-
-    }
 
 
     ul {
@@ -109,16 +13,12 @@
         flex-direction: column;
         align-items: flex-start;
         justify-content: center;
-        height: 100%;
-        min-height: 100%;
 
-        font-size: var(--font-size-750);
-
-        margin-left: var(--width-gap);
+        font-size: var(--font-size-800);
     }
 
     li {
-        margin-top: auto;
+        margin-top: 0;
         margin-bottom: var(--margin-400);
 
         color: var(--color-text-400);
@@ -133,8 +33,8 @@
             margin-right: var(--margin-100);
 
             svg {
-                width: var(--font-size-750);
-                height: var(--font-size-750);
+                width: var(--font-size-800);
+                height: var(--font-size-800);
             }
         }
 

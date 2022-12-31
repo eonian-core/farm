@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import Image from 'next/image'
 import styles from './contacts.module.scss';
-import GrowingTree from './growing_tree.png'
 
 import { SocialLink } from "../../socials"
 
@@ -16,7 +14,6 @@ export const Contacts = ({ locale, socialLinks }: ContactsProps) => {
 
     return (
         <div className={styles.contacts}>
-            <Image src={GrowingTree} alt="Growing Neon Tree" placeholder="blur" />
             <ul>
                 {localLinks.map(({ name, href, icon }) => (
                     <li key={name}>

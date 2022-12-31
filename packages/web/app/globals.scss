@@ -72,6 +72,7 @@
     --line-height-1100: 4.25rem;
     --line-height-1120: 4.5rem;
     --line-height-1150: 7rem;
+    --line-height-1165: 8rem;
     --line-height-1180: 9rem;
     --line-height-1200: 11.5rem;
   
@@ -240,6 +241,9 @@
     --padding-400: 1.5rem;
     --padding-500: 2rem;
     --padding-600: 2.5rem;
+    --padding-700: 3rem;
+    --padding-800: 6rem;
+    --padding-900: 20rem;
   
   // width
     --width-column: 60px;
@@ -254,6 +258,7 @@
     --width-500: calc(5 * var(--width-column) + 4 * var(--width-gap));
     --width-600: calc(6 * var(--width-column) + 5 * var(--width-gap));
     --width-700: calc(7 * var(--width-column) + 6 * var(--width-gap));
+    --width-800: calc(8 * var(--width-column) + 7 * var(--width-gap));
 
     --max-width: calc(1360px + 2 * var(--width-gap)); // must be lower than ultra wide and bigger than desctop screen
     
