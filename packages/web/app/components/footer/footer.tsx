@@ -34,10 +34,11 @@ const Footer = () => {
 export default Footer;
 
 export const Resources = () => {
-  const showFooter = process.env.NEXT_PUBLIC_FEATURE_SHOW_FAQ === 'true';
-  // Additional features can be chhecked there
+  const showFooter = process.env.NEXT_PUBLIC_FEATURE_FAQ_PAGE === 'true';
+  const showCommunity = process.env.NEXT_PUBLIC_FEATURE_COMMUNITY_PAGE === 'true';
+
   // if at least one feautre is enabled, the footer will be shown
-  if(!showFooter) {
+  if(![showFooter, showCommunity].some(Boolean)) {
     return null;
   }
 
@@ -49,6 +50,9 @@ export const Resources = () => {
       <ul>
         {showFooter && (
           <FooterLink name="FAQ" href="/faq" /> 
+        )}
+        {showCommunity && (
+          <FooterLink name="Community" href="/community" />
         )}
       </ul>
     </div>

@@ -15,6 +15,7 @@ const FooterLink: React.FC<Props> = ({ name, href, hrefs, icon }) => {
   return (
     <li key={name} className="flex items-center text-slate-300 mb-2">
       {icon && <div>{icon}</div>}
+
       {langauges.map((langauge, index) => {
         const href = links[langauge];
         const lang = langauge.toUpperCase();
