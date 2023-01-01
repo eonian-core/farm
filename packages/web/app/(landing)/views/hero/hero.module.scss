@@ -1,4 +1,5 @@
 @import "../../../screen.scss";
+@import "../../styles/gradient-text.mixin.scss";
 
 @keyframes shine {
     0% {
@@ -76,13 +77,13 @@
         font-size: var(--font-size-1200);
         font-weight: var(--font-black);
         line-height: var(--line-height-1200);
+        letter-spacing: var(--letter-spacing-black-500);
         text-align: center;
-        background: var(--title-gradient);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        position: relative;
+        z-index: -1;
+        
+        @include gradient-text(var(--title-gradient));
 
+        position: relative;
         animation: appearFrom09 0.5s ease-out;
 
         // Glow
@@ -176,6 +177,7 @@
     .hero h1 {
         font-size: var(--font-size-1180);
         line-height: var(--line-height-1180);
+        letter-spacing: var(--letter-spacing-black-400);
 
         &::after {
             bottom: -3rem;
@@ -219,6 +221,7 @@
         h1 {
             font-size: var(--font-size-1150);
             line-height: var(--line-height-1150);
+            letter-spacing: var(--letter-spacing-black-300);
 
             &::after {
                 width: 15rem;
@@ -271,10 +274,7 @@
             text-align: left;
             font-size: var(--font-size-1180);
             line-height: var(--line-height-1180);
-
-            span {
-                display: block;
-            }
+            letter-spacing: var(--letter-spacing-black-400);
 
             &::after {
                 width: 15rem;
@@ -291,10 +291,6 @@
             text-align: left;
             max-width: var(--width-400);
             margin-top: var(--margin-400);
-
-            span {
-                display: block;
-            }
         }
     }
 }
@@ -333,6 +329,7 @@
         h1 {
             font-size: var(--font-size-1150);
             line-height: var(--line-height-1150);
+            letter-spacing: var(--letter-spacing-black-300);
 
             &::after {
                 width: 15rem;

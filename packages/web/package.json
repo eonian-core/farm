@@ -13,6 +13,7 @@
     "@mdx-js/react": "^2.2.1",
     "@next/font": "13.0.7",
     "@next/mdx": "^13.1.1",
+    "@react-spring/web": "^9.6.1",
     "@types/node": "18.11.17",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.9",
@@ -22,6 +23,8 @@
     "eslint": "8.30.0",
     "eslint-config-next": "13.0.7",
     "next": "^13.1.1",
+    "next-seo": "^5.15.0",
+    "nextjs-google-analytics": "^2.2.2",
     "postcss": "^8.4.20",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -31,6 +34,7 @@
   "devDependencies": {
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
+    "rehype-external-links": "^2.0.1",
     "sass": "^1.57.0"
   }
 }

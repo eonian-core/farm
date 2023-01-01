@@ -50,6 +50,13 @@
     --font-bold: 700;
     --font-extrabold: 800;
     --font-black: 900;
+
+  // letter spacing
+    --letter-spacing-normal-500: 0em;
+    --letter-spacing-bold-500: 0em;
+    --letter-spacing-black-300: -1px;
+    --letter-spacing-black-400: -1.5px;
+    --letter-spacing-black-500: -2px;
   
   // line height
     --line-height-100: 1.25rem;
@@ -67,6 +74,7 @@
     --line-height-1180: 9rem;
     --line-height-1200: 11.5rem;
   
+
 
   // Colors
 
@@ -102,8 +110,8 @@
 
     // Background
 
-      --color-background-start: hsl(200, 4%, 14%);
-      --color-background-end: hsl(180, 4%, 10%);
+      --color-background-start: hsl(180, 4%, 14%);
+      --color-background-end: hsl(200, 4%, 10%);
       --color-neutral-background-gradient: linear-gradient(
         to bottom,
         var(--color-background-start),
@@ -224,6 +232,7 @@
     --margin-800: 4rem;
 
   // padding
+    --padding-100: 0.5rem;
     --padding-200: 0.75rem;
     --padding-300: 1rem;
     --padding-400: 1.5rem;
@@ -279,7 +288,6 @@ body {
 
 body {
   color: var(--color-text-500);
-  background: var(--color-background-end);
 }
 
 a {

@@ -1,0 +1,7 @@
+@import "../../screen.scss";
+
+@media (max-width: $screen-tablet) {
+    .mobileBreak {
+        display: block;
+    }
+}
