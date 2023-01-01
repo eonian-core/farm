@@ -1,0 +1,97 @@
+$pin-thickness: 2px;
+$pin-head-size: 16px;
+
+.pin {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+  top: 4px;
+
+  width: $pin-thickness;
+  background-image: linear-gradient(var(--color-text-200) 10%, transparent 90%);
+
+  &::before {
+    position: absolute;
+    content: "";
+    border-radius: 50%;
+    background-color: var(--color-text-200);
+    width: $pin-head-size;
+    height: $pin-head-size;
+    left: -($pin-head-size / 2 - $pin-thickness / 2);
+    border: 4px solid var(--color-background-start);
+  }
+}
+
+.point {
+  --point-color: var(--color-text-200);
+  --point-size: 16px;
+
+  color: var(--color-text-200);
+
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  bottom: -calc(var(--point-size) / 2);
+  left: -calc(var(--point-size) / 2);
+
+  bottom: 0;
+  left: 0;
+
+  transform: translate(-50%, 50%);
+
+  width: var(--point-size);
+  height: var(--point-size);
+
+  border-radius: 50%;
+
+  background-color: var(--point-color);
+  background: radial-gradient(var(--point-color) 40%, rgba(0, 0, 0, 0.1));
+
+  @apply shadow-md;
+
+  &::before,
+  &::after {
+    --orbit-scale: 0;
+
+    content: "";
+
+    position: absolute;
+    top: calc(var(--point-size) / 2);
+    left: calc(var(--point-size) / 2);
+
+    
+    width: calc(var(--point-size) * var(--orbit-scale));
+    height: calc(var(--point-size) * var(--orbit-scale));
+    
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+    border: 1px solid var(--point-color);
+  }
+
+  &::before {
+    --orbit-scale: 1.1;
+    opacity: 0.25;
+  }
+
+  &::after {
+    --orbit-scale: 1.25;
+    opacity: 0.1;
+  }
+
+  &--done {
+    --point-size: 24px;
+    --point-color: hsl(341, 67%, 50%);
+
+    &::before {
+      opacity: 0.5;
+    }
+
+    &::after {
+      opacity: 0.35;
+    }
+  }
+}

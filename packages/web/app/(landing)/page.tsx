@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
-import Roadmap from "./views/roadmap/roadmap";
+import { RoadmapLoader } from "./views/roadmap/roadmap";
 
 const components: MDXComponents = {
   h2: heading.H2,
@@ -17,7 +17,10 @@ const components: MDXComponents = {
   Solution,
   Block,
   BigNumber,
-  Roadmap,
+  Roadmap: dynamic(import("./views/roadmap/roadmap"), {
+    ssr: false, // Disable prerender for Roadmap, it's fully client side story
+    loading: () => <RoadmapLoader />,
+  }),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
 };

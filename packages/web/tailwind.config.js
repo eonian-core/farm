@@ -16,6 +16,9 @@ module.exports = {
           800: "hsl(240, 4%, 16%)",
           900: "hsl(240, 6%, 10%)",
         },
+        crimson: {
+          DEFAULT: "hsl(341, 67%, 50%)",
+        },
       },
       fontFamily: {
         sans: ["ui-sans-serif", "system-ui"],
@@ -42,6 +45,14 @@ module.exports = {
   },
   daisyui: {
     base: false,
-    themes: ["dark"],
+    // themes: ["dark"],
+    themes: [
+      {
+        dark: {
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
+          ".tooltip": { "--tooltip-color": "#161616" },
+        },
+      },
+    ],
   },
 };
