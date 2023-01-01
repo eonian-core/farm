@@ -1,50 +1,55 @@
 @import "../screen.scss";
 
 .main {
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    padding-top: var(--padding-1300);
-    padding-bottom: var(--padding-1300);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+}
 
-    h1 {
-        font-size: var(--font-size-1200);
-        font-weight: var(--font-black);
-        line-height: var(--line-height-1200);
-        text-align: left;
-        background: var(--color-primary-gradient);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        position: relative;
+.faqContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 100vh;
+  padding-top: var(--padding-1300);
+  padding-bottom: var(--padding-1300);
 
-        animation: appearFrom09 0.5s ease-out;
-    }
+  h1 {
+    font-size: var(--font-size-1100);
+    font-weight: var(--font-black);
+    line-height: var(--line-height-1100);
+    text-align: left;
+    background: var(--color-primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
 
-    p {
-        font-size: var(--font-size-700);
-        line-height: var(--line-height-500);
-        text-align: left;
-        margin-top: var(--margin-600);
-        margin-bottom: var(--margin-600);
-        font-weight: var(--font-medium);
-        color: var(--color-text-400);
-    }
+    animation: appearFrom09 0.5s ease-out;
+  }
+
+  p {
+    font-size: var(--font-size-700);
+    line-height: var(--line-height-500);
+    text-align: left;
+    margin-top: var(--margin-600);
+    margin-bottom: var(--margin-600);
+    font-weight: var(--font-medium);
+    color: var(--color-text-400);
+  }
 }
 
 @keyframes appearFrom09 {
-    0% {
-        opacity: 0;
-        transform: scale(0.9);
-    }
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
 
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
