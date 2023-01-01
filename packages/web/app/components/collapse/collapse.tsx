@@ -1,12 +1,13 @@
 import styles from "./collapse.module.scss";
+import React from "react";
 
 interface CollapseProp {
   index: number;
   label: string;
-  description: string;
+  children: React.ReactNode;
 }
 
-export default function Collapse({ index, label, description }: CollapseProp) {
+export default function Collapse({ index = 0, label, children }: CollapseProp) {
   return (
     <div className={styles.container}>
       <div
@@ -15,7 +16,7 @@ export default function Collapse({ index, label, description }: CollapseProp) {
       >
         <div className="collapse-title text-xl font-medium">{label}</div>
         <div className="collapse-content">
-          <p>{description}</p>
+            {children}
         </div>
       </div>
     </div>
