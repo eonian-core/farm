@@ -53,6 +53,10 @@ export default class Waves extends Component<Props> {
     this.startSecondaryWavesAnimation();
   }
 
+  componentWillUnmount(): void {
+    cancelAnimationFrame(this.frameId);
+  }
+
   shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
     const { peaks, width, height } = this.props;
     return (
