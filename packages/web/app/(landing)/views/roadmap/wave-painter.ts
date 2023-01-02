@@ -18,7 +18,6 @@ export default class WavePainter {
   private scaleX: number;
   private ctx: CanvasRenderingContext2D;
   private previousQuadraticCurvePoint: Point;
-  private shiftX: number;
   private waveGradient?: CanvasGradient;
 
   constructor(private canvas: HTMLCanvasElement) {
@@ -30,7 +29,6 @@ export default class WavePainter {
     this.blur = 0;
     this.stepX = 1;
     this.useQuadraticCurvePaint = false;
-    this.shiftX = 0;
 
     this.scaleX = this.peaks * 2;
     this.ctx = canvas.getContext("2d")!;
@@ -56,9 +54,9 @@ export default class WavePainter {
 
   private calculateY(x: number): number {
     const { width } = this.canvas;
-    const xR = this.offsetX + x * this.scaleX + width / 2 + this.shiftX;
+    const xR = x * this.scaleX + width / 2 + this.offsetX;
     const y = Math.sin((xR * Math.PI) / width);
-    const yR = this.offsetY + y * this.scaleY;
+    const yR = y * this.scaleY + this.offsetY; ;
     return yR;
   }
 
@@ -118,14 +116,14 @@ export default class WavePainter {
 
   /* Getters */
 
-  public getShiftX(): number {
-    return this.shiftX;
+  public getOffsetX(): number {
+    return this.offsetX;
   }
 
   /* Setters */
 
-  public setShiftX(value: number) {
-    this.shiftX = value;
+  public setOffsetX(value: number) {
+    this.offsetX = value;
   }
 
   /* Builder */
@@ -185,11 +183,6 @@ export default class WavePainter {
 
     public setStepX(value: number) {
       this.painter.stepX = value;
-      return this;
-    }
-
-    public setShiftX(value: number) {
-      this.painter.shiftX = value;
       return this;
     }
 

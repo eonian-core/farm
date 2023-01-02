@@ -22,6 +22,10 @@ export default class Waves extends Component<Props> {
   private currentX: number;
   private targetX: number;
 
+  private readonly frameInterval: number;
+  private frameId: number;
+  private previousFrameTimestamp: number;
+
   constructor(props: Props) {
     super(props);
 
@@ -29,16 +33,24 @@ export default class Waves extends Component<Props> {
 
     this.currentX = 0;
     this.targetX = 0;
+
+    this.frameId = 0;
+    this.frameInterval = 1000 / 30; // 30 frames per second
+    this.previousFrameTimestamp = 0;
   }
 
   componentDidMount(): void {
     this.init();
     this.draw();
+
+    this.startSecondaryWavesAnimation();
   }
 
   componentDidUpdate(): void {
     this.init();
     this.draw();
+
+    this.startSecondaryWavesAnimation();
   }
 
   shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
@@ -70,7 +82,7 @@ export default class Waves extends Component<Props> {
       .setColor("#5073b8")
       .setPeakColor("#ef4e7b")
       .setOffsetY(waveY)
-      .setShiftX(this.getShift(startAt))
+      .setOffsetX(this.getShift(startAt))
       .build();
 
     const middleWaveGradient = this.createGradient(this.ctx, waveY, "#ef4e7b");
@@ -79,10 +91,9 @@ export default class Waves extends Component<Props> {
       .setLineWidth(40)
       .setScaleY(24)
       .setColor(middleWaveGradient)
-      .setOffsetX(800)
+      .setOffsetX(800 + this.getShift(startAt) * 0.75)
       .setBlur(1)
       .setOffsetY(waveY + 20)
-      .setShiftX(this.getShift(startAt) * 0.75)
       .build();
 
     const farestWaveGradient = this.createGradient(this.ctx, waveY, "#5073b8");
@@ -91,10 +102,9 @@ export default class Waves extends Component<Props> {
       .setLineWidth(40)
       .setScaleY(16)
       .setColor(farestWaveGradient)
-      .setOffsetX(256)
+      .setOffsetX(256 + this.getShift(startAt) * 0.5)
       .setBlur(2)
       .setOffsetY(waveY + 10)
-      .setShiftX(this.getShift(startAt) * 0.5)
       .build();
   }
 
@@ -116,6 +126,26 @@ export default class Waves extends Component<Props> {
     return gradient;
   }
 
+  private startSecondaryWavesAnimation() {
+    cancelAnimationFrame(this.frameId);
+    const timestamp = performance.now();
+    this.previousFrameTimestamp = timestamp;
+    this.animateSecondaryWaves(timestamp);
+  }
+
+  private animateSecondaryWaves = (timestamp: number) => {
+    const elapsed = timestamp - this.previousFrameTimestamp;
+    if (elapsed > this.frameInterval) {
+      this.previousFrameTimestamp = timestamp - (elapsed % this.frameInterval);
+
+      this.farestWavePainter.setOffsetX(this.farestWavePainter.getOffsetX() - 4);
+      this.middleWavePainter.setOffsetX(this.middleWavePainter.getOffsetX() - 8);
+
+      this.draw();
+    }
+    this.frameId = requestAnimationFrame(this.animateSecondaryWaves);
+  };
+
   private draw = () => {
     const { width, height } = this.props;
     this.ctx.clearRect(0, 0, width, height);
@@ -126,17 +156,13 @@ export default class Waves extends Component<Props> {
   };
 
   public prepareAnimation(moveTo: number) {
-    this.currentX = this.mainWavePainter.getShiftX();
+    this.currentX = this.mainWavePainter.getOffsetX();
     this.targetX = this.getShift(moveTo);
   }
 
   public animate = (progress: number) => {
     const x = this.currentX + (this.targetX - this.currentX) * progress;
-
-    this.farestWavePainter.setShiftX(x / 2);
-    this.middleWavePainter.setShiftX(x * 0.75);
-    this.mainWavePainter.setShiftX(x);
-
+    this.mainWavePainter.setOffsetX(x);
     this.draw();
   };
 

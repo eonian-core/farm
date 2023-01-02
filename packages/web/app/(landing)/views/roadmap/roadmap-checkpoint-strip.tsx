@@ -65,7 +65,10 @@ export default class RoadmapCheckpointStrip extends Component<Props> {
   }
 
   private getOffset(index: number): number {
-    return -this.checkpointWidth * (index - 1);
+    const { containerWidth, peaks } = this.props;
+    const delta = peaks > 1 ? peaks % 2 : -1;
+    const offset = peaks > 1 ? 0 : containerWidth / 2;
+    return -this.checkpointWidth * (index - delta) + offset;
   }
 
   public prepareAnimation(moveTo: number) {
@@ -87,11 +90,13 @@ export default class RoadmapCheckpointStrip extends Component<Props> {
   };
 
   private renderCheckpoint = (data: CheckpointRenderData, index: number) => {
+    const { peaks } = this.props;
     const { node, ...restParams } = data;
     return (
       <RoadmapCheckpoint
         key={index}
         width={this.checkpointWidth}
+        isCentered={peaks === 1}
         {...restParams}
       >
         {node}

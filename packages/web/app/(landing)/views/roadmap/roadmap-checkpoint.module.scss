@@ -62,10 +62,9 @@ $pin-head-size: 16px;
     top: calc(var(--point-size) / 2);
     left: calc(var(--point-size) / 2);
 
-    
     width: calc(var(--point-size) * var(--orbit-scale));
     height: calc(var(--point-size) * var(--orbit-scale));
-    
+
     transform: translate(-50%, -50%);
 
     border-radius: 50%;
@@ -93,5 +92,12 @@ $pin-head-size: 16px;
     &::after {
       opacity: 0.35;
     }
+  }
+
+  &--centered {
+    left: auto;
+    right: calc(50% - var(--point-size) / 2);
+    bottom: calc(-1 * var(--point-size) / 2);
+    transform: none;
   }
 }

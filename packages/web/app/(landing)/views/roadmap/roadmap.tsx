@@ -13,6 +13,7 @@ interface Props {
 }
 
 interface State {
+  peaks: number;
   width: number;
   height: number;
   centeredCheckpointIndex: number;
@@ -21,13 +22,17 @@ interface State {
 }
 
 export default class Roadmap extends PureComponent<Props, State> {
-  private containerRef: React.RefObject<HTMLDivElement>;
-  private wavesRef: React.RefObject<Waves>;
-  private stripRef: React.RefObject<RoadmapCheckpointStrip>;
+  private readonly containerRef: React.RefObject<HTMLDivElement>;
+  private readonly wavesRef: React.RefObject<Waves>;
+  private readonly stripRef: React.RefObject<RoadmapCheckpointStrip>;
 
   private readonly transitionDuration = 300;
   private transitionStart: number = -1;
   private transitionFrameId: number = -1;
+
+  private readonly waveHeight;
+  private readonly waveThickness;
+  private readonly wavePeakHeight;
 
   constructor(props: Props) {
     super(props);
@@ -36,7 +41,12 @@ export default class Roadmap extends PureComponent<Props, State> {
     this.wavesRef = React.createRef();
     this.stripRef = React.createRef();
 
+    this.waveHeight = 32;
+    this.waveThickness = 25;
+    this.wavePeakHeight = this.waveHeight * 2 + this.waveThickness;
+
     this.state = {
+      peaks: 0,
       width: 0,
       height: 0,
       centeredCheckpointIndex: -1,
@@ -75,13 +85,14 @@ export default class Roadmap extends PureComponent<Props, State> {
   }
 
   render() {
-    const { content, checkpoints, centeredCheckpointIndex, width, height } =
-      this.state;
-
-    const peaks = 3;
-    const waveHeight = 32;
-    const waveThickness = 25;
-    const wavePeakHeight = waveHeight * 2 + waveThickness;
+    const {
+      content,
+      checkpoints,
+      centeredCheckpointIndex,
+      width,
+      height,
+      peaks,
+    } = this.state;
 
     return (
       <div className="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
@@ -94,7 +105,7 @@ export default class Roadmap extends PureComponent<Props, State> {
             ref={this.stripRef}
             containerWidth={width}
             peaks={peaks}
-            wavePeakHeight={wavePeakHeight}
+            wavePeakHeight={this.wavePeakHeight}
             checkpoints={checkpoints}
             startAt={centeredCheckpointIndex}
           />
@@ -103,8 +114,8 @@ export default class Roadmap extends PureComponent<Props, State> {
             peaks={peaks}
             width={width}
             height={height}
-            waveHeight={waveHeight}
-            waveThickness={waveThickness}
+            waveHeight={this.waveHeight}
+            waveThickness={this.waveThickness}
             startAt={centeredCheckpointIndex}
           />
           <RoadmapCheckpointMenu
@@ -119,7 +130,7 @@ export default class Roadmap extends PureComponent<Props, State> {
 
   private animate = (timestamp: number) => {
     const delta = timestamp - this.transitionStart;
-    const progress = Math.min(delta / this.transitionDuration, 1);
+    const progress = Math.min(this.easing(delta / this.transitionDuration), 1);
 
     this.wavesRef.current?.animate(progress);
     this.stripRef.current?.animate(progress);
@@ -140,11 +151,20 @@ export default class Roadmap extends PureComponent<Props, State> {
     this.animate(this.transitionStart);
   }
 
+  /**
+   * Ease-In-Out (Quint) https://easings.net/#easeInOutQuint
+   */
+  private easing(x: number): number {
+    return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
+  }
+
   private handleResize = () => {
     const { current: container } = this.containerRef;
+    const windowWidth = window.innerWidth;
     this.setState({
       width: container?.offsetWidth ?? 0,
       height: container?.offsetHeight ?? 0,
+      peaks: windowWidth > 1024 ? 3 : windowWidth > 460 ? 2 : 1,
     });
   };
 

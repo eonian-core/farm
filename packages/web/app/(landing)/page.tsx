@@ -18,7 +18,7 @@ const components: MDXComponents = {
   Block,
   BigNumber,
   Roadmap: dynamic(import("./views/roadmap/roadmap"), {
-    ssr: false, // Disable prerender for Roadmap, it's fully client side story
+    ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
     loading: () => <RoadmapLoader />,
   }),
   Card: dynamic(import("../components/card/card")),
