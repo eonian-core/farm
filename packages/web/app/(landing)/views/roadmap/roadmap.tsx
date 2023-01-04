@@ -200,8 +200,7 @@ export default class Roadmap extends PureComponent<Props, State> {
   };
 
   /**
-   * Extracts checkpoint components from the passed "children" requisite (required to work with MDX)
-   * to keep MDX marktup
+   * Extracts checkpoint components from the passed "children" props (required to work with MDX)
    * @param children the children prop content
    * @returns two groups - checkpoints and other components
    */
