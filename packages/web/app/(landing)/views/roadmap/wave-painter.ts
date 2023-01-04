@@ -4,20 +4,47 @@ interface Point {
 }
 
 export default class WavePainter {
+  // Number of wave peaks displayed on the screen.
   private peaks: number;
+
+  // Wave thickness.
   private lineWidth: number;
+
+  // Maximum wave height.
   private scaleY: number;
+
+  // Color of the wave.
   private color: string | CanvasGradient;
+
+  // Wave peak color (if specified, it will create a gradient).
   private peakColor?: string;
+
+  // Wave horizontal shift.
   private offsetX: number;
+
+  // Wave vertical shift.
   private offsetY: number;
+
+  // Blur in pixels.
   private blur: number;
+
+  // Line drawing step. The smaller the value, the smoother the wave
   private stepX: number;
+
+  // Specifies whether or not to draw a curved line between drawing steps.
+  // We can increase the performance by setting this parameter to "true" and setting a higher value for "stepX".
   private useQuadraticCurvePaint: boolean;
 
+  // Distance between wave's peaks. Calculated automatically.
   private scaleX: number;
+
+  // Canvas 2D content.
   private ctx: CanvasRenderingContext2D;
+
+  // Cached point for curve rendering. Used for optimization.
   private previousQuadraticCurvePoint: Point;
+
+  // Cached wave gradient.
   private waveGradient?: CanvasGradient;
 
   constructor(private canvas: HTMLCanvasElement) {
@@ -56,7 +83,7 @@ export default class WavePainter {
     const { width } = this.canvas;
     const xR = x * this.scaleX + width / 2 + this.offsetX;
     const y = Math.sin((xR * Math.PI) / width);
-    const yR = y * this.scaleY + this.offsetY; ;
+    const yR = y * this.scaleY + this.offsetY;
     return yR;
   }
 

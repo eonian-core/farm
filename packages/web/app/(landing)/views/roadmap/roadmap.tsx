@@ -26,12 +26,22 @@ export default class Roadmap extends PureComponent<Props, State> {
   private readonly wavesRef: React.RefObject<Waves>;
   private readonly stripRef: React.RefObject<RoadmapCheckpointStrip>;
 
+  // Duration of the wave scrolling animation
   private readonly transitionDuration = 300;
+
+  // Animation start timestamp
   private transitionStart: number = -1;
+
+  // Currently active animation frame id
   private transitionFrameId: number = -1;
 
+  // Wave height relative to its zero
   private readonly waveHeight;
+
+  // Wave line width
   private readonly waveThickness;
+
+  // Peak wave height (including thickness) relative to the bottom of the container
   private readonly wavePeakHeight;
 
   constructor(props: Props) {
@@ -128,6 +138,11 @@ export default class Roadmap extends PureComponent<Props, State> {
     );
   }
 
+  /**
+   * Main handler for the scrolling animation, used for Component & Canvas animation sync.
+   * Simultaneously performs the roadmap-strip and canvas animation by passing the current animation progress.
+   * @param timestamp the current timestamp
+   */
   private animate = (timestamp: number) => {
     const delta = timestamp - this.transitionStart;
     const progress = Math.min(this.easing(delta / this.transitionDuration), 1);
@@ -140,6 +155,11 @@ export default class Roadmap extends PureComponent<Props, State> {
     }
   };
 
+  /**
+   * Starts the transition animation to the specified roadmap checkpoint.
+   * Cancels the current animation (if any).
+   * @param index the index of the roadmap checkpoint.
+   */
   private startTransition(index: number) {
     cancelAnimationFrame(this.transitionFrameId);
 
@@ -158,13 +178,17 @@ export default class Roadmap extends PureComponent<Props, State> {
     return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
   }
 
+  /**
+   * Resize handler. Sets the width and height used for the canvas size.
+   * Also sets the number of peaks to maintain the screen adaptivity.
+   */
   private handleResize = () => {
     const { current: container } = this.containerRef;
     const windowWidth = window.innerWidth;
     this.setState({
       width: container?.offsetWidth ?? 0,
       height: container?.offsetHeight ?? 0,
-      peaks: windowWidth > 1024 ? 3 : windowWidth > 460 ? 2 : 1,
+      peaks: windowWidth > 1024 ? 3 : windowWidth > 640 ? 2 : 1,
     });
   };
 
@@ -175,6 +199,12 @@ export default class Roadmap extends PureComponent<Props, State> {
     });
   };
 
+  /**
+   * Extracts checkpoint components from the passed "children" requisite (required to work with MDX)
+   * to keep MDX marktup
+   * @param children the children prop content
+   * @returns two groups - checkpoints and other components
+   */
   private static groupChildren(children: React.ReactNode) {
     return Children.toArray(children).reduce(
       (groups, node: any) => {

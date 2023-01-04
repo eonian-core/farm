@@ -19,11 +19,19 @@ export default class Waves extends Component<Props> {
   private middleWavePainter!: WavePainter;
   private farestWavePainter!: WavePainter;
 
+  // Current horizontal offset of the main wave.
   private currentX: number;
+
+  // Value to which the main wave will be transitioned. Used for animation.
   private targetX: number;
 
+  // Frame interval for secondary wave animation. Used to reduce animation FPS (to increase performance).
   private readonly frameInterval: number;
+
+  // Secondary animation frame id.
   private frameId: number;
+
+  // Previous animation frame start.
   private previousFrameTimestamp: number;
 
   constructor(props: Props) {
@@ -142,8 +150,12 @@ export default class Waves extends Component<Props> {
     if (elapsed > this.frameInterval) {
       this.previousFrameTimestamp = timestamp - (elapsed % this.frameInterval);
 
-      this.farestWavePainter.setOffsetX(this.farestWavePainter.getOffsetX() - 4);
-      this.middleWavePainter.setOffsetX(this.middleWavePainter.getOffsetX() - 8);
+      this.farestWavePainter.setOffsetX(
+        this.farestWavePainter.getOffsetX() - 4
+      );
+      this.middleWavePainter.setOffsetX(
+        this.middleWavePainter.getOffsetX() - 8
+      );
 
       this.draw();
     }
