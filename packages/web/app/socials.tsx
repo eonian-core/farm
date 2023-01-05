@@ -7,54 +7,60 @@ import IconYoutube from "./components/icons/icon-youtube";
 
 export interface SocialLink {
   name: string;
-  hrefs: Record<string, string>;
+  href: string;
   icon: React.ReactNode;
 }
 
-const socials: SocialLink[] = [
-  {
-    name: "Telegram",
-    icon: <IconTelegram />,
-    hrefs: {
-      en: "https://t.me/+9yTj0kBHbMozMDAy",
-      ru: "https://t.me/firstblockrus",
+export interface LocalesSocials {
+  [locale: string]: Array<SocialLink>
+}
+
+export const socials: LocalesSocials = {
+  en: [
+    {
+      name: "Telegram",
+      icon: <IconTelegram />,
+      href: "https://t.me/+9yTj0kBHbMozMDAy",
     },
-  },
-  {
-    name: "Medium",
-    icon: <IconMedium />,
-    hrefs: {
-      en: "https://medium.com/eonian-finance",
+    {
+      name: "Medium",
+      icon: <IconMedium />,
+      href: "https://medium.com/eonian-finance",
     },
-  },
-  {
-    name: "GitHub",
-    icon: <IconGithub />,
-    hrefs: {
-      en: "https://github.com/eonian-core",
+    {
+      name: "GitHub",
+      icon: <IconGithub />,
+      href: "https://github.com/eonian-core",
+
     },
-  },
-  {
-    name: "Twitter",
-    icon: <IconTwitter />,
-    hrefs: {
-      en: "https://twitter.com/EonianFinance",
+    {
+      name: "Twitter",
+      icon: <IconTwitter />,
+      href: "https://twitter.com/EonianFinance",
+
     },
-  },
-  {
-    name: "Discord",
-    icon: <IconDiscord />,
-    hrefs: {
-      en: "https://discord.gg/nsvDz7EA",
+    {
+      name: "Discord",
+      icon: <IconDiscord />,
+      href: "https://discord.gg/nsvDz7EA",
+
     },
-  },
-  {
-    name: "YouTube",
-    icon: <IconYoutube />,
-    hrefs: {
-      ru: "https://www.youtube.com/@eonian3304"
+  ],
+  
+  ru: [
+    {
+      name: "Telegram",
+      icon: <IconTelegram />,
+      href: "https://t.me/firstblockrus",
+
     },
-  }
-];
+    {
+      name: "YouTube",
+      icon: <IconYoutube />,
+      href: "https://www.youtube.com/@eonian3304"
+    }
+  ]
+}
+
 
 export default socials;

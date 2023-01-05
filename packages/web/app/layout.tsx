@@ -21,8 +21,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const locale = 'en';
   return (
-    <html lang="en">
+    <html lang={locale}>
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
@@ -30,7 +31,7 @@ export default function RootLayout({
       <head />
       <body className={roboto.className}>
         <Navigation />
-        <SlidingFooter footer={<Footer />}>
+        <SlidingFooter footer={<Footer locale={locale} />}>
           {children}
         </SlidingFooter>
       </body>

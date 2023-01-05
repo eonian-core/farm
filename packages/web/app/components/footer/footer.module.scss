@@ -7,6 +7,8 @@
     a {
         width: fit-content;
         padding: 0;
+        min-height: var(--font-size-900);
+        margin-bottom: var(--margin-300);
     }
 }
 
@@ -20,5 +22,40 @@
     animation: beat 1.5s ease-in-out infinite;
 }
   
+.footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-  
+    h5 {
+        margin-bottom: var(--margin-300);
+        min-height: var(--font-size-900);
+    }
+
+    li {
+        margin-bottom: var(--margin-200);
+    }
+}
+
+.socials {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: var(--margin-400);
+    row-gap: var(--margin-200);    
+    
+    font-size: var(--font-size-750);
+
+    li {
+        margin-bottom: 0;
+    }
+
+    svg {
+        width: var(--font-size-750);
+        height: var(--font-size-750);
+    }
+}
+
+.copyright {
+    text-align: center;
+    margin-top: auto;
+}
