@@ -22,12 +22,11 @@
     left: 0;
     right: 0;
 
+    z-index: 100;
     display: flex;
-    flex-direction: row;
     align-items: center;
     justify-content: center;
-
-    z-index: 100;
+    
     
 }
 
@@ -37,7 +36,21 @@
     max-width: var(--max-width);
 
     animation: appearWithDelay 1s ease-in;
+
+    display: grid;
+    grid-template-columns: var(--width-300) 1fr var(--width-300);
+
+    max-width: var(--max-width);
 }
+
+.list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--margin-400);
+}
+
 
 .logo {
     height: 100%;
@@ -45,6 +58,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 0;
+    margin-right: auto;
 
 
 }
