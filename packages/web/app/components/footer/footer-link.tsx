@@ -28,7 +28,7 @@ const FooterLink: React.FC<Props> = ({ name, href, hrefs, icon }) => {
             <Link
               className={clsx("leading-7 hover:underline", { 'ml-1': !isExternalLink})}
               target={isExternalLink ? "_self" : "_blank"}
-              rel={isExternalLink ? '' : "noopener noreferrer"} // prenect tabnabbing
+              rel={isExternalLink ? '' : "noopener noreferrer"} // prevent tabnabbing
               href={href}
             >
               {total > 1 ? (index === 0 ? `${name} ${lang}` : lang) : name}

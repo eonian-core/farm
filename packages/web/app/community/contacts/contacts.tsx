@@ -6,6 +6,7 @@ import styles from './contacts.module.scss';
 import { SocialLink } from "../../socials"
 import IconDownOpen from "../../components/icons/icon-down-open";
 import IconClose from "../../components/icons/icon-close";
+import { ExternalLink } from "../../components/links/links";
 
 export interface ContactsProps {
     locale: string
@@ -20,7 +21,7 @@ export const Contacts = ({ locale, socialLinks }: ContactsProps) => {
             <ul>
                 {localLinks.map(({ name, href, icon }) => (
                     <li key={name}>
-                        <Link href={href}><span>{icon}</span>{name}</Link>
+                        <ExternalLink href={href} icon={icon}>{name}</ExternalLink>
                     </li>
                 ))}
             </ul>
@@ -75,7 +76,7 @@ export const OtherLanguages = ({ otherLocales }: { otherLocales: Record<string, 
                     <ul>
                         {otherLocales[locale].map(({ name, href, icon }) => (
                             <li key={name}>
-                                <Link href={href}><span>{icon}</span>{name}</Link>
+                                <ExternalLink href={href} icon={icon}>{name}</ExternalLink>
                             </li>
                         ))}
                     </ul>

@@ -22,25 +22,10 @@
     li {
         margin-top: 0;
         margin-bottom: var(--margin-400);
-        color: var(--color-text-400);
 
-        a {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
-
-        span {
-            margin-right: var(--margin-100);
-
-            svg {
-                width: var(--font-size-800);
-                height: var(--font-size-800);
-            }
-        }
-
-        &:hover {
-            color: var(--color-text-200);
+        svg {
+            width: var(--font-size-800);
+            height: var(--font-size-800);
         }
     }
 }
@@ -59,14 +44,13 @@
     margin-top: var(--margin-200);
 
     animation: appearFrom09 0.3s ease-out;;
+    width: 100%;
 
     h5 {
         text-transform: capitalize;
         margin-bottom: var(--margin-100);
         font-weight: var(--font-bold);
         color: var(--color-text-300);
-
-
     }
 
 }
@@ -84,14 +68,14 @@
     cursor: pointer;
 
     position: relative;
-    left: -0.6rem;
+    // left: -0.6rem;
 
     button {
         margin-left: var(--margin-50);
     }
 
     &:hover {
-        color: var(--color-text-200);
+        color: var(--color-text-400);
     }
 
 
@@ -104,7 +88,7 @@
         font-size: var(--font-size-600);
         
 
-        li span svg {
+        li svg {
             width: var(--font-size-700);
             height: var(--font-size-700);
         }
@@ -121,7 +105,7 @@
         font-size: var(--font-size-500);
         line-height: var(--line-height-500);
 
-        li span svg {
+        li svg {
             width: var(--font-size-700);
             height: var(--font-size-700);
         }
@@ -133,13 +117,9 @@
 
     .contacts {
         margin-top: var(--margin-500);
-
     }
 
-
-
     .contacts, .otherLanguagesHighLevelList {
-        
 
         ul {
             display: grid;
