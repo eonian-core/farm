@@ -5,7 +5,6 @@ import type { MDXComponents } from "mdx/types";
 import dynamic from "next/dynamic";
 import styles from "./page.module.scss";
 import heading from "../components/heading/heading";
-import socials from "../socials";
 
 
 const components: MDXComponents = {
@@ -15,7 +14,7 @@ const components: MDXComponents = {
   Contacts: () => {
     const Contacts = dynamic(import('./contacts/contacts'));
     
-    return <Contacts locale="en" socialLinks={socials} />
+    return <Contacts locale="en" />
   }
 }
 
