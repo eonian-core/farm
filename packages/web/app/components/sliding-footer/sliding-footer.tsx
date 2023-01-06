@@ -9,7 +9,7 @@ interface Props {
 }
 
 // Optional: set a default value to prevent scroll bar jitter
-const minFooterHeight = 394;
+const minFooterHeight = 450;
 
 const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
   const footerRef = React.useRef<HTMLDivElement>(null);
@@ -20,7 +20,7 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
     // Set content's margin as footer's height
     const onResize = () => {
       const { current: footer } = footerRef;
-      setMargin(footer?.offsetHeight ?? 0);
+      setMargin(max(footer?.offsetHeight ?? 0, minFooterHeight));
     };
 
     // Initial calculation
@@ -47,3 +47,9 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
 };
 
 export default SlidingFooter;
+
+/** Find maximum of two number */
+function max(a: number, b: number): number {
+  return a > b ? a : b;
+}
+
