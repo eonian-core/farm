@@ -7,19 +7,15 @@ import styles from "./navigation.module.scss";
 
 export interface MenuProps {
     children: React.ReactNode;
-    onStateChange?: (isOpen: boolean) => void;
+    isOpen?: boolean;
+    toggleMenu?: () => void;
 }
 
-export const Menu = ({children, onStateChange}: MenuProps) => {
-    const [isOpen, toggleMenu] = useCycle(false, true);
+export const Menu = ({children, isOpen, toggleMenu}: MenuProps) => {
     const containerRef = useRef(null);
     const [hamburgerRef, setHamburgerRef] = useState<MutableRefObject<HTMLDivElement | null>>({current: null}); // Need rerender to calculate dimensions
     const { height } = useDimensions(containerRef);
     const { x, y } = useDimensions(hamburgerRef);
-
-    useEffect(() => {
-        onStateChange && onStateChange(isOpen);
-    }, [isOpen, onStateChange]);
 
     return (
         <motion.div
