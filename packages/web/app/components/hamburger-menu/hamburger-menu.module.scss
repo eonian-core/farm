@@ -54,16 +54,20 @@ green: #3FAF82
         transform: rotate(135deg);
     }
 
-    &:hover {
-        span:nth-child(1) {
-            transform: rotate(30deg);
-        }
-    
-        span:nth-child(3) {
-            transform: rotate(150deg);
+    // Fix of ghost hover for touch devices, disable hover effect
+    @media (hover: hover) {
+        &:hover {
+            span:nth-child(1) {
+                transform: rotate(30deg);
+            }
+        
+            span:nth-child(3) {
+                transform: rotate(150deg);
+            }
         }
     }
 }
+
 
 .inactive {
     span:nth-child(1) {
@@ -84,16 +88,20 @@ green: #3FAF82
         
     }
 
-    &:hover {
-        span:nth-child(1) {
-            top: -3px;
+       // Fix of ghost hover for touch devices, disable hover effect
+       @media (hover: hover) {
+            &:hover {
+                span:nth-child(1) {
+                    top: -3px;
+                }
+            
+                span:nth-child(3) {
+                    bottom: -3px;
+                }
+            }
         }
-    
-        span:nth-child(3) {
-            bottom: -3px;
-        }
-    }
 }
+
 
 @keyframes top-1 {
     0% {
