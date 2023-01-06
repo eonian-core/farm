@@ -7,6 +7,7 @@ import { Menu } from "./menu";
 import clsx from "clsx";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
+import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
 
 export interface NavigationProps {
   onStateChange?: (isOpen: boolean) => void;
@@ -52,7 +53,7 @@ export default function Navigation({ onStateChange }: NavigationProps) {
   ))
 
   return (
-    <nav className={styles.navigation}>
+    <nav className={styles.navigation} id={TOP_ELELEMENT_ID}>
       <div className={styles.content}>
         <div className={styles.logo}>
           <LogoWithText />

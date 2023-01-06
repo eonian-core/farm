@@ -1,7 +1,8 @@
 import Link, { LinkProps as NextLinkProps } from "next/link";
-import React from "react";
+import React, { useCallback } from "react";
 import clsx from "clsx";
 import styles from './links.module.scss';
+import useScrollToTop from "./useScrollToTop";
 
 export type BaseLinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof NextLinkProps> & NextLinkProps & {
     children?: React.ReactNode;
@@ -34,9 +35,21 @@ export const LinkWithIcon = ({ href, className, icon, children, iconClassName, .
 );
 
 /** Link used for navigation between pages **inside** application */
-export const InternalLink = ({ href, className, ...props }: LinkWithIconProps) => (
-    <LinkWithIcon href={href} className={clsx(styles.internalLink, className)} {...props} />
-);
+export const InternalLink = ({ href, className, onClick, ...props }: LinkWithIconProps) => {
+    const [onRouteChange] = useScrollToTop();
+    
+    const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (onClick) {
+            onClick(e);
+        }
+
+        onRouteChange();
+    }, [onClick, onRouteChange])
+
+    return (
+        <LinkWithIcon href={href} className={clsx(styles.internalLink, className)} onClick={handleClick} {...props} />
+    );
+}
 
 /** Link used for navigation to **external** sites */
 export const ExternalLink = ({ href, className, ...props }: LinkWithIconProps) => (
