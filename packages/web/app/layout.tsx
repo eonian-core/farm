@@ -1,6 +1,8 @@
 'use client';
 
 import { Roboto } from "@next/font/google";
+import { useState } from "react";
+import clsx from "clsx";
 
 import './globals.scss'
 import './tailwind.css'
@@ -8,6 +10,7 @@ import './tailwind.css'
 import Navigation from './components/navigation/navigation'
 import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import Footer from "./components/footer/footer";
+import styles from './layout.module.scss'
 
 
 const roboto = Roboto({ 
@@ -21,6 +24,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [isMenuOpen, setMenuState] = useState(false);
+
   const locale = 'en';
   return (
     <html lang={locale}>
@@ -29,8 +34,8 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className={roboto.className}>
-        <Navigation />
+      <body className={clsx(roboto.className, {[styles.menuOpen]: isMenuOpen})}>
+        <Navigation onStateChange={setMenuState}/>
         <SlidingFooter footer={<Footer locale={locale} />}>
           {children}
         </SlidingFooter>

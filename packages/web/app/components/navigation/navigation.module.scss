@@ -1,12 +1,14 @@
+@import "../../screen.scss";
+
 @keyframes appearWithDelay {
     0% {
         opacity: 0;
-        transform: translateY(0.5rem);
+        transform: translateY(-0.5rem);
     }
 
     50% {
         opacity: 0;
-        transform: translateY(0.5rem);
+        transform: translateY(-0.5rem);
     }
 
     70% {
@@ -26,8 +28,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    
+
+
 }
 
 .content {
@@ -43,7 +45,7 @@
     max-width: var(--max-width);
 }
 
-.list {
+.topBarList {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -51,6 +53,31 @@
     gap: var(--margin-400);
 }
 
+.menuList {
+    font-size: var(--font-size-1200);
+    font-weight: var(--font-black);
+    line-height: var(--line-height-1200);
+    letter-spacing: var(--letter-black-400);
+    text-transform: uppercase;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    max-width: var(--max-width);
+    padding: var(--width-gap);
+
+    height: 100vh;
+    overflow-y: hidden;
+
+    a {
+        color: var(--color-text-900);
+
+        &:hover {
+            color: var(--color-text-800);
+        }
+    }
+}
 
 .logo {
     height: 100%;
@@ -64,3 +91,70 @@
 
 }
 
+.menuWrapper {
+    display: none;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 var(--padding-500);
+    height: var(--navigation-height);
+}
+
+.menuBackground {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    background: linear-gradient(to right top, #4f1c7c 30%, #460db9 70%, #275db3 100%);
+}
+
+@media screen and (max-width: $screen-desktop) {
+    .menuList {
+        font-size: var(--font-size-1150);
+        font-weight: var(--font-black);
+        line-height: var(--line-height-1150);
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .content {
+        grid-template-columns: 1fr 1fr;
+    }
+    .menuWrapper {
+        display: initial;
+    }
+
+    .topBarList {
+        display: none;
+    }
+
+    .menuList {
+        font-size: var(--font-size-1120);
+        font-weight: var(--font-black);
+        line-height: var(--line-height-1120);
+        padding-top: var(--padding-800);
+    }
+}
+
+@media (max-width: $screen-mobile) {
+
+    .menuList {
+        font-size: var(--font-size-1000);
+        font-weight: var(--font-black);
+        line-height: var(--line-height-1000);
+    }
+}
+
+@media (max-width: $screen-small-mobile) {
+
+    .menuList {
+        font-size: var(--font-size-900);
+        font-weight: var(--font-black);
+        line-height: var(--line-height-900);
+    }
+}
