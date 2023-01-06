@@ -20,7 +20,7 @@ const RoadmapCheckpoint: React.FC<Props> = ({
 }) => {
   return (
     <div
-      className={clsx("relative h-full px-4", { "text-center px-6": isCentered })}
+      className={clsx("relative h-full px-4", { "px-10": isCentered })}
       style={{ width: `${width}px` }}
     >
       <h3 className="text-gray-300">{title}</h3>

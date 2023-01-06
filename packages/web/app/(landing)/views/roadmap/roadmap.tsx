@@ -105,8 +105,8 @@ export default class Roadmap extends PureComponent<Props, State> {
     } = this.state;
 
     return (
-      <div className="flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
-        <div>{content}</div>
+      <div className="flex min-h-screen w-full flex-col sm:items-center justify-center overflow-hidden">
+        <div className="px-10">{content}</div>
         <div
           ref={this.containerRef}
           className={clsx("h-96 w-full", styles.overlay)}
