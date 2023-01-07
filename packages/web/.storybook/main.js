@@ -16,8 +16,5 @@ module.exports = {
   },
   "docs": {
     "autodocs": "tag"
-  },
-  "features": {
-    "storyStoreV7": true,
-  },
+  }
 }
