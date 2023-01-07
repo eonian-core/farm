@@ -8,6 +8,10 @@
     &:hover {
         color: var(--color-text-200);
     }
+
+    &:active {
+        color: var(--color-text-100);
+    }
 }
 
 .internalLink {
