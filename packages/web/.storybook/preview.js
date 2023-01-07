@@ -33,3 +33,7 @@ export const decorators = [
     </div>
   ),
 ];
+
+export const globalTypes = {
+  pseudo: {}
+};

@@ -37,3 +37,25 @@ export const Default: Story = {
         </>)
     }
 }
+
+export const Hover: Story = {
+    parameters: {pseudo: { hover: true }},
+    args: {
+        href: 'https://google.com',
+        children: (<>
+            <h3>This is example Card</h3>
+            <p>It is used to wrap block with header and text as card.</p>
+        </>)
+    }
+}
+
+export const Active: Story = {
+    parameters: {pseudo: { active: true }},
+    args: {
+        href: 'https://google.com',
+        children: (<>
+            <h3>This is example Card</h3>
+            <p>It is used to wrap block with header and text as card.</p>
+        </>)
+    }
+}

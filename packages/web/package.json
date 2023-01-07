@@ -49,6 +49,7 @@
     "prettier-plugin-tailwindcss": "^0.2.1",
     "rehype-external-links": "^2.0.1",
     "sass": "^1.57.0",
-    "storybook": "^7.0.0-beta.20"
+    "storybook": "^7.0.0-beta.20",
+    "storybook-addon-pseudo-states": "^2.0.0-next.0"
   }
 }
