@@ -5,6 +5,7 @@ export interface CheckpointRenderData {
   isPassed: boolean;
   title: string;
   date: string;
+  url?: string;
   node: React.ReactNode;
 }
 

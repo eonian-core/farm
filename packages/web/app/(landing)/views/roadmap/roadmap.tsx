@@ -212,6 +212,7 @@ export default class Roadmap extends PureComponent<Props, State> {
             isPassed: props["data-passed"],
             date: props["data-date"],
             title: props["data-checkpoint"],
+            url: props["data-url"],
             node,
           });
         } else {

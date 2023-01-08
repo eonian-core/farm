@@ -101,3 +101,18 @@ $pin-head-size: 16px;
     transform: none;
   }
 }
+
+.container {
+  &[href]:hover {
+    h3 {
+      text-decoration-line: underline;
+    }
+  }
+}
+
+.content {
+  ul {
+    list-style-type: disc;
+    list-style-position: inside;
+  }
+}
