@@ -15,7 +15,9 @@
 * - border width
 * - opacity
 */
-:root {
+:root, 
+::after,
+::before {
 
   // font sizes
     --font-size-100: 0.75rem;

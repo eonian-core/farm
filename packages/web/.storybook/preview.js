@@ -1,6 +1,7 @@
 import React from 'react';
 import { Roboto } from "@next/font/google";
 
+
 import '../app/globals.scss';
 import '../app/tailwind.css'
 
@@ -24,12 +25,9 @@ export const parameters = {
 export const decorators = [
   (Story) => (
     <div className={roboto.className}>
+      
       <Story />
-      <style global jsx>{`
-        .docs-story {
-          background-color: var(--color-background-start);
-        }
-      `}</style>
+      
     </div>
   ),
 ];
