@@ -31,7 +31,7 @@ const RoadmapCheckpointMenu: React.FC<Props> = ({
       />
       {checkpoints.map((checkpoint, index) => {
         const classes = clsx(
-          "cursor-pointer p-2 hover:opacity-80",
+          "cursor-pointer p-2 hover:opacity-100",
           index === activeCheckpointIndex ? "opacity-80" : "opacity-20"
         );
         return (
