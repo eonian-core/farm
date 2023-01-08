@@ -24,10 +24,9 @@ const RoadmapCheckpointMenu: React.FC<Props> = ({
 
   return (
     <div className="mt-6 flex flex-row justify-center">
-      <IconChevron
-        width={28}
-        height={28}
-        className="rotate-180 cursor-pointer hover:text-gray-200"
+      <Chevron
+        left={true}
+        disabled={activeCheckpointIndex === 0}
         onClick={() => handleChangeIndex(activeCheckpointIndex - 1)}
       />
       {checkpoints.map((checkpoint, index) => {
@@ -43,14 +42,28 @@ const RoadmapCheckpointMenu: React.FC<Props> = ({
           </div>
         );
       })}
-      <IconChevron
-        width={28}
-        height={28}
-        className="cursor-pointer hover:text-gray-200"
+      <Chevron
+        disabled={activeCheckpointIndex === checkpoints.length - 1}
         onClick={() => handleChangeIndex(activeCheckpointIndex + 1)}
       />
     </div>
   );
 };
+
+function Chevron(props: {
+  onClick: VoidFunction;
+  left?: boolean;
+  disabled?: boolean;
+}) {
+  const { onClick, left = false, disabled = false } = props;
+  const classes = clsx({
+    "rotate-180": left,
+    "hover:text-gray-200 cursor-pointer": !disabled,
+    "text-gray-600": disabled,
+  });
+  return (
+    <IconChevron width={28} height={28} className={classes} onClick={onClick} />
+  );
+}
 
 export default React.memo(RoadmapCheckpointMenu);
