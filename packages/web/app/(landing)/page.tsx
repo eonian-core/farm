@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
-import { RoadmapLoader } from "./views/roadmap/roadmap";
+import PageLoader from "../components/page-loader/page-loader";
 
 const components: MDXComponents = {
   h2: heading.H2,
@@ -19,7 +19,7 @@ const components: MDXComponents = {
   BigNumber,
   Roadmap: dynamic(import("./views/roadmap/roadmap"), {
     ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
-    loading: () => <RoadmapLoader />,
+    loading: () => <PageLoader />,
   }),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),

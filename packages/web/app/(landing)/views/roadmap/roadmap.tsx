@@ -6,7 +6,6 @@ import RoadmapCheckpointStrip, {
 import RoadmapCheckpointMenu from "./roadmap-checkpoint-menu";
 import styles from "./roadmap.module.scss";
 import clsx from "clsx";
-import Spinner from "../../../components/spinner/spinner";
 
 interface Props {
   children: React.ReactNode;
@@ -105,7 +104,7 @@ export default class Roadmap extends PureComponent<Props, State> {
     } = this.state;
 
     return (
-      <div className="flex min-h-screen w-full flex-col sm:items-center justify-center overflow-hidden">
+      <div className="flex min-h-screen w-full flex-col justify-center overflow-hidden sm:items-center">
         <div className="px-10">{content}</div>
         <div
           ref={this.containerRef}
@@ -227,11 +226,3 @@ export default class Roadmap extends PureComponent<Props, State> {
     );
   }
 }
-
-export const RoadmapLoader = () => {
-  return (
-    <div className="flex h-screen items-center justify-center">
-      <Spinner size={40} />
-    </div>
-  );
-};
