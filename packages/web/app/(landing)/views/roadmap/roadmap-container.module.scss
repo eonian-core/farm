@@ -1,6 +1,8 @@
 @import "../../../screen.scss";
 
-
+.roadmapContainer {
+    margin-bottom: var(--margin-1000);
+}
 
 
 @media (max-width: $screen-mobile) {

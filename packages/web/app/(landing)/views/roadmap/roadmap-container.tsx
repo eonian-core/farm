@@ -5,10 +5,10 @@ export interface RoadmapContainerProps {
     children: React.ReactNode;
 }
 
-export const RoadmapContainer = ({children}: RoadmapContainerProps) => (
-    <div className={clsx("flex min-h-screen w-full flex-col justify-center overflow-hidden sm:items-center", styles.roadmapContainer)}>
+export const RoadmapContainer = ({ children }: RoadmapContainerProps) => (
+    <div className={clsx("flex min-h-fit w-full flex-col justify-center overflow-hidden sm:items-center", styles.roadmapContainer)}>
         {children}
-      </div>
+    </div>
 )
 
 export default RoadmapContainer;
