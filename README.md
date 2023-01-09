@@ -67,27 +67,13 @@ yarn dev
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
 
-## TODO
 
-[x] Add event tests for ERC4626
-[] add solhint in CI process
-[] add test coverage in CI process
-[] add more security validators in CI process
-[] add optimizations in compilation process
-[] add foundry to hardhat remappings support
-[] silent warning for unused arguments in SafeERC4626 contract
 
-# Colors
+## Deployment
 
-<https://tailwindcss.com/docs/customizing-colors>
-Primary
+Deplyment process focused to implement GitOps practices. Basically it means all master (main) builds go to production directly. For web applications PRs also deploys to preview enviroment.
 
-* Indigo
-* Fuchsia
-* <https://uigradients.com/?utm_source=pocket_saves#Celestial>
+### Deployments of Apps
 
-Accent
+* <https:/eonian.finance> - Web app deployed Eonian DAO domain.
 
-* Amber
-* <https://uigradients.com/?utm_source=pocket_saves#LearningandLeading>
-* <https://uigradients.com/?utm_source=pocket_saves#LightOrange>
