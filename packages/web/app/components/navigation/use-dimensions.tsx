@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // important to react on ref.current changes
 import { MutableRefObject, useEffect, useLayoutEffect, useRef, useMemo, useState } from "react";
+import { useOnResizeEffect } from "../useOnResizeEffect";
 
 export interface DimensionalState {
   width: number;
@@ -14,18 +15,10 @@ export interface DimensionalState {
 export const useDimensions = (ref: MutableRefObject<any>): DimensionalState | null => {
   const [dimensionsRef, setDimensions] = useState(() => ({ current: calculateDimensions(ref.current) }))
 
-  function updateDimensions() {
+  useOnResizeEffect(() => {
     const current = calculateDimensions(ref.current);
 
     setDimensions({ current })
-  }
-
-  useLayoutEffect(() => {
-    updateDimensions();
-
-    window.addEventListener("resize", updateDimensions);
-
-    return () => window.removeEventListener("resize", updateDimensions);
   }, [ref, ref.current])
 
   return dimensionsRef.current;
