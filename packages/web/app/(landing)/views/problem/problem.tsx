@@ -1,7 +1,5 @@
 import Container from "../../../components/contrainer/container"
-import Image from 'next/image';
 import styles from './problem.module.scss'
-import BitoinInCrystal from './bitcoin_in_crystal.png'
 
 
 // Props for the Problem component
@@ -17,11 +15,6 @@ interface ProblemProps {
 export const Problem = ({children}: ProblemProps) => {
     return (
         <Container mobileFullWidth>
-            <Image
-                src={BitoinInCrystal}
-                alt="Bitcoin in crystal"
-                placeholder="blur" 
-            />
             <div className={styles.problem}>
                 <div className={styles.content}>
                     {children}

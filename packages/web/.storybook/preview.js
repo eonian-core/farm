@@ -26,7 +26,13 @@ export const decorators = [
     <div className={roboto.className}>
       
       <Story />
-      
+      <style jsx global>{`
+        .story-wrapper, .docs-story {
+          background-color: var(--color-background-start);
+          width: 100%;
+          height: 100%;
+        }
+      `}</style>
     </div>
   ),
 ];
