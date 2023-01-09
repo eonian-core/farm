@@ -21,6 +21,8 @@ const components: MDXComponents = {
     ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
     loading: () => <PageLoader />,
   }),
+  RoadmapCheckpoint: dynamic(import("./views/roadmap/roadmap-checkpoint"), {ssr: false}),
+  RoadmapContainer: dynamic(import("./views/roadmap/roadmap-container"), {ssr: false}),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
 };
