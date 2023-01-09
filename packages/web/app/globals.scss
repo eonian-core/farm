@@ -24,6 +24,7 @@
     --font-size-500: 1rem; // Default size, by default equal 16px 
     --font-size-600: 1.125rem;
     --font-size-700: 1.25rem;
+    --font-size-750: 1.5rem;
     --font-size-800: 1.875rem;
     --font-size-900: 2.25rem;
     --font-size-1000: 3rem;
@@ -71,6 +72,7 @@
     --line-height-1100: 4.25rem;
     --line-height-1120: 4.5rem;
     --line-height-1150: 7rem;
+    --line-height-1165: 8rem;
     --line-height-1180: 9rem;
     --line-height-1200: 11.5rem;
   
@@ -223,6 +225,8 @@
         --color-success-900: hsl(144, 61%, 20%);
   
   // margin
+    --margin-50: 0.25rem;
+    --margin-100: 0.5rem;
     --margin-200: 0.75rem;
     --margin-300: 1rem;
     --margin-400: 1.5rem;
@@ -238,6 +242,9 @@
     --padding-400: 1.5rem;
     --padding-500: 2rem;
     --padding-600: 2.5rem;
+    --padding-700: 3rem;
+    --padding-800: 6rem;
+    --padding-900: 10rem;
   
   // width
     --width-column: 60px;
@@ -252,6 +259,7 @@
     --width-500: calc(5 * var(--width-column) + 4 * var(--width-gap));
     --width-600: calc(6 * var(--width-column) + 5 * var(--width-gap));
     --width-700: calc(7 * var(--width-column) + 6 * var(--width-gap));
+    --width-800: calc(8 * var(--width-column) + 7 * var(--width-gap));
 
     --max-width: calc(1360px + 2 * var(--width-gap)); // must be lower than ultra wide and bigger than desctop screen
     
@@ -288,4 +296,5 @@ a {
 
 html {
   color-scheme: dark;
+  
 }

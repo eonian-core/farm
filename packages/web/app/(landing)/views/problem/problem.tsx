@@ -1,4 +1,4 @@
-import Container from "../contrainer/container"
+import Container from "../../../components/contrainer/container"
 import styles from './problem.module.scss'
 
 // Props for the Problem component

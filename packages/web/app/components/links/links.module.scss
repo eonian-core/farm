@@ -1,0 +1,41 @@
+
+.baseLink {
+    color: var(--color-text-400);
+    text-decoration: none;
+
+    // Not contain font size for easy reusing
+    
+    &:hover {
+        color: var(--color-text-200);
+    }
+}
+
+.internalLink {
+    @extend .baseLink;
+}
+
+.externalLink {
+    @extend .baseLink;
+}
+
+.linkWithIcon {
+    @extend .baseLink;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .icon {
+        margin-right: var(--margin-100);
+    }
+}
+
+.onlyIcon {
+    .icon {
+        margin-right: 0;
+    }
+}
+
+.onlyText {
+    // for future use
+}
