@@ -29,20 +29,18 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
         onClick={() => handleChangeIndex(activeCheckpointIndex - 1)}
       />
 
-      {new Array(count).fill(0).map((checkpoint, index) => {
-        const classes = clsx(
-          "cursor-pointer p-2 hover:opacity-100",
-          index === activeCheckpointIndex ? "opacity-80" : "opacity-20"
-        );
-
-        return (
-          <div key={index} className="tooltip">
-            <div className={classes} onClick={() => handleChangeIndex(index)}>
-              <div className="h-3 w-3 rounded-full bg-gray-50"></div>
-            </div>
-          </div>
-        );
-      })}
+      {new Array(count).fill(0).map((_, index) => (
+        <div
+          key={index}
+          className={clsx(
+            "cursor-pointer p-2 hover:opacity-100",
+            index === activeCheckpointIndex ? "opacity-80" : "opacity-20"
+          )}
+          onClick={() => handleChangeIndex(index)}
+        >
+          <div className="h-3 w-3 rounded-full bg-gray-50"></div>
+        </div>
+      ))}
 
       <Chevron
         disabled={activeCheckpointIndex === count - 1}
