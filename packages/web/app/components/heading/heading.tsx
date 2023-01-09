@@ -8,6 +8,10 @@ const inter = Inter({
     display: 'block' // force to show font anyway
 });
 
+export const H1 = ({ children }: { children?: React.ReactNode }) => (
+    <h1 className={`${styles.header1} ${inter.className}`}>{children}</h1>
+)
+
 export const H2 = ({ children }: { children?: React.ReactNode }) => (
     <h2 className={`${styles.header2} ${inter.className}`}>{children}</h2>
 )
@@ -31,6 +35,7 @@ export const H3 = ({ children }: { children?: React.ReactNode }) => {
 
 
 const heading = {
+    H1, 
     H2,
     H3
 }

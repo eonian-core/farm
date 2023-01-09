@@ -1,7 +1,7 @@
 .logo {
     font-size: var(--font-size-500);
     font-weight: var(--font-medium);
-    color: var(--color-text-300);
+    
     width: 100%;
     display: flex;
     align-items: center;
@@ -10,7 +10,10 @@
 
     text-transform: uppercase;
 
-    &:hover {
+    &, span {
+        color: var(--color-text-300);
+    }
+    &:hover, &:hover span {
         color: var(--color-text-100);
     }   
     
