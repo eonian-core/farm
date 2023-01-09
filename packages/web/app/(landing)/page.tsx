@@ -11,6 +11,7 @@ import PageLoader from "../components/page-loader/page-loader";
 
 const components: MDXComponents = {
   h2: heading.H2,
+  h3: heading.H3,
   Hero,
   Problem: dynamic(import("./views/problem/problem")),
   Category: dynamic(import("../components/category/category")),
@@ -23,6 +24,7 @@ const components: MDXComponents = {
   }),
   RoadmapCheckpoint: dynamic(import("./views/roadmap/roadmap-checkpoint"), {ssr: false}),
   RoadmapContainer: dynamic(import("./views/roadmap/roadmap-container"), {ssr: false}),
+  RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), {ssr: false}),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
 };

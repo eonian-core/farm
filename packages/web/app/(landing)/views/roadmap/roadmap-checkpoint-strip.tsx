@@ -55,7 +55,7 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
         ref={this.ref}
         className="absolute inset-y-0 flex flex-row"
         style={{
-          padding: `${wavePeakHeight}px ${this.halfPeakWidth}px`,
+          padding: `2rem ${this.halfPeakWidth}px ${wavePeakHeight}px ${this.halfPeakWidth}px`,
           transform: `translateX(${this.getOffset(startAt)}px)`,
         }}
       >
@@ -82,6 +82,7 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
     const { containerWidth, peaks } = this.props;
     const delta = peaks > 1 ? peaks % 2 : -1;
     const offset = peaks > 1 ? 0 : containerWidth / 2;
+    
     return -this.checkpointWidth * (index - delta) + offset;
   }
 
