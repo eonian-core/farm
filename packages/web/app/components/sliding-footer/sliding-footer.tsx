@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, {DependencyList, EffectCallback, useEffect} from "react";
+import { useOnResizeEffect } from "../useOnResizeEffect";
 import styles from "./sliding-footer.module.scss";
 
 interface Props {
@@ -16,19 +17,11 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
 
   const [margin, setMargin] = React.useState(minFooterHeight);
 
-  React.useEffect(() => {
-    // Set content's margin as footer's height
-    const onResize = () => {
-      const { current: footer } = footerRef;
-      setMargin(max(footer?.offsetHeight ?? 0, minFooterHeight));
-    };
-
-    // Initial calculation
-    onResize();
-
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  // Set content's margin as footer's height
+  useOnResizeEffect(() => {
+    const { current: footer } = footerRef;
+    setMargin(Math.max(footer?.offsetHeight ?? 0, minFooterHeight));
+  }, [])
 
   return (
     <>
@@ -47,9 +40,4 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
 };
 
 export default SlidingFooter;
-
-/** Find maximum of two number */
-function max(a: number, b: number): number {
-  return a > b ? a : b;
-}
 

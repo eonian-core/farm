@@ -4,7 +4,7 @@ import { Roboto } from "@next/font/google";
 import { useState } from "react";
 import clsx from "clsx";
 import { GoogleAnalytics } from "nextjs-google-analytics";
-
+import dynamic from "next/dynamic";
 
 import './globals.scss'
 import './tailwind.css'
@@ -39,6 +39,7 @@ export default function RootLayout({
       <head />
       <body className={clsx(roboto.className, {[styles.menuOpen]: isMenuOpen})}>
         <Navigation onStateChange={setMenuState}/>
+        
         <SlidingFooter footer={<Footer locale={locale} />}>
           {children}
         </SlidingFooter>
