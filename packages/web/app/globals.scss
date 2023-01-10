@@ -15,7 +15,9 @@
 * - border width
 * - opacity
 */
-:root {
+:root, 
+::after,
+::before {
 
   // font sizes
     --font-size-100: 0.75rem;
@@ -290,6 +292,7 @@ body {
 
 body {
   color: var(--color-text-500);
+  background-color: var(--color-background-start);
 }
 
 a {

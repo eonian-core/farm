@@ -27,7 +27,7 @@
     position: relative;
     border-radius: var(--border-radius-450);
 
-    &::after {
+    &::before {
         content: '';
         position: absolute;
         top: calc(-1 * var(--border-radius-400));
