@@ -14,7 +14,7 @@ export const GradientCard = ({ children }: GradientCardProps) => (
 
         <div className={styles.contentWrapper}>
             <div className={styles.content}>
-                <span>{children}</span>
+                {children}
             </div>
         </div>
     </div>
