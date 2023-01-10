@@ -8,6 +8,12 @@ green: #3FAF82
     position: relative;
     width: var(--font-size-800);
     height: var(--font-size-800);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+
+    &:focus {
+        outline: none;
+    }
 }
 
 .btn {
