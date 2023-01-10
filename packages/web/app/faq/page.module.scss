@@ -1,3 +1,5 @@
+@import "../screen.scss";
+
 .main {
   display: flex;
   flex-direction: column;
@@ -44,5 +46,17 @@
     width: 100%;
     margin-bottom: var(--margin-900);
     font-size: var(--font-size-700);
+  }
+}
+
+@media (max-width: $screen-tablet) {
+  .faqContent {
+
+      h1 {
+          font-size: var(--font-size-1180);
+          line-height: var(--line-height-1180);
+          letter-spacing: var(--letter-spacing-black-400);
+      }
+
   }
 }
