@@ -67,13 +67,16 @@ yarn dev
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
 
-
-
 ## Deployment
 
 Deplyment process focused to implement GitOps practices. Basically it means all master (main) builds go to production directly. For web applications PRs also deploys to preview enviroment.
 
-### Deployments of Apps
+### Deployed Apps
 
 * <https:/eonian.finance> - Web app deployed Eonian DAO domain.
+* <https://storybook-eonian.vercel.app> - Storybook of Web application components
 
+### CDN
+
+* <https://vercel.com/eonian/farm-app> - Web app project in Vercel
+* <https://vercel.com/eonian/storybook> - Storybook project in Vercel
