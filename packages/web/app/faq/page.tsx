@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./page.module.css";
+import styles from "./page.module.scss";
 import { MDXComponents } from "mdx/types";
 import heading from "../components/heading/heading";
 import dynamic from "next/dynamic";
@@ -10,6 +10,8 @@ import React from "react";
 const components: MDXComponents = {
   h1: heading.H1,
   Collapse: dynamic(import("../components/collapse/collapse")),
+  h3: dynamic(import("../components/collapse/collapse-header")),
+  CollapseContent: dynamic(import("../components/collapse/collapse-content")),
 };
 
 export default function FAQ() {

@@ -1,23 +1,28 @@
 import styles from "./collapse.module.scss";
 import React from "react";
+import clsx from "clsx";
 
 interface CollapseProp {
   index: number;
-  label: string;
   children: React.ReactNode;
+  /** Set open at start */
+  open: boolean;
 }
 
-export default function Collapse({ index = 0, label, children }: CollapseProp) {
+export default function Collapse({ index = 0, children, open }: CollapseProp) {
+  const [isOpen, setIsOpen] = React.useState(open);
+  const toggleOpen = React.useCallback(() => setIsOpen(!isOpen), [isOpen]);
+
   return (
-    <div className={styles.container}>
+    <div className={styles.container} onClick={toggleOpen}>
       <div
         tabIndex={index}
-        className="collapse-arrow rounded-box collapse border border-base-300 bg-base-100"
+        className={clsx("collapse-arrow rounded-box collapse border border-base-300 bg-base-100", {
+          'collapse-open': isOpen,
+          'collapse-close': !isOpen
+        })}
       >
-        <div className="collapse-title text-xl font-medium">{label}</div>
-        <div className="collapse-content">
-            {children}
-        </div>
+        {children}
       </div>
     </div>
   );
