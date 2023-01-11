@@ -21,6 +21,10 @@
     @include gradient-text(var(--color-primary-gradient));
 }
 
+.header3 {
+    color: var(--color-text-300);
+}
+
 
 @media (max-width: $screen-mobile) {
     .header1 {

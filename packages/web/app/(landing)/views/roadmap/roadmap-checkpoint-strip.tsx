@@ -1,30 +1,38 @@
 import React, { Component } from "react";
 import RoadmapCheckpoint from "./roadmap-checkpoint";
 
-export interface CheckpointRenderData {
-  isPassed: boolean;
-  title: string;
+export interface RoadmapCheckpointProps {
+  completed: boolean;
   date: string;
-  url?: string;
-  node: React.ReactNode;
+  title: string;
+  href: string;
+  children: React.ReactNode;
 }
 
-interface Props {
+export interface RoadmapCheckpointStripProps {
   containerWidth: number;
   peaks: number;
   wavePeakHeight: number;
-  checkpoints: CheckpointRenderData[];
+  children: React.ReactNode;
   startAt: number;
 }
 
-export default class RoadmapCheckpointStrip extends Component<Props> {
+export interface RoadmapContextState {
+  width: number;
+  isCentered: boolean;
+}
+
+export const RoadmapContext = React.createContext<RoadmapContextState>({ width: 100, isCentered: false});
+
+
+export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointStripProps> {
   private ref: React.RefObject<HTMLDivElement>;
 
   private regExp = /translateX\('?"?(\-?.*)px\D*\)/;
   private currentX: number;
   private targetX: number;
 
-  constructor(props: Props) {
+  constructor(props: RoadmapCheckpointStripProps) {
     super(props);
 
     this.ref = React.createRef();
@@ -33,7 +41,7 @@ export default class RoadmapCheckpointStrip extends Component<Props> {
     this.targetX = 0;
   }
 
-  shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
+  shouldComponentUpdate(nextProps: Readonly<RoadmapCheckpointStripProps>): boolean {
     const { peaks, containerWidth } = this.props;
     return (
       peaks !== nextProps.peaks || containerWidth !== nextProps.containerWidth
@@ -41,17 +49,22 @@ export default class RoadmapCheckpointStrip extends Component<Props> {
   }
 
   render() {
-    const { wavePeakHeight, checkpoints, startAt } = this.props;
+    const { wavePeakHeight, children, startAt, peaks } = this.props;
     return (
       <div
         ref={this.ref}
         className="absolute inset-y-0 flex flex-row"
         style={{
-          padding: `${wavePeakHeight}px ${this.halfPeakWidth}px`,
+          padding: `2rem ${this.halfPeakWidth}px ${wavePeakHeight}px ${this.halfPeakWidth}px`,
           transform: `translateX(${this.getOffset(startAt)}px)`,
         }}
       >
-        {checkpoints.map(this.renderCheckpoint)}
+        <RoadmapContext.Provider value={{
+          width: this.checkpointWidth,
+          isCentered: peaks === 1
+        }}>
+          {children}
+        </RoadmapContext.Provider>
       </div>
     );
   }
@@ -69,6 +82,7 @@ export default class RoadmapCheckpointStrip extends Component<Props> {
     const { containerWidth, peaks } = this.props;
     const delta = peaks > 1 ? peaks % 2 : -1;
     const offset = peaks > 1 ? 0 : containerWidth / 2;
+    
     return -this.checkpointWidth * (index - delta) + offset;
   }
 
@@ -88,20 +102,5 @@ export default class RoadmapCheckpointStrip extends Component<Props> {
     }
     const x = this.currentX + (this.targetX - this.currentX) * progress;
     strip.style.transform = `translateX(${x}px)`;
-  };
-
-  private renderCheckpoint = (data: CheckpointRenderData, index: number) => {
-    const { peaks } = this.props;
-    const { node, ...restParams } = data;
-    return (
-      <RoadmapCheckpoint
-        key={index}
-        width={this.checkpointWidth}
-        isCentered={peaks === 1}
-        {...restParams}
-      >
-        {node}
-      </RoadmapCheckpoint>
-    );
   };
 }

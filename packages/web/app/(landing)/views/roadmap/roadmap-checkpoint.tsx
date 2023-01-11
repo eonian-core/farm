@@ -1,57 +1,53 @@
 import clsx from "clsx";
-import React from "react";
+import React, { useContext } from "react";
+import { H3Context } from "../../../components/heading/heading";
 import IconCheck from "../../../components/icons/icon-check";
-import IconExternal from "../../../components/icons/icon-external";
-import { CheckpointRenderData } from "./roadmap-checkpoint-strip";
+import { RoadmapCheckpointProps, RoadmapContext } from "./roadmap-checkpoint-strip";
 import styles from "./roadmap-checkpoint.module.scss";
 
-interface Props extends Omit<CheckpointRenderData, "node"> {
-  width: number;
-  isCentered: boolean;
-  children: React.ReactNode;
-}
 
-const RoadmapCheckpoint: React.FC<Props> = ({
-  width,
+
+const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({
   title,
   date,
-  url,
-  isPassed,
-  isCentered,
+  href,
+  completed,
   children,
 }) => {
+  const {width, isCentered} = useContext(RoadmapContext);
+  
   return (
     <a
       className={clsx(
         styles.container,
         "relative h-full px-4",
         { "px-10": isCentered },
-        { "cursor-pointer": url }
+        { "cursor-pointer": href }
       )}
       style={{ width: `${width}px` }}
-      href={url}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
     >
-      <h3 className="text-gray-300">
-        {title}
-        {url && <IconExternal size={12} className="ml-1 inline" />}
-      </h3>
-      <div className="text-sm">{date}</div>
-      <div className={clsx(styles.content, "mt-4 text-sm text-gray-400")}>
+      <H3Context.Provider value={{ isExternalLink: !!href }}>
+
         {children}
-      </div>
-      <div className={clsx(styles.pin, { hidden: isCentered })} />
-      <div
-        className={clsx(styles.point, {
-          [styles["point--done"]]: isPassed,
-          [styles["point--centered"]]: isCentered,
-        })}
-      >
-        {isPassed && <IconCheck width={20} height={20} />}
-      </div>
+        
+        <div className={clsx(styles.pin, { hidden: isCentered })} />
+        
+        <div
+          className={clsx(styles.point, {
+            [styles["point--done"]]: completed,
+            [styles["point--centered"]]: isCentered,
+          })}
+        >
+          {completed && <IconCheck width={20} height={20} />}
+        </div>
+      </H3Context.Provider>
     </a>
   );
 };
 
-export default React.memo(RoadmapCheckpoint);
+RoadmapCheckpoint.displayName = "RoadmapCheckpoint";
+
+export default RoadmapCheckpoint;

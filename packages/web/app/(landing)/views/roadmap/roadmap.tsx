@@ -1,26 +1,25 @@
-import React, { Children, PureComponent } from "react";
+import React, { Children, isValidElement, PureComponent, ReactElement, ReactNode } from "react";
 import Waves from "./waves";
 import RoadmapCheckpointStrip, {
-  CheckpointRenderData,
+  RoadmapCheckpointProps,
 } from "./roadmap-checkpoint-strip";
 import RoadmapCheckpointMenu from "./roadmap-checkpoint-menu";
+import RoadmapCheckpoint from './roadmap-checkpoint';
 import styles from "./roadmap.module.scss";
 import clsx from "clsx";
 
-interface Props {
+export interface RoadmapProps {
   children: React.ReactNode;
 }
 
-interface State {
+export interface RoadmapState {
   peaks: number;
   width: number;
   height: number;
   centeredCheckpointIndex: number;
-  checkpoints: CheckpointRenderData[];
-  content: React.ReactNode[];
 }
 
-export default class Roadmap extends PureComponent<Props, State> {
+export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
   private readonly containerRef: React.RefObject<HTMLDivElement>;
   private readonly wavesRef: React.RefObject<Waves>;
   private readonly stripRef: React.RefObject<RoadmapCheckpointStrip>;
@@ -43,7 +42,7 @@ export default class Roadmap extends PureComponent<Props, State> {
   // Peak wave height (including thickness) relative to the bottom of the container
   private readonly wavePeakHeight;
 
-  constructor(props: Props) {
+  constructor(props: RoadmapProps) {
     super(props);
 
     this.containerRef = React.createRef();
@@ -59,24 +58,20 @@ export default class Roadmap extends PureComponent<Props, State> {
       width: 0,
       height: 0,
       centeredCheckpointIndex: -1,
-      checkpoints: [],
-      content: [],
     };
   }
 
-  static getDerivedStateFromProps(props: Props, state: State) {
+  static getDerivedStateFromProps({children}: RoadmapProps, state: RoadmapState) {
     const { centeredCheckpointIndex: currentIndex } = state;
     if (currentIndex >= 0) {
       return null;
     }
 
-    const { content, checkpoints } = Roadmap.groupChildren(props.children);
-    const firstUndoneCheckpointIndex = checkpoints.findIndex(
-      (checkpoint) => !checkpoint.isPassed
+    const firstUndoneCheckpointIndex = (Children.toArray(children) as Array<ReactElement<RoadmapCheckpointProps>>).findIndex(
+      (checkpoint) => !checkpoint?.props.completed
     );
+
     return {
-      content,
-      checkpoints,
       centeredCheckpointIndex: Math.max(firstUndoneCheckpointIndex - 1, 0),
     };
   }
@@ -95,18 +90,15 @@ export default class Roadmap extends PureComponent<Props, State> {
 
   render() {
     const {
-      content,
-      checkpoints,
       centeredCheckpointIndex,
       width,
       height,
       peaks,
     } = this.state;
+    const {children} = this.props
 
     return (
-      <div className="flex min-h-screen w-full flex-col justify-center overflow-hidden sm:items-center">
-        <div className="px-10">{content}</div>
-        <div
+      <div
           ref={this.containerRef}
           className={clsx("h-96 w-full", styles.overlay)}
         >
@@ -115,9 +107,9 @@ export default class Roadmap extends PureComponent<Props, State> {
             containerWidth={width}
             peaks={peaks}
             wavePeakHeight={this.wavePeakHeight}
-            checkpoints={checkpoints}
             startAt={centeredCheckpointIndex}
-          />
+          >{children}</RoadmapCheckpointStrip>
+          
           <Waves
             ref={this.wavesRef}
             peaks={peaks}
@@ -127,13 +119,13 @@ export default class Roadmap extends PureComponent<Props, State> {
             waveThickness={this.waveThickness}
             startAt={centeredCheckpointIndex}
           />
+
           <RoadmapCheckpointMenu
             activeCheckpointIndex={centeredCheckpointIndex}
-            checkpoints={checkpoints}
+            count={Children.toArray(children).length}
             onActiveCheckpointChanged={this.handleSetCenteredCheckpointIndex}
           />
         </div>
-      </div>
     );
   }
 
@@ -184,6 +176,7 @@ export default class Roadmap extends PureComponent<Props, State> {
   private handleResize = () => {
     const { current: container } = this.containerRef;
     const windowWidth = window.innerWidth;
+
     this.setState({
       width: container?.offsetWidth ?? 0,
       height: container?.offsetHeight ?? 0,
@@ -198,32 +191,5 @@ export default class Roadmap extends PureComponent<Props, State> {
     });
   };
 
-  /**
-   * Extracts checkpoint components from the passed "children" props (required to work with MDX)
-   * @param children the children prop content
-   * @returns two groups - checkpoints and other components
-   */
-  private static groupChildren(children: React.ReactNode) {
-    return Children.toArray(children).reduce(
-      (groups, node: any) => {
-        const props = node.props ?? {};
-        if ("data-checkpoint" in props) {
-          groups["checkpoints"].push({
-            isPassed: props["data-passed"],
-            date: props["data-date"],
-            title: props["data-checkpoint"],
-            url: props["data-url"],
-            node,
-          });
-        } else {
-          groups["content"].push(node);
-        }
-        return groups;
-      },
-      {
-        content: [] as React.ReactNode[],
-        checkpoints: [] as CheckpointRenderData[],
-      }
-    );
-  }
 }
+

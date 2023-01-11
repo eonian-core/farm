@@ -1,25 +1,24 @@
 import clsx from "clsx";
 import React from "react";
 import IconChevron from "../../../components/icons/icon-chevron";
-import { CheckpointRenderData } from "./roadmap-checkpoint-strip";
 
-interface Props {
+export interface RoadmapCheckpointMenuProps {
   activeCheckpointIndex: number;
-  checkpoints: CheckpointRenderData[];
+  count: number;
   onActiveCheckpointChanged: (index: number) => void;
 }
 
-const RoadmapCheckpointMenu: React.FC<Props> = ({
-  checkpoints,
+const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
+  count,
   activeCheckpointIndex,
   onActiveCheckpointChanged,
 }) => {
   const handleChangeIndex = React.useCallback(
     (index: number) => {
-      index = Math.max(Math.min(index, checkpoints.length - 1), 0);
+      index = Math.max(Math.min(index, count - 1), 0);
       onActiveCheckpointChanged(index);
     },
-    [checkpoints, onActiveCheckpointChanged]
+    [count, onActiveCheckpointChanged]
   );
 
   return (
@@ -29,21 +28,22 @@ const RoadmapCheckpointMenu: React.FC<Props> = ({
         disabled={activeCheckpointIndex === 0}
         onClick={() => handleChangeIndex(activeCheckpointIndex - 1)}
       />
-      {checkpoints.map((checkpoint, index) => {
-        const classes = clsx(
-          "cursor-pointer p-2 hover:opacity-100",
-          index === activeCheckpointIndex ? "opacity-80" : "opacity-20"
-        );
-        return (
-          <div key={index} data-tip={checkpoint.title} className="tooltip">
-            <div className={classes} onClick={() => handleChangeIndex(index)}>
-              <div className="h-3 w-3 rounded-full bg-gray-50"></div>
-            </div>
-          </div>
-        );
-      })}
+
+      {new Array(count).fill(0).map((_, index) => (
+        <div
+          key={index}
+          className={clsx(
+            "cursor-pointer p-2 hover:opacity-100",
+            index === activeCheckpointIndex ? "opacity-80" : "opacity-20"
+          )}
+          onClick={() => handleChangeIndex(index)}
+        >
+          <div className="h-3 w-3 rounded-full bg-gray-50"></div>
+        </div>
+      ))}
+
       <Chevron
-        disabled={activeCheckpointIndex === checkpoints.length - 1}
+        disabled={activeCheckpointIndex === count - 1}
         onClick={() => handleChangeIndex(activeCheckpointIndex + 1)}
       />
     </div>

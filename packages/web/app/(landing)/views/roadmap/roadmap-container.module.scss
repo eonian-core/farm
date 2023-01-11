@@ -1,0 +1,16 @@
+@import "../../../screen.scss";
+
+.roadmapContainer {
+    padding-bottom: var(--margin-1000);
+}
+
+
+@media (max-width: $screen-mobile) {
+
+    .roadmapContainer {
+        & > h2, & > span {
+            padding-left: var(--width-gap);
+            padding-right: var(--width-gap);
+        }
+    }
+}

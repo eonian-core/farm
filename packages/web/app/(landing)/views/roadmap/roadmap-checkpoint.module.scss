@@ -108,10 +108,26 @@ $pin-head-size: 16px;
       text-decoration-line: underline;
     }
   }
+
+  p, ul {
+    margin-top: var(--margin-300);
+  }
+
+  li, p {
+    font-size: var(--font-size-300);
+    line-height: var(--line-height-300);
+    color: var(--color-text-400);
+  }
+
+  ul {
+    list-style: initial;
+    padding-left: var(--padding-300);
+  }
 }
 
 .content {
   ul {
+    
     list-style-type: disc;
     list-style-position: inside;
   }
