@@ -1,12 +1,11 @@
 
 .gradientCard {
-    padding: 10px 0;
-    background-color: var(--background-color-start);
+    padding: 2rem 0;
+    background-color: var(--color-background-start);
     position: relative;
     overflow: hidden;
 
     animation: fade-in .2s cubic-bezier(.455,.03,.515,.955); 
-    
 }
 
 .contentWrapper {
@@ -68,6 +67,7 @@
     mix-blend-mode: screen;
     animation-iteration-count: infinite;
     animation-timing-function: cubic-bezier(.1,0,.9,1);
+    filter: blur(40px);
 }
 
 .gradient1 {
