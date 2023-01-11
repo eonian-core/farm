@@ -79,6 +79,16 @@ Export abi and address in json format. Usefull for dApps
 npx hardhat --network ropsten export './some-path'
 ```
 
+## TODO
+
+[x] Add event tests for ERC4626
+[] add solhint in CI process
+[] add test coverage in CI process
+[] add more security validators in CI process
+[] add optimizations in compilation process
+[] add foundry to hardhat remappings support
+[] silent warning for unused arguments in SafeERC4626 contract
+
 ## Performance optimizations
 
 For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
