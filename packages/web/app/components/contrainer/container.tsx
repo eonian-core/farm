@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import React from 'react'
 import styles from './container.module.scss'
 
@@ -5,12 +6,17 @@ import styles from './container.module.scss'
 export interface ContainerProps {
     children: React.ReactNode
     mobileFullWidth?: boolean
+    className?: string
 }
 
-export default function Container({children, mobileFullWidth}: ContainerProps) {
-    return (
-        <section className={`${styles.container} ${mobileFullWidth ? styles.mobileFullWidth : ''}`}>
-            {children}
-        </section>
-    )
-}
+export const Container = React.forwardRef<HTMLElement, ContainerProps>(({ mobileFullWidth, className, ...props }: ContainerProps, ref) => (
+    <section 
+        {...props}
+        className={clsx(styles.container, { [styles.mobileFullWidth]: mobileFullWidth }, className)} 
+        ref={ref}
+        />
+))
+
+Container.displayName = 'Container'
+
+export default Container
