@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PageIntersectionObserver from "./page-intersection-observer";
 import WavePainter from "./wave-painter";
 
 interface Props {
@@ -34,6 +35,8 @@ export default class Waves extends Component<Props> {
   // Previous animation frame start.
   private previousFrameTimestamp: number;
 
+  private readonly pageObserver: PageIntersectionObserver<HTMLCanvasElement>;
+
   constructor(props: Props) {
     super(props);
 
@@ -45,24 +48,31 @@ export default class Waves extends Component<Props> {
     this.frameId = 0;
     this.frameInterval = 1000 / 30; // 30 frames per second
     this.previousFrameTimestamp = 0;
+
+    this.pageObserver = new PageIntersectionObserver(
+      this.ref,
+      this.toggleSecondaryWavesAnimation
+    );
   }
 
   componentDidMount(): void {
     this.init();
     this.draw();
 
-    this.startSecondaryWavesAnimation();
+    this.pageObserver.reinit();
   }
 
   componentDidUpdate(): void {
     this.init();
     this.draw();
 
-    this.startSecondaryWavesAnimation();
+    this.pageObserver.reinit();
   }
 
   componentWillUnmount(): void {
-    cancelAnimationFrame(this.frameId);
+    this.stopSecondaryWavesAnimation();
+
+    this.pageObserver.destroy();
   }
 
   shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
@@ -138,11 +148,23 @@ export default class Waves extends Component<Props> {
     return gradient;
   }
 
+  private toggleSecondaryWavesAnimation = (enable: boolean) => {
+    if (enable) {
+      this.startSecondaryWavesAnimation();
+      return;
+    }
+    this.stopSecondaryWavesAnimation();
+  }
+
   private startSecondaryWavesAnimation() {
     cancelAnimationFrame(this.frameId);
     const timestamp = performance.now();
     this.previousFrameTimestamp = timestamp;
     this.animateSecondaryWaves(timestamp);
+  }
+
+  private stopSecondaryWavesAnimation() {
+    cancelAnimationFrame(this.frameId);
   }
 
   private animateSecondaryWaves = (timestamp: number) => {
