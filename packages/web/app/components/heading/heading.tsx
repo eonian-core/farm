@@ -27,7 +27,7 @@ export const H3 = ({ children }: { children?: React.ReactNode }) => {
 
     return (
         <h3 className={`${styles.header3} ${inter.className}`}>
-            {children} 
+            {children}
             {isExternalLink && <IconExternal size={12} className="ml-1 inline" />}
         </h3>
     )
@@ -35,7 +35,7 @@ export const H3 = ({ children }: { children?: React.ReactNode }) => {
 
 
 const heading = {
-    H1, 
+    H1,
     H2,
     H3
 }

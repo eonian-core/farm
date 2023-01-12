@@ -1,41 +1,31 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
+"use client";
 
-const inter = Inter({ subsets: ['latin'] })
+import styles from "./page.module.scss";
+import { MDXComponents } from "mdx/types";
+import heading from "../components/heading/heading";
+import dynamic from "next/dynamic";
+import { MDXProvider } from "@mdx-js/react";
+import React from "react";
 
-export default function Home() {
+const components: MDXComponents = {
+  h1: heading.H1,
+  Collapse: dynamic(import("../components/collapse/collapse")),
+  h3: dynamic(import("../components/collapse/collapse-header")),
+  CollapseContent: dynamic(import("../components/collapse/collapse-content")),
+};
+
+export default function FAQ() {
+  const Content = dynamic(import(`./content/en.mdx`));
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <h1>This is FAQ</h1>
-      </div>
-
-   
+      <MDXProvider components={components}>
+        <section className={styles.container}>
+          <div className={styles.faqContent}>
+            <Content />
+          </div>
+        </section>
+      </MDXProvider>
     </main>
-  )
+  );
 }
