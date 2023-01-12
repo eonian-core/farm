@@ -15,7 +15,9 @@
 * - border width
 * - opacity
 */
-:root {
+:root,
+::after,
+::before {
 
   // font sizes
     --font-size-100: 0.75rem;
@@ -24,6 +26,7 @@
     --font-size-500: 1rem; // Default size, by default equal 16px 
     --font-size-600: 1.125rem;
     --font-size-700: 1.25rem;
+    --font-size-750: 1.5rem;
     --font-size-800: 1.875rem;
     --font-size-900: 2.25rem;
     --font-size-1000: 3rem;
@@ -71,6 +74,7 @@
     --line-height-1100: 4.25rem;
     --line-height-1120: 4.5rem;
     --line-height-1150: 7rem;
+    --line-height-1165: 8rem;
     --line-height-1180: 9rem;
     --line-height-1200: 11.5rem;
   
@@ -223,6 +227,8 @@
         --color-success-900: hsl(144, 61%, 20%);
   
   // margin
+    --margin-50: 0.25rem;
+    --margin-100: 0.5rem;
     --margin-200: 0.75rem;
     --margin-300: 1rem;
     --margin-400: 1.5rem;
@@ -231,6 +237,7 @@
     --margin-700: 3rem;
     --margin-800: 4rem;
     --margin-900: 6rem;
+    --margin-1000: 10rem;
 
   // padding
     --padding-100: 0.5rem;
@@ -240,13 +247,8 @@
     --padding-500: 2rem;
     --padding-600: 2.5rem;
     --padding-700: 3rem;
-    --padding-800: 3.5rem;
-    --padding-900: 4rem;
-    --padding-1000: 4.5rem;
-    --padding-1100: 5rem;
-    --padding-1200: 5.5rem;
-    --padding-1300: 6rem;
-    --padding-1400: 10rem;
+    --padding-800: 6rem;
+    --padding-900: 10rem;
 
   // width
     --width-column: 60px;
@@ -292,6 +294,7 @@ body {
 
 body {
   color: var(--color-text-500);
+  background-color: var(--color-background-start);
 }
 
 a {
@@ -300,4 +303,5 @@ a {
 
 html {
   color-scheme: dark;
+
 }

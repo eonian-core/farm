@@ -1,6 +1,6 @@
 import React from "react";
 import { Inter } from "@next/font/google";
-import Container from "../contrainer/container";
+import Container from "../../../components/contrainer/container";
 import styles from "./hero.module.scss";
 
 const inter = Inter({

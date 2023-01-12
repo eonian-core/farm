@@ -38,19 +38,22 @@
         line-height: var(--line-height-600);
         margin-bottom: var(--margin-200);
     }
-}
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-    .card:hover {
+    &:hover {
         background: var(--color-neutral-800);
         border: 1px solid var(--color-neutral-700);
+    
+        h3 {
+            transform: translateX(4px);
+        }
     }
 
-    .card:hover h3 {
-        transform: translateX(4px);
+    &:active {
+        background: var(--color-neutral-700);
+        border: 1px solid var(--color-neutral-600);
     }
 }
+
 
 @media (max-width: $screen-mobile) {
     .card {
