@@ -5,39 +5,44 @@ import { useIntersect, Image as ThreeImage, ScrollControls, Scroll } from '@reac
 import { useDrag } from 'react-use-gesture'
 import styles from './paralax.module.scss'
 
-export const Paralax = ({ positionY }: { positionY: number }) => {
+export const Paralax = ({ scrollTop }: { scrollTop: number }) => {
 
     return (
         <div className={styles.canvasContainer}>
             <Canvas
+                linear
                 orthographic
-                camera={{ zoom: 80 }}
+                camera={{ zoom: 75, position: [0, 0, 500] }}
                 dpr={[1, 1.5]}
             >
-                <Items positionY={positionY} />
+                <Items scrollTop={scrollTop} offset={0} factor={0.1} />
 
             </Canvas>
         </div>
     )
 }
 
-function Items({ positionY }: { positionY: number }) {
+function Items({ scrollTop, offset, factor }: { scrollTop: number, offset: number, factor: number }) {
     const { width: w, height: h } = useThree((state) => state.viewport)
-    const image = useRef<THREE.Mesh>(null)
+    const target = useRef<THREE.Group>(null)
     const zoom = 75
+   
     useFrame(() => {
-        if(!image.current) {
+        if(!target.current) {
             return
         }
-        image.current.position.y = THREE.MathUtils.lerp(image.current.position.y, positionY, 0.1)
+
+        target.current.position.y = THREE.MathUtils.lerp(target.current.position.y, (scrollTop / zoom) * factor, 0.1)
       })
 
     return (<>
-        <ThreeImage
-            ref={image}
-            url="/assets/bitcoin_in_crystal.png"
-            scale={[w / 5, w / 5]}
-            position={[-w / 3, 0, 0]}
-        />
+        <group position={[0, -h * offset * factor, 0]}>
+            <group ref={target}>
+                <ThreeImage
+                    position={[1, 0, 0]}
+                    url="/assets/bitcoin_in_crystal.png"
+                />
+            </group>
+        </group>
     </>)
 }

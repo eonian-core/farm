@@ -7,6 +7,9 @@ import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
+import { useState } from "react";
+import { useGesture } from "react-use-gesture";
+import { ScrollContext } from "./views/problem/problem";
 
 
 const components: MDXComponents = {
@@ -25,11 +28,14 @@ const components: MDXComponents = {
 export default function Home() {
   const Content = dynamic(import(`./content/en.mdx`));
 
+
+
   return (
     <main className={styles.main}>
-        <MDXProvider components={components}>
-          <Content />
-        </MDXProvider>
+        
+          <MDXProvider components={components}>
+            <Content />
+          </MDXProvider>
     </main>
   );
 }

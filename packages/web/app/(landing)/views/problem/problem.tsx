@@ -2,7 +2,7 @@ import Container from "../../../components/contrainer/container"
 import Image from 'next/image';
 import styles from './problem.module.scss'
 import { Paralax } from "./paralax";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState, createContext} from "react";
 import { useGesture } from 'react-use-gesture'
 
 
@@ -12,27 +12,19 @@ interface ProblemProps {
     children: React.ReactNode
 }
 
+export const ScrollContext = createContext(0)
+
 /** 
  * Problem block of the landing page
  * @param children - content of the block
  */
 export const Problem = ({children}: ProblemProps) => {
-    const [positionY, setY] = useState(0)
-    const containerRef = useRef(0)
-    
-    const bind = useGesture({ onWheel: ({ event, movement: [x, y], direction: [dx, dy] }) => {
-            console.log('scroll', event, x, y, dx, dy)
-            if (y) {
-              
-              setY(positionY + y / 1000)
-            }
-          },
-        }
-      )
+    const scrollTop = useContext(ScrollContext)
 
     return (
-        <Container mobileFullWidth {...bind()}>
-            <Paralax positionY={positionY} />
+        <Container mobileFullWidth className={styles.problemContainer}>
+            <Paralax scrollTop={scrollTop} />
+            
             <div className={styles.problem}>
                 <div className={styles.content}>
                     {children}
