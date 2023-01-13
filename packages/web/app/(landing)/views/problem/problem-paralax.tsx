@@ -9,7 +9,7 @@ export function ProblemParalax(){
     return <Block offset={0} factor={0.3}>
         <ThreeImage
             scale={[w / 5, w / 5]}
-            position={[-6, -4, 0]}
+            position={[-7, -4, 0]}
             url="/assets/bitcoin_in_crystal.png"
         />
         <ThreeImage
