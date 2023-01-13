@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"yarn:dev:next\" \"yarn:storybook\"",
+    "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\"",
     "dev:next": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "storybook dev -p 6006 --quiet",
     "build:storybook": "storybook build",
     "serve:storybook": "serve ./storybook-static"
   },

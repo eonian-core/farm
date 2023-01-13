@@ -1,0 +1,62 @@
+@import "../screen.scss";
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+
+  padding-bottom: var(--padding-1400);
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  max-width: var(--max-width);
+  padding: 0 var(--width-gap);
+}
+
+.faqContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: var(--padding-1300);
+  padding-bottom: var(--padding-1300);
+  width: 100%;
+  max-width: var(--width-1000);
+
+  h1 {
+    font-size: var(--font-size-1200);
+    font-weight: var(--font-bold);
+    line-height: var(--font-size-1200);
+    width: 100%;
+    margin-top: var(--margin-800);
+  }
+
+  & > p {
+    width: 100%;
+    margin-bottom: var(--margin-900);
+    font-size: var(--font-size-700);
+  }
+}
+
+@media (max-width: $screen-tablet) {
+  .faqContent {
+
+      h1 {
+          font-size: var(--font-size-1180);
+          line-height: var(--line-height-1180);
+          letter-spacing: var(--letter-spacing-black-400);
+      }
+
+  }
+}

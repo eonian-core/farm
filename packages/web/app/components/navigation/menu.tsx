@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, MutableRefObject } from "react";
+import { useState, useEffect, useRef, MutableRefObject, useMemo } from "react";
 import { motion, useCycle } from "framer-motion";
 
 import { HamburgerMenu } from "../hamburger-menu/hamburger-menu";
-import { useDimensions } from "./use-dimensions";
+import { DimensionalState, useDimensions } from "./use-dimensions";
 import styles from "./navigation.module.scss";
 
 export interface MenuProps {
@@ -11,11 +11,12 @@ export interface MenuProps {
     toggleMenu?: () => void;
 }
 
-export const Menu = ({children, isOpen, toggleMenu}: MenuProps) => {
+export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
     const containerRef = useRef(null);
-    const [hamburgerRef, setHamburgerRef] = useState<MutableRefObject<HTMLDivElement | null>>({current: null}); // Need rerender to calculate dimensions
-    const { height } = useDimensions(containerRef);
-    const { x, y } = useDimensions(hamburgerRef);
+    const [hamburgerRef, setHamburgerRef] = useState<MutableRefObject<HTMLDivElement | null>>({ current: null }); // Need rerender to calculate dimensions
+    const { height = 0 } = useDimensions(containerRef) || {};
+    const dimensions = useDimensions(hamburgerRef);
+    const animation = useMenuAnimation(dimensions);
 
     return (
         <motion.div
@@ -25,8 +26,8 @@ export const Menu = ({children, isOpen, toggleMenu}: MenuProps) => {
             ref={containerRef}
             className={styles.menuWrapper}
         >
-            {hamburgerRef.current && (
-                <motion.div className={styles.menuBackground} variants={sidebar(x, y)} >
+            {animation && (
+                <motion.div className={styles.menuBackground} variants={animation} >
                     {children}
                 </motion.div>)
             }
@@ -34,7 +35,10 @@ export const Menu = ({children, isOpen, toggleMenu}: MenuProps) => {
             <div className={styles.hamburger}>
                 <HamburgerMenu active={isOpen} onClick={toggleMenu} ref={
                     ref => {
-                        if(!hamburgerRef.current && ref) setHamburgerRef({current: ref})}
+                        if (!hamburgerRef.current && ref) {
+                            setHamburgerRef({ current: ref })
+                        }
+                    }
                 } />
             </div>
         </motion.div>
@@ -42,26 +46,56 @@ export const Menu = ({children, isOpen, toggleMenu}: MenuProps) => {
 
 }
 
+const useMenuAnimation = (dimensions: DimensionalState | null) => useMemo(
+    () => calculateMenuAnimation(dimensions), 
+    [dimensions, dimensions?.x, dimensions?.y, dimensions?.width, dimensions?.height]
+);
 
-export const MenuContent = () => {
-    return <div></div>
+
+function calculateMenuAnimation(dimensions: DimensionalState | null){
+    if(!dimensions) {
+        return null;
+    }
+
+    const { x, y } = adjustCoordinates(dimensions);
+    return animation(x, y);
 }
 
-const sidebar = (x: number, y: number) => ({
+// Need point to center of hamburger menu
+function adjustCoordinates({x, y, width, height}: DimensionalState) {
+    // On touch devises we not have scroll bar
+    const adjustX = isTouchDevice() ? 0 : 15;
+    const adjustY = isTouchDevice() ? 7 : 5;
+
+    return {
+        x: x + width / 2 + adjustX,
+        y: y + height / 2 + adjustY
+    }
+}
+
+const animation = (x: number, y: number) => ({
     open: (height = 100) => ({
-      clipPath: `circle(${height * 2}vh at ${x + 15}px ${y + 15}px)`,
-      transition: {
-        type: "spring",
-        stiffness: 50,
-      }
+        clipPath: `circle(${height * 2}vh at ${x}px ${y}px)`,
+        transition: {
+            type: "spring",
+            stiffness: 50,
+        }
     }),
 
     closed: {
-      clipPath: `circle(0vh at ${x + 15}px ${y + 15}px)`,
-      transition: {
-        type: "spring",
-        stiffness: 200,
-        damping: 40
-      }
+        clipPath: `circle(0vh at ${x}px ${y}px)`,
+        transition: {
+            type: "spring",
+            stiffness: 200,
+            damping: 40
+        }
     }
-  });
+});
+
+function isTouchDevice() {
+    return (('ontouchstart' in window) ||
+       (navigator.maxTouchPoints > 0) ||
+       // fallback for old browsers
+       // @ts-ignore
+       (navigator.msMaxTouchPoints > 0));
+  }

@@ -5,7 +5,6 @@ import { useCallback, useState, WheelEventHandler } from "react";
 import clsx from "clsx";
 import { GoogleAnalytics } from "nextjs-google-analytics"; // TODO: use lazy loading
 
-
 import './globals.scss'
 import './tailwind.css'
 
@@ -41,6 +40,7 @@ export default function RootLayout({
       <head />
 
       <body className={clsx(roboto.className, {[styles.menuOpen]: isMenuOpen})}>
+
         <ScrollTopContext.Provider value={scrollTop}>
           <Navigation onStateChange={setMenuState}/>
           

@@ -11,7 +11,7 @@ const LogoWithText = () => {
   return (
     <InternalLink href="/" className={styles.logo} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
       <div className={styles.logoIcon}>
-        <EonianLogo color={isHovered ? 'hsl(240, 5%, 96%)': 'hsl(240, 5%, 84%)'} />
+        <EonianLogo color={isHovered ? 'var(--color-text-100)': 'var(--color-text-300)'} />
       </div>
       <span>Eonian</span>
     </InternalLink>

@@ -67,27 +67,16 @@ yarn dev
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
 
-## TODO
+## Deployment
 
-[x] Add event tests for ERC4626
-[] add solhint in CI process
-[] add test coverage in CI process
-[] add more security validators in CI process
-[] add optimizations in compilation process
-[] add foundry to hardhat remappings support
-[] silent warning for unused arguments in SafeERC4626 contract
+Deplyment process focused to implement GitOps practices. Basically it means all master (main) builds go to production directly. For web applications PRs also deploys to preview enviroment.
 
-# Colors
+### Deployed Apps
 
-<https://tailwindcss.com/docs/customizing-colors>
-Primary
+* <https:/eonian.finance> - Web app deployed Eonian DAO domain.
+* <https://storybook-eonian.vercel.app> - Storybook of Web application components
 
-* Indigo
-* Fuchsia
-* <https://uigradients.com/?utm_source=pocket_saves#Celestial>
+### CDN
 
-Accent
-
-* Amber
-* <https://uigradients.com/?utm_source=pocket_saves#LearningandLeading>
-* <https://uigradients.com/?utm_source=pocket_saves#LightOrange>
+* <https://vercel.com/eonian/farm-app> - Web app project in Vercel
+* <https://vercel.com/eonian/storybook> - Storybook project in Vercel
