@@ -3,7 +3,7 @@ import { Inter } from "@next/font/google";
 import styles from "./navigation.module.scss";
 import LogoWithText from "../logo/logo-with-text";
 import { InternalLink } from "../links/links";
-import { Menu } from "./menu";
+import { Menu } from "./menu"; // TODO: import menu asynchronously
 import clsx from "clsx";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";

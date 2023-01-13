@@ -7,9 +7,7 @@ import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
-import { useState } from "react";
-import { useGesture } from "react-use-gesture";
-import { ScrollContext } from "./views/problem/problem";
+
 
 
 const components: MDXComponents = {
@@ -26,16 +24,23 @@ const components: MDXComponents = {
 
 
 export default function Home() {
-  const Content = dynamic(import(`./content/en.mdx`));
-
-
+  const Content = dynamic(import(`./content/en.mdx`));  
+  const ParalaxCanvas = dynamic(import("../components/paralax/paralax-canvas"), {
+    ssr: false,
+  })
+  const ProblemParalax = dynamic(import("./views/problem/problem-paralax"), {
+    ssr: false,
+  })
 
   return (
     <main className={styles.main}>
-        
-          <MDXProvider components={components}>
-            <Content />
-          </MDXProvider>
+      <MDXProvider components={components}>
+        <Content />
+      </MDXProvider>
+  
+      <ParalaxCanvas pages={3} sections={3}>
+        <ProblemParalax />
+      </ParalaxCanvas>      
     </main>
   );
 }
