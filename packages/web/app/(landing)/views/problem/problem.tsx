@@ -1,4 +1,5 @@
 import Container from "../../../components/contrainer/container"
+import ProblemParallax from "./problem-parallax"
 import styles from './problem.module.scss'
 
 // Props for the Problem component
@@ -21,6 +22,7 @@ export const Problem = ({children}: ProblemProps) => {
                         {children}
                     </div>
                 </div>
+                <ProblemParallax />
             </div>
         </Container>
     )

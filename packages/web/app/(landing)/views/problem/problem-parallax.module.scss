@@ -1,0 +1,35 @@
+.container {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.imageWrapper {
+  --start-fade-offset: 50%;
+
+  position: absolute;
+
+  img {
+    mask-image: linear-gradient(
+      to bottom,
+      var(--color-background-start) var(--start-fade-offset),
+      transparent 100%
+    );
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    top: 50%;
+    left: 50%;
+    box-shadow: 0 0 60px 30px #fff, 0 0 100px 60px hsl(341, 67%, 50%),
+      0 0 140px 90px hsl(270, 35%, 50%);
+    opacity: 30%;
+  }
+}
