@@ -17,7 +17,7 @@ export interface ParallaxBlockProps {
 }
 
 export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children }: ParallaxBlockProps) => {
-    const size = window.screen.width * scale;
+    const size = getPageWidth() * scale;
     const halfSize = size / 2;
 
     const scrollYProgress = useScrollYContext()!;
@@ -62,3 +62,13 @@ export const useParalaxProgress = (scrollYProgress: MotionValue<number>, y: numb
 }
 
 export default ParallaxBlock;
+
+function getPageWidth() {
+    return Math.max(
+      document.body.scrollWidth,
+      document.documentElement.scrollWidth,
+      document.body.offsetWidth,
+      document.documentElement.offsetWidth,
+      document.documentElement.clientWidth
+    );
+  }

@@ -29,7 +29,7 @@ export function ProblemParallax() {
       <ParallaxBlock
         x={1.2}
         y={0}
-        scale={0.1}
+        scale={0.12}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.etheriumBox}
       >
