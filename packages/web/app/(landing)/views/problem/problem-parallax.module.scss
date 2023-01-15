@@ -1,3 +1,10 @@
+.etheriumBox {
+  z-index: -100;
+}
+
+.pyramidBox {
+  z-index: -100;
+}
 
 .imageContainer {
   position: relative;
@@ -6,6 +13,8 @@
   
 }
 
+
+
 .bitcoinImageContainer {
   img {
     filter: drop-shadow(0 0 3px rgba(20, 179, 204, 0.425)) blur(0.5px);
@@ -13,7 +22,10 @@
   }
 }
 
+
+
 .etheriumImageContainer {
+  
   img {
     filter: drop-shadow(0 0 3px rgba(196, 16, 212, 0.425)) blur(0.5px);
     opacity: 0.9;

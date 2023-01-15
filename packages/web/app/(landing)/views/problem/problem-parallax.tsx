@@ -1,32 +1,20 @@
 import React from "react";
 import styles from "./problem-parallax.module.scss";
 import Image from "next/image";
-import {
-  motion,
-  MotionStyle,
-  useScroll,
-  useWillChange,
-  useTransform,
-  useSpring,
-  MotionValue,
-} from "framer-motion";
-import { ParalaxContainer } from "../../../components/parallax/parallax-container";
-import { ParallaxBlock } from "../../../components/parallax/parallax-block";
 import clsx from "clsx";
+import dynamic from "next/dynamic";
 
 export function ProblemParallax() {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+    const ParalaxContainer = dynamic(import('../../../components/parallax/parallax-container'), { ssr: false })
+    const ParallaxBlock = dynamic(import('../../../components/parallax/parallax-block'), { ssr: false })
 
-  return (
+   return (
     <ParalaxContainer>
       <ParallaxBlock
-        x={-0.05}
-        y={0.45}
+        x={-0.1}
+        y={0.2}
         scale={0.2}
+        spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}
       >
         <div className={clsx(styles.imageContainer, styles.bitcoinImageContainer)}>
           <div className={styles.graidentWrapper}>
@@ -39,9 +27,11 @@ export function ProblemParallax() {
       </ParallaxBlock>
 
       <ParallaxBlock
-        x={1}
-        y={0.2}
+        x={1.2}
+        y={0}
         scale={0.1}
+        spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
+        className={styles.etheriumBox}
       >
         <div className={clsx(styles.imageContainer, styles.etheriumImageContainer)}>
           <div className={styles.graidentWrapper}>
@@ -56,6 +46,7 @@ export function ProblemParallax() {
         x={0.6}
         y={0.9}
         scale={0.09}
+        className={styles.pyramidBox}
       >
         <div className={clsx(styles.imageContainer, styles.crystalPiramidImageContainer)}>
           <div className={styles.graidentWrapper}>

@@ -1,6 +1,9 @@
+'use client';
+
 import { motion, MotionStyle, MotionValue, useSpring, useTransform, useWillChange } from "framer-motion";
 import { useScrollYContext } from "./parallax-container";
 import styles from './parallax-block.module.scss'
+import clsx from "clsx";
 
 export interface ParallaxBlockProps {
     x: number;
@@ -10,9 +13,10 @@ export interface ParallaxBlockProps {
     children: React.ReactNode;
     styles?: MotionStyle
     spring?: Motion.SpringOptions
+    className?: string;
 }
 
-export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, children }: ParallaxBlockProps) => {
+export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children }: ParallaxBlockProps) => {
     const size = window.screen.width * scale;
     const halfSize = size / 2;
 
@@ -22,7 +26,7 @@ export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spri
     const willChange = useWillChange();
     return (
         <motion.div
-            className={styles.parallaxBlock}
+            className={clsx(styles.parallaxBlock, className)}
             style={{
                 left: `${x * 100}%`,
                 top: `${y * 100}%`,
@@ -41,12 +45,12 @@ export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spri
 
 /** Use scroll progress to calculate new y position of paralax block*/
 export const useParalaxProgress = (scrollYProgress: MotionValue<number>, y: number, halfSize: number, scale: number, spring: Motion.SpringOptions = {}) => {
-    const translate = 100 * (1.5 - y) * scale;
+    // const translate = 100 * (1.5 - y);
 
     const transform = useTransform(
         scrollYProgress,
         [1, 0],
-        [-translate - halfSize, translate - halfSize]
+        [-halfSize, halfSize]
     );
 
     return useSpring(transform, {
@@ -56,3 +60,5 @@ export const useParalaxProgress = (scrollYProgress: MotionValue<number>, y: numb
         ...spring
     });
 }
+
+export default ParallaxBlock;
