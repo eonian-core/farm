@@ -23,20 +23,20 @@
     justify-content: center;
     position: relative;
 
-    &::before {
-        content: '';
-        position: absolute;
-        top: calc(-1 * var(--border-radius-400));
-        left: calc(-1 * var(--border-radius-400));
-        height: calc(100% + var(--border-radius-400) * 2);
-        width: calc(100% + var(--border-radius-400) * 2);
+    // &::before {
+    //     content: '';
+    //     position: absolute;
+    //     top: calc(-1 * var(--border-radius-400));
+    //     left: calc(-1 * var(--border-radius-400));
+    //     height: calc(100% + var(--border-radius-400) * 2);
+    //     width: calc(100% + var(--border-radius-400) * 2);
 
-        background: var(--color-accent-background-gradient);
-        border-radius: calc(2 * var(--border-radius-400));
-        z-index: -100;
-        animation: animatedgradient 20s ease alternate infinite;
-        background-size: 300% 300%;
-    }
+    //     background: var(--color-accent-background-gradient);
+    //     border-radius: calc(2 * var(--border-radius-400));
+    //     z-index: -100;
+    //     animation: animatedgradient 20s ease alternate infinite;
+    //     background-size: 300% 300%;
+    // }
 
     z-index: -99;
 }
