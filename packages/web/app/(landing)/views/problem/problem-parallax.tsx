@@ -10,6 +10,8 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
+import { ParalaxContainer } from "../../../components/parallax/parallax-container";
+import { ParallaxBlock } from "../../../components/parallax/parallax-block";
 
 export function ProblemParallax() {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -19,20 +21,28 @@ export function ProblemParallax() {
   });
 
   return (
-    <div ref={ref} className={styles.container}>
-      <FloatingCrystal
-        src="/assets/bitcoin_in_crystal.png"
+    <ParalaxContainer>
+      <ParallaxBlock
         x={-0.05}
         y={0.45}
-        fade={0.1}
-        animationProgress={scrollYProgress}
-      />
-      <FloatingCrystal
+        scale={0.2}
+      >
+        
+        <div className={styles.imageContainer}>
+          <div className={styles.graidentWrapper}>
+            <div className={styles.gradientBitcoin1}></div>
+            <div className={styles.gradientBitcoin2}></div>
+            <div className={styles.gradientBitcoin3}></div>
+          </div>
+          <Image fill src={"/assets/bitcoin_in_crystal.png"} alt="Bitcoin crystal" />
+      </div>
+      </ParallaxBlock>
+      {/* <FloatingCrystal
         src="/assets/etherium_crystal_2.png"
         x={0.5}
         y={-0.05}
         scale={0.75}
-        fade={0.4}
+        fade={0.1}
         animationProgress={scrollYProgress}
       />
       <FloatingCrystal
@@ -40,7 +50,7 @@ export function ProblemParallax() {
         x={1.15}
         y={0.2}
         scale={0.65}
-        fade={0.7}
+        fade={0.1}
         animationProgress={scrollYProgress}
       />
       <FloatingCrystal
@@ -48,18 +58,20 @@ export function ProblemParallax() {
         x={0.9}
         y={1}
         scale={0.65}
-        fade={0.5}
+        fade={0.1}
         animationProgress={scrollYProgress}
+        // blur={0.5}
       />
       <FloatingCrystal
         src="/assets/crystal_4.png"
         x={0.2}
         y={1.1}
         scale={0.65}
-        fade={0.5}
+        fade={0.1}
         animationProgress={scrollYProgress}
-      />
-    </div>
+        // blur={0.5}
+      /> */}
+    </ParalaxContainer>
   );
 }
 
@@ -115,7 +127,12 @@ function FloatingCrystal({
         } as MotionStyle
       }
     >
-      <Image fill src={src} alt="crystal" />
+      <div className={styles.imageContainer}>
+        <div className={styles.graidentWrapper}>
+          <div className={styles.gradient}></div>
+        </div>
+        <Image fill src={src} alt="crystal" />
+      </div>
     </motion.div>
   );
 }

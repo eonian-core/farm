@@ -12,7 +12,6 @@ import Navigation from './components/navigation/navigation'
 import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import Footer from "./components/footer/footer";
 import styles from './layout.module.scss'
-import { ScrollTopContext, useScroll } from "./components/paralax/scroll-context";
 
 const roboto = Roboto({ 
   subsets: ['latin', 'cyrillic'], 
@@ -26,12 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isMenuOpen, setMenuState] = useState(false);
-  // cannot be used on page level, triggers re-render on every scroll
-  const [scrollTop, onWheel] = useScroll();
     
   const locale = 'en';
   return (
-    <html lang={locale} onWheel={onWheel}>
+    <html lang={locale}>
       <GoogleAnalytics trackPageViews />
       {/*
         <head /> will contain the components returned by the nearest parent
@@ -41,13 +38,11 @@ export default function RootLayout({
 
       <body className={clsx(roboto.className, {[styles.menuOpen]: isMenuOpen})}>
 
-        <ScrollTopContext.Provider value={scrollTop}>
-          <Navigation onStateChange={setMenuState}/>
-          
-          <SlidingFooter footer={<Footer locale={locale} />}>
-            {children}
-          </SlidingFooter>
-        </ScrollTopContext.Provider>
+        <Navigation onStateChange={setMenuState}/>
+        
+        <SlidingFooter footer={<Footer locale={locale} />}>
+          {children}
+        </SlidingFooter>
       </body>
     </html>
   );
