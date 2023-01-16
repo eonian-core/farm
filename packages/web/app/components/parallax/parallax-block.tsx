@@ -15,11 +15,12 @@ export interface ParallaxBlockProps {
     styles?: MotionStyle
     spring?: Motion.SpringOptions
     className?: string;
+    sizeLimits?: Numberimits
 }
 
-export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children }: ParallaxBlockProps) => {
-    const {width = 1} = useWindowSize()
-    const size = width * scale;
+export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children, sizeLimits = {} }: ParallaxBlockProps) => {
+    const { width = 1 } = useWindowSize()
+    const size = alignToLimits(width * scale, sizeLimits);
     const halfSize = size / 2;
 
     const scrollYProgress = useScrollYContext()!;
@@ -45,6 +46,27 @@ export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spri
         </motion.div>
     );
 };
+
+export interface Numberimits {
+    max?: number
+    min?: number
+}
+
+const alignToLimits = (count: number, { min, max }: Numberimits) => {
+    if (min === undefined && max === undefined) {
+        return count;
+    }
+
+    if (min === undefined) {
+        return Math.min(count, max!);
+    }
+
+    if (max === undefined) {
+        return Math.max(count, min);
+    }
+
+    return Math.max(Math.min(count, max), min);
+}
 
 /** Use scroll progress to calculate new y position of parallax block */
 export const useParallaxProgress = (scrollYProgress: MotionValue<number>, halfSize: number, scale: number, spring: Motion.SpringOptions = {}) => {

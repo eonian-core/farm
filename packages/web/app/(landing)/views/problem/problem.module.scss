@@ -73,23 +73,48 @@
     }
 }
 
+@media (max-width: $screen-tablet) {
+    .problemWrapper, .problem {
+        width: 100%;
+    }
+
+    .problem {
+        padding: var(--padding-700) calc(var(--width-gap) * 0.5);
+        
+    }
+
+    .pageContainer {
+        padding: calc(var(--width-gap) * 0.5);
+    }
+}
+
 
 @media (max-width: $screen-mobile) {
 
     .problem {
-        border-radius: 0;
-        padding: 0 var(--padding-300);
-        margin: 0 var(--margin-500);
-        max-width: calc(100vw - var(--margin-500));
-        min-height: calc(100vh - var(--margin-500));
+        margin: 0 var(--border-radius-400);
+        max-width: calc(100vw - var(--border-radius-400));
 
-        &::after {
-            border-radius: 0;
 
-            top: calc(-1 * var(--margin-500) * var(--border-radius-400));
-            left: calc(-1 * var(--margin-500) * var(--border-radius-400));
-            height: 100vh;
-            width: calc(100% + var(--margin-500) + var(--border-radius-400) * 2);
+    }
+
+    .pageContainer {
+        padding: calc(var(--width-gap) * 0.2);
+    }
+
+    .problemWrapper {
+        &::before {
+            top: calc(-1 * var(--border-radius-400));
+            left: calc(-1 * var(--border-radius-400));
+            height: calc(100% + var(--border-radius-400) * 2);
+            width: calc(100% + var(--border-radius-400) * 2);
+    
+            background: var(--color-accent-background-gradient);
+            border-radius: calc(2 * var(--border-radius-400));
+            z-index: -100;
+            animation: animatedgradient 20s ease alternate infinite;
+            background-size: 300% 300%;
+            filter: none;
         }
     }
 
