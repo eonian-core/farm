@@ -26,17 +26,16 @@
     &::before {
         content: '';
         position: absolute;
-        top: -10%;
-        left: -10%;
-        height: calc(120%);
-        width: calc(120%);
+        top: calc(-1 * var(--border-radius-400));
+        left: calc(-1 * var(--border-radius-400));
+        height: calc(100% + var(--border-radius-400) * 2);
+        width: calc(100% + var(--border-radius-400) * 2);
 
         background: var(--color-accent-background-gradient);
-        border-radius: 30%;
-        z-index: -100;
+        border-radius: calc(2 * var(--border-radius-400));
+        z-index: -1;
         animation: animatedgradient 20s ease alternate infinite;
         background-size: 300% 300%;
-        filter: blur(40px);
     }
 
     z-index: -99;
@@ -68,7 +67,7 @@
 }
 
 @media (prefers-reduced-motion) {
-    .problem::after {
+    .problem::before {
         animation: none;
     }
 }
@@ -91,11 +90,13 @@
 
 @media (max-width: $screen-mobile) {
 
+    $border-width: var(--margin-300);
+
     .problem {
-        margin: 0 var(--border-radius-400);
-        max-width: calc(100vw - var(--border-radius-400));
-
-
+        margin: 0 $border-width;
+        max-width: calc(100vw - $border-width * 2);
+        padding-left: calc(var(--width-gap) - $border-width);
+        padding-right: calc(var(--width-gap) - $border-width);
     }
 
     .pageContainer {
@@ -104,17 +105,12 @@
 
     .problemWrapper {
         &::before {
-            top: calc(-1 * var(--border-radius-400));
-            left: calc(-1 * var(--border-radius-400));
-            height: calc(100% + var(--border-radius-400) * 2);
-            width: calc(100% + var(--border-radius-400) * 2);
-    
-            background: var(--color-accent-background-gradient);
-            border-radius: calc(2 * var(--border-radius-400));
-            z-index: -100;
-            animation: animatedgradient 20s ease alternate infinite;
-            background-size: 300% 300%;
-            filter: none;
+            border-radius: 0;
+
+            top: calc(-1 * $border-width);
+            left: calc(-1 * $border-width);
+            height: calc(100% + $border-width * 2);
+            width: calc(100% + $border-width * 2);
         }
     }
 

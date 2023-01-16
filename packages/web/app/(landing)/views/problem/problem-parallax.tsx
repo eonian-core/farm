@@ -14,44 +14,46 @@ import { useWindowSize } from "../../../components/resize-hooks/useWindowSize";
 
 
 export const ProblemParallax = () => {
-  const {width} = useWindowSize();
+  const { width } = useWindowSize();
   const isSmallScreen = isSmallerThanDesktop(width || 1);
 
   return (
-  <ParallaxContainer>
-    <ParallaxBlock
-      x={!isSmallScreen ? -0.1 : 0.3}
-      y={!isSmallScreen ? 0.2 : -0.8}
-      scale={0.2}
-      spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}
-      sizeLimits={{ min: 280, max: 400 }}
-    >
-      <BitcoinImage />
-    </ParallaxBlock>
+    <ParallaxContainer>
+      <ParallaxBlock
+        x={!isSmallScreen ? -0.1 : 0.3}
+        y={!isSmallScreen ? 0.2 : -0.8}
+        scale={0.2}
+        spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}
+        className={styles.bitcoinBix}
+        sizeLimits={{ min: 280, max: 400 }}
+      >
+        <BitcoinImage />
+      </ParallaxBlock>
 
-    <ParallaxBlock
-      x={!isSmallScreen ? 0.8 : 0.6}
-      y={!isSmallScreen ? -0.5 : -1}
-      scale={0.12}
-      spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
-      className={styles.ethereumBox}
-      sizeLimits={{ min: 170, max: 240 }}
-    >
-      <EthereumImage />
-    </ParallaxBlock>
+      <ParallaxBlock
+        x={!isSmallScreen ? 0.8 : 0.6}
+        y={!isSmallScreen ? -0.5 : -1}
+        scale={0.12}
+        spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
+        className={styles.ethereumBox}
+        sizeLimits={{ min: 170, max: 240 }}
+      >
+        <EthereumImage />
+      </ParallaxBlock>
 
-    <ParallaxBlock
-      x={0.6}
-      y={1.05}
-      scale={0.09}
-      className={styles.pyramidBox}
-      sizeLimits={{ min: 150, max: 180 }}
-    >
-      <PyramidImage />
-    </ParallaxBlock>
+      <ParallaxBlock
+        x={0.6}
+        y={1.05}
+        scale={0.09}
+        className={styles.pyramidBox}
+        sizeLimits={{ min: 150, max: 180 }}
+      >
+        <PyramidImage />
+      </ParallaxBlock>
 
-  </ParallaxContainer>
-);}
+    </ParallaxContainer>
+  );
+}
 
 
 export default ProblemParallax;
