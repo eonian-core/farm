@@ -2,10 +2,11 @@
   margin: var(--margin-300);
   max-width: var(--width-800);
   width: 100%;
-  cursor: pointer;
+  
 
   h3 {
     color: var(--color-text-400);
+    cursor: pointer;
   }
 
   p {
