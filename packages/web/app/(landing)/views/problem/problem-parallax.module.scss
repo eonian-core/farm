@@ -1,4 +1,4 @@
-.etheriumBox {
+.ethereumBox {
   z-index: -150;
 }
 
@@ -20,7 +20,7 @@
   }
 }
 
-.etheriumImageContainer {
+.ethereumImageContainer {
 
   img {
     filter: drop-shadow(0 0 3px rgba(196, 16, 212, 0.425)) blur(0.5px);
@@ -103,7 +103,7 @@
   background: rgba(170, 35, 204, 0.847);
 }
 
-.gradientEtherium1 {
+.gradientEthereum1 {
   @extend .gradient;
 
   width: 70%;
@@ -115,7 +115,7 @@
   background: rgb(190, 42, 248);
 }
 
-.gradientEtherium2 {
+.gradientEthereum2 {
   @extend .gradient;
 
   width: 120%;

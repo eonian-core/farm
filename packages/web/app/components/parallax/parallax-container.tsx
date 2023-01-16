@@ -1,19 +1,18 @@
-import { MotionValue, useMotionValue, useScroll } from "framer-motion";
+import { MotionValue, useScroll } from "framer-motion";
 import { createContext, useContext, useRef } from "react";
 import styles from "./parallax-container.module.scss";
 
 const ScrollYContext = createContext<MotionValue<number> | null>(null)
 
-/** Provides Y progress value for scroll progres over paralax container */
+/** Provides Y progress value for scroll progres over parallax container */
 export const useScrollYContext = () => useContext(ScrollYContext);
 
-// props
-interface ParalaxContainerProps {
+export interface ParallaxContainerProps {
     children: React.ReactNode
 }
 
-/** Container which provides paralax context for paralax blocks */
-export const ParalaxContainer = ({ children }: ParalaxContainerProps) => {
+/** Container which provides parallax context for parallax blocks */
+export const ParallaxContainer = ({ children }: ParallaxContainerProps) => {
     const ref = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -28,4 +27,4 @@ export const ParalaxContainer = ({ children }: ParalaxContainerProps) => {
 
 }
 
-export default ParalaxContainer;
+export default ParallaxContainer;
