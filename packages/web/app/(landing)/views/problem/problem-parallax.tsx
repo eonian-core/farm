@@ -27,8 +27,8 @@ export function ProblemParallax() {
       </ParallaxBlock>
 
       <ParallaxBlock
-        x={1.2}
-        y={0}
+        x={0.8}
+        y={-0.5}
         scale={0.12}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.etheriumBox}
@@ -44,7 +44,7 @@ export function ProblemParallax() {
 
       <ParallaxBlock
         x={0.6}
-        y={0.9}
+        y={1.05}
         scale={0.09}
         className={styles.pyramidBox}
       >
