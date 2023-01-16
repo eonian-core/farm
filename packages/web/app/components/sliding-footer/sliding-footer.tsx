@@ -1,7 +1,7 @@
 "use client";
 
 import React, {DependencyList, EffectCallback, useEffect} from "react";
-import { useOnResizeEffect } from "../useOnResizeEffect";
+import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 import styles from "./sliding-footer.module.scss";
 
 interface Props {

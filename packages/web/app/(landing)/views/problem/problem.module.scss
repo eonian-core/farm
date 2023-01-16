@@ -33,7 +33,7 @@
 
         background: var(--color-accent-background-gradient);
         border-radius: calc(2 * var(--border-radius-400));
-        z-index: -100;
+        z-index: -1;
         animation: animatedgradient 20s ease alternate infinite;
         background-size: 300% 300%;
     }
@@ -47,12 +47,11 @@
     align-items: center;
     justify-content: center;
 
-    padding: var(--padding-900);
+    padding: var(--padding-800);
 
-    background: var(--color-background-start);
-    
     border-radius: var(--border-radius-450);
-    
+    background: var(--color-background-500);
+
     height: 100%;
 }
 
@@ -68,28 +67,50 @@
 }
 
 @media (prefers-reduced-motion) {
-    .problem::after {
+    .problem::before {
         animation: none;
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .problemWrapper, .problem {
+        width: 100%;
+    }
+
+    .problem {
+        padding: var(--padding-700) calc(var(--width-gap) * 0.5);
+        
+    }
+
+    .pageContainer {
+        padding: calc(var(--width-gap) * 0.5);
     }
 }
 
 
 @media (max-width: $screen-mobile) {
 
-    .problem {
-        border-radius: 0;
-        padding: 0 var(--padding-300);
-        margin: 0 var(--margin-500);
-        max-width: calc(100vw - var(--margin-500));
-        min-height: calc(100vh - var(--margin-500) );
+    $border-width: var(--margin-300);
 
-        &::after {
+    .problem {
+        margin: 0 $border-width;
+        max-width: calc(100vw - $border-width * 2);
+        padding-left: calc(var(--width-gap) - $border-width);
+        padding-right: calc(var(--width-gap) - $border-width);
+    }
+
+    .pageContainer {
+        padding: calc(var(--width-gap) * 0.2);
+    }
+
+    .problemWrapper {
+        &::before {
             border-radius: 0;
 
-            top: calc(-1 * var(--margin-500) * var(--border-radius-400));
-            left: calc(-1 * var(--margin-500) * var(--border-radius-400));
-            height: 100vh;
-            width: calc(100% + var(--margin-500) + var(--border-radius-400) * 2);
+            top: calc(-1 * $border-width);
+            left: calc(-1 * $border-width);
+            height: calc(100% + $border-width * 2);
+            width: calc(100% + $border-width * 2);
         }
     }
 
@@ -99,5 +120,5 @@
             line-height: var(--line-height-500);
         }
     }
-    
+
 }
