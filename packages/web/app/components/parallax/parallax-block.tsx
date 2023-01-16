@@ -1,10 +1,10 @@
 'use client';
 
-import { animate, motion, MotionStyle, MotionValue, useSpring, useTransform, useWillChange } from "framer-motion";
+import { motion, MotionStyle, MotionValue, useSpring, useTransform, useWillChange } from "framer-motion";
 import { useScrollYContext } from "./parallax-container";
 import styles from './parallax-block.module.scss'
 import clsx from "clsx";
-import { useEffect } from "react";
+import { useWindowSize } from "../resize-hooks/useWindowSize";
 
 export interface ParallaxBlockProps {
     x: number;
@@ -18,7 +18,8 @@ export interface ParallaxBlockProps {
 }
 
 export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children }: ParallaxBlockProps) => {
-    const size = getPageWidth() * scale;
+    const {width = 1} = useWindowSize()
+    const size = width * scale;
     const halfSize = size / 2;
 
     const scrollYProgress = useScrollYContext()!;
@@ -64,13 +65,3 @@ export const useParallaxProgress = (scrollYProgress: MotionValue<number>, halfSi
 }
 
 export default ParallaxBlock;
-
-function getPageWidth() {
-    return Math.max(
-      document.body.scrollWidth,
-      document.documentElement.scrollWidth,
-      document.body.offsetWidth,
-      document.documentElement.offsetWidth,
-      document.documentElement.clientWidth
-    );
-  }
