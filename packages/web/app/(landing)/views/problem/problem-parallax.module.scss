@@ -30,7 +30,7 @@
   }
 }
 
-.crystalPiramidImageContainer {
+.crystalPyramidImageContainer {
   img {
     filter: drop-shadow(0 0 3px rgba(212, 176, 16, 0.425)) blur(0.3px);
     opacity: 0.85;
@@ -129,7 +129,7 @@
   background: rgb(52, 7, 70);
 }
 
-.gradientPiramid1 {
+.gradientPyramid1 {
   @extend .gradient;
 
   width: 80%;
@@ -141,7 +141,7 @@
   background: rgba(240, 200, 24, 0.808);
 }
 
-.gradientPiramid2 {
+.gradientPyramid2 {
   @extend .gradient;
 
   width: 30%;
@@ -153,7 +153,7 @@
   background: rgb(245, 11, 11);
 }
 
-.gradientPiramid3 {
+.gradientPyramid3 {
   @extend .gradient;
 
   width: 30%;
@@ -165,7 +165,7 @@
   background: rgb(205, 7, 255);
 }
 
-.gradientPiramid4 {
+.gradientPyramid4 {
   @extend .gradient;
 
   width: 30%;
