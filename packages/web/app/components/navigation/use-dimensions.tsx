@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // important to react on ref.current changes
 import { MutableRefObject, useEffect, useLayoutEffect, useRef, useMemo, useState } from "react";
-import { useOnResizeEffect } from "../useOnResizeEffect";
+import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 
 export interface DimensionalState {
   width: number;
