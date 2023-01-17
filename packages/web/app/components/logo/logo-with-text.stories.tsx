@@ -31,3 +31,11 @@ export const Default: Story = {
     args: {
     }
 }
+
+export const Hover: Story = {
+    parameters: { pseudo: { hover: true } },
+}
+
+export const Active: Story = {
+    parameters: { pseudo: { active: true } },
+}
