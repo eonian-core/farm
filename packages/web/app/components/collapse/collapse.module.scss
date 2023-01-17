@@ -7,9 +7,17 @@
   h3 {
     color: var(--color-text-400);
     cursor: pointer;
+    padding-left: var(--padding-500);
+    
+    &::after {
+      right: var(--padding-600) !important; // remove it after switch from daisy-ui
+    }
   }
 
   p {
     color: var(--color-text-300);
+    line-height: var(--line-height-600);
+    padding: var(--padding-300);
+    font-size: var(--font-size-600);
   }
 }

@@ -17,6 +17,7 @@ export type LinkWithIconProps = BaseLinkProps & {
 
     /** Class name for icon */
     iconClassName?: string
+
 }
 
 /** Link which can contain optional icon */

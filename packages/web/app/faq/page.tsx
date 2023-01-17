@@ -12,6 +12,7 @@ const components: MDXComponents = {
   Collapse: dynamic(import("../components/collapse/collapse")),
   h3: dynamic(import("../components/collapse/collapse-header")),
   CollapseContent: dynamic(import("../components/collapse/collapse-content")),
+  InternalLink: dynamic(import("../components/links/links").then(({ InternalLink }) => InternalLink)),
 };
 
 export default function FAQ() {
