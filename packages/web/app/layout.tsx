@@ -19,6 +19,10 @@ const roboto = Roboto({
   display: 'block' // force to show font anyway
 })
 
+// nextjs-google-analytics will detect it by self
+// but need check it on app side, to not break srr process locally
+const isHaveGoogleAnalytics = !!process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
 export default function RootLayout({
   children,
 }: {
@@ -33,7 +37,7 @@ export default function RootLayout({
   const locale = 'en';
   return (
     <html lang={locale}>
-      <GoogleAnalytics trackPageViews />
+      {isHaveGoogleAnalytics && <GoogleAnalytics trackPageViews />}
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
