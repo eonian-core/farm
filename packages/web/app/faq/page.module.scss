@@ -31,7 +31,7 @@
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  max-width: var(--width-1000);
+  max-width: var(--width-800);
 
   h1 {
     font-size: var(--font-size-1200);
@@ -41,21 +41,53 @@
     margin-top: var(--margin-800);
   }
 
-  & > p {
+  &>p {
     width: 100%;
     margin-bottom: var(--margin-900);
     font-size: var(--font-size-700);
+    padding-left: var(--padding-100);
+    padding-right: var(--padding-100);
   }
 }
 
 @media (max-width: $screen-tablet) {
   .faqContent {
 
-      h1 {
-          font-size: var(--font-size-1180);
-          line-height: var(--line-height-1180);
-          letter-spacing: var(--letter-spacing-black-400);
-      }
+    h1 {
+      font-size: var(--font-size-1180);
+      line-height: var(--line-height-1180);
+      letter-spacing: var(--letter-spacing-black-400);
+    }
+
+    &>p {
+      font-size: var(--font-size-600);
+      line-height: var(--line-height-600);
+    }
+
+  }
+}
+
+@media (max-width: $screen-mobile) {
+  $page_side_gaps: var(--padding-200);
+
+  .container {
+    padding: 0 $page_side_gaps;
+  }
+
+  .faqContent {
+
+    h1 {
+      margin-top: var(--margin-900);
+      padding-left: var(--padding-300);
+      padding-right: var(--padding-300);
+      margin-bottom: 0;
+    }
+
+    &>p {
+      margin-bottom: var(--margin-1000);
+      padding-left: var(--padding-400);
+      padding-right: var(--padding-400);
+    }
 
   }
 }

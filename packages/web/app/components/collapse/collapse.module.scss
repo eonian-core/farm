@@ -1,6 +1,7 @@
+@import "../../screen.scss";
+
 .container {
   margin: var(--margin-300);
-  max-width: var(--width-800);
   width: 100%;
   
 
@@ -19,5 +20,27 @@
     line-height: var(--line-height-600);
     padding: var(--padding-300);
     font-size: var(--font-size-600);
+  }
+}
+
+@media (max-width: $screen-mobile) {
+
+  .container {
+
+    h3 {
+      padding-left: var(--padding-400);
+      font-size: var(--font-size-600);
+
+      &::after {
+        right: var(--padding-500) !important; // remove it after switch from daisy-ui
+      }
+    }
+
+    p {
+      line-height: var(--line-height-500);
+      font-size: var(--font-size-500);
+      padding: 0 var(--padding-100) var(--padding-500);
+      
+    }
   }
 }
