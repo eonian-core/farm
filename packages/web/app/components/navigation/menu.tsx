@@ -1,15 +1,31 @@
-import { useState, useEffect, useRef, MutableRefObject, useMemo } from "react";
-import { motion, useCycle } from "framer-motion";
+import { useState, useRef, MutableRefObject, useMemo } from "react";
+import { motion } from "framer-motion";
 
 import { HamburgerMenu } from "../hamburger-menu/hamburger-menu";
 import { DimensionalState, useDimensions } from "./use-dimensions";
 import styles from "./navigation.module.scss";
+import { Inter } from "@next/font/google";
+import clsx from "clsx";
 
 export interface MenuProps {
     children: React.ReactNode;
     isOpen?: boolean;
     toggleMenu?: () => void;
 }
+
+const inter = Inter({
+    subsets: ["latin", "cyrillic"],
+    display: 'block' // force to show font anyway
+});
+
+const menuVariants = {
+    open: {
+        transition: { staggerChildren: 0.07, delayChildren: 0.2 }
+    },
+    closed: {
+        transition: { staggerChildren: 0.05, staggerDirection: -1 }
+    }
+};
 
 export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
     const containerRef = useRef(null);
@@ -28,7 +44,9 @@ export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
         >
             {animation && (
                 <motion.div className={styles.menuBackground} variants={animation} >
-                    {children}
+                    <motion.ul variants={menuVariants} className={clsx(inter.className, styles.menuList)}>
+                        {children}
+                    </motion.ul>
                 </motion.div>)
             }
 
@@ -43,17 +61,18 @@ export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
             </div>
         </motion.div>
     );
-
 }
 
+export default Menu;
+
 const useMenuAnimation = (dimensions: DimensionalState | null) => useMemo(
-    () => calculateMenuAnimation(dimensions), 
+    () => calculateMenuAnimation(dimensions),
     [dimensions, dimensions?.x, dimensions?.y, dimensions?.width, dimensions?.height]
 );
 
 
-function calculateMenuAnimation(dimensions: DimensionalState | null){
-    if(!dimensions) {
+function calculateMenuAnimation(dimensions: DimensionalState | null) {
+    if (!dimensions) {
         return null;
     }
 
@@ -62,7 +81,7 @@ function calculateMenuAnimation(dimensions: DimensionalState | null){
 }
 
 // Need point to center of hamburger menu
-function adjustCoordinates({x, y, width, height}: DimensionalState) {
+function adjustCoordinates({ x, y, width, height }: DimensionalState) {
     // On touch devises we not have scroll bar
     const adjustX = isTouchDevice() ? 0 : 15;
     const adjustY = isTouchDevice() ? 7 : 5;
@@ -94,8 +113,8 @@ const animation = (x: number, y: number) => ({
 
 function isTouchDevice() {
     return (('ontouchstart' in window) ||
-       (navigator.maxTouchPoints > 0) ||
-       // fallback for old browsers
-       // @ts-ignore
-       (navigator.msMaxTouchPoints > 0));
-  }
+        (navigator.maxTouchPoints > 0) ||
+        // fallback for old browsers
+        // @ts-ignore
+        (navigator.msMaxTouchPoints > 0));
+}
