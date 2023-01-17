@@ -8,7 +8,7 @@ import ParallaxBlock from "../../../components/parallax/parallax-block";
 
 import bitoinCrystalPic from './assets/bitcoin_in_crystal.png'
 import ethereumCrystalPic from './assets/ethereum_crystal_2.png'
-import piramidCristalPic from './assets/crystal_4.png'
+import pyramidCristalPic from './assets/crystal_4.png'
 import { useWindowSize } from "../../../components/resize-hooks/useWindowSize";
 
 
@@ -32,7 +32,7 @@ export const ProblemParallax = () => {
 
       <ParallaxBlock
         x={!isSmallScreen ? 0.8 : 0.6}
-        y={!isSmallScreen ? -0.5 : -1}
+        y={!isSmallScreen ? -0.5 : -0.8}
         scale={0.12}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.ethereumBox}
@@ -83,13 +83,13 @@ export const EthereumImage = () => (
 )
 
 export const PyramidImage = () => (
-  <div className={clsx(styles.imageContainer, styles.crystalPiramidImageContainer)}>
+  <div className={clsx(styles.imageContainer, styles.crystalPyramidImageContainer)}>
     <div className={styles.graidentWrapper}>
-      <div className={styles.gradientPiramid1}></div>
-      <div className={styles.gradientPiramid2}></div>
-      <div className={styles.gradientPiramid3}></div>
-      <div className={styles.gradientPiramid4}></div>
+      <div className={styles.gradientPyramid1}></div>
+      <div className={styles.gradientPyramid2}></div>
+      <div className={styles.gradientPyramid3}></div>
+      <div className={styles.gradientPyramid4}></div>
     </div>
-    <Image src={piramidCristalPic} alt="Crystal" placeholder="blur" />
+    <Image src={pyramidCristalPic} alt="Crystal" placeholder="blur" />
   </div>
 )
