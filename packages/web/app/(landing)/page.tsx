@@ -9,6 +9,7 @@ import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
 import PageLoader from "../components/page-loader/page-loader";
 
+
 const components: MDXComponents = {
   h2: heading.H2,
   h3: heading.H3,
@@ -40,8 +41,7 @@ const components: MDXComponents = {
 };
 
 export default function Home() {
-  const Content = dynamic(import(`./content/en.mdx`));
-
+  const Content = dynamic(import(`./content/en.mdx`));  
   return (
     <main className={styles.main}>
       <MDXProvider components={components}>

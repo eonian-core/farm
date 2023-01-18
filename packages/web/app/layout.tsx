@@ -1,10 +1,9 @@
 'use client';
 
 import { Roboto } from "@next/font/google";
-import { useState } from "react";
+import { useCallback, useState, WheelEventHandler } from "react";
 import clsx from "clsx";
-import { GoogleAnalytics } from "nextjs-google-analytics";
-import dynamic from "next/dynamic";
+import { GoogleAnalytics } from "nextjs-google-analytics"; // TODO: use lazy loading
 
 import './globals.scss'
 import './tailwind.css'
@@ -13,7 +12,6 @@ import Navigation from './components/navigation/navigation'
 import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import Footer from "./components/footer/footer";
 import styles from './layout.module.scss'
-
 
 const roboto = Roboto({ 
   subsets: ['latin', 'cyrillic'], 
@@ -27,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isMenuOpen, setMenuState] = useState(false);
-
+    
   const locale = 'en';
   return (
     <html lang={locale}>
@@ -37,7 +35,9 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
+
       <body className={clsx(roboto.className, {[styles.menuOpen]: isMenuOpen})}>
+
         <Navigation onStateChange={setMenuState}/>
         
         <SlidingFooter footer={<Footer locale={locale} />}>
@@ -47,3 +47,4 @@ export default function RootLayout({
     </html>
   );
 }
+

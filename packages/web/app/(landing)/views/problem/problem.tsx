@@ -1,6 +1,6 @@
+import dynamic from "next/dynamic"
 import Container from "../../../components/contrainer/container"
 import styles from './problem.module.scss'
-
 
 // Props for the Problem component
 interface ProblemProps {
@@ -13,12 +13,17 @@ interface ProblemProps {
  * @param children - content of the block
  */
 export const Problem = ({children}: ProblemProps) => {
+    const ProblemParallax = dynamic(import('./problem-parallax'), { ssr: false })
+    
     return (
-        <Container mobileFullWidth>
-            <div className={styles.problem}>
-                <div className={styles.content}>
-                    {children}
+        <Container className={styles.pageContainer}>
+            <div className={styles.problemWrapper}>
+                <div className={styles.problem}>
+                    <div className={styles.content}>
+                        {children}
+                    </div>
                 </div>
+                <ProblemParallax />
             </div>
         </Container>
     )
