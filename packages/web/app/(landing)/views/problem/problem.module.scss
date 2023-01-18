@@ -95,8 +95,8 @@
     .problem {
         margin: 0 $border-width;
         max-width: calc(100vw - $border-width * 2);
-        padding-left: calc(var(--width-gap) - $border-width);
-        padding-right: calc(var(--width-gap) - $border-width);
+        padding-left: calc(var(--width-gap) * 0.8);
+        padding-right: calc(var(--width-gap) * 0.8);
     }
 
     .pageContainer {

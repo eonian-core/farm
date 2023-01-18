@@ -32,7 +32,7 @@ export const ProblemParallax = () => {
 
       <ParallaxBlock
         x={!isSmallScreen ? 0.8 : 0.6}
-        y={!isSmallScreen ? -0.5 : -0.8}
+        y={!isSmallScreen ? -0.5 : -0.7}
         scale={0.12}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.ethereumBox}

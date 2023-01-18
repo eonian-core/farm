@@ -9,10 +9,12 @@ interface SolutionProps {
 
 export const Solution = ({children}: SolutionProps) => {
     return (
-        <Container>
-            <div className={styles.solution}>
-                <div className={styles.content}>
-                    {children}
+        <Container className={styles.pageContainer}>
+            <div className={styles.solutionContainer}>
+                <div className={styles.solution}>
+                    <div className={styles.content}>
+                        {children}
+                    </div>
                 </div>
             </div>
         </Container>
@@ -21,7 +23,7 @@ export const Solution = ({children}: SolutionProps) => {
 
 export default Solution;
 
-// props for Block component
+
 interface BlockProps {
     children: React.ReactNode
     /** Align number to the end of the block and reverse on small screen sizes*/
