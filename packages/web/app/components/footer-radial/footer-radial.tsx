@@ -1,5 +1,5 @@
 import React from "react";
-import { useOnResizeEffect } from "../useOnResizeEffect";
+import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 import styles from "./footer-radial.module.scss";
 import RadialEffectPainter from "./radial-effect-painter";
 
