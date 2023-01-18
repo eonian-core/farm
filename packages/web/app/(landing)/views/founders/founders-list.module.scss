@@ -1,0 +1,13 @@
+@import "../../../screen.scss";
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: $screen-tablet) {
+  .container {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}

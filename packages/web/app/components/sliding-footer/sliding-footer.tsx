@@ -1,6 +1,7 @@
 "use client";
 
-import React, {DependencyList, EffectCallback, useEffect} from "react";
+import React from "react";
+import FooterRadial from "../footer-radial/footer-radial";
 import { useOnResizeEffect } from "../useOnResizeEffect";
 import styles from "./sliding-footer.module.scss";
 
@@ -21,12 +22,13 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
   useOnResizeEffect(() => {
     const { current: footer } = footerRef;
     setMargin(Math.max(footer?.offsetHeight ?? 0, minFooterHeight));
-  }, [])
+  }, []);
 
   return (
     <>
       <div className={styles.content} style={{ marginBottom: `${margin}px` }}>
         {children}
+        <FooterRadial />
       </div>
       <div
         ref={footerRef}
@@ -40,4 +42,3 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
 };
 
 export default SlidingFooter;
-

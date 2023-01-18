@@ -1,0 +1,61 @@
+@import "../../screen.scss";
+
+.container {
+  position: absolute;
+
+  bottom: 0;
+
+  z-index: -1;
+
+  width: 1600px;
+  height: 1600px;
+  overflow: hidden;
+
+  @media (max-width: $screen-tablet) {
+    width: 2200px;
+    height: 2200px;
+  }
+
+  @media (max-width: $screen-small-mobile) {
+    width: 3500px;
+    height: 3500px;
+
+    &::after {
+      background: radial-gradient(
+        circle at 50% 110%,
+        var(--color-background-start) 20%,
+        transparent 100%,
+      ) !important;
+    }
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at 50% 50%,
+      transparent 0,
+      var(--color-background-start) 60%
+    );
+  }
+
+  & > canvas {
+    animation-name: radial-spin;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes radial-spin {
+  from {
+    transform: translateY(52.5%) rotate(0deg);
+  }
+  to {
+    transform: translateY(52.5%) rotate(360deg);
+  }
+}

@@ -8,6 +8,7 @@ import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
 import PageLoader from "../components/page-loader/page-loader";
+import { ExternalLink } from "../components/links/links";
 
 const components: MDXComponents = {
   h2: heading.H2,
@@ -15,6 +16,12 @@ const components: MDXComponents = {
   Hero,
   Problem: dynamic(import("./views/problem/problem")),
   Category: dynamic(import("../components/category/category")),
+  Founders: dynamic(import("./views/founders/founders")),
+  FoundersList: dynamic(import("./views/founders/founders-list")),
+  Founder: dynamic(import("./views/founders/founder")),
+  ExternalLink,
+  IconLinkedIn: dynamic(import("../components/icons/icon-linkedin")),
+  IconTwitter: dynamic(import("../components/icons/icon-twitter")),
   Solution,
   Block,
   BigNumber,
@@ -22,9 +29,13 @@ const components: MDXComponents = {
     ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
     loading: () => <PageLoader />,
   }),
-  RoadmapCheckpoint: dynamic(import("./views/roadmap/roadmap-checkpoint"), {ssr: false}),
-  RoadmapContainer: dynamic(import("./views/roadmap/roadmap-container"), {ssr: false}),
-  RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), {ssr: false}),
+  RoadmapCheckpoint: dynamic(import("./views/roadmap/roadmap-checkpoint"), {
+    ssr: false,
+  }),
+  RoadmapContainer: dynamic(import("./views/roadmap/roadmap-container"), {
+    ssr: false,
+  }),
+  RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), { ssr: false }),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
 };
