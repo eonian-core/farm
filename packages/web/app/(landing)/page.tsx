@@ -8,7 +8,6 @@ import Hero from "./views/hero/hero";
 import heading from "../components/heading/heading";
 import Solution, { Block, BigNumber } from "./views/solution/solution";
 import PageLoader from "../components/page-loader/page-loader";
-import { ExternalLink } from "../components/links/links";
 
 const components: MDXComponents = {
   h2: heading.H2,
@@ -19,7 +18,7 @@ const components: MDXComponents = {
   Founders: dynamic(import("./views/founders/founders")),
   FoundersList: dynamic(import("./views/founders/founders-list")),
   Founder: dynamic(import("./views/founders/founder")),
-  ExternalLink,
+  ExternalLink: dynamic(import("../components/links/external-link")),
   IconLinkedIn: dynamic(import("../components/icons/icon-linkedin")),
   IconTwitter: dynamic(import("../components/icons/icon-twitter")),
   Solution,
