@@ -1,9 +1,9 @@
 'use client';
 
 import { Roboto } from "@next/font/google";
-import { useCallback, useState, WheelEventHandler } from "react";
+import { useState } from "react";
 import clsx from "clsx";
-import { GoogleAnalytics } from "nextjs-google-analytics"; // TODO: use lazy loading
+import dynamic from 'next/dynamic'
 
 import './globals.scss'
 import './tailwind.css'
@@ -13,11 +13,15 @@ import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import Footer from "./components/footer/footer";
 import styles from './layout.module.scss'
 
-const roboto = Roboto({ 
-  subsets: ['latin', 'cyrillic'], 
+const roboto = Roboto({
+  subsets: ['latin', 'cyrillic'],
   weight: ['300', '400', '500', '700', '900'],
   display: 'block' // force to show font anyway
 })
+
+// nextjs-google-analytics will detect it by self
+// but need check it on app side, to not break srr process locally
+const isHaveGoogleAnalytics = !!process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export default function RootLayout({
   children,
@@ -25,21 +29,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isMenuOpen, setMenuState] = useState(false);
-    
+
+  const GoogleAnalytics = dynamic(
+    () => import('nextjs-google-analytics')
+      .then(({ GoogleAnalytics }) => GoogleAnalytics));
+
   const locale = 'en';
   return (
     <html lang={locale}>
-      <GoogleAnalytics trackPageViews />
+      {isHaveGoogleAnalytics && <GoogleAnalytics trackPageViews />}
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
 
-      <body className={clsx(roboto.className, {[styles.menuOpen]: isMenuOpen})}>
+      <body className={clsx(roboto.className, { [styles.menuOpen]: isMenuOpen })}>
 
-        <Navigation onStateChange={setMenuState}/>
-        
+        <Navigation onStateChange={setMenuState} />
+
         <SlidingFooter footer={<Footer locale={locale} />}>
           {children}
         </SlidingFooter>

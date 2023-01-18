@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import React, { useCallback } from "react";
 import { InternalLink } from "../links/links";
 import EonianLogo from "./logo";
@@ -9,11 +8,13 @@ const LogoWithText = () => {
   const { isHovered, onMouseOver, onMouseOut } = useHover();
 
   return (
-    <InternalLink href="/" className={styles.logo} onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
-      <div className={styles.logoIcon}>
+    <InternalLink href="/" className={styles.logo} onMouseOver={onMouseOver} onMouseOut={onMouseOut}
+      iconClassName={styles.logoIcon}
+      icon={
         <EonianLogo color={isHovered ? 'var(--color-text-100)': 'var(--color-text-300)'} />
-      </div>
-      <span>Eonian</span>
+      }
+    >
+      Eonian
     </InternalLink>
   );
 };

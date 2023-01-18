@@ -1,4 +1,6 @@
 .logo {
+    display: flex;
+
     font-size: var(--font-size-500);
     font-weight: var(--font-medium);
     
@@ -20,6 +22,5 @@
 }
 
 .logoIcon {
-    padding-right: var(--padding-100);
-    margin-top: -0.05rem;
+    margin-top: -0.1rem;
 }
