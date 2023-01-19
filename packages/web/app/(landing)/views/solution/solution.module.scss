@@ -13,12 +13,12 @@
     &::before {
         content: "";
         position: absolute;
-        top: -2.5%;
-        left: -2.5%;
-        height: calc(105%);
-        width: calc(105%);
+        top: 0%;
+        left: 25%;
+        height: calc(100%);
+        width: calc(40%);
         background: var(--color-accent-background-gradient);
-        border-radius: calc(2 * var(--border-radius-400));
+        border-radius: 30%;
         z-index: -1;
         animation: animatedgradient 30s ease alternate infinite;
         background-size: 300% 300%;
@@ -40,7 +40,10 @@
 
     padding: var(--padding-700);
     border-radius: var(--border-radius-450);
-    background: var(--color-background-highlight);
+    background: var(--color-background-start);
+
+    // width: 100%;
+    // width: 100vw;
 
 }
 
