@@ -51,15 +51,3 @@ export const InternalLink = ({ href, className, onClick, ...props }: LinkWithIco
         <LinkWithIcon href={href} className={clsx(styles.internalLink, className)} onClick={handleClick} {...props} />
     );
 }
-
-/** Link used for navigation to **external** sites */
-export const ExternalLink = ({ href, className, ...props }: LinkWithIconProps) => (
-    <LinkWithIcon
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer" // prevent tabnabbing
-        className={clsx(styles.externalLink, className)}
-        {...props}
-    />
-);
-

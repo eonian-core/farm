@@ -2,8 +2,9 @@ import React from "react";
 import LogoWithText from "../logo/logo-with-text";
 import globalSocials, {SocialLink} from "../../socials";
 import styles from './footer.module.scss'
-import { ExternalLink, InternalLink } from "../links/links";
+import { InternalLink } from "../links/links";
 import clsx from "clsx";
+import ExternalLink from "../links/external-link";
 
 const Footer = ({ locale }: { locale: string }) => {
   return (

@@ -1,0 +1,35 @@
+.container {
+  padding: var(--padding-500);
+
+  p {
+    font-size: var(--font-size-400);
+  }
+
+  ul {
+    margin-top: var(--margin-100);
+
+    display: flex;
+    align-items: center;
+
+    & > li {
+      padding-right: var(--padding-100);
+    }
+  }
+}
+
+.avatar {
+  width: 160px;
+  height: 160px;
+
+  border: 1px solid var(--color-text-800);
+  background-color: var(--color-background-end);
+
+  border-radius: var(--border-radius-450);
+
+  margin-bottom: var(--margin-200);
+
+  & > svg {
+    color: var(--color-background-start);
+  }
+}
+

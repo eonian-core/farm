@@ -16,6 +16,12 @@ const components: MDXComponents = {
   Hero,
   Problem: dynamic(import("./views/problem/problem")),
   Category: dynamic(import("../components/category/category")),
+  Founders: dynamic(import("./views/founders/founders")),
+  FoundersList: dynamic(import("./views/founders/founders-list")),
+  Founder: dynamic(import("./views/founders/founder")),
+  ExternalLink: dynamic(import("../components/links/external-link")),
+  IconLinkedIn: dynamic(import("../components/icons/icon-linkedin")),
+  IconTwitter: dynamic(import("../components/icons/icon-twitter")),
   Solution,
   Block,
   BigNumber,
@@ -23,9 +29,13 @@ const components: MDXComponents = {
     ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
     loading: () => <PageLoader />,
   }),
-  RoadmapCheckpoint: dynamic(import("./views/roadmap/roadmap-checkpoint"), {ssr: false}),
-  RoadmapContainer: dynamic(import("./views/roadmap/roadmap-container"), {ssr: false}),
-  RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), {ssr: false}),
+  RoadmapCheckpoint: dynamic(import("./views/roadmap/roadmap-checkpoint"), {
+    ssr: false,
+  }),
+  RoadmapContainer: dynamic(import("./views/roadmap/roadmap-container"), {
+    ssr: false,
+  }),
+  RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), { ssr: false }),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
 };

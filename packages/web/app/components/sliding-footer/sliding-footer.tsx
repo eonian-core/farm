@@ -1,9 +1,10 @@
 "use client";
 
-import React, {DependencyList, EffectCallback, useEffect} from "react";
+import React from "react";
+import FooterRadial from "../footer-radial/footer-radial";
 import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 import styles from "./sliding-footer.module.scss";
-
+import { usePathname } from "next/navigation";
 interface Props {
   children: React.ReactNode;
   footer: React.ReactNode;
@@ -14,6 +15,7 @@ const minFooterHeight = 450;
 
 const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
   const footerRef = React.useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const [margin, setMargin] = React.useState(minFooterHeight);
 
@@ -21,12 +23,13 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
   useOnResizeEffect(() => {
     const { current: footer } = footerRef;
     setMargin(Math.max(footer?.offsetHeight ?? 0, minFooterHeight));
-  }, [])
+  }, []);
 
   return (
     <>
       <div className={styles.content} style={{ marginBottom: `${margin}px` }}>
         {children}
+        {pathname === '/' && <FooterRadial />}
       </div>
       <div
         ref={footerRef}
@@ -40,4 +43,3 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
 };
 
 export default SlidingFooter;
-
