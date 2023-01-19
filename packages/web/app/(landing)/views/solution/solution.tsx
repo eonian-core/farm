@@ -1,6 +1,8 @@
-import dynamic from "next/dynamic"
 import Container from "../../../components/contrainer/container"
 import styles from './solution.module.scss'
+import Image from "next/image"
+
+import vaultPic from './assets/vault2.png'
 
 // Props for the Solution component
 interface SolutionProps {
@@ -9,18 +11,20 @@ interface SolutionProps {
 }
 
 export const Solution = ({children}: SolutionProps) => {
-    const SolutionParallax = dynamic(import('./solution-parallax'), { ssr: false })
-
     return (
         <Container className={styles.pageContainer}>
+            <div className={styles.vaultContainer}>
+                <Image src={vaultPic} alt="Futuristic bank vault" placeholder="blur" />
+            </div>
             <div className={styles.solutionContainer}>
                 <div className={styles.solution}>
                     <div className={styles.content}>
                         {children}
                     </div>
                 </div>
-                <SolutionParallax />
+                
             </div>
+            
         </Container>
     )
 }
