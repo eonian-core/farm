@@ -24,7 +24,7 @@ export const ProblemParallax = () => {
         y={!isSmallScreen ? 0.2 : -0.8}
         scale={0.2}
         spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}
-        className={styles.bitcoinBix}
+        className={styles.bitcoinBox}
         sizeLimits={{ min: 280, max: 400 }}
       >
         <BitcoinImage />

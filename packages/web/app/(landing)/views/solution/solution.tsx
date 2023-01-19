@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic"
 import Container from "../../../components/contrainer/container"
 import styles from './solution.module.scss'
 
@@ -8,6 +9,8 @@ interface SolutionProps {
 }
 
 export const Solution = ({children}: SolutionProps) => {
+    const SolutionParallax = dynamic(import('./solution-parallax'), { ssr: false })
+
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.solutionContainer}>
@@ -16,6 +19,7 @@ export const Solution = ({children}: SolutionProps) => {
                         {children}
                     </div>
                 </div>
+                <SolutionParallax />
             </div>
         </Container>
     )
