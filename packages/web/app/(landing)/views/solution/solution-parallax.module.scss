@@ -5,103 +5,60 @@
   z-index: -100;
 }
 
-.backgroundText {
+.backgroundTextBox {
   position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+  justify-content: flex-end;
+
+
+}
+
+.backgroundText {
   font-size: var(--font-size-1300);
   font-weight: var(--font-black);
   letter-spacing: var(--letter-spacing-black-800);
   color: var(--color-text-background-500);
   text-transform: uppercase;
-  
+  text-align: right;
 }
 
-.backgroundTextBox {
-  position: absolute;
-  
-  
 
 
+@media (max-width: $screen-desktop) {
+  .backgroundText {
+    font-size: var(--font-size-1250);
+    letter-spacing: var(--letter-spacing-black-500);
+  }
 }
 
-.vaultImageContainer {
-  img {
-    filter: drop-shadow(0 0 3px rgba(20, 179, 204, 0.425)) blur(0.5px);
-    opacity: 0.9;
-    transform: scale(-1, 1);
+@media (max-width: $screen-desktop) {
+  .backgroundText {
+    font-size: var(--font-size-1240);
+    letter-spacing: var(--letter-spacing-black-500);
   }
 }
 
 
-.graidentWrapper {
-  position: absolute;
-  z-index: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  filter: blur(40px);
-}
-
-.gradient {
-  position: absolute;
-
-  width: 100%;
-  height: 100%;
-
-  z-index: -2;
-
-  left: 0;
-  top: 0;
-
-  opacity: 1;
-  mix-blend-mode: screen;
-
-  border-radius: 100%;
-
-  background: rgba(26, 223, 223, 0.849);
-
-  filter: blur(40px);
-}
-
-.gradientVault1 {
-  @extend .gradient;
-
-  width: 50%;
-  height: 80%;
-
-  top: 10%;
-  left: 5%;
-
-  background: #FFB6AA;
-
-}
-
-.gradientVault2 {
-  @extend .gradient;
-
-  width: 70%;
-  height: 25%;
-
-  top: 10%;
-  left: 15%;
-
-  background: rgba(221, 15, 228, 0.699);
-}
-
-.gradientVault3 {
-  @extend .gradient;
-
-  width: 75%;
-  height: 70%;
-
-  top: 30%;
-  left: 15%;
-
-  background: rgba(26, 223, 223, 0.548);
+@media (max-width: $screen-tablet) {
+  .backgroundText {
+    font-size: var(--font-size-1230);
+    letter-spacing: var(--letter-spacing-black-500);
+  }
 }
 
 @media (max-width: $screen-mobile) {
-  .vaultBox {
-    z-index: -150;
+  .backgroundText {
+    font-size: var(--font-size-1180);
+    letter-spacing: var(--letter-spacing-black-500);
+  }
+}
+
+@media (max-width: $screen-small-mobile) {
+  .backgroundText {
+    font-size: var(--font-size-1150);
+    letter-spacing: var(--letter-spacing-black-500);
   }
 }

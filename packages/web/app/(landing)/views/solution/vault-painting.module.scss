@@ -1,5 +1,7 @@
+@import "../../../screen.scss";
+
 .wrapper {
-    width: 30vw;
+    width: 40vw;
     max-width: var(--width-600);
 }
 
@@ -24,6 +26,7 @@
         filter: blur(40px);
     }
 }
+
 @keyframes animatedgradient {
     0% {
         background-position: 0% 50%;
@@ -35,5 +38,23 @@
 
     100% {
         background-position: 0% 50%;
+    }
+}
+
+@media (max-width: $screen-laptop) {
+    .wrapper {
+        width: 50vw;
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .wrapper {
+        width: 60vw;
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .wrapper {
+        width: 80vw;
     }
 }

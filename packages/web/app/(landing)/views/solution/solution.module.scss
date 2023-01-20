@@ -7,6 +7,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    // overflow-x: hidden;
 }
 
 
@@ -36,9 +37,7 @@
 
     padding: var(--padding-700);
     border-radius: var(--border-radius-450);
-
-    // width: 100%;
-    // width: 100vw;
+    padding-left: var(--padding-500);
 
 }
 
@@ -118,13 +117,23 @@
     .pageContainer {
         padding: calc(var(--width-gap) * 0.5);
     }
+}
 
+@media (max-width: $screen-laptop) {
+    .pageContainer {
+        flex-direction: column-reverse;
+    }
+
+    .solution {
+        padding-left: var(--padding-700);
+    }
 }
 
 
 @media (max-width: $screen-mobile) {
     .pageContainer {
-        padding: calc(var(--width-gap) * 0.2);
+        padding: 0;
+        padding-bottom: var(--padding-900);
     }
     
     .solution {
