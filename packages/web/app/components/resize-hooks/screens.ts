@@ -23,3 +23,12 @@ export const useIsMobileOrSmaller = (): boolean | undefined => useIsScreenSmalle
 
 /** Return true if current screen is smaller or equal tablet screen size */
 export const useIsTabletOrSmaller = (): boolean | undefined => useIsScreenSmallerOrEqual(TABLET_SCREEN);
+
+/** Return true if current screen is smaller or equal laptop screen size */
+export const useIsLaptopOrSmaller = (): boolean | undefined => useIsScreenSmallerOrEqual(LAPTOP_SCREEN);
+
+/** Return true if current screen is smaller or equal desktop screen size */
+export const useIsDesktopOrSmaller = (): boolean | undefined => useIsScreenSmallerOrEqual(DESKTOP_SCREEN);
+
+/** Return true if current screen is smaller or equal ultra wide screen size */
+export const useIsUltraWideOrSmaller = (): boolean | undefined => useIsScreenSmallerOrEqual(ULTRA_WIDE_SCREEN);

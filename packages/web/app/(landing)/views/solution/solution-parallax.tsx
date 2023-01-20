@@ -3,15 +3,12 @@ import React from "react";
 import ParallaxContainer from "../../../components/parallax/parallax-container";
 import ParallaxBlock from "../../../components/parallax/parallax-block";
 import { useWindowSize } from "../../../components/resize-hooks/useWindowSize";
+import { useIsDesktopOrSmaller } from "../../../components/resize-hooks/screens";
 
 import styles from "./solution-parallax.module.scss";
 
-
-
-
 export const SolutionParallax = () => {
-  const { width } = useWindowSize();
-  const isSmallScreen = isSmallerThanDesktop(width || 1);
+  const isSmallScreen = useIsDesktopOrSmaller();
 
   return (
     <ParallaxContainer className={styles.solutionParalax}>
@@ -33,9 +30,6 @@ export const SolutionParallax = () => {
 
 
 export default SolutionParallax;
-
-const desktopWidth = 1280;
-const isSmallerThanDesktop = (screenWidth: number) => screenWidth < desktopWidth;
 
 export const BackgroundText = ({children}: {children: React.ReactNode}) => (
   <div className={styles.backgroundText}>
