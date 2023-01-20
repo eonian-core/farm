@@ -1,0 +1,33 @@
+@import "../../screen.scss";
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    &:first-child {
+        align-items: center;
+        justify-content: flex-end;
+
+        grid-column: 1 / 3;
+    }
+
+    &:last-child {
+        align-items: center;
+        justify-content: flex-start;
+
+
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .row {
+        align-items: flex-start;
+
+        &:first-child {
+            justify-content: flex-end;
+            grid-column: 1;
+        }
+    }
+}
