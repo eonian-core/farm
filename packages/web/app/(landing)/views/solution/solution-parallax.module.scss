@@ -1,9 +1,24 @@
 @import "../../../screen.scss";
 
 
-.imageContainer {
-  position: relative;
-  height: 100%;
+.solutionParalax {
+  z-index: -100;
+}
+
+.backgroundText {
+  position: absolute;
+  font-size: var(--font-size-1300);
+  font-weight: var(--font-black);
+  letter-spacing: var(--letter-spacing-black-800);
+  color: var(--color-text-background-500);
+  text-transform: uppercase;
+  
+}
+
+.backgroundTextBox {
+  position: absolute;
+  
+  
 
 
 }
