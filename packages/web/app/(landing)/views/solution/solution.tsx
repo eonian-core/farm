@@ -1,8 +1,7 @@
+import dynamic from 'next/dynamic'
+
 import Container from "../../../components/contrainer/container"
 import styles from './solution.module.scss'
-import Image from "next/image"
-
-import vaultPic from './assets/vault2.png'
 
 // Props for the Solution component
 interface SolutionProps {
@@ -10,21 +9,23 @@ interface SolutionProps {
 
 }
 
-export const Solution = ({children}: SolutionProps) => {
+export const Solution = ({ children }: SolutionProps) => {
+    const VaultPainting = dynamic(() => import('./vault-painting'))
+
+
     return (
         <Container className={styles.pageContainer}>
-            <div className={styles.vaultContainer}>
-                <Image src={vaultPic} alt="Futuristic bank vault" placeholder="blur" />
-            </div>
+            <VaultPainting />
+
             <div className={styles.solutionContainer}>
                 <div className={styles.solution}>
                     <div className={styles.content}>
                         {children}
                     </div>
                 </div>
-                
+
             </div>
-            
+
         </Container>
     )
 }
@@ -38,7 +39,7 @@ interface BlockProps {
     end?: boolean
 }
 
-export const Block = ({children, end}: BlockProps) => {
+export const Block = ({ children, end }: BlockProps) => {
     return (
         <div className={`${styles.block} ${end ? styles.blockEnd : ''}`}>
             {children}
@@ -52,7 +53,7 @@ interface BigNumberProps {
 }
 
 
-export const BigNumber = ({children}: BigNumberProps) => {
+export const BigNumber = ({ children }: BigNumberProps) => {
     return (
         <div className={styles.bigNumber}>
             <span>{children}</span>

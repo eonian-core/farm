@@ -1,0 +1,39 @@
+.wrapper {
+    width: 30vw;
+    max-width: var(--width-600);
+}
+
+.painting {
+    
+    position: relative;
+    box-shadow: 0px 16px 31px -10px rgb(5, 6, 17);
+
+    
+    &::before {
+        content: "";
+        position: absolute;
+        top: 5%;
+        left: 15%;
+        height: calc(50%);
+        width: calc(70%);
+        background: var(--color-accent-background-gradient);
+        border-radius: 30%;
+        z-index: -1;
+        animation: animatedgradient 30s ease alternate infinite;
+        background-size: 300% 300%;
+        filter: blur(40px);
+    }
+}
+@keyframes animatedgradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
