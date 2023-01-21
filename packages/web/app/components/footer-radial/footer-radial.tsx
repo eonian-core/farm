@@ -1,13 +1,28 @@
+import { usePathname } from "next/navigation";
 import React from "react";
 import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 import styles from "./footer-radial.module.scss";
 import RadialEffectPainter from "./radial-effect-painter";
 
-interface Props {
+interface FooterRadialProps {
   radius?: number
 }
 
-const FooterRadial: React.FC<Props> = ({ radius = 60 }) => {
+// Show readial only in landing page
+export const LandingOnlyRadial: React.FC<FooterRadialProps> = (props) => {
+  const pathname = usePathname();
+
+  if (pathname !== "/") {
+    return null;
+  }
+
+  return <FooterRadial {...props} />
+}
+
+export default LandingOnlyRadial;
+
+// keep without next/navigation for storybook support
+export const FooterRadial: React.FC<FooterRadialProps> = ({ radius = 60 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const [width, setWidth] = React.useState(0);
@@ -26,4 +41,4 @@ const FooterRadial: React.FC<Props> = ({ radius = 60 }) => {
   );
 };
 
-export default FooterRadial;
+

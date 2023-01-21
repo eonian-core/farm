@@ -10,7 +10,8 @@
     "lint": "next lint",
     "storybook": "storybook dev -p 6006 --quiet",
     "build:storybook": "storybook build",
-    "serve:storybook": "serve ./storybook-static"
+    "serve:storybook": "serve ./storybook-static",
+    "production": "next build && next start"
   },
   "dependencies": {
     "@mdx-js/loader": "^2.2.1",
