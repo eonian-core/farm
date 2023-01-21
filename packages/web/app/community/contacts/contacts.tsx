@@ -3,7 +3,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import styles from './contacts.module.scss';
 import IconDownOpen from "../../components/icons/icon-down-open";
 import IconClose from "../../components/icons/icon-close";
-import { ExternalLink } from "../../components/links/links";
+import ExternalLink from "../../components/links/external-link";
 import globalSocials, { SocialLink } from "../../socials";
 
 export interface ContactsProps {
