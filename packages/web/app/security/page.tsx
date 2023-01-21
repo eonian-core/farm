@@ -14,7 +14,8 @@ const components: MDXComponents = {
   Column: dynamic(import('./columns/columns')),
   Row: dynamic(import('./rows/rows')),
   InternalLink: dynamic(import('../components/links/links').then(({ InternalLink }) => InternalLink)),
-  ImageWrapper: dynamic(import('../components/images/images').then(({ ImageWrapper }) => ImageWrapper)),
+  Approach: dynamic(import('./views/approach/approach')),
+  ApproachDescription: dynamic(import('./views/approach/approach-description')),
 }
 
 
