@@ -9,13 +9,10 @@ import ParallaxBlock from "../../../components/parallax/parallax-block";
 import bitoinCrystalPic from './assets/bitcoin_in_crystal.png'
 import ethereumCrystalPic from './assets/ethereum_crystal_2.png'
 import pyramidCristalPic from './assets/crystal_4.png'
-import { useWindowSize } from "../../../components/resize-hooks/useWindowSize";
-
-
+import { useIsDesktopOrSmaller } from "../../../components/resize-hooks/screens";
 
 export const ProblemParallax = () => {
-  const { width } = useWindowSize();
-  const isSmallScreen = isSmallerThanDesktop(width || 1);
+  const isSmallScreen = useIsDesktopOrSmaller();
 
   return (
     <ParallaxContainer>
@@ -24,7 +21,7 @@ export const ProblemParallax = () => {
         y={!isSmallScreen ? 0.2 : -0.8}
         scale={0.2}
         spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}
-        className={styles.bitcoinBix}
+        className={styles.bitcoinBox}
         sizeLimits={{ min: 280, max: 400 }}
       >
         <BitcoinImage />
@@ -32,7 +29,7 @@ export const ProblemParallax = () => {
 
       <ParallaxBlock
         x={!isSmallScreen ? 0.8 : 0.6}
-        y={!isSmallScreen ? -0.5 : -0.8}
+        y={!isSmallScreen ? -0.5 : -0.7}
         scale={0.12}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.ethereumBox}
@@ -57,9 +54,6 @@ export const ProblemParallax = () => {
 
 
 export default ProblemParallax;
-
-const desktopWidth = 1280;
-const isSmallerThanDesktop = (screenWidth: number) => screenWidth < desktopWidth;
 
 export const BitcoinImage = () => (
   <div className={clsx(styles.imageContainer, styles.bitcoinImageContainer)}>
