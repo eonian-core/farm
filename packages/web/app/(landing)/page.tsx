@@ -5,20 +5,16 @@ import type { MDXComponents } from "mdx/types";
 import dynamic from "next/dynamic";
 import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
-import heading from "../components/heading/heading";
-import Solution, { Block, BigNumber } from "./views/solution/solution";
 import PageLoader from "../components/page-loader/page-loader";
 
 
 const components: MDXComponents = {
-  h2: heading.H2,
-  h3: heading.H3,
-  Hero,
+  Hero, // no lazy loading for Hero, it's the first thing that's rendered
+  h2: dynamic(import("../components/heading/heading").then(({H2}) => H2)),
+  h3: dynamic(import("../components/heading/heading").then(({H3}) => H3)),
   Problem: dynamic(import("./views/problem/problem")),
   Category: dynamic(import("../components/category/category")),
-  Solution,
-  Block,
-  BigNumber,
+  Solution: dynamic(import("./views/solution/solution")),
   Roadmap: dynamic(import("./views/roadmap/roadmap"), {
     ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
     loading: () => <PageLoader />,
