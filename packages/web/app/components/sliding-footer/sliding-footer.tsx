@@ -1,10 +1,11 @@
 "use client";
 
-import React, {DependencyList, EffectCallback, useEffect} from "react";
+import React from "react";
 import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 import styles from "./sliding-footer.module.scss";
+import dynamic from "next/dynamic";
 
-interface Props {
+interface SlidingFooterProps {
   children: React.ReactNode;
   footer: React.ReactNode;
 }
@@ -12,8 +13,9 @@ interface Props {
 // Optional: set a default value to prevent scroll bar jitter
 const minFooterHeight = 450;
 
-const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
+const SlidingFooter: React.FC<SlidingFooterProps> = ({ children, footer }) => {
   const footerRef = React.useRef<HTMLDivElement>(null);
+  
 
   const [margin, setMargin] = React.useState(minFooterHeight);
 
@@ -21,12 +23,16 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
   useOnResizeEffect(() => {
     const { current: footer } = footerRef;
     setMargin(Math.max(footer?.offsetHeight ?? 0, minFooterHeight));
-  }, [])
+  }, []);
+
+  const LandingOnlyRadial = dynamic(import("../footer-radial/footer-radial"), { ssr: false }) // ssr can break layout
 
   return (
     <>
       <div className={styles.content} style={{ marginBottom: `${margin}px` }}>
         {children}
+
+        <LandingOnlyRadial />
       </div>
       <div
         ref={footerRef}
@@ -40,4 +46,3 @@ const SlidingFooter: React.FC<Props> = ({ children, footer }) => {
 };
 
 export default SlidingFooter;
-

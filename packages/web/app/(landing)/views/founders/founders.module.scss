@@ -1,0 +1,10 @@
+.container {
+  position: relative;
+
+  margin: var(--margin-800) 0;
+
+  & > span,
+  & > h2 {
+    padding-left: var(--padding-500);
+  }
+}

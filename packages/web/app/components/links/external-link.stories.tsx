@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import IconClose from '../icons/icon-close';
-
-import { ExternalLink } from './links';
+import ExternalLink from './external-link';
 
 const meta: Meta<typeof ExternalLink> = {
     title: 'Components/Links/ExternalLink',
