@@ -17,7 +17,6 @@ const BackgroundTextScreenMap = {
 
 export const SolutionParallax = () => {
   const screen = useScreenName();
-  console.log(screen);
   const {x, y} = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
   
   return (

@@ -3,7 +3,6 @@
 import { Roboto } from "@next/font/google";
 import { useState } from "react";
 import clsx from "clsx";
-import dynamic from 'next/dynamic'
 
 import './globals.scss'
 import './tailwind.css'
@@ -12,6 +11,7 @@ import Navigation from './components/navigation/navigation'
 import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import Footer from "./components/footer/footer";
 import styles from './layout.module.scss'
+import GoogleAnalytics from "./google-analytics";
 
 const roboto = Roboto({
   subsets: ['latin', 'cyrillic'],
@@ -19,25 +19,19 @@ const roboto = Roboto({
   display: 'block' // force to show font anyway
 })
 
-// nextjs-google-analytics will detect it by self
-// but need check it on app side, to not break srr process locally
-const isHaveGoogleAnalytics = !!process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+export interface RootLayoutProps {
+  children: React.ReactNode;
+}
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: RootLayoutProps) {
   const [isMenuOpen, setMenuState] = useState(false);
-
-  const GoogleAnalytics = dynamic(
-    () => import('nextjs-google-analytics')
-      .then(({ GoogleAnalytics }) => GoogleAnalytics));
 
   const locale = 'en';
   return (
     <html lang={locale}>
-      {isHaveGoogleAnalytics && <GoogleAnalytics trackPageViews />}
+      <GoogleAnalytics />
       {/*
         <head /> will contain the components returned by the nearest parent
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
