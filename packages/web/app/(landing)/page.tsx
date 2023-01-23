@@ -32,6 +32,7 @@ const components: MDXComponents = {
     ssr: false,
   }),
   RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), { ssr: false }),
+  InDevelopment: dynamic(import("./views/in-development/in-development")),
   Card: dynamic(import("../components/card/card")),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
 };
