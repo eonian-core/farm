@@ -1,3 +1,4 @@
+@import "../../../screen.scss";
 
 .inDevelopmentWrapper {
     display: flex;
@@ -24,13 +25,30 @@
         line-height: var(--line-height-600);
         margin-bottom: var(--margin-200);
     }
+
+    & > p, & > a {
+        max-width: var(--width-600);
+    }
+
+    z-index: 1;
 }
 
-.backgroundImage {
-    position: absolute;
-    right: -5rem;
-    top: -15rem;
+@media (max-width: $screen-tablet) {
+    .inDevelopmentWrapper {
+        flex-direction: column;
+        align-items: center;
+    }
 
-    width: 50vw;
-    // z-index: -1;
+    .inDevelopment {
+        max-width: var(--width-600);
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .inDevelopment {
+        p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+        }
+    }
 }

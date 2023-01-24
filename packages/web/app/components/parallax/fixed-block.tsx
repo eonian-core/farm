@@ -19,12 +19,12 @@ export interface ParallaxBlockProps {
 }
 
 export const FixedBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children, sizeLimits = {} }: ParallaxBlockProps) => {
-    const { width = 1 } = useWindowSize()
+    const { width = 1, height } = useWindowSize()
     const size = alignToLimits(width * scale, sizeLimits);
     const halfSize = size / 2;
 
     const scrollYProgress = useScrollYContext()!;
-    const newY = useParallaxProgress(scrollYProgress, halfSize, scale, spring);
+    const newY = useParallaxProgress(scrollYProgress, halfSize, scale, height, spring);
 
     const opacity = useTransform(scrollYProgress, [0, 1], [0, 1], {mixer: (from, to) => value => {
         if(value < 0.5)
@@ -32,6 +32,15 @@ export const FixedBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring,
 
         return to
     }})
+
+    const scaleT = useTransform(scrollYProgress, [0, 1], [0, 1], {mixer: (from, to) => value => {
+        
+        if(value < 0.5)
+            return value * 0.8 + 0.6
+
+        return to
+    }})
+
 
     const willChange = useWillChange();
     return (
@@ -47,6 +56,7 @@ export const FixedBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring,
                 y: newY,
                 x: -halfSize,
                 opacity,
+                scale: scaleT,
                 ...motionStyles
             }}
         >
@@ -78,15 +88,15 @@ const alignToLimits = (count: number, { min, max }: Numberimits) => {
 }
 
 /** Use scroll progress to calculate new y position of parallax block */
-export const useParallaxProgress = (scrollYProgress: MotionValue<number>, halfSize: number, scale: number, spring: Motion.SpringOptions = {}) => {
+export const useParallaxProgress = (scrollYProgress: MotionValue<number>, halfSize: number, scale: number, height?: number, spring: Motion.SpringOptions = {}) => {
     const diff = halfSize * scale * 10;
 
     const transform = useTransform(
         scrollYProgress,
         [0, 1],
-        [0, 1000],
+        [0, height || 1000],
         {mixer: (from, to) => value => {
-            console.log('value', value, from, to)
+            console.log('value', value, from, to, height)
             if(value <= 0.5)
                 return value * to
 

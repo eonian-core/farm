@@ -18,7 +18,7 @@ export const InDevelopmentParallax = () => {
 
       <FixedBlock
         x={!isSmallScreen ? 0.8 : 0.6}
-        y={!isSmallScreen ? -1.3 : -0.7}
+        y={!isSmallScreen ? -1.6 : -0.7}
         scale={0.6}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.imageBox}
