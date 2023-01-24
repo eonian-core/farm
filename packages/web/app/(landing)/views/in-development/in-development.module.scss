@@ -16,7 +16,7 @@
     position: relative;
     width: 100%;
 
-    max-width: var(--width-600);
+    max-width: var(--width-700);
 
     & > p {
         color: var(--color-text-400);
@@ -28,9 +28,9 @@
 
 .backgroundImage {
     position: absolute;
-    right: -10rem;
+    right: -5rem;
     top: -15rem;
 
-    width: 60vw;
+    width: 50vw;
     // z-index: -1;
 }
