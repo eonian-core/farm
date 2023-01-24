@@ -13579,13 +13579,6 @@ next@^13.1.1:
     "@next/swc-win32-ia32-msvc" "13.1.1"
     "@next/swc-win32-x64-msvc" "13.1.1"
 
-nextjs-google-analytics@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/nextjs-google-analytics/-/nextjs-google-analytics-2.2.2.tgz#5f634960c19933c8515f1da310d170418710b83f"
-  integrity sha512-PfA5QZCV+tsCEHG6AE3UXHY8fpHguN+l8t81GztdVW1EtX6UCfu8/rb/X/E+D3oFMY0P3YFQzouSgdm1OhWFiA==
-  optionalDependencies:
-    fsevents "^2.3.2"
-
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.npmjs.org/nice-try/-/nice-try-1.0.5.tgz"
