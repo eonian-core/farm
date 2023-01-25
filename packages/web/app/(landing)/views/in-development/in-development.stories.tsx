@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Card from '../../../components/card/card';
-import Category from '../../../components/category/category';
-import { GradientCard } from '../../../components/gradient-card/gradient-card';
 import heading from "../../../components/heading/heading";
 
 import { InDevelopment } from './in-development';
@@ -45,12 +43,12 @@ export const Default: Story = {
                 Together, we can build something truly great! We can make the future of investment simple and accessible for all.
                 We are currently working hard on the first version of our protocol, and with your help, we can make it better.</p>
 
-            <GradientCard>
+            <Card href={'https://t.me/+9yTj0kBHbMozMDAy'}>
                 <h3>Join us</h3>
 
                 <p>In our Telegram youll have the opportunity to connect with industry experts and like-minded individuals.
                     Were committed to creating a collaborative and supportive community, so dont hesitate to ask!</p>
-            </GradientCard>
+            </Card>
         </>)
     }
 }

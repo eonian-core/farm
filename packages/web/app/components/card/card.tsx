@@ -1,4 +1,5 @@
 import React from 'react'
+import { H3Context } from '../heading/heading'
 
 import styles from './card.module.scss'
 
@@ -20,7 +21,9 @@ export const Card = ({href, children}: CardProps) => (<a
     target="_blank"
     rel="noopener noreferrer"
   >
-    {children}
+    <H3Context.Provider value={{ isExternalLink: true }}>
+      {children}
+    </H3Context.Provider>
   </a>
 )
 
