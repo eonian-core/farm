@@ -13,7 +13,9 @@ const components: MDXComponents = {
   h2: heading.H2,
   Column: dynamic(import('./columns/columns')),
   InternalLink: dynamic(import('../components/links/links').then(({ InternalLink }) => InternalLink)),
+  Approach: dynamic(import('./views/approach/approach')),
   ApproachDescription: dynamic(import('./views/approach/approach-description')),
+  SecOps: dynamic(import('./views/secops/secops')),
 }
 
 

@@ -1,0 +1,33 @@
+@import "../../../screen.scss";
+@import "../../../components/styles/gradient-text.mixin.scss";
+@import "../../../components/styles/appear.animation.scss";
+
+.secops {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+@media (max-width: $screen-mobile) {
+    .approach {
+        align-items: flex-start;
+
+        &:first-child {
+            justify-content: flex-end;
+            grid-column: 1;
+        }
+    }
+}
+@media (max-width: $screen-desktop) {
+    .approach {
+        grid-template-columns: var(--width-500) var(--width-200);
+        grid-row-gap: var(--padding-300);
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .approach {
+        grid-template-columns: 2fr 1fr;
+    }
+}

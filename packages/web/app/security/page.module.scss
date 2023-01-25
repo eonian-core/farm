@@ -22,12 +22,11 @@
   width: 100%;
   height: 100%;
 
-  display: grid;
-  grid-template-columns: var(--width-500) var(--width-500);
-  grid-gap: var(--width-gap);
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-
-  grid-row-gap: var(--padding-500);
+  align-items: center;
+  min-height: 100vh;
 
   h1 {
     width: 100%;
