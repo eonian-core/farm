@@ -79,7 +79,6 @@ export const useOpacityProgress = (scrollYProgress: MotionValue<number>, thresho
 export const useScaleProgress = (scrollYProgress: MotionValue<number>, threshold = 0.5, multiplier = 0.8, accselerator = 0.6) => 
     useTransform(scrollYProgress, [0, 1], [0, 1], {
         mixer: (from, to) => value => {
-            console.log(value, threshold, value * multiplier + accselerator)
             if (value < threshold)
                 return value * multiplier + accselerator
 
