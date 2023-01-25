@@ -1,7 +1,26 @@
-.imageBox{
+@import "../../../screen.scss";
 
+.imageBox {
+    width: 60vw;
+    height: 60vw;
+    
+    max-height: 1000px;
+    max-width: 1000px;
+    
+    min-width: 400px;
+    min-height: 400px;
 }
 
 .imageContainer {
     
+}
+
+@media (max-width: $screen-tablet) {
+    .imageBox {
+        width: 80vw;
+        height: 80vw;
+
+        max-height: 500px;
+        max-width: 500px;
+    }
 }

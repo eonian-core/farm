@@ -5,6 +5,7 @@ import { useScrollYContext } from "./parallax-container";
 import styles from './parallax-block.module.scss'
 import clsx from "clsx";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
+import { alignToLimits, Numberimits } from "./alignToLimits";
 
 export interface ParallaxBlockProps {
     x: number;
@@ -46,27 +47,6 @@ export const ParallaxBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spri
         </motion.div>
     );
 };
-
-export interface Numberimits {
-    max?: number
-    min?: number
-}
-
-const alignToLimits = (count: number, { min, max }: Numberimits) => {
-    if (min === undefined && max === undefined) {
-        return count;
-    }
-
-    if (min === undefined) {
-        return Math.min(count, max!);
-    }
-
-    if (max === undefined) {
-        return Math.max(count, min);
-    }
-
-    return Math.max(Math.min(count, max), min);
-}
 
 /** Use scroll progress to calculate new y position of parallax block */
 export const useParallaxProgress = (scrollYProgress: MotionValue<number>, halfSize: number, scale: number, spring: Motion.SpringOptions = {}) => {

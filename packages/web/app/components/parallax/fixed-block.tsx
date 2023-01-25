@@ -6,41 +6,29 @@ import styles from './parallax-block.module.scss'
 import clsx from "clsx";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
 
-export interface ParallaxBlockProps {
-    x: number;
-    y: number;
-    /** Multiplier how to increase size of the block, 1 by default */
-    scale?: number;
+export interface FixedBlockProps {
+    x: number | string;
+    y: number | string;
     children: React.ReactNode;
     styles?: MotionStyle
     spring?: Motion.SpringOptions
     className?: string;
-    sizeLimits?: Numberimits
+    /** Point where image will stop be fixed, can be from 0 to 1. By default 0.5 */
+    threshold?: number
+    /** Used for calculate how fast scale must grow */
+    scale?: { multiplier?: number, accselerator?: number }
 }
 
-export const FixedBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring, className, children, sizeLimits = {} }: ParallaxBlockProps) => {
-    const { width = 1, height } = useWindowSize()
-    const size = alignToLimits(width * scale, sizeLimits);
-    const halfSize = size / 2;
-
+/** Block which linked to scroll progress, it will slowly grow and becove visible on first half of container scroll. Then it will work as normal div */
+export const FixedBlock = ({ x, y, styles: motionStyles = {}, threshold = 0.5, className, children, scale = {} }: FixedBlockProps) => {
     const scrollYProgress = useScrollYContext()!;
-    const newY = useParallaxProgress(scrollYProgress, halfSize, scale, height, spring);
+    
+    const opacity = useOpacityProgress(scrollYProgress, threshold)
+    const {multiplier, accselerator} = scale
+    const newScale = useScaleProgress(scrollYProgress, threshold, multiplier, accselerator)
 
-    const opacity = useTransform(scrollYProgress, [0, 1], [0, 1], {mixer: (from, to) => value => {
-        if(value < 0.5)
-            return value * 2
-
-        return to
-    }})
-
-    const scaleT = useTransform(scrollYProgress, [0, 1], [0, 1], {mixer: (from, to) => value => {
-        
-        if(value < 0.5)
-            return value * 0.8 + 0.6
-
-        return to
-    }})
-
+    const { height } = useWindowSize()
+    const newY = useFixedParallaxProgress(scrollYProgress, threshold, height);
 
     const willChange = useWillChange();
     return (
@@ -48,15 +36,12 @@ export const FixedBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring,
             className={clsx(styles.parallaxBlock, className)}
 
             style={{
-                left: `${x * 100}%`,
-                top: `${y * 100}%`,
-                width: `${size}px`,
-                height: `${size}px`,
-                willChange,
+                left: typeof x === 'number' ? `${x * 100}%` : x,
+                top: typeof y === 'number' ? `${y * 100}%` : y,
                 y: newY,
-                x: -halfSize,
+                willChange,
                 opacity,
-                scale: scaleT,
+                scale: newScale,
                 ...motionStyles
             }}
         >
@@ -66,46 +51,38 @@ export const FixedBlock = ({ x, y, scale = 1, styles: motionStyles = {}, spring,
 };
 export default FixedBlock;
 
-export interface Numberimits {
-    max?: number
-    min?: number
-}
 
-const alignToLimits = (count: number, { min, max }: Numberimits) => {
-    if (min === undefined && max === undefined) {
-        return count;
-    }
 
-    if (min === undefined) {
-        return Math.min(count, max!);
-    }
-
-    if (max === undefined) {
-        return Math.max(count, min);
-    }
-
-    return Math.max(Math.min(count, max), min);
-}
-
-/** Use scroll progress to calculate new y position of parallax block */
-export const useParallaxProgress = (scrollYProgress: MotionValue<number>, halfSize: number, scale: number, height?: number, spring: Motion.SpringOptions = {}) => {
-    const diff = halfSize * scale * 10;
-
-    const transform = useTransform(
-        scrollYProgress,
-        [0, 1],
-        [0, height || 1000],
-        {mixer: (from, to) => value => {
-            console.log('value', value, from, to, height)
-            if(value <= 0.5)
+/** Transform scroll progress in a way that it looks stick to page on first half of the scroll */
+export const useFixedParallaxProgress = (scrollYProgress: MotionValue<number>, threshold = 0.5, height?: number) =>
+    useTransform(scrollYProgress, [0, 1], [0, height || 1000], {
+        mixer: (from, to) => value => {
+            if (value <= threshold)
                 return value * to
 
-            return to / 2;
-        }}
-    );
+            return to * threshold
+        }
+    });
 
-    console.log(transform, scrollYProgress)
+/** Transform scroll progress in a way that it will slowly become visible on first half of the scroll */
+export const useOpacityProgress = (scrollYProgress: MotionValue<number>, threshold = 0.5) => 
+    useTransform(scrollYProgress, [0, 1], [0, 1], {
+        mixer: (from, to) => value => {
+            if (value < threshold)
+                return value / threshold
 
-    return transform
-}
+            return to
+        }
+    });
 
+/** Transform scroll progress in a way that it will slowly grow on first half of the scroll */
+export const useScaleProgress = (scrollYProgress: MotionValue<number>, threshold = 0.5, multiplier = 0.8, accselerator = 0.6) => 
+    useTransform(scrollYProgress, [0, 1], [0, 1], {
+        mixer: (from, to) => value => {
+            console.log(value, threshold, value * multiplier + accselerator)
+            if (value < threshold)
+                return value * multiplier + accselerator
+
+            return to
+        }
+    })
