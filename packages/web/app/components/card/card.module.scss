@@ -43,11 +43,12 @@
     transition: background 200ms, border 200ms;
     background: var(--color-background-highlight);
     box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 6px -1px rgba(34, 33, 33, 0.493);
-    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 
     margin-top: var(--margin-500);
 
-    display: block;
+    display: flex;
+    flex-direction: column;
     cursor: pointer;
 
     @include flare-effect-on-hover;
@@ -70,14 +71,8 @@
         color: var(--color-text-400);
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
-        margin-bottom: var(--margin-200);
-
-        &:last-child {
-            margin-bottom: 0;
-        }
+        margin-bottom: 0;
     }
-
-
 
     &:hover {
         box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 9px -1px rgba(0, 0, 0, 0.4);
@@ -88,8 +83,17 @@
     }
 
     &:active {
-        box-shadow: inset 0px 0px 24px -12px rgba(255, 255, 255, .5);
+        box-shadow: inset 0px 0px 24px -12px rgba(0, 0, 0, 0.712);
     }
+}
+
+.target {
+    margin-left: auto;
+
+    color: var(--color-text-500);
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-600);
+    
 }
 
 
