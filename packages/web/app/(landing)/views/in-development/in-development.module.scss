@@ -1,0 +1,54 @@
+@import "../../../screen.scss";
+
+.inDevelopmentWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+}
+
+.inDevelopment {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    position: relative;
+    width: 100%;
+
+    max-width: var(--width-700);
+
+    & > p {
+        color: var(--color-text-400);
+        font-size: var(--font-size-600);
+        line-height: var(--line-height-600);
+        margin-bottom: var(--margin-200);
+    }
+
+    & > p, & > a {
+        max-width: var(--width-600);
+    }
+
+    z-index: 1;
+}
+
+@media (max-width: $screen-tablet) {
+    .inDevelopmentWrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .inDevelopment {
+        max-width: var(--width-600);
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .inDevelopment {
+        p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+        }
+    }
+}
