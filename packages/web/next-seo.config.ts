@@ -28,8 +28,8 @@ export const NEXT_SEO_DEFAULT: NextSeoProps = {
     type: 'website',
     locale: 'en_IE',
     url: 'https://eonian.finance/',
-    title: 'Eonian | Crypto yield aggregator that cares security',
-    description: 'Decentralised and secure protocol for passive investments with peace in mind.',
+    title: 'Eonian | Crypto yield aggregator that cares about security',
+    description: 'Decentralised and secure real yeild protocol for passive investments with peace in mind.',
     images: [
       {
         url: 'https://eonian.finance/assets/preview-open-graph.png',
