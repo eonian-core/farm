@@ -15,7 +15,7 @@
         transform: rotate(35deg);
         transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
         width: 50px;
-        z-index: -10;
+        // z-index: -10;
     }
 
     &:hover {
@@ -38,10 +38,12 @@
 }
 
 .card {
-    padding: var(--padding-300);
+    padding: var(--padding-400);
     border-radius: var(--border-radius-500);
     transition: background 200ms, border 200ms;
-    border: 1px solid var(--color-neutral-700);
+    background: var(--color-background-highlight);
+    box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 6px -1px rgba(34, 33, 33, 0.493);
+    transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
 
     margin-top: var(--margin-500);
 
@@ -57,9 +59,9 @@
 
     h3 {
         font-weight: var(--font-semibold);
-        font-size: var(--font-size-700);
+        font-size: var(--font-size-750);
         line-height: var(--line-height-700);
-        margin-bottom: var(--margin-200);
+        margin-bottom: var(--margin-100);
         color: var(--color-text-400);
         transition: transform 200ms;
     }
@@ -69,11 +71,16 @@
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
         margin-bottom: var(--margin-200);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
 
 
     &:hover {
+        box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 9px -1px rgba(0, 0, 0, 0.4);
 
         h3 {
             transform: translateX(4px);
@@ -88,6 +95,11 @@
 
 @media (max-width: $screen-mobile) {
     .card {
+
+        h3 {
+            font-size: var(--font-size-700);
+            line-height: var(--line-height-700);
+        }
         p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);
