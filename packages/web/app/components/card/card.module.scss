@@ -39,6 +39,7 @@
 
 .card {
     padding: var(--padding-400);
+    padding-bottom: var(--padding-300);
     border-radius: var(--border-radius-500);
     transition: background 200ms, border 200ms;
     background: var(--color-background-highlight);
@@ -76,10 +77,6 @@
 
     &:hover {
         box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 9px -1px rgba(0, 0, 0, 0.4);
-
-        h3 {
-            transform: translateX(4px);
-        }
     }
 
     &:active {
@@ -104,7 +101,8 @@
             font-size: var(--font-size-700);
             line-height: var(--line-height-700);
         }
-        p {
+        
+        .target, p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);
         }

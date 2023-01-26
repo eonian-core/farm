@@ -11,11 +11,7 @@ const components: MDXComponents = {
   h1: heading.H1,
   h2: heading.H2,
   Column: dynamic(import('./columns/columns')),
-  Contacts: () => {
-    const Contacts = dynamic(import('./contacts/contacts'));
-    
-    return <Contacts locale="en" />
-  }
+  Contacts: dynamic(import('./contacts/contacts'))
 }
 
 
