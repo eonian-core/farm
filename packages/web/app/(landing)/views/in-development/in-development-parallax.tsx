@@ -10,17 +10,18 @@ import Neon64Pic from './assets/neon-46.png'
 import FixedBlock from "../../../components/parallax/fixed-block";
 
 const BackgroundTextScreenMap = {
-  [ScreenName.ULTRA_WIDE]: {x: 0.3, y: -1.6}, 
-  [ScreenName.DESKTOP]: {x: 0.35, y: -1.4},
-  [ScreenName.LAPTOP]: {x: 0.5, y: -1.1},
-  [ScreenName.TABLET]: {x: 0.25, y: -1.55},
-  [ScreenName.MOBILE]: {x: 0.1, y: '-60rem'},
-  [ScreenName.SMALL_MOBILE]: {x: -0.05, y: '-27rem'},
+  [ScreenName.ULTRA_WIDE]: { x: 0.3, y: -1.4 },
+  [ScreenName.DESKTOP]: { x: 0.35, y: -1.4 },
+  [ScreenName.LAPTOP]: { x: 0.5, y: -1.1 },
+  [ScreenName.TABLET]: { x: 0.25, y: -1.55 },
+  [ScreenName.MOBILE]: { x: 0.1, y: '-60rem' },
+  [ScreenName.SMALL_MOBILE]: { x: -0.05, y: '-27rem' },
 }
 
 export const InDevelopmentParallax = () => {
   const screen = useScreenName();
   const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
+  const isSmallMobile = screen === ScreenName.SMALL_MOBILE
 
   return (
     <ParallaxContainer>
@@ -29,10 +30,10 @@ export const InDevelopmentParallax = () => {
         {...position}
         spring={{ stiffness: 300, damping: 50, restDelta: 0.001 }}
         className={styles.imageBox}
-        threshold={screen !== ScreenName.SMALL_MOBILE ? 0.5 : 0.1}
+        threshold={!isSmallMobile ? 0.5 : 0.1}
         scale={{
-          multiplier: screen !== ScreenName.SMALL_MOBILE ? 0.8 : 2,
-          accselerator: screen !== ScreenName.SMALL_MOBILE ? 0.6 : 0.8,
+          multiplier: !isSmallMobile ? 0.8 : 2,
+          accselerator: !isSmallMobile ? 0.6 : 0.8,
         }}
       >
         <NeonImage />
