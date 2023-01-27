@@ -1,12 +1,14 @@
 import React from "react";
 import LogoWithText from "../logo/logo-with-text";
-import globalSocials, {SocialLink} from "../../socials";
+import globalSocials, { SocialLink, useLocalSocials } from "../../socials";
 import styles from './footer.module.scss'
 import { InternalLink } from "../links/links";
 import clsx from "clsx";
 import ExternalLink from "../links/external-link";
 
-const Footer = ({ locale }: { locale: string }) => {
+const Footer = () => {
+  const socials = useLocalSocials()
+
   return (
     <footer className={clsx("w-full max-w-screen-lg p-8 pt-14", styles.footer)}>
       <div className="flex flex-wrap justify-center md:justify-around">
@@ -18,7 +20,7 @@ const Footer = ({ locale }: { locale: string }) => {
         <div className="flex flex-wrap p-4 md:justify-start md:align-start">
           <Resources />
 
-          <Socials socials={globalSocials[locale]} />
+          <Socials {...{ socials }} />
         </div>
       </div>
 
@@ -47,12 +49,15 @@ export const Resources = () => {
         Resources
       </h5>
       <ul>
+        
         {showFooter && (
           <li><InternalLink href="/faq" >FAQ</InternalLink></li>
         )}
+
         {showCommunity && (
           <li><InternalLink href="/community" >Community</InternalLink></li>
         )}
+        
       </ul>
     </div>
   )
@@ -61,10 +66,13 @@ export const Resources = () => {
 export const Socials = ({ socials }: { socials: Array<SocialLink> }) => (
   <div className="mx-12 mb-6">
     <h5 className="text-xl font-medium leading-normal">Social</h5>
+
     <ul className={styles.socials}>{
+
       socials.map(({ name, href, icon }) => (
         <li key={name}><ExternalLink href={href} icon={icon} /></li>
       ))
+
     }</ul>
   </div>
 )

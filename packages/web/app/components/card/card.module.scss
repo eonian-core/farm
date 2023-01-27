@@ -1,18 +1,58 @@
 @import "../../screen.scss";
 
+@mixin flare-effect-on-hover {
+    overflow: hidden;
+    position: relative;
+
+    &:after {
+        background: #fff;
+        content: "";
+        height: 200%;
+        left: -30%;
+        opacity: 0.2;
+        position: absolute;
+        top: -50%;
+        transform: rotate(35deg);
+        transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
+        width: 50px;
+        // z-index: -10;
+    }
+
+    &:hover {
+        &:after {
+            left: 120%;
+        }
+    }
+
+    @media (max-width: $screen-tablet) {
+        &:after {
+            left: -10rem;
+        }
+
+        &:hover {
+            &:after {
+                left: 150%;
+            }
+        }
+    }
+}
+
 .card {
-    padding: var(--padding-300);
-    border-radius: var(--border-radius);
+    padding: var(--padding-400);
+    padding-bottom: var(--padding-300);
+    border-radius: var(--border-radius-500);
     transition: background 200ms, border 200ms;
-    border: 1px solid transparent;
+    background: var(--color-background-highlight);
+    box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 6px -1px rgba(34, 33, 33, 0.493);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 
     margin-top: var(--margin-500);
 
-    margin-left: calc(-1 * var(--padding-300));
-    margin-right: calc(-1 * var(--padding-300));
-
-    display: block;
+    display: flex;
+    flex-direction: column;
     cursor: pointer;
+
+    @include flare-effect-on-hover;
 
     span {
         display: inline-block;
@@ -21,43 +61,48 @@
 
     h3 {
         font-weight: var(--font-semibold);
-        font-size: var(--font-size-700);
+        font-size: var(--font-size-750);
         line-height: var(--line-height-700);
-        margin-bottom: var(--margin-200);
+        margin-bottom: var(--margin-100);
         color: var(--color-text-400);
         transition: transform 200ms;
-
-        &::after {
-            content: ' ->';
-        }
     }
 
     p {
         color: var(--color-text-400);
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
-        margin-bottom: var(--margin-200);
+        margin-bottom: 0;
     }
 
     &:hover {
-        background: var(--color-neutral-800);
-        border: 1px solid var(--color-neutral-700);
-    
-        h3 {
-            transform: translateX(4px);
-        }
+        box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 9px -1px rgba(0, 0, 0, 0.4);
     }
 
     &:active {
-        background: var(--color-neutral-700);
-        border: 1px solid var(--color-neutral-600);
+        box-shadow: inset 0px 0px 24px -12px rgba(0, 0, 0, 0.712);
     }
+}
+
+.target {
+    margin-left: auto;
+
+    color: var(--color-text-500);
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-600);
+    
 }
 
 
 @media (max-width: $screen-mobile) {
     .card {
-        p {
+
+        h3 {
+            font-size: var(--font-size-700);
+            line-height: var(--line-height-700);
+        }
+        
+        .target, p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);
         }

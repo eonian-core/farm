@@ -6,6 +6,7 @@
     overflow: hidden;
 
     animation: fade-in .2s cubic-bezier(.455,.03,.515,.955); 
+    max-width: var(--width-800);
 }
 
 .contentWrapper {

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Card } from './card';
+import { Card, Target } from './card';
 
 const meta: Meta<typeof Card> = {
     title: 'Components/Card',
@@ -15,7 +15,7 @@ const meta: Meta<typeof Card> = {
                     width: 100%;
                     height: 100%;
                 
-                    max-width: var(--max-width);
+                    max-width: var(--width-700);
                     padding: 0 var(--width-gap);
                 }
           `}</style>
@@ -34,6 +34,7 @@ export const Default: Story = {
         children: (<>
             <h3>This is example Card</h3>
             <p>It is used to wrap block with header and text as card.</p>
+            <Target>Target</Target>
         </>)
     }
 }
@@ -45,6 +46,7 @@ export const Hover: Story = {
         children: (<>
             <h3>This is example Card</h3>
             <p>It is used to wrap block with header and text as card.</p>
+            <Target>Target</Target>
         </>)
     }
 }
@@ -56,6 +58,7 @@ export const Active: Story = {
         children: (<>
             <h3>This is example Card</h3>
             <p>It is used to wrap block with header and text as card.</p>
+            <Target>Target</Target>
         </>)
     }
 }

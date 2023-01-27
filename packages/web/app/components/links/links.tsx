@@ -14,10 +14,8 @@ export type LinkWithIconProps = BaseLinkProps & {
     icon?: React.ReactNode;
     /** Can be omited if link must contain only icon */
     children?: React.ReactNode;
-
     /** Class name for icon */
     iconClassName?: string
-
 }
 
 /** Link which can contain optional icon */

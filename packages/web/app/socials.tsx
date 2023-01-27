@@ -4,6 +4,7 @@ import IconMedium from "./components/icons/icon-medium";
 import IconTelegram from "./components/icons/icon-telegram";
 import IconTwitter from "./components/icons/icon-twitter";
 import IconYoutube from "./components/icons/icon-youtube";
+import { useLocale } from "./locale";
 
 export interface SocialLink {
   name: string;
@@ -62,5 +63,17 @@ export const socials: LocalesSocials = {
   ]
 }
 
-
 export default socials;
+
+export const useLocalSocials = (): Array<SocialLink> => {
+  const { current } = useLocale();
+
+  return socials[current];
+}
+
+export const useOtherLanguageslSocials = (): LocalesSocials => {
+  const { current } = useLocale();
+  const {[current]: localLinks, ...otherLocales} = socials
+
+  return otherLocales;
+}

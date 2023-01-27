@@ -4,14 +4,12 @@ import styles from './contacts.module.scss';
 import IconDownOpen from "../../components/icons/icon-down-open";
 import IconClose from "../../components/icons/icon-close";
 import ExternalLink from "../../components/links/external-link";
-import globalSocials, { SocialLink } from "../../socials";
+import { SocialLink, useLocalSocials, useOtherLanguageslSocials } from "../../socials";
 
-export interface ContactsProps {
-    locale: string
-}
 
-export const Contacts = ({ locale }: ContactsProps) => {
-    const {[locale]: localLinks, ...otherLocales} = globalSocials
+export const Contacts = () => {
+    const localLinks = useLocalSocials()
+    const otherLocales = useOtherLanguageslSocials()
 
     return (
         <div className={styles.contacts}>

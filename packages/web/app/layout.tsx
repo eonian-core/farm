@@ -12,6 +12,7 @@ import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import Footer from "./components/footer/footer";
 import styles from './layout.module.scss'
 import GoogleAnalytics from "./google-analytics";
+import { LocaleContext } from "./locale";
 
 const roboto = Roboto({
   subsets: ['latin', 'cyrillic'],
@@ -31,21 +32,23 @@ export default function RootLayout({
   const locale = 'en';
   return (
     <html lang={locale}>
-      <GoogleAnalytics />
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
-      <head />
+      <LocaleContext.Provider value={{current: locale}}>
+        <GoogleAnalytics />
+        {/*
+          <head /> will contain the components returned by the nearest parent
+          head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
+        */}
+        <head />
 
-      <body className={clsx(roboto.className, { [styles.menuOpen]: isMenuOpen })}>
+        <body className={clsx(roboto.className, { [styles.menuOpen]: isMenuOpen })}>
 
-        <Navigation onStateChange={setMenuState} />
+          <Navigation onStateChange={setMenuState} />
 
-        <SlidingFooter footer={<Footer locale={locale} />}>
-          {children}
-        </SlidingFooter>
-      </body>
+          <SlidingFooter footer={<Footer />}>
+            {children}
+          </SlidingFooter>
+        </body>
+      </LocaleContext.Provider>
     </html>
   );
 }
