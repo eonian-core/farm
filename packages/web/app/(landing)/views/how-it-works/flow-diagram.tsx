@@ -1,5 +1,19 @@
 import React, { PureComponent } from "react";
-import { Svg, SVG, G, Path, Marker, Element, Timeline } from "@svgdotjs/svg.js";
+import {
+  Svg,
+  SVG,
+  G,
+  Path,
+  Marker,
+  Element,
+  Timeline,
+  Circle,
+  Text,
+} from "@svgdotjs/svg.js";
+import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
+import styles from "./flow-diagram.module.scss";
+import clsx from "clsx";
+import { text } from "node:stream/consumers";
 
 interface Point {
   x: number;
@@ -7,16 +21,16 @@ interface Point {
 }
 
 interface Props {
-  width?: string;
-  height?: string;
-
-  /**
-   * It is used for debugging purposes. If "true" - the frame path will be displayed.
-   */
-  displayFrame?: boolean;
+  labels: string[];
+  onSelectedLabelChanged?: (label: string) => void;
+  className?: string;
 }
 
-export default class FlowDiagram extends PureComponent<Props> {
+interface State {
+  isMobileDisplay: boolean;
+}
+
+export default class FlowDiagram extends PureComponent<Props, State> {
   private ref: React.RefObject<HTMLDivElement>;
   private svg: Svg;
 
@@ -26,17 +40,6 @@ export default class FlowDiagram extends PureComponent<Props> {
     "hsl(341, 67%, 50%)",
     "hsl(229, 80%, 66%)",
     "hsl(256, 77%, 60%)",
-  ];
-
-  private texts = [
-    "Deposit",
-    "Withdraw",
-    "Find Options",
-    "Allocation",
-    "Investment",
-    "Aggregation",
-    "Reinvestment",
-    "Monitoring",
   ];
 
   private params = {
@@ -51,7 +54,7 @@ export default class FlowDiagram extends PureComponent<Props> {
     arrows: {
       scale: 0.75,
       attributes: {
-        fill: "#f06",
+        fill: "#fff",
       },
     },
     edges: {
@@ -64,9 +67,13 @@ export default class FlowDiagram extends PureComponent<Props> {
     },
     points: {
       dot: {
-        fill: "#fff",
+        size: this.lineWidth * 1.5,
+        attributes: {
+          fill: "#fff",
+        },
       },
       circle: {
+        size: 1.5,
         attributes: {
           fill: "var(--color-background-start)",
           stroke: "#f06",
@@ -86,14 +93,27 @@ export default class FlowDiagram extends PureComponent<Props> {
     },
   };
 
+  private selectedPoint: string | null;
+  private selectedPointGroup: G | null;
+
   constructor(props: Props) {
     super(props);
 
     this.ref = React.createRef();
     this.svg = SVG();
+
+    this.state = {
+      isMobileDisplay: false,
+    };
+
+    this.selectedPoint = null;
+    this.selectedPointGroup = null;
   }
 
   componentDidMount(): void {
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize();
+
     this.drawSVG();
   }
 
@@ -102,13 +122,27 @@ export default class FlowDiagram extends PureComponent<Props> {
   }
 
   componentWillUnmount(): void {
+    window.removeEventListener("resize", this.handleResize);
     this.resetSVG();
   }
 
   render() {
-    const { width, height } = this.props;
-    return <div ref={this.ref} style={{ width, height }} />;
+    const { className } = this.props;
+    return <div ref={this.ref} className={clsx(styles.wrapper, className)} />;
   }
+
+  private handleResize = () => {
+    const { current: container } = this.ref;
+    if (!container) {
+      return;
+    }
+    const { width } = container.getBoundingClientRect();
+    const { isMobileDisplay } = this.state;
+    const toMobile = width <= LAPTOP_SCREEN;
+    if (toMobile !== isMobileDisplay) {
+      this.setState({ isMobileDisplay: toMobile });
+    }
+  };
 
   private drawSVG() {
     const { current: container } = this.ref;
@@ -120,24 +154,28 @@ export default class FlowDiagram extends PureComponent<Props> {
 
     this.svg.addTo(container).size("100%", "100%");
 
-    const frameGroup = this.drawDiagramFrame();
-    this.focusViewBoxTo(frameGroup, 7.5);
-
     const diagramGroup = this.drawDiagram();
-    this.drawEntry(diagramGroup);
-    this.drawExit(diagramGroup);
+
+    const { isMobileDisplay } = this.state;
+    if (!isMobileDisplay) {
+      this.drawLineEntry(diagramGroup);
+      this.drawLineExit(diagramGroup);
+    }
+
     this.drawArrows(diagramGroup);
     this.drawPoints(diagramGroup);
+
+    this.focusViewBoxTo(diagramGroup, 7.5);
   }
 
-  private drawEntry(group: G) {
+  private drawLineEntry(group: G) {
     const { edges } = this.params;
     const path = group.get(0) as Path;
     const { x, y } = path.pointAt(0);
     group.path(`M ${x} ${y} h -${edges.length}`).attr(edges.attributes);
   }
 
-  private drawExit(group: G) {
+  private drawLineExit(group: G) {
     const { edges } = this.params;
     const path = group.get(1) as Path;
     const length = path.length();
@@ -145,41 +183,21 @@ export default class FlowDiagram extends PureComponent<Props> {
     group.path(`M ${x} ${y} h ${edges.length}`).attr(edges.attributes);
   }
 
-  private drawDiagramFrame(): G {
-    const { displayFrame } = this.props;
-    const group = this.svg.group();
-
-    const attributes = {
-      ...this.params.diagram.attributes,
-      "stroke-dasharray": "0.5, 0.5",
-    };
-
-    this.drawDiagram(group, attributes);
-
-    if (!displayFrame) {
-      return group.hide();
-    }
-
-    this.iteratePaths(group, (path) => {
-      for (const position of ["start", "end", "mid"]) {
-        path.marker(position, 10, 10, (add) => {
-          add.circle(10).fill("#f06");
-        });
-      }
-    });
-
-    return group;
-  }
-
   private drawDiagram(
     group?: G,
     attributes = this.params.diagram.attributes
   ): G {
-    const paths = [
-      "m 0 10 Q 10 10 13 1 q 3 -9 12 -13 Q 35 -16 47 -7",
-      "M 35 8 Q 46 16 56 12 Q 65 9 68 -1 Q 71 -10 81 -10",
-      "M 47 -7 a 1 1 0 0 1 -12 15 A 1 1 0 0 1 47 -7",
-    ];
+    const paths = this.state.isMobileDisplay
+      ? [
+          "M 0 -16 Q 4 -15 7 -12 q 5 6 1 15",
+          "M -8 -3 Q -12 7 -7 12 Q -4 15 0 16",
+          "M 8 3 A 1 1 60 0 1 -8 -3 A 1 1 60 0 1 8 3",
+        ]
+      : [
+          "m 0 10 Q 10 10 13 1 q 3 -9 12 -13 Q 35 -16 47 -7",
+          "M 35 8 Q 46 16 56 12 Q 65 9 68 -1 Q 71 -10 81 -10",
+          "M 47 -7 a 1 1 0 0 1 -12 15 A 1 1 0 0 1 47 -7",
+        ];
 
     const entryPath = paths[0];
     const exitPath = paths[1];
@@ -243,11 +261,12 @@ export default class FlowDiagram extends PureComponent<Props> {
   }
 
   private drawPoints(group: G) {
+    const { labels } = this.props;
     // Draw entry point
     const entryLeaf = group.get(0) as Path;
     const entryPoint = entryLeaf.pointAt(0);
     this.drawPoint(group, {
-      text: this.texts[0],
+      text: labels[0],
       color: this.colors[0],
       position: entryPoint,
       textOffset: { x: 0, y: -1 },
@@ -258,7 +277,7 @@ export default class FlowDiagram extends PureComponent<Props> {
     const exitLeafLength = exitLeaf.length();
     const exitPoint = exitLeaf.pointAt(exitLeafLength);
     this.drawPoint(group, {
-      text: this.texts[1],
+      text: labels[labels.length - 1],
       color: this.colors[1],
       position: exitPoint,
       textOffset: { x: 0, y: 1 },
@@ -267,7 +286,7 @@ export default class FlowDiagram extends PureComponent<Props> {
     // Generate positions on the circle loop
     const circlePath = group.get(2) as Path;
     const length = circlePath.length();
-    const countPoints = this.texts.length - 2;
+    const countPoints = labels.length - 2;
     const points = new Array(countPoints).fill(0).map((_, i) => {
       const segment = length / countPoints;
       return circlePath.pointAt(i * segment);
@@ -278,7 +297,7 @@ export default class FlowDiagram extends PureComponent<Props> {
     points.forEach((point, i) => {
       const textOffset = this.getNormalizedVector(point, centerPoint);
       this.drawPoint(group, {
-        text: this.texts[i + 2],
+        text: labels[i + 1],
         color: this.colors[2],
         position: point,
         textOffset,
@@ -293,32 +312,26 @@ export default class FlowDiagram extends PureComponent<Props> {
       color: string;
       position: Point;
       textOffset: Point;
-      circleSize?: number;
-      dotSize?: number;
     }
   ) {
-    const {
-      text,
-      color,
-      position,
-      textOffset,
-      circleSize = 1.5,
-      dotSize = this.lineWidth * 1.5,
-    } = options;
+    const { text, color, position, textOffset } = options;
     const { points } = this.params;
+    const { attributes: textAttributes } = points.text;
+    const { size: circleSize, attributes: circleAttributes } = points.circle;
+    const { size: dotSize, attributes: dotAttributes } = points.dot;
 
     const pointOffset = -circleSize / 2;
     const pointGroup = group.group();
     const circleElement = pointGroup
       .circle(circleSize)
       .move(pointOffset, pointOffset)
-      .attr({ ...points.circle.attributes, stroke: color });
+      .attr({ ...circleAttributes, stroke: color });
 
     const dotOffset = pointOffset + circleSize / 2 - dotSize / 2;
     const dotElement = pointGroup
       .circle(dotSize)
       .move(dotOffset, dotOffset)
-      .fill(points.dot.fill);
+      .fill(dotAttributes.fill);
 
     const { x, y } = position;
     const { x: tX, y: tY } = textOffset;
@@ -328,44 +341,76 @@ export default class FlowDiagram extends PureComponent<Props> {
     const textAnchor = isVShifted ? "middle" : tX > 0 ? "start" : "end";
     const textX = tX * offsetFactor;
     const textY = tY * offsetFactor;
-
     const textElement = pointGroup.text(text).attr({
-      ...points.text.attributes,
+      ...textAttributes,
       "text-anchor": textAnchor,
       x: textX,
       y: textY,
     });
 
+    pointGroup.remember("text", text);
     pointGroup.translate(x, y);
     pointGroup.css({ cursor: "pointer" });
 
+    circleElement.remember("size", circleSize);
+    dotElement.remember("size", dotSize);
+    textElement.remember("pos", { x: textX, y: textY });
+
+    this.setupPointAnimation(pointGroup);
+
+    this.addMouseHoverEvent(pointGroup, (isHovered) => {
+      if (this.selectedPoint === text) {
+        return;
+      }
+      pointGroup.remember(isHovered ? "runAnimation" : "reverseAnimation")();
+    });
+
+    pointGroup.click(() => {
+      this.selectPoint(pointGroup);
+    });
+  }
+
+  private selectPoint = (pointGroup: G) => {
+    this.selectedPointGroup?.remember("reverseAnimation")?.();
+
+    this.selectedPointGroup = pointGroup;
+    this.selectedPoint = this.selectedPointGroup.remember("text");
+
+    const { onSelectedLabelChanged } = this.props;
+    onSelectedLabelChanged?.(this.selectedPoint!);
+    pointGroup.remember("runAnimation")();
+  };
+
+  private setupPointAnimation(pointGroup: G) {
+    const circleElement = pointGroup.get(0) as Circle;
+    const dotElement = pointGroup.get(1) as Circle;
+    const textElement = pointGroup.get(2) as Text;
+
+    const circleSize = circleElement.remember("size");
+    const dotSize = dotElement.remember("size");
+    const { x, y } = textElement.remember("pos");
+
     const timeline = new Timeline();
-    dotElement.timeline(timeline);
     circleElement.timeline(timeline);
+    dotElement.timeline(timeline);
     textElement.timeline(timeline);
 
     const animate = <T extends Element>(element: T): T => {
       return element.animate(200, 0, "absolute") as unknown as T;
     };
 
-    this.addMouseHoverEvent(pointGroup, (isHovered) => {
-      if (isHovered) {
-        animate(dotElement).size(dotSize * 1.5);
-        animate(circleElement).size(circleSize * 1.5);
-        animate(textElement).attr({ x: textX * 1.25, y: textY * 1.25 });
-      } else {
-        animate(dotElement).size(dotSize);
-        animate(circleElement).size(circleSize);
-        animate(textElement).attr({ x: textX, y: textY });
-      }
+    pointGroup.remember("runAnimation", () => {
+      animate(dotElement).size(dotSize * 1.5);
+      animate(circleElement).size(circleSize * 1.5);
+      animate(textElement).attr({ x: x * 1.25, y: y * 1.25 });
     });
 
-    pointGroup.click(() => {
-      this.handlePointClick(pointGroup, position);
+    pointGroup.remember("reverseAnimation", () => {
+      animate(dotElement).size(dotSize);
+      animate(circleElement).size(circleSize);
+      animate(textElement).attr({ x, y });
     });
   }
-
-  private handlePointClick = (pointGroup: G, position: Point) => {};
 
   private resetSVG() {
     this.svg.clear();
@@ -425,49 +470,3 @@ export default class FlowDiagram extends PureComponent<Props> {
     group.mouseleave(handler);
   }
 }
-
-/**
- *     const gp = new GradientPath({
-      path: path.node,
-      segments: 30,
-      samples: 3,
-      precision: 2, // Optional
-    });
-
-    const gradients = [
-      { color: "hsl(341, 67%, 50%)", pos: 0 },
-      { color: "hsl(270, 35%, 50%)", pos: 0.5 },
-      { color: "hsl(229, 80%, 66%)", pos: 1 }
-    ];
-
-    gp.render({
-      type: "path",
-      fill: gradients,
-      stroke: gradients,
-      width: 4,
-      strokeWidth: 0.5,
-    });
-
-    ///
-    const gradient = this.svg.gradient("radial", function (add) {
-      add.stop({ offset: 0, color: "#fff" });
-      add.stop({ offset: 1, color: "#555" });
-    });
-    gradient.radius(0.05);
-
-    const size = 300;
-    const circleMask = this.svg
-      .circle(size)
-      .move(position.x - size / 2, position.y - size / 2)
-      .fill(gradient);
-
-    const diagramGroup = pointGroup.parent()! as G;
-    diagramGroup.maskWith(circleMask);
-    ///
-
-    m 0 0 Q 11 -2 14 -11 Q 17 -20 26 -21 t 15 7 A 1 1 0 0 1 28 -3 A 1 1 0 0 1 41 -14 M 28 -3 Q 35 5 43 3 q 7 -2 10 -8 Q 57 -13 65 -17
-    m 0 0 Q 11 -2 14 -11 Q 17 -20 26 -21 T 41 -14 A 1 1 0 0 1 28 -3 A 1 1 0 0 1 41 -14
-    m 0 10 Q 10 10 13 1 q 3 -9 12 -13 Q 35 -16 47 -7 M 47 -7 a 1 1 0 0 1 -12 15 A 1 1 0 0 1 47 -7 M 35 8 Q 46 16 56 12 Q 65 9 68 -1 Q 71 -10 81 -10
-    M 0 -6 C 2 -6 3 -6 8 -7 Q 11 -8 12.937 -9.235 Q 16 -11 19 -11 A 1 1 0 0 1 19 11 Q 16 11 12.937 9.235 Q 11 8 8 7 C 3 6 2 6 0 6
-    M 0 -3 C 2 -3 7 -3 9.205 -5.899 Q 11 -8 12.937 -9.235 Q 16 -11 19 -11 A 1 1 0 0 1 19 11 Q 16 11 12.937 9.235 Q 11 8 9.205 5.899 C 7 3 2 3 0 3
- */

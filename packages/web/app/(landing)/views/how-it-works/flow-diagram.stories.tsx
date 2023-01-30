@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 import FlowDiagram from "./flow-diagram";
 
 const meta: Meta<typeof FlowDiagram> = {
@@ -33,8 +33,15 @@ type Story = StoryObj<typeof FlowDiagram>;
 
 export const Default: Story = {
   args: {
-    width: "100%",
-    height: "400px",
-    displayFrame: true,
+    labels: [
+      "Deposit",
+      "Find Options",
+      "Allocation",
+      "Investment",
+      "Aggregation",
+      "Reinvestment",
+      "Monitoring",
+      "Withdraw",
+    ],
   },
 };
