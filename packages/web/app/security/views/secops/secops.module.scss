@@ -2,7 +2,7 @@
 @import "../../../components/styles/gradient-text.mixin.scss";
 @import "../../../components/styles/appear.animation.scss";
 
-.secops {
+.secOps {
     width: 100%;
     height: 100%;
     min-height: 100vh;
@@ -30,8 +30,31 @@
     }
 }
 
+.riskModel {
+
+}
+
+.paintingUmbrella {
+    position: relative;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 5%;
+        left: 15%;
+        height: calc(50%);
+        width: calc(70%);
+        background: var(--color-accent-background-gradient);
+        border-radius: 30%;
+        z-index: -1;
+        animation: animatedgradient 30s ease alternate infinite;
+        background-size: 300% 300%;
+        filter: blur(40px);
+    }
+}
+
 @media (max-width: $screen-mobile) {
-    .secops {
+    .secOps {
         align-items: flex-start;
 
         &:first-child {
@@ -41,14 +64,14 @@
     }
 }
 @media (max-width: $screen-desktop) {
-    .secops {
+    .secOps {
         grid-template-columns: var(--width-500) var(--width-200);
         grid-row-gap: var(--padding-300);
     }
 }
 
 @media (max-width: $screen-tablet) {
-    .secops {
+    .secOps {
         grid-template-columns: 2fr 1fr;
     }
 }

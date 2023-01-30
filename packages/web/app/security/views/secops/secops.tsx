@@ -9,7 +9,7 @@ export default function SecOps({
   children,
 }: SecOpsProps) {
   return (
-      <div className={styles.secops}>
+      <div className={styles.secOps}>
           {children}
       </div>
   );
