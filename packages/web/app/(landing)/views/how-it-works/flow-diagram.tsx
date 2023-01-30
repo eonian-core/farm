@@ -1,6 +1,5 @@
 import React, { PureComponent } from "react";
-import { Svg, SVG, G, Path, Marker, create } from "@svgdotjs/svg.js";
-import path from "path";
+import { Svg, SVG, G, Path, Marker, Element, Timeline } from "@svgdotjs/svg.js";
 
 interface Point {
   x: number;
@@ -27,6 +26,17 @@ export default class FlowDiagram extends PureComponent<Props> {
     "hsl(341, 67%, 50%)",
     "hsl(229, 80%, 66%)",
     "hsl(256, 77%, 60%)",
+  ];
+
+  private texts = [
+    "Deposit",
+    "Withdraw",
+    "Find Options",
+    "Allocation",
+    "Investment",
+    "Aggregation",
+    "Reinvestment",
+    "Monitoring",
   ];
 
   private params = {
@@ -117,9 +127,7 @@ export default class FlowDiagram extends PureComponent<Props> {
     this.drawEntry(diagramGroup);
     this.drawExit(diagramGroup);
     this.drawArrows(diagramGroup);
-
-    const points = this.drawPoints(diagramGroup);
-    this.drawTextForPoints(diagramGroup, points);
+    this.drawPoints(diagramGroup);
   }
 
   private drawEntry(group: G) {
@@ -234,114 +242,130 @@ export default class FlowDiagram extends PureComponent<Props> {
     );
   }
 
-  private drawPoints(group: G): Point[] {
+  private drawPoints(group: G) {
     // Draw entry point
     const entryLeaf = group.get(0) as Path;
     const entryPoint = entryLeaf.pointAt(0);
-    this.createPoint(group, this.colors[0]).translate(
-      entryPoint.x,
-      entryPoint.y
-    );
+    this.drawPoint(group, {
+      text: this.texts[0],
+      color: this.colors[0],
+      position: entryPoint,
+      textOffset: { x: 0, y: -1 },
+    });
 
     // Draw exit point
     const exitLeaf = group.get(1) as Path;
     const exitLeafLength = exitLeaf.length();
     const exitPoint = exitLeaf.pointAt(exitLeafLength);
-    this.createPoint(group, this.colors[1]).translate(exitPoint.x, exitPoint.y);
+    this.drawPoint(group, {
+      text: this.texts[1],
+      color: this.colors[1],
+      position: exitPoint,
+      textOffset: { x: 0, y: 1 },
+    });
 
-    let points: Point[] = [];
-
-    // Draw loop points
+    // Generate positions on the circle loop
     const circlePath = group.get(2) as Path;
     const length = circlePath.length();
-    const loopPoints = 6;
-    for (let i = 0; i < loopPoints; i++) {
-      const segment = loopPoints ? length / loopPoints : 0;
-      const point = circlePath.pointAt(i * segment);
-      this.createPoint(group, this.colors[2]).translate(point.x, point.y);
-      points.push(point);
-    }
-
-    points.unshift(entryPoint);
-    points.push(exitPoint);
-
-    return points;
-  }
-
-  private drawTextForPoints(group: G, points: Point[]) {
-    const { text } = this.params.points;
-    const entryPoint = points.shift()!;
-    group.text("Deposit").attr({
-      ...text.attributes,
-      x: entryPoint.x,
-      y: entryPoint.y - 2,
+    const countPoints = this.texts.length - 2;
+    const points = new Array(countPoints).fill(0).map((_, i) => {
+      const segment = length / countPoints;
+      return circlePath.pointAt(i * segment);
     });
 
-    const exitPoint = points.pop()!;
-    group.text("Withdraw").attr({
-      ...text.attributes,
-      x: exitPoint.x,
-      y: exitPoint.y + 2,
-    });
-
-    const texts = [
-      "Find Options",
-      "Allocation",
-      "Investment",
-      "Aggregation",
-      "Reinvestment",
-      "Monitoring",
-    ];
-
-    const { x: cx, y: cy } = this.getCenterPoint(points);
-    for (let i = 0; i < texts.length; i++) {
-      const { x, y } = points[i];
-
-      const vector = { x: x - cx, y: y - cy };
-      const vectorLength = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
-      vector.x /= vectorLength;
-      vector.y /= vectorLength;
-
-      group.text(texts[i]).attr({
-        ...text.attributes,
-        "text-anchor": x > cx ? "start" : "end",
-        x: x + vector.x * 1.75,
-        y: y + vector.y * 1.75,
+    // Draw loop points
+    const centerPoint = this.getCenterPoint(points);
+    points.forEach((point, i) => {
+      const textOffset = this.getNormalizedVector(point, centerPoint);
+      this.drawPoint(group, {
+        text: this.texts[i + 2],
+        color: this.colors[2],
+        position: point,
+        textOffset,
       });
-    }
+    });
   }
 
-  private createPoint(
+  private drawPoint(
     group: G,
-    color: string,
-    circleSize = 1.5,
-    dotSize = this.lineWidth * 1.5
+    options: {
+      text: string;
+      color: string;
+      position: Point;
+      textOffset: Point;
+      circleSize?: number;
+      dotSize?: number;
+    }
   ) {
+    const {
+      text,
+      color,
+      position,
+      textOffset,
+      circleSize = 1.5,
+      dotSize = this.lineWidth * 1.5,
+    } = options;
     const { points } = this.params;
 
     const pointOffset = -circleSize / 2;
     const pointGroup = group.group();
-    pointGroup
+    const circleElement = pointGroup
       .circle(circleSize)
       .move(pointOffset, pointOffset)
       .attr({ ...points.circle.attributes, stroke: color });
 
     const dotOffset = pointOffset + circleSize / 2 - dotSize / 2;
-    const dot = pointGroup
+    const dotElement = pointGroup
       .circle(dotSize)
       .move(dotOffset, dotOffset)
       .fill(points.dot.fill);
 
-    pointGroup.attr({ style: "cursor: pointer" });
-    pointGroup.mouseenter(() => {
-      dot.scale(2);
-    });
-    pointGroup.mouseleave(() => {
-      dot.scale(0.5);
+    const { x, y } = position;
+    const { x: tX, y: tY } = textOffset;
+
+    const isVShifted = tX === 0;
+    const offsetFactor = isVShifted ? 2 : 1.75;
+    const textAnchor = isVShifted ? "middle" : tX > 0 ? "start" : "end";
+    const textX = tX * offsetFactor;
+    const textY = tY * offsetFactor;
+
+    const textElement = pointGroup.text(text).attr({
+      ...points.text.attributes,
+      "text-anchor": textAnchor,
+      x: textX,
+      y: textY,
     });
 
-    return pointGroup;
+    pointGroup.translate(x, y);
+    pointGroup.css({ cursor: "pointer" });
+
+    const timeline = new Timeline();
+    dotElement.timeline(timeline);
+    circleElement.timeline(timeline);
+    textElement.timeline(timeline);
+
+    const animate = <T extends Element>(element: T): T => {
+      return element.animate(200, 0, "absolute") as unknown as T;
+    };
+
+    this.addMouseHoverEvent(pointGroup, (isHovered) => {
+      if (isHovered) {
+        animate(dotElement).size(dotSize * 1.5);
+        animate(circleElement).size(circleSize * 1.5);
+        animate(textElement).attr({ x: textX * 1.25, y: textY * 1.25 });
+      } else {
+        animate(dotElement).size(dotSize);
+        animate(circleElement).size(circleSize);
+        animate(textElement).attr({ x: textX, y: textY });
+      }
+    });
+
+    pointGroup.click(() => {
+      this.handlePointClick(pointGroup, position);
+    });
   }
+
+  private handlePointClick = (pointGroup: G, position: Point) => {};
 
   private resetSVG() {
     this.svg.clear();
@@ -382,6 +406,24 @@ export default class FlowDiagram extends PureComponent<Props> {
     );
     return { x: point.x / points.length, y: point.y / points.length };
   }
+
+  private getNormalizedVector({ x, y }: Point, { x: cx, y: cy }: Point) {
+    const vector = { x: x - cx, y: y - cy };
+    const vectorLength = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    vector.x /= vectorLength;
+    vector.y /= vectorLength;
+    return vector;
+  }
+
+  private addMouseHoverEvent(group: G, callback: (hover: boolean) => void) {
+    group.css({ "pointer-events": "bounding-box" } as any);
+    const handler = (event: MouseEvent) => {
+      const isEnter = event.type === "mouseenter";
+      callback(isEnter);
+    };
+    group.mouseenter(handler);
+    group.mouseleave(handler);
+  }
 }
 
 /**
@@ -407,13 +449,20 @@ export default class FlowDiagram extends PureComponent<Props> {
     });
 
     ///
-        var gradient = this.svg.gradient("radial", function (add) {
+    const gradient = this.svg.gradient("radial", function (add) {
       add.stop({ offset: 0, color: "#fff" });
       add.stop({ offset: 1, color: "#555" });
     });
-    gradient.radius(0.1);
-    var ellipse = this.svg.circle(50).move(25, -20).fill(gradient);
-    diagramGroup.maskWith(ellipse);
+    gradient.radius(0.05);
+
+    const size = 300;
+    const circleMask = this.svg
+      .circle(size)
+      .move(position.x - size / 2, position.y - size / 2)
+      .fill(gradient);
+
+    const diagramGroup = pointGroup.parent()! as G;
+    diagramGroup.maskWith(circleMask);
     ///
 
     m 0 0 Q 11 -2 14 -11 Q 17 -20 26 -21 t 15 7 A 1 1 0 0 1 28 -3 A 1 1 0 0 1 41 -14 M 28 -3 Q 35 5 43 3 q 7 -2 10 -8 Q 57 -13 65 -17
