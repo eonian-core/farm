@@ -13,7 +13,6 @@ import {
 import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
 import clsx from "clsx";
-import { text } from "node:stream/consumers";
 
 interface Point {
   x: number;
@@ -21,8 +20,8 @@ interface Point {
 }
 
 interface Props {
-  labels: string[];
-  onSelectedLabelChanged?: (label: string) => void;
+  stepLabels: string[];
+  onActiveStepChanged?: (label: string) => void;
   className?: string;
 }
 
@@ -261,12 +260,12 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private drawPoints(group: G) {
-    const { labels } = this.props;
+    const { stepLabels } = this.props;
     // Draw entry point
     const entryLeaf = group.get(0) as Path;
     const entryPoint = entryLeaf.pointAt(0);
     this.drawPoint(group, {
-      text: labels[0],
+      label: stepLabels[0],
       color: this.colors[0],
       position: entryPoint,
       textOffset: { x: 0, y: -1 },
@@ -277,7 +276,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const exitLeafLength = exitLeaf.length();
     const exitPoint = exitLeaf.pointAt(exitLeafLength);
     this.drawPoint(group, {
-      text: labels[labels.length - 1],
+      label: stepLabels[stepLabels.length - 1],
       color: this.colors[1],
       position: exitPoint,
       textOffset: { x: 0, y: 1 },
@@ -286,7 +285,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     // Generate positions on the circle loop
     const circlePath = group.get(2) as Path;
     const length = circlePath.length();
-    const countPoints = labels.length - 2;
+    const countPoints = stepLabels.length - 2;
     const points = new Array(countPoints).fill(0).map((_, i) => {
       const segment = length / countPoints;
       return circlePath.pointAt(i * segment);
@@ -297,7 +296,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     points.forEach((point, i) => {
       const textOffset = this.getNormalizedVector(point, centerPoint);
       this.drawPoint(group, {
-        text: labels[i + 1],
+        label: stepLabels[i + 1],
         color: this.colors[2],
         position: point,
         textOffset,
@@ -308,13 +307,13 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   private drawPoint(
     group: G,
     options: {
-      text: string;
+      label: string;
       color: string;
       position: Point;
       textOffset: Point;
     }
   ) {
-    const { text, color, position, textOffset } = options;
+    const { label, color, position, textOffset } = options;
     const { points } = this.params;
     const { attributes: textAttributes } = points.text;
     const { size: circleSize, attributes: circleAttributes } = points.circle;
@@ -341,14 +340,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const textAnchor = isVShifted ? "middle" : tX > 0 ? "start" : "end";
     const textX = tX * offsetFactor;
     const textY = tY * offsetFactor;
-    const textElement = pointGroup.text(text).attr({
+    const textElement = pointGroup.text(label).attr({
       ...textAttributes,
       "text-anchor": textAnchor,
       x: textX,
       y: textY,
     });
 
-    pointGroup.remember("text", text);
+    pointGroup.attr("data-label", label);
     pointGroup.translate(x, y);
     pointGroup.css({ cursor: "pointer" });
 
@@ -359,26 +358,35 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.setupPointAnimation(pointGroup);
 
     this.addMouseHoverEvent(pointGroup, (isHovered) => {
-      if (this.selectedPoint === text) {
+      if (this.selectedPoint === label) {
         return;
       }
       pointGroup.remember(isHovered ? "runAnimation" : "reverseAnimation")();
     });
 
     pointGroup.click(() => {
-      this.selectPoint(pointGroup);
+      this.selectPoint(label);
     });
   }
 
-  private selectPoint = (pointGroup: G) => {
+  public selectPoint = (label: string) => {
+    if (this.selectedPoint === label) {
+      return;
+    }
+
+    const group = this.svg.findOne(`g[data-label="${label}"]`) as G;
+    if (!group) {
+      return;
+    }
+
     this.selectedPointGroup?.remember("reverseAnimation")?.();
 
-    this.selectedPointGroup = pointGroup;
-    this.selectedPoint = this.selectedPointGroup.remember("text");
+    this.selectedPointGroup = group;
+    this.selectedPoint = label;
 
-    const { onSelectedLabelChanged } = this.props;
-    onSelectedLabelChanged?.(this.selectedPoint!);
-    pointGroup.remember("runAnimation")();
+    const { onActiveStepChanged } = this.props;
+    onActiveStepChanged?.(this.selectedPoint!);
+    this.selectedPointGroup.remember("runAnimation")();
   };
 
   private setupPointAnimation(pointGroup: G) {

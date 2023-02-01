@@ -1,0 +1,33 @@
+.container {
+  padding: 0 var(--padding-400);
+  flex-shrink: 0;
+  position: relative;
+
+  &--active {
+    .content {
+      top: 100%;
+      transform: translateY(-100%);
+    }
+  }
+}
+
+.content {
+  cursor: pointer;
+  border-radius: var(--border-radius-400);
+  padding: var(--padding-300);
+  background-color: var(--color-background-end);
+  color: var(--color-text-400);
+
+  position: relative;
+
+  top: 50%;
+  transform: translateY(-50%);
+
+  transition: top 150ms ease-out, transform 150ms ease-out;
+
+  h3 {
+    font-size: var(--font-size-600);
+    color: var(--color-text-300);
+    margin-bottom: var(--margin-100);
+  }
+}

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import FlowDiagram from "./flow-diagram";
 
 const meta: Meta<typeof FlowDiagram> = {
-  title: "HowItWorks/FlowDiagram",
+  title: "Views/HowItWorks/FlowDiagram",
   component: FlowDiagram,
   tags: ["autodocs"],
   decorators: [
@@ -33,7 +33,7 @@ type Story = StoryObj<typeof FlowDiagram>;
 
 export const Default: Story = {
   args: {
-    labels: [
+    stepLabels: [
       "Deposit",
       "Find Options",
       "Allocation",
