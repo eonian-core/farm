@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "../../../components/contrainer/container";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
+import { HIW_AUTOSCROLL_DURATION } from "./constants";
 import FlowDiagram from "./flow-diagram";
 import FlowSliderItem, { FlowSliderItemProps } from "./flow-slider-item";
 import styles from "./how-it-works.module.scss";
@@ -49,7 +50,7 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
       const index = stepLabels.indexOf(activeStep) + 1;
       const nextStep = stepLabels[index >= stepLabels.length ? 0 : index];
       setActiveStep(nextStep);
-    }, 5000);
+    }, HIW_AUTOSCROLL_DURATION);
     return () => window.clearInterval(interval);
   }, [activeStep, stepLabels]);
 

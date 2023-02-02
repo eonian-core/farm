@@ -15,8 +15,7 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const { activeStep, setActiveStep } =
-    React.useContext(HIWContext);
+  const { activeStep, setActiveStep } = React.useContext(HIWContext);
 
   const handleClick = React.useCallback(() => {
     setActiveStep(stepLabel);
@@ -40,7 +39,9 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
     return styles;
   }, [isActive, activeRelativeOffsetY, numberColor]);
 
-  const className = clsx(styles.container, { [styles.containerActive]: isActive });
+  const className = clsx(styles.container, {
+    [styles.containerActive]: isActive,
+  });
   return (
     <div
       className={className}
@@ -50,11 +51,14 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
       <div
         ref={contentRef}
         onClick={handleClick}
-        className={styles.content}
+        className={styles.wrapper}
         style={contentStyles}
       >
-        <h3>{stepLabel}</h3>
-        {children}
+        <div className={styles.gradient} />
+        <div className={styles.content}>
+          <h3>{stepLabel}</h3>
+          {children}
+        </div>
       </div>
     </div>
   );
