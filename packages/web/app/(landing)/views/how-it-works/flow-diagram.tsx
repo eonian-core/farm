@@ -10,6 +10,7 @@ import {
   Circle,
   Text,
   Point as SVGPoint,
+  Runner,
 } from "@svgdotjs/svg.js";
 import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
@@ -66,6 +67,16 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       },
     },
     points: {
+      link: {
+        attributes: {
+          "stroke-width": this.lineWidth,
+          "stroke-dasharray": "0.5, 0.85",
+          "stroke-opacity": 0.0,
+          opacity: 0.35,
+          fill: "none",
+          stroke: "var(--color-text-50)",
+        },
+      },
       dot: {
         size: this.lineWidth * 1.5,
         attributes: {
@@ -95,6 +106,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private selectedPoint: string | null;
   private selectedPointGroup: G | null;
+  private selectedPointLinkGroup: G | null;
 
   constructor(props: Props) {
     super(props);
@@ -108,6 +120,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     this.selectedPoint = null;
     this.selectedPointGroup = null;
+    this.selectedPointLinkGroup = null;
   }
 
   componentDidMount(): void {
@@ -394,20 +407,39 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   };
 
   private createLinkToCard(label: string) {
-    const element = document.getElementById(label);
-    const { current: container } = this.ref;
+    const cardElement = document.getElementById(label);
     const pointGroup = this.getPointGroup(label);
-    if (!element || !container || !pointGroup) {
+    if (!cardElement || !pointGroup) {
       return;
     }
 
-    const { x: containerX } = container.getBoundingClientRect();
-    const { width, x: cardX } = element.getBoundingClientRect();
+    const { link } = this.params.points;
+    const stringPath = this.getPathForLink(pointGroup, cardElement);
+    if (!this.selectedPointLinkGroup) {
+      const group = this.selectedPointLinkGroup = this.svg.group();
+      const path = group.path(stringPath).attr(link.attributes);
+      this.animate(path).attr({ "stroke-opacity": 1.0 });
+      return;
+    }
+
+    const path = this.selectedPointLinkGroup.get(0) as Path;
+    this.animate(path)
+      .attr({ "stroke-opacity": 0.0 })
+      .after(() => {
+        path?.plot(stringPath);
+        this.animate(path).attr({ "stroke-opacity": 1.0 });
+      });
+  }
+
+  private getPathForLink(from: G, to: HTMLElement) {
+    const { current: container } = this.ref;
+    const { x: containerX } = container!.getBoundingClientRect();
+    const { width, x: cardX } = to.getBoundingClientRect();
     const centerX = cardX - containerX + width / 2;
 
     const point = new SVGPoint(centerX, 0);
 
-    const { x: startX, y: startY } = pointGroup.remember("pos");
+    const { x: startX, y: startY } = from.remember("pos");
     const { x: endX, y: endY } = point.transform(this.svg.ctm().inverse());
 
     const diffY = endY - startY;
@@ -439,14 +471,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         `V ${endY}`,
       ];
     }
-
-    this.svg
-      .path(path)
-      .attr("stroke-width", this.lineWidth)
-      .attr("stroke-dasharray", "0.5, 0.85")
-      .attr('opacity', 0.35)
-      .fill("none")
-      .stroke("#fff");
+    return path;
   }
 
   private setupPointAnimation(pointGroup: G) {
@@ -463,20 +488,16 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     dotElement.timeline(timeline);
     textElement.timeline(timeline);
 
-    const animate = <T extends Element>(element: T): T => {
-      return element.animate(200, 0, "absolute") as unknown as T;
-    };
-
     pointGroup.remember("runAnimation", () => {
-      animate(dotElement).size(dotSize * 1.5);
-      animate(circleElement).size(circleSize * 1.5);
-      animate(textElement).attr({ x: x * 1.25, y: y * 1.25 });
+      this.animate(dotElement).size(dotSize * 1.5);
+      this.animate(circleElement).size(circleSize * 1.5);
+      this.animate(textElement).attr({ x: x * 1.25, y: y * 1.25 });
     });
 
     pointGroup.remember("reverseAnimation", () => {
-      animate(dotElement).size(dotSize);
-      animate(circleElement).size(circleSize);
-      animate(textElement).attr({ x, y });
+      this.animate(dotElement).size(dotSize);
+      this.animate(circleElement).size(circleSize);
+      this.animate(textElement).attr({ x, y });
     });
   }
 
@@ -541,4 +562,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   private getPointGroup(label: string): G {
     return this.svg.findOne(`g[data-label="${label}"]`) as G;
   }
+
+  private animate = <T extends Element>(element: T, duration = 200): T & Runner => {
+    return element.animate(duration, 0, "absolute") as unknown as T & Runner;
+  };
 }
