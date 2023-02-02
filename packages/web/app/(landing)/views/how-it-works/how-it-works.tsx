@@ -10,14 +10,12 @@ interface Props {
 }
 
 interface HIWContextState {
-  itemWidth: number;
   steps: string[];
   activeStep: string;
   setActiveStep: (label: string) => void;
 }
 
 export const HIWContext = React.createContext<HIWContextState>({
-  itemWidth: 0,
   steps: [],
   activeStep: "",
   setActiveStep: () => {},
@@ -35,7 +33,6 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
 
   const contextValue: HIWContextState = React.useMemo(
     () => ({
-      itemWidth: 350,
       steps: stepLabels,
       activeStep,
       setActiveStep,
@@ -47,18 +44,23 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
     diagramRef.current?.selectPoint(activeStep);
   }, [activeStep]);
 
+  React.useEffect(() => {
+    const interval = window.setInterval(() => {
+      const index = stepLabels.indexOf(activeStep) + 1;
+      const nextStep = stepLabels[index >= stepLabels.length ? 0 : index];
+      setActiveStep(nextStep);
+    }, 5000);
+    return () => window.clearInterval(interval);
+  }, [activeStep, stepLabels]);
+
   return (
-    <Container>
-      <div className={styles.container}>
-        <HIWContext.Provider value={contextValue}>
-          {children}
-        </HIWContext.Provider>
-        <FlowDiagram
-          ref={diagramRef}
-          onActiveStepChanged={setActiveStep}
-          stepLabels={stepLabels}
-        />
-      </div>
+    <Container className={styles.container}>
+      <HIWContext.Provider value={contextValue}>{children}</HIWContext.Provider>
+      <FlowDiagram
+        ref={diagramRef}
+        onActiveStepChanged={setActiveStep}
+        stepLabels={stepLabels}
+      />
     </Container>
   );
 };

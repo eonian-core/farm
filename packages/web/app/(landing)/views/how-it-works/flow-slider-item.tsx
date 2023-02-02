@@ -1,5 +1,6 @@
 import clsx from "clsx";
-import React from "react";
+import React, { CSSProperties } from "react";
+import { HIW_ANIMATION_DURATION, HIW_ITEM_WIDTH } from "./constants";
 import styles from "./flow-slider-item.module.scss";
 import { HIWContext } from "./how-it-works";
 
@@ -14,7 +15,8 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const { itemWidth, activeStep, setActiveStep } = React.useContext(HIWContext);
+  const { activeStep, setActiveStep } =
+    React.useContext(HIWContext);
 
   const handleClick = React.useCallback(() => {
     setActiveStep(stepLabel);
@@ -25,13 +27,15 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
   const numberColor = usePointColor(stepLabel);
 
   const contentStyles = React.useMemo(() => {
-    const styles = {} as any;
+    const styles = {
+      transitionDuration: `${HIW_ANIMATION_DURATION}ms`,
+    } as CSSProperties;
     const hasOffset = isActive && activeRelativeOffsetY != null;
     if (hasOffset) {
       styles["transform"] = `translateY(${activeRelativeOffsetY}px)`;
     }
     if (numberColor) {
-      styles["--card-number-color"] = numberColor;
+      (styles as any)["--card-number-color"] = numberColor;
     }
     return styles;
   }, [isActive, activeRelativeOffsetY, numberColor]);
@@ -40,7 +44,7 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
   return (
     <div
       className={className}
-      style={{ width: `${itemWidth}px` }}
+      style={{ width: `${HIW_ITEM_WIDTH}px` }}
       id={stepLabel}
     >
       <div

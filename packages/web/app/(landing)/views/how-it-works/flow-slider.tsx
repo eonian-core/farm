@@ -1,5 +1,6 @@
 import React from "react";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
+import { HIW_ANIMATION_DURATION, HIW_ITEM_WIDTH } from "./constants";
 import styles from "./flow-slider.module.scss";
 import { HIWContext } from "./how-it-works";
 
@@ -8,8 +9,7 @@ interface Props {
 }
 
 const FlowSlider: React.FC<Props> = ({ children }) => {
-  const { itemWidth, steps, activeStep, setActiveStep } =
-    React.useContext(HIWContext);
+  const { steps, activeStep } = React.useContext(HIWContext);
 
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -23,13 +23,16 @@ const FlowSlider: React.FC<Props> = ({ children }) => {
       return;
     }
     const { width: containerWidth } = container.getBoundingClientRect();
-    const visibleOnScreen = Math.floor(containerWidth / itemWidth);
+    const visibleOnScreen = Math.max(
+      Math.floor(containerWidth / HIW_ITEM_WIDTH),
+      1
+    );
     setVisibleSteps(visibleOnScreen);
 
-    const visiblePart = visibleOnScreen * itemWidth;
+    const visiblePart = visibleOnScreen * HIW_ITEM_WIDTH;
     const offset = (containerWidth - visiblePart) / 2;
     setOffsetX(offset);
-  }, [itemWidth]);
+  }, []);
 
   React.useEffect(() => {
     const { current: container } = ref;
@@ -42,15 +45,19 @@ const FlowSlider: React.FC<Props> = ({ children }) => {
       visibleSteps >= 3
         ? Math.max(Math.min(index - 1, steps.length - visibleSteps), 0)
         : index;
-    setTranslateX(-translateN * itemWidth);
-  }, [visibleSteps, itemWidth, activeStep, steps]);
+    setTranslateX(-translateN * HIW_ITEM_WIDTH);
+  }, [visibleSteps, activeStep, steps]);
 
   return (
     <div
       id="diagram-slider"
       ref={ref}
       className={styles.container}
-      style={{ left: `${offsetX}px`, transform: `translateX(${translateX}px)` }}
+      style={{
+        left: `${offsetX}px`,
+        transform: `translateX(${translateX}px)`,
+        transitionDuration: `${HIW_ANIMATION_DURATION}ms`,
+      }}
     >
       {children}
     </div>

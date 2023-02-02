@@ -15,6 +15,7 @@ import {
 import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
 import clsx from "clsx";
+import { HIW_ANIMATION_DURATION } from "./constants";
 
 interface Point {
   x: number;
@@ -72,9 +73,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
           "stroke-width": this.lineWidth,
           "stroke-dasharray": "0.5, 0.85",
           "stroke-opacity": 0.0,
-          opacity: 0.35,
-          fill: "none",
-          stroke: "var(--color-text-50)",
+          opacity: 0.55,
+          fill: "none"
         },
       },
       dot: {
@@ -201,7 +201,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.drawArrows(diagramGroup);
     this.drawPoints(diagramGroup);
 
-    this.focusViewBoxTo(diagramGroup, 7.5);
+    this.focusViewBoxTo(diagramGroup, { x: 1, y: 5 });
   }
 
   private drawLineEntry(group: G) {
@@ -439,6 +439,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
 
     const { link } = this.params.points;
+    const color = pointGroup.attr("data-color");
     const group = this.selectedPointLinkGroup;
 
     let path = group.get(0) as Path;
@@ -447,14 +448,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         .attr({ "stroke-opacity": 0.0 })
         .after(() => {
           const stringPath = this.getPathForLink(pointGroup, cardElement);
-          path?.plot(stringPath);
+          path?.plot(stringPath).stroke(color);
           this.animate(path).attr({ "stroke-opacity": 1.0 });
         });
       return;
     }
 
     const stringPath = this.getPathForLink(pointGroup, cardElement);
-    path = group.path(stringPath).attr(link.attributes);
+    path = group.path(stringPath).attr({ ...link.attributes, stroke: color });
     this.animate(path).attr({ "stroke-opacity": 1.0 });
   }
 
@@ -533,17 +534,17 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.svg.remove();
   }
 
-  private focusViewBoxTo(group: G, distance: number) {
-    const box = this.resizeBox(group.node.getBBox(), distance);
+  private focusViewBoxTo(group: G, margin: Point) {
+    const box = this.resizeBox(group.node.getBBox(), margin);
     this.svg.viewbox(box);
   }
 
-  private resizeBox({ x, y, width, height }: DOMRect, delta: number): DOMRect {
+  private resizeBox({ x, y, width, height }: DOMRect, margin: Point): DOMRect {
     return new DOMRect(
-      x - delta / 2,
-      y - delta / 2,
-      width + delta,
-      height + delta
+      x - margin.x / 2,
+      y - margin.y / 2,
+      width + margin.x,
+      height + margin.y
     );
   }
 
@@ -592,7 +593,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private animate = <T extends Element>(
     element: T,
-    duration = 200,
+    duration = HIW_ANIMATION_DURATION,
     delay = 0
   ): T & Runner => {
     return element.animate(duration, delay, "absolute") as unknown as T &

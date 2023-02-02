@@ -1,6 +1,10 @@
-.container {
-    width: 100%;
+@import "../../../screen.scss";
 
-    // border-radius: var(--border-radius-500);
-    // background-color: var(--color-background-end);
+.container {
+  width: 100%;
+  height: 100vh;
+  @media (max-width: $screen-mobile) {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
