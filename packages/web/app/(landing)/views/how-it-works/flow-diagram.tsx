@@ -9,6 +9,7 @@ import {
   Timeline,
   Circle,
   Text,
+  Point as SVGPoint,
 } from "@svgdotjs/svg.js";
 import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
@@ -347,6 +348,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       y: textY,
     });
 
+    pointGroup.remember("pos", { x, y });
     pointGroup.attr("data-label", label);
     pointGroup.translate(x, y);
     pointGroup.css({ cursor: "pointer" });
@@ -374,7 +376,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       return;
     }
 
-    const group = this.svg.findOne(`g[data-label="${label}"]`) as G;
+    const group = this.getPointGroup(label);
     if (!group) {
       return;
     }
@@ -387,7 +389,65 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const { onActiveStepChanged } = this.props;
     onActiveStepChanged?.(this.selectedPoint!);
     this.selectedPointGroup.remember("runAnimation")();
+
+    this.createLinkToCard(label);
   };
+
+  private createLinkToCard(label: string) {
+    const element = document.getElementById(label);
+    const { current: container } = this.ref;
+    const pointGroup = this.getPointGroup(label);
+    if (!element || !container || !pointGroup) {
+      return;
+    }
+
+    const { x: containerX } = container.getBoundingClientRect();
+    const { width, x: cardX } = element.getBoundingClientRect();
+    const centerX = cardX - containerX + width / 2;
+
+    const point = new SVGPoint(centerX, 0);
+
+    const { x: startX, y: startY } = pointGroup.remember("pos");
+    const { x: endX, y: endY } = point.transform(this.svg.ctm().inverse());
+
+    const diffY = endY - startY;
+    const halfDiffY = startY + diffY / 2;
+    const fY = halfDiffY;
+
+    const step = 1;
+
+    let path: string[] = [];
+
+    if (endX < startX) {
+      path = [
+        `M ${startX} ${startY}`,
+        `V ${fY}`,
+        `A 1 1 0 0 0 ${startX - step} ${fY - step}`,
+        `H ${endX}`,
+        `A 1 1 0 0 1 ${endX - step} ${fY - step * 2}`,
+        `V ${endY}`,
+      ];
+    } else if (endX === startX) {
+      path = [`M ${startX} ${startY} V ${endY}`];
+    } else {
+      path = [
+        `M ${startX} ${startY}`,
+        `V ${fY}`,
+        `A 1 1 0 0 1 ${startX + step} ${fY - step}`,
+        `H ${endX - step}`,
+        `A 1 1 0 0 0 ${endX} ${fY - step * 2}`,
+        `V ${endY}`,
+      ];
+    }
+
+    this.svg
+      .path(path)
+      .attr("stroke-width", this.lineWidth)
+      .attr("stroke-dasharray", "0.5, 0.85")
+      .attr('opacity', 0.35)
+      .fill("none")
+      .stroke("#fff");
+  }
 
   private setupPointAnimation(pointGroup: G) {
     const circleElement = pointGroup.get(0) as Circle;
@@ -476,5 +536,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     };
     group.mouseenter(handler);
     group.mouseleave(handler);
+  }
+
+  private getPointGroup(label: string): G {
+    return this.svg.findOne(`g[data-label="${label}"]`) as G;
   }
 }
