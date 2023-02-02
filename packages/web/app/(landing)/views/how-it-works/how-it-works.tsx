@@ -1,5 +1,6 @@
 import React from "react";
 import Container from "../../../components/contrainer/container";
+import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
 import FlowDiagram from "./flow-diagram";
 import FlowSliderItem, { FlowSliderItemProps } from "./flow-slider-item";
 import styles from "./how-it-works.module.scss";
@@ -10,13 +11,15 @@ interface Props {
 
 interface HIWContextState {
   itemWidth: number;
-  activeStep: string | null;
+  steps: string[];
+  activeStep: string;
   setActiveStep: (label: string) => void;
 }
 
 export const HIWContext = React.createContext<HIWContextState>({
   itemWidth: 0,
-  activeStep: null,
+  steps: [],
+  activeStep: "",
   setActiveStep: () => {},
 });
 
@@ -25,7 +28,20 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
   const stepLabels = useStepLabels(children);
 
   const [activeStep, setActiveStep] = React.useState(stepLabels[0]);
-  const contextValue = { itemWidth: 350, activeStep, setActiveStep };
+
+  useOnResizeEffect(() => {
+    setActiveStep(stepLabels[0]);
+  }, []);
+
+  const contextValue: HIWContextState = React.useMemo(
+    () => ({
+      itemWidth: 350,
+      steps: stepLabels,
+      activeStep,
+      setActiveStep,
+    }),
+    [stepLabels, activeStep]
+  );
 
   React.useEffect(() => {
     diagramRef.current?.selectPoint(activeStep);

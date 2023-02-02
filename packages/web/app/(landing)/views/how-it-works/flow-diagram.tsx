@@ -106,7 +106,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private selectedPoint: string | null;
   private selectedPointGroup: G | null;
-  private selectedPointLinkGroup: G | null;
+  private selectedPointLinkGroup!: G;
+
+  private sliderObserver: MutationObserver | null;
 
   constructor(props: Props) {
     super(props);
@@ -120,7 +122,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     this.selectedPoint = null;
     this.selectedPointGroup = null;
-    this.selectedPointLinkGroup = null;
+
+    this.sliderObserver = null;
   }
 
   componentDidMount(): void {
@@ -128,6 +131,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.handleResize();
 
     this.drawSVG();
+
+    this.initSliderObserver();
   }
 
   componentDidUpdate(): void {
@@ -137,11 +142,27 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   componentWillUnmount(): void {
     window.removeEventListener("resize", this.handleResize);
     this.resetSVG();
+
+    this.sliderObserver?.disconnect();
   }
 
   render() {
     const { className } = this.props;
     return <div ref={this.ref} className={clsx(styles.wrapper, className)} />;
+  }
+
+  private initSliderObserver() {
+    const sliderElement = document.getElementById("diagram-slider");
+    if (!sliderElement) {
+      return;
+    }
+    this.sliderObserver = new MutationObserver(() => {
+      this.selectedPoint && this.createLinkToCard(this.selectedPoint);
+    });
+    this.sliderObserver.observe(sliderElement, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
   }
 
   private handleResize = () => {
@@ -166,6 +187,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.resetSVG();
 
     this.svg.addTo(container).size("100%", "100%");
+
+    this.selectedPointLinkGroup = this.svg.group();
 
     const diagramGroup = this.drawDiagram();
 
@@ -362,6 +385,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     });
 
     pointGroup.remember("pos", { x, y });
+    pointGroup.id(`point-${label}`);
+    pointGroup.attr("data-color", color);
     pointGroup.attr("data-label", label);
     pointGroup.translate(x, y);
     pointGroup.css({ cursor: "pointer" });
@@ -414,21 +439,23 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
 
     const { link } = this.params.points;
-    const stringPath = this.getPathForLink(pointGroup, cardElement);
-    if (!this.selectedPointLinkGroup) {
-      const group = this.selectedPointLinkGroup = this.svg.group();
-      const path = group.path(stringPath).attr(link.attributes);
-      this.animate(path).attr({ "stroke-opacity": 1.0 });
+    const group = this.selectedPointLinkGroup;
+
+    let path = group.get(0) as Path;
+    if (path) {
+      this.animate(path)
+        .attr({ "stroke-opacity": 0.0 })
+        .after(() => {
+          const stringPath = this.getPathForLink(pointGroup, cardElement);
+          path?.plot(stringPath);
+          this.animate(path).attr({ "stroke-opacity": 1.0 });
+        });
       return;
     }
 
-    const path = this.selectedPointLinkGroup.get(0) as Path;
-    this.animate(path)
-      .attr({ "stroke-opacity": 0.0 })
-      .after(() => {
-        path?.plot(stringPath);
-        this.animate(path).attr({ "stroke-opacity": 1.0 });
-      });
+    const stringPath = this.getPathForLink(pointGroup, cardElement);
+    path = group.path(stringPath).attr(link.attributes);
+    this.animate(path).attr({ "stroke-opacity": 1.0 });
   }
 
   private getPathForLink(from: G, to: HTMLElement) {
@@ -446,7 +473,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const halfDiffY = startY + diffY / 2;
     const fY = halfDiffY;
 
-    const step = 1;
+    const step = Math.min(Math.abs(endX - startX) / 2, 1);
 
     let path: string[] = [];
 
@@ -563,7 +590,12 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     return this.svg.findOne(`g[data-label="${label}"]`) as G;
   }
 
-  private animate = <T extends Element>(element: T, duration = 200): T & Runner => {
-    return element.animate(duration, 0, "absolute") as unknown as T & Runner;
+  private animate = <T extends Element>(
+    element: T,
+    duration = 200,
+    delay = 0
+  ): T & Runner => {
+    return element.animate(duration, delay, "absolute") as unknown as T &
+      Runner;
   };
 }

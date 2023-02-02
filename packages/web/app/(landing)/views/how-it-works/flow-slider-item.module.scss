@@ -3,15 +3,17 @@
   flex-shrink: 0;
   position: relative;
 
-  &--active {
-    .content {
-      // // top: 100%;
-      // transform: translateY(-20%);
-    }
+  counter-increment: count;
+
+  user-select: none;
+  &Active {
+    user-select: auto;
   }
 }
 
 .content {
+  --card-number-color: var(--color-text-400);
+
   cursor: pointer;
   border-radius: var(--border-radius-400);
   padding: var(--padding-300);
@@ -20,14 +22,38 @@
 
   position: relative;
 
+  z-index: 1;
   top: 50%;
   transform: translateY(-50%);
 
   transition: top 150ms ease-out, transform 150ms ease-out;
 
   h3 {
+    display: flex;
+    align-items: center;
+
     font-size: var(--font-size-600);
     color: var(--color-text-300);
     margin-bottom: var(--margin-100);
+
+    &::before {
+      $size: 30px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-size-300);
+
+      content: counter(count, decimal);
+      width: $size;
+      height: $size;
+
+      border-radius: 50%;
+      background-color: var(--color-background-start);
+
+      margin-right: var(--margin-100);
+
+      border: 2px solid var(--card-number-color);
+    }
   }
 }

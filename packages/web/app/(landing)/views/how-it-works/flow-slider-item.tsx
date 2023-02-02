@@ -16,29 +16,27 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
 
   const { itemWidth, activeStep, setActiveStep } = React.useContext(HIWContext);
 
-  const [activeRelativeOffsetY, setActiveRelativeOffsetY] = React.useState<number | null>(null);
-
   const handleClick = React.useCallback(() => {
     setActiveStep(stepLabel);
   }, [stepLabel, setActiveStep]);
 
   const isActive = stepLabel === activeStep;
+  const activeRelativeOffsetY = useRelativeOffsetY(contentRef, [isActive]);
+  const numberColor = usePointColor(stepLabel);
 
-  React.useEffect(() => {
-    const { current: element } = contentRef;
-    const parent = element?.parentElement;
-    if (!element || !parent) {
-      return;
+  const contentStyles = React.useMemo(() => {
+    const styles = {} as any;
+    const hasOffset = isActive && activeRelativeOffsetY != null;
+    if (hasOffset) {
+      styles["transform"] = `translateY(${activeRelativeOffsetY}px)`;
     }
-    const { height } = element.getBoundingClientRect();
-    const { height: parentHeight } = parent.getBoundingClientRect();
-    setActiveRelativeOffsetY(parentHeight - height - parentHeight / 2);
-  }, [isActive]);
+    if (numberColor) {
+      styles["--card-number-color"] = numberColor;
+    }
+    return styles;
+  }, [isActive, activeRelativeOffsetY, numberColor]);
 
-  const className = clsx(styles.container, {
-    [styles["container--active"]]: isActive,
-  });
-
+  const className = clsx(styles.container, { [styles.containerActive]: isActive });
   return (
     <div
       className={className}
@@ -49,11 +47,7 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
         ref={contentRef}
         onClick={handleClick}
         className={styles.content}
-        style={
-          isActive && activeRelativeOffsetY != null
-            ? { transform: `translateY(${activeRelativeOffsetY}px)` }
-            : undefined
-        }
+        style={contentStyles}
       >
         <h3>{stepLabel}</h3>
         {children}
@@ -61,5 +55,34 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
     </div>
   );
 };
+
+function usePointColor(key: string) {
+  const [color, setColor] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    const point = document.getElementById(`point-${key}`);
+    const color = point?.getAttribute("data-color");
+    color && setColor(color);
+  }, [key]);
+  return color;
+}
+
+function useRelativeOffsetY<T extends HTMLElement>(
+  ref: React.RefObject<T>,
+  deps: any[]
+) {
+  const [offsetY, setOffsetY] = React.useState<number | null>(null);
+  React.useEffect(() => {
+    const { current: element } = ref;
+    const parent = element?.parentElement;
+    if (!element || !parent) {
+      return;
+    }
+    const { height } = element.getBoundingClientRect();
+    const { height: parentHeight } = parent.getBoundingClientRect();
+    setOffsetY(parentHeight - height - parentHeight / 2);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+  return offsetY;
+}
 
 export default FlowSliderItem;

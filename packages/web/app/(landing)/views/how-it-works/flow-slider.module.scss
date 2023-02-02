@@ -4,4 +4,7 @@
   width: 100%;
 
   position: relative;
+
+  transition: transform 200ms ease-out;
+  will-change: transform;
 }
