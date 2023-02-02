@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import Container from "../../../components/contrainer/container";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
@@ -78,13 +79,13 @@ function extractStepLabels(children: React.ReactNode): string[] {
 
   const result = [];
   for (const { type, props } of elements) {
-    if (type === FlowSliderItem) {
+    if (props && "stepLabel" in props) {
       const itemProps = props as FlowSliderItemProps;
       result.push(itemProps.stepLabel);
       continue;
     }
 
-    if ("children" in props) {
+    if (props && "children" in props) {
       const next = extractStepLabels(props.children);
       result.push(...next);
     }

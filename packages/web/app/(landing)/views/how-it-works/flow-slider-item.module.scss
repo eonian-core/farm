@@ -1,3 +1,5 @@
+@import "../../../screen.scss";
+
 .container {
   padding: 0 var(--padding-400);
   flex-shrink: 0;
@@ -13,6 +15,10 @@
       opacity: 1;
     }
   }
+
+  @media (max-width: $screen-mobile) {
+    font-size: var(--font-size-300);
+  }
 }
 
 .gradient {
@@ -22,7 +28,7 @@
   transition: opacity 200ms ease-out;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     opacity: 0.85;
     background-color: var(--color-background-end);

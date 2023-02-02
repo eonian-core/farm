@@ -322,7 +322,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     // Generate positions on the circle loop
     const circlePath = group.get(2) as Path;
     const length = circlePath.length();
-    const countPoints = stepLabels.length - 2;
+    const countPoints = Math.max(stepLabels.length - 2, 0);
     const points = new Array(countPoints).fill(0).map((_, i) => {
       const segment = length / countPoints;
       return circlePath.pointAt(i * segment);
