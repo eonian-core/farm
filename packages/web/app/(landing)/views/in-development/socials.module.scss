@@ -1,0 +1,44 @@
+@import "../../../screen.scss";
+
+.container {
+    max-width: var(--width-600);
+    width: 100%;
+}
+
+.socials {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+
+    padding: var(--padding-400);
+    padding-left: 0;
+    padding-right: 0;
+
+    li {
+        margin-right: var(--margin-400);
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        svg {
+            width: var(--font-size-750);
+            height: var(--font-size-750);
+            color: var(--color-text-500);
+        }
+
+        &:hover {
+            svg {
+                color: var(--color-text-400);
+            }
+        }
+    }   
+}
+
+@media (max-width: $screen-mobile) {
+    .socials {
+        justify-content: center;
+
+    }
+}

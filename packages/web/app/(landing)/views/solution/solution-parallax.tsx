@@ -17,13 +17,12 @@ const BackgroundTextScreenMap = {
 
 export const SolutionParallax = () => {
   const screen = useScreenName();
-  const {x, y} = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
+  const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
   
   return (
     <ParallaxContainer className={styles.solutionParalax}>
       <ParallaxBlock
-        x={x}
-        y={y}
+        {...position}
         scale={0.2}
         spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}
         className={styles.backgroundTextBox}
