@@ -131,7 +131,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   componentDidMount(): void {
-    this.initSliderAnimationObserver();
+    setTimeout(this.initSliderAnimationObserver, 100);
 
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
@@ -156,7 +156,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     return <div ref={this.ref} className={clsx(styles.wrapper, className)} />;
   }
 
-  private initSliderAnimationObserver() {
+  private initSliderAnimationObserver = () => {
     const slider = document.getElementById("diagram-slider");
     slider?.addEventListener("transitionstart", this.handleTransition);
     slider?.addEventListener("transitionend", this.handleTransition);

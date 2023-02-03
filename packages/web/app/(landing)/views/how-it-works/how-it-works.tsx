@@ -4,7 +4,7 @@ import Container from "../../../components/contrainer/container";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
 import { HIW_AUTOSCROLL_DURATION } from "./constants";
 import FlowDiagram from "./flow-diagram";
-import FlowSliderItem, { FlowSliderItemProps } from "./flow-slider-item";
+import { FlowSliderItemProps } from "./flow-slider-item";
 import styles from "./how-it-works.module.scss";
 
 interface Props {
