@@ -5,6 +5,6 @@
 
   position: relative;
 
-  transition: transform 200ms ease-out;
-  will-change: transform;
+  transition: transform 200ms ease-out, left 200ms ease-out;
+  will-change: transform, left;
 }

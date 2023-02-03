@@ -172,7 +172,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private handleTransition = (event: TransitionEvent) => {
     const { type, propertyName } = event;
-    if (propertyName !== "transform") {
+    if (['transform', 'left'].indexOf(propertyName) < 0) {
       return;
     }
 
