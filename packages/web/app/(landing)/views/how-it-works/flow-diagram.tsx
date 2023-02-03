@@ -106,9 +106,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     },
   };
 
-  private selectedPoint: string | null;
-  private selectedPointGroup: G | null;
-  private selectedPointLinkGroup!: G;
+  private activeStepPoint: string | null;
+  private activeStepPointGroup: G | null;
+  private activeStepPointLinkGroup!: G;
 
   private debouncedRedrawLink: DebouncedFunc<(point: string | null) => void>;
 
@@ -122,8 +122,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       isMobileDisplay: false,
     };
 
-    this.selectedPoint = null;
-    this.selectedPointGroup = null;
+    this.activeStepPoint = null;
+    this.activeStepPointGroup = null;
 
     this.debouncedRedrawLink = debounce((point: string | null) => {
       point === null ? this.hideLinkToCard() : this.createLinkToCard(point);
@@ -178,7 +178,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     type === "transitionstart"
       ? this.debouncedRedrawLink(null)
-      : this.debouncedRedrawLink(this.selectedPoint);
+      : this.debouncedRedrawLink(this.activeStepPoint);
   };
 
   private handleResize = () => {
@@ -204,7 +204,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     this.svg.addTo(container).size("100%", "100%");
 
-    this.selectedPointLinkGroup = this.svg.group();
+    this.activeStepPointLinkGroup = this.svg.group();
 
     const diagramGroup = this.drawDiagram();
 
@@ -414,7 +414,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.setupPointAnimation(pointGroup);
 
     this.addMouseHoverEvent(pointGroup, (isHovered) => {
-      if (this.selectedPoint === label) {
+      if (this.activeStepPoint === label) {
         return;
       }
       pointGroup.remember(isHovered ? "runAnimation" : "reverseAnimation")();
@@ -426,7 +426,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   public selectPoint = (label: string) => {
-    if (this.selectedPoint === label) {
+    if (this.activeStepPoint === label) {
       return;
     }
 
@@ -435,14 +435,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       return;
     }
 
-    this.selectedPointGroup?.remember("reverseAnimation")?.();
+    this.activeStepPointGroup?.remember("reverseAnimation")?.();
 
-    this.selectedPointGroup = group;
-    this.selectedPoint = label;
+    this.activeStepPointGroup = group;
+    this.activeStepPoint = label;
 
     const { onActiveStepChanged } = this.props;
-    onActiveStepChanged?.(this.selectedPoint!);
-    this.selectedPointGroup.remember("runAnimation")();
+    onActiveStepChanged?.(this.activeStepPoint!);
+    this.activeStepPointGroup.remember("runAnimation")();
   };
 
   private createLinkToCard(label: string) {
@@ -453,7 +453,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
     const { link } = this.params.points;
     const color = pointGroup.attr("data-color");
-    const group = this.selectedPointLinkGroup;
+    const group = this.activeStepPointLinkGroup;
     const path = this.getPathForLink(pointGroup, cardElement);
     const pathElement = this.getPath(group)?.plot(path) ?? group.path(path);
     pathElement.attr({ ...link.attributes, stroke: color });
@@ -461,7 +461,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private hideLinkToCard() {
-    const pathElement = this.getPath(this.selectedPointLinkGroup);
+    const pathElement = this.getPath(this.activeStepPointLinkGroup);
     this.animate(pathElement)?.attr({ "stroke-opacity": 0.0 });
   }
 
