@@ -3,15 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\"",
+    "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\"",
     "dev:next": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "storybook": "storybook dev -p 6006 --quiet",
+    "storybook": "storybook dev -p 6006 --quiet --no-open",
     "build:storybook": "storybook build",
     "serve:storybook": "serve ./storybook-static",
-    "production": "next build && next start"
+    "production": "next build && next start",
+    "open:next": "opener http://localhost:3000"
   },
   "dependencies": {
     "@mdx-js/loader": "^2.2.1",
@@ -51,6 +52,7 @@
     "@types/lodash.debounce": "^4.0.7",
     "concurrently": "^7.6.0",
     "eslint-plugin-storybook": "^0.6.8",
+    "opener": "^1.5.2",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
     "rehype-external-links": "^2.0.1",
