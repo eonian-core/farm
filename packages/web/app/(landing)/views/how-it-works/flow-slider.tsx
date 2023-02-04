@@ -2,7 +2,7 @@ import React from "react";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
 import { HIW_ANIMATION_DURATION, HIW_ITEM_WIDTH } from "./constants";
 import styles from "./flow-slider.module.scss";
-import { HIWContext } from "./how-it-works";
+import { HIWContext } from "./context";
 
 interface Props {
   children: React.ReactNode;

@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React, { CSSProperties } from "react";
 import { HIW_ANIMATION_DURATION, HIW_ITEM_WIDTH } from "./constants";
 import styles from "./flow-slider-item.module.scss";
-import { HIWContext } from "./how-it-works";
+import { HIWContext } from "./context";
 
 export interface FlowSliderItemProps {
   stepLabel: string;
@@ -15,18 +15,14 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const { activeStep, setActiveStep, bottomSlider } =
-    React.useContext(HIWContext);
+  const { activeStep, setActiveStep } = React.useContext(HIWContext);
 
   const handleClick = React.useCallback(() => {
     setActiveStep(stepLabel);
   }, [stepLabel, setActiveStep]);
 
   const isActive = stepLabel === activeStep;
-  const activeRelativeOffsetY = useRelativeOffsetY(contentRef, bottomSlider, [
-    bottomSlider,
-    isActive,
-  ]);
+  const activeRelativeOffsetY = useRelativeOffsetY(contentRef, [isActive]);
   const numberColor = usePointColor(stepLabel);
 
   const contentStyles = React.useMemo(() => {
@@ -80,18 +76,20 @@ function usePointColor(key: string) {
 
 function useRelativeOffsetY<T extends HTMLElement>(
   ref: React.RefObject<T>,
-  reverse: boolean,
   deps: any[]
 ) {
   const [offsetY, setOffsetY] = React.useState<number | null>(null);
   React.useEffect(() => {
     const { current: element } = ref;
     const parent = element?.parentElement;
-    if (!element || !parent) {
+    const diagram = document.getElementById("flow-diagram");
+    if (!element || !parent || !diagram) {
       return;
     }
     const { height } = element.getBoundingClientRect();
-    const { height: parentHeight } = parent.getBoundingClientRect();
+    const { height: parentHeight, y: parentY } = parent.getBoundingClientRect();
+    const { y: diagramY } = diagram.getBoundingClientRect();
+    const reverse = parentY > diagramY;
     setOffsetY(
       reverse ? -parentHeight / 2 : parentHeight - height - parentHeight / 2
     );

@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from "@storybook/react";
+import FlowDiagramContextListener from "./flow-digram-context-listener";
 import FlowSlider from "./flow-slider";
 import FlowSliderItem from "./flow-slider-item";
 import HowItWorks from "./how-it-works";
@@ -35,6 +36,7 @@ export default meta;
 const Template: StoryFn<typeof HowItWorks> = (props) => {
   return (
     <HowItWorks {...props}>
+      <FlowDiagramContextListener />
       <FlowSlider>
         <FlowSliderItem stepLabel="Deposit">
           Deposit your tokens into the Eonian protocol and watch your yield

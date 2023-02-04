@@ -14,27 +14,26 @@ import {
 } from "@svgdotjs/svg.js";
 import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
-import clsx from "clsx";
 import { HIW_ANIMATION_DURATION } from "./constants";
 import debounce from "lodash.debounce";
 import { DebouncedFunc } from "lodash";
+import { HIWContext } from "./context";
 
 interface Point {
   x: number;
   y: number;
 }
 
-interface Props {
-  stepLabels: string[];
-  onActiveStepChanged?: (label: string) => void;
-  className?: string;
-}
+interface Props {}
 
 interface State {
   isMobileDisplay: boolean;
 }
 
 export default class FlowDiagram extends PureComponent<Props, State> {
+  static contextType = HIWContext;
+  context!: React.ContextType<typeof HIWContext>;
+
   private ref: React.RefObject<HTMLDivElement>;
   private svg: Svg;
 
@@ -152,8 +151,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   render() {
-    const { className } = this.props;
-    return <div ref={this.ref} className={clsx(styles.wrapper, className)} />;
+    return <div ref={this.ref} id="flow-diagram" className={styles.wrapper} />;
   }
 
   private initSliderAnimationObserver = () => {
@@ -313,7 +311,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private drawPoints(group: G) {
-    const { stepLabels } = this.props;
+    const { steps: stepLabels } = this.context;
     // Draw entry point
     const entryLeaf = group.get(0) as Path;
     const entryPoint = entryLeaf.pointAt(0);
@@ -440,8 +438,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.activeStepPointGroup = group;
     this.activeStepPoint = label;
 
-    const { onActiveStepChanged } = this.props;
-    onActiveStepChanged?.(this.activeStepPoint!);
+    const { setActiveStep } = this.context;
+    setActiveStep(this.activeStepPoint!);
+
     this.activeStepPointGroup.remember("runAnimation")();
   };
 

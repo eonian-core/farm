@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import PageLoader from "../components/page-loader/page-loader";
-
+import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
@@ -34,21 +34,24 @@ const components: MDXComponents = {
   RoadmapDate: dynamic(import("./views/roadmap/roadmap-date"), { ssr: false }),
   InDevelopment: dynamic(import("./views/in-development/in-development")),
   Card: dynamic(import("../components/card/card")),
-  Target: dynamic(import("../components/card/card").then(({Target}) => Target)),
+  Target: dynamic(
+    import("../components/card/card").then(({ Target }) => Target)
+  ),
   Mbr: dynamic(import("../components/mobile-break/mobile-break")),
-  HowItWorks: dynamic(import("./views/how-it-works/how-it-works"), {
-    ssr: false,
-  }),
-  FlowSlider: dynamic(import("./views/how-it-works/flow-slider"), {
-    ssr: false,
-  }),
-  FlowSliderItem: dynamic(import("./views/how-it-works/flow-slider-item"), {
-    ssr: false,
-  }),
+  HowItWorks: dynamic(import("./views/how-it-works/how-it-works")),
+  FlowSlider: dynamic(import("./views/how-it-works/flow-slider")),
+  FlowSliderItem: dynamic(import("./views/how-it-works/flow-slider-item")),
+  FlowDiagramContextListener: dynamic(
+    import("./views/how-it-works/flow-digram-context-listener"),
+    {
+      ssr: false,
+      loading: () => <FlowDiagramLoader />,
+    }
+  ),
 };
 
 export default function Home() {
-  const Content = dynamic(import(`./content/en.mdx`));  
+  const Content = dynamic(import(`./content/en.mdx`));
   return (
     <main className={styles.main}>
       <MDXProvider components={components}>
