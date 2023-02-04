@@ -12,6 +12,8 @@ export interface ImageCardProps {
   href: string
   /** Path to image */
   image: StaticImageData
+  /** Alt image name */
+  alt: string
   /**
    * Children of card 
    * expect one h3 header and one p element and Target component
@@ -20,20 +22,21 @@ export interface ImageCardProps {
 }
 
 /** Card component which primarly wraps block with header and text as card  */
-export const ImageCard = ({href, image, children}: ImageCardProps) => (<a
+export const ImageCard = ({ href, image, alt, children }: ImageCardProps) => (
+  <a
     href={href}
     className={styles.imageCard}
     target="_blank"
     rel="noopener noreferrer"
   >
-    <Image src={image} alt="magnifier image"/>
+    <Image src={image} alt={alt} placeholder="blur" />
     <div className={styles.content}>
       <H3Context.Provider value={{ isExternalLink: false }}>
         {children}
       </H3Context.Provider>
     </div>
   </a>
-)
+);
 
 export default ImageCard
 

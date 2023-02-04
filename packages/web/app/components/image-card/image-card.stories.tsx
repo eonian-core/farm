@@ -33,6 +33,7 @@ export const Default: Story = {
     args: {
         href: 'https://google.com',
         image: magnifierPic,
+        alt: 'magnifier picture',
         children: (<>
             <h3>This is example ImageCard</h3>
             <p>It is used to wrap block with header, image, and text as card.</p>
