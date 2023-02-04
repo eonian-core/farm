@@ -1,9 +1,11 @@
+import magnifierPic from "../assets/magnifier.png";
+
 <Approach>
     <Column>
         # We are Proud of Our Security
     </Column>
 
-    <ApproachDescription>
+    {/*<ApproachDescription>
         We take security first approach to make sure
         all our contracts are safe to use. We use
         enterprise level software security practices:
@@ -11,7 +13,17 @@
         great results in Web2 world, but was
         forgotten by Web3 developers.
         <InternalLink href="/security/more">Know more</InternalLink>
-    </ApproachDescription>
+    </ApproachDescription>*/}
+    <ImageCard href={'/security/more'} image={magnifierPic}>
+        We take security first approach to make sure
+        all our contracts are safe to use. We use
+        enterprise level software security practices:
+        SecOps and Secure SDLC, which already showed
+        great results in Web2 world, but was
+        forgotten by Web3 developers.
+
+        <Target>Know more</Target>
+    </ImageCard>
 </Approach>
 
 <SecOps>
@@ -34,4 +46,11 @@
 
         <InternalLink href="/security/risks">Full list</InternalLink>
     </RiskModel>
+    <CodeReview>
+        ## Code Review
+
+        Each line of code was reviewed multiple times for high
+        level logic issues, security vulnerabilities, or gas
+        usage inefficiencies
+    </CodeReview>
 </SecOps>
