@@ -15,14 +15,18 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const { activeStep, setActiveStep } = React.useContext(HIWContext);
+  const { activeStep, setActiveStep, bottomSlider } =
+    React.useContext(HIWContext);
 
   const handleClick = React.useCallback(() => {
     setActiveStep(stepLabel);
   }, [stepLabel, setActiveStep]);
 
   const isActive = stepLabel === activeStep;
-  const activeRelativeOffsetY = useRelativeOffsetY(contentRef, [isActive]);
+  const activeRelativeOffsetY = useRelativeOffsetY(contentRef, bottomSlider, [
+    bottomSlider,
+    isActive,
+  ]);
   const numberColor = usePointColor(stepLabel);
 
   const contentStyles = React.useMemo(() => {
@@ -76,6 +80,7 @@ function usePointColor(key: string) {
 
 function useRelativeOffsetY<T extends HTMLElement>(
   ref: React.RefObject<T>,
+  reverse: boolean,
   deps: any[]
 ) {
   const [offsetY, setOffsetY] = React.useState<number | null>(null);
@@ -87,7 +92,9 @@ function useRelativeOffsetY<T extends HTMLElement>(
     }
     const { height } = element.getBoundingClientRect();
     const { height: parentHeight } = parent.getBoundingClientRect();
-    setOffsetY(parentHeight - height - parentHeight / 2);
+    setOffsetY(
+      reverse ? -parentHeight / 2 : parentHeight - height - parentHeight / 2
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
   return offsetY;

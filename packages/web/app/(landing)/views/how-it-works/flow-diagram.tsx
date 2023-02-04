@@ -160,7 +160,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const slider = document.getElementById("diagram-slider");
     slider?.addEventListener("transitionstart", this.handleTransition);
     slider?.addEventListener("transitionend", this.handleTransition);
-  }
+  };
 
   private disposeSliderAnimationObserver() {
     this.debouncedRedrawLink.cancel();
@@ -172,7 +172,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private handleTransition = (event: TransitionEvent) => {
     const { type, propertyName } = event;
-    if (['transform', 'left'].indexOf(propertyName) < 0) {
+    if (["transform", "left"].indexOf(propertyName) < 0) {
       return;
     }
 
@@ -467,14 +467,24 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private getPathForLink(from: G, to: HTMLElement) {
     const { current: container } = this.ref;
-    const { x: containerX } = container!.getBoundingClientRect();
-    const { width, x: cardX } = to.getBoundingClientRect();
+    const {
+      x: containerX,
+      y: containerY,
+      height,
+    } = container!.getBoundingClientRect();
+    const { width, x: cardX, y: cardY } = to.getBoundingClientRect();
     const centerX = cardX - containerX + width / 2;
 
-    const point = new SVGPoint(centerX, 0);
+    const isOnBottom = cardY > containerY;
+    const point = new SVGPoint(centerX, isOnBottom ? height : 0);
 
-    const { x: startX, y: startY } = from.remember("pos");
-    const { x: endX, y: endY } = point.transform(this.svg.ctm().inverse());
+    const pointPosition = from.remember("pos");
+    const cardPosition = point.transform(this.svg.ctm().inverse());
+
+    const startX = isOnBottom ? cardPosition.x : pointPosition.x;
+    const startY = isOnBottom ? cardPosition.y : pointPosition.y;
+    const endX = isOnBottom ? pointPosition.x : cardPosition.x;
+    const endY = isOnBottom ? pointPosition.y : cardPosition.y;
 
     const diffY = endY - startY;
     const halfDiffY = startY + diffY / 2;
@@ -489,9 +499,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         `M ${startX} ${startY}`,
         `V ${fY}`,
         `A 1 1 0 0 0 ${startX - step} ${fY - step}`,
-        `H ${endX}`,
-        `A 1 1 0 0 1 ${endX - step} ${fY - step * 2}`,
-        `V ${endY}`,
+        `H ${endX + step}`,
+        `A 1 1 0 0 1 ${endX} ${fY - step * 2}`,
+        `L ${endX} ${endY}`,
       ];
     } else if (endX === startX) {
       path = [`M ${startX} ${startY} V ${endY}`];
@@ -502,7 +512,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         `A 1 1 0 0 1 ${startX + step} ${fY - step}`,
         `H ${endX - step}`,
         `A 1 1 0 0 0 ${endX} ${fY - step * 2}`,
-        `V ${endY}`,
+        `L ${endX} ${endY}`,
       ];
     }
     return path;

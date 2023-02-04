@@ -1,5 +1,7 @@
-'use client';
-import React from "react";
+"use client";
+import clsx from "clsx";
+import { useInView } from "framer-motion";
+import React, { useInsertionEffect } from "react";
 import Container from "../../../components/contrainer/container";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
 import { HIW_AUTOSCROLL_DURATION } from "./constants";
@@ -12,20 +14,28 @@ interface Props {
 }
 
 interface HIWContextState {
+  bottomSlider: boolean;
   steps: string[];
   activeStep: string;
   setActiveStep: (label: string) => void;
 }
 
-export const HIWContext = React.createContext<HIWContextState>({
+const defaultHIWContextState = {
+  bottomSlider: true,
   steps: [],
   activeStep: "",
   setActiveStep: () => {},
-});
+};
+export const HIWContext = React.createContext<HIWContextState>(
+  defaultHIWContextState
+);
 
 const HowItWorks: React.FC<Props> = ({ children }) => {
+  const containerRef = React.useRef<HTMLElement>(null);
   const diagramRef = React.useRef<FlowDiagram>(null);
   const stepLabels = useStepLabels(children);
+
+  const isInView = useInView(containerRef);
 
   const [activeStep, setActiveStep] = React.useState(stepLabels[0]);
 
@@ -35,6 +45,7 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
 
   const contextValue: HIWContextState = React.useMemo(
     () => ({
+      ...defaultHIWContextState,
       steps: stepLabels,
       activeStep,
       setActiveStep,
@@ -47,16 +58,22 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
   }, [activeStep]);
 
   React.useEffect(() => {
+    if (!isInView) {
+      return;
+    }
     const interval = window.setInterval(() => {
       const index = stepLabels.indexOf(activeStep) + 1;
       const nextStep = stepLabels[index >= stepLabels.length ? 0 : index];
       setActiveStep(nextStep);
     }, HIW_AUTOSCROLL_DURATION);
     return () => window.clearInterval(interval);
-  }, [activeStep, stepLabels]);
+  }, [isInView, activeStep, stepLabels]);
 
+  const className = clsx(styles.container, {
+    [styles.containerReverse]: contextValue.bottomSlider,
+  });
   return (
-    <Container className={styles.container}>
+    <Container ref={containerRef} className={className}>
       <HIWContext.Provider value={contextValue}>{children}</HIWContext.Provider>
       <FlowDiagram
         ref={diagramRef}

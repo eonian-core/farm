@@ -12,4 +12,8 @@
   @media (max-width: $screen-laptop) and (min-width: $screen-mobile) {
     margin-top: var(--margin-900);
   }
+
+  &Reverse {
+    flex-direction: column-reverse;
+  }
 }
