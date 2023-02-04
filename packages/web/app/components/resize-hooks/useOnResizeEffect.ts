@@ -9,5 +9,6 @@ export function useOnResizeEffect(effect: EffectCallback, deps?: DependencyList)
       window.addEventListener("resize", effect);
   
       return () => window.removeEventListener("resize", effect);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps);
   }
