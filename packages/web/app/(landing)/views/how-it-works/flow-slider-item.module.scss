@@ -120,5 +120,6 @@
   top: 50%;
   transform: translateY(-50%);
 
-  transition: transform 150ms ease-out;
+  transition: transform 150ms ease-out, opacity 150ms ease-out;
+  will-change: transform, opacity;
 }

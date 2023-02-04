@@ -15,7 +15,7 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
 }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const { activeStep, setActiveStep } = React.useContext(HIWContext);
+  const { steps, activeStep, setActiveStep } = React.useContext(HIWContext);
 
   const handleClick = React.useCallback(() => {
     setActiveStep(stepLabel);
@@ -25,9 +25,21 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
   const activeRelativeOffsetY = useRelativeOffsetY(contentRef, [isActive]);
   const numberColor = usePointColor(stepLabel);
 
+  const distanceOpacity = React.useMemo(() => {
+    const activeIndex = steps.indexOf(activeStep);
+    const currentIndex = steps.indexOf(stepLabel);
+    const distance = Math.abs(activeIndex - currentIndex);
+    if (distance <= 1) {
+      return 1.0;
+    }
+    const fadeStep = 0.3;
+    return Math.max(1.0 - fadeStep * distance, 0);
+  }, [stepLabel, steps, activeStep]);
+
   const contentStyles = React.useMemo(() => {
     const styles = {
       transitionDuration: `${HIW_ANIMATION_DURATION}ms`,
+      opacity: distanceOpacity,
     } as CSSProperties;
     const hasOffset = isActive && activeRelativeOffsetY != null;
     if (hasOffset) {
@@ -37,7 +49,7 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
       (styles as any)["--card-number-color"] = numberColor;
     }
     return styles;
-  }, [isActive, activeRelativeOffsetY, numberColor]);
+  }, [isActive, activeRelativeOffsetY, numberColor, distanceOpacity]);
 
   const className = clsx(styles.container, {
     [styles.containerActive]: isActive,
