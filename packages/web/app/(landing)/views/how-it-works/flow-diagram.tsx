@@ -24,16 +24,16 @@ interface Point {
   y: number;
 }
 
-interface Props {}
+interface Props {
+  stepLabels: string[];
+  onActiveStepChanged: (stepLabel: string) => void;
+}
 
 interface State {
   isMobileDisplay: boolean;
 }
 
 export default class FlowDiagram extends PureComponent<Props, State> {
-  static contextType = HIWContext;
-  context!: React.ContextType<typeof HIWContext>;
-
   private ref: React.RefObject<HTMLDivElement>;
   private svg: Svg;
 
@@ -311,7 +311,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private drawPoints(group: G) {
-    const { steps: stepLabels } = this.context;
+    const { stepLabels } = this.props;
     // Draw entry point
     const entryLeaf = group.get(0) as Path;
     const entryPoint = entryLeaf.pointAt(0);
@@ -438,8 +438,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.activeStepPointGroup = group;
     this.activeStepPoint = label;
 
-    const { setActiveStep } = this.context;
-    setActiveStep(this.activeStepPoint!);
+    const { onActiveStepChanged } = this.props;
+    onActiveStepChanged?.(this.activeStepPoint!);
 
     this.activeStepPointGroup.remember("runAnimation")();
   };

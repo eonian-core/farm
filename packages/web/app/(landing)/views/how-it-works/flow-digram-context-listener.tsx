@@ -4,7 +4,7 @@ import { HIWContext } from "./context";
 import FlowDiagram from "./flow-diagram";
 
 const FlowDiagramContextListener = () => {
-  const { activeStep } = React.useContext(HIWContext);
+  const { activeStep, setActiveStep, steps } = React.useContext(HIWContext);
 
   const diagramRef = React.useRef<FlowDiagram>(null);
 
@@ -14,7 +14,11 @@ const FlowDiagramContextListener = () => {
 
   return (
     <>
-      <FlowDiagram ref={diagramRef} />
+      <FlowDiagram
+        ref={diagramRef}
+        onActiveStepChanged={setActiveStep}
+        stepLabels={steps}
+      />
     </>
   );
 };
