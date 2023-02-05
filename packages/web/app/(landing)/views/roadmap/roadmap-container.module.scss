@@ -2,16 +2,22 @@
 
 .roadmapContainer {
     padding-top: var(--margin-800);
-    padding-bottom: var(--margin-1000);
-}
+    padding-bottom: var(--margin-1100);
 
+    @media (max-width: $screen-tablet) {
+        padding-top: var(--margin-1100);
+        padding-bottom: var(--margin-1100);
+    }
 
-@media (max-width: $screen-mobile) {
+    @media (max-width: $screen-mobile) {
+        padding-top: var(--margin-800);
+        padding-bottom: var(--margin-1000);
 
-    .roadmapContainer {
-        & > h2, & > span {
+        &>h2,
+        &>span {
             padding-left: var(--width-gap);
             padding-right: var(--width-gap);
         }
+
     }
 }

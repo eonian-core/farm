@@ -10,6 +10,7 @@ export interface FadeInChildrenProps {
     children: React.ReactNode
 
     className?: string
+    childClassName?: string
 
     /** The delay before the animation starts, default 0.2s */
     initialDelay?: number
@@ -26,6 +27,7 @@ export interface FadeInChildrenProps {
 export const FadeInChildren = ({
     children,
     className,
+    childClassName,
     delay = 0.05,
     duration = 0.4,
     initialDelay = 0.2,
@@ -36,16 +38,18 @@ export const FadeInChildren = ({
     const delayedIsInView = useDelay(toMs(initialDelay), isInView)
 
     return (
-        <div ref={ref}>
-            <FadeIn 
-                className={className} 
-                delay={toMs(delay)} 
-                visible={delayedIsInView} 
-                transitionDuration={toMs(duration)}
-                >
-                {children}
-            </FadeIn>
-        </div>
+        <FadeIn 
+            className={className} 
+            childClassName={childClassName}
+            delay={toMs(delay)} 
+            visible={delayedIsInView} 
+            transitionDuration={toMs(duration)}
+            wrapperTag={props => (
+                <div {...props} ref={ref} />
+            )}
+        >
+            {children}
+        </FadeIn>
     )
 
 }

@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 
 import Container from "../../../components/contrainer/container"
+import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
 import styles from './solution.module.scss'
 
 // Props for the Solution component
@@ -14,13 +15,15 @@ export const Solution = ({ children }: SolutionProps) => {
     const SolutionParallax = dynamic(import('./solution-parallax'), { ssr: false })
     const FadeInChildren = dynamic(() => import('../../../components/fade-in/fade-in-children'))
 
+    const isMobileOrSmaller = useIsMobileOrSmaller()
+
     return (
         <Container className={styles.pageContainer}>
             <VaultPainting />
 
             <div className={styles.solutionContainer}>
                 <div className={styles.solution}>
-                    <FadeInChildren className={styles.content}>
+                    <FadeInChildren className={styles.content} amount={!isMobileOrSmaller ? "all" : 0.3}>
                         {children}
                     </FadeInChildren>
                 </div>
