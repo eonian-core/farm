@@ -21,6 +21,8 @@ export interface FadeInProps {
 
     /** Should the animation fade up, default is true */
     fadeUp?: boolean
+    /** The initial y position of the element when fade up, default is '30%' */
+    fadeUpinitial?: string
 
     /** Should the animation play only once, default is true */
     once?: boolean
@@ -37,6 +39,7 @@ export const FadeIn = ({
     zoomIn = false,
     zoomInInitial = 0.9,
     fadeUp = true,
+    fadeUpinitial = '30%',
     once = true,
     amount = 'all'
 }: FadeInProps) => {
@@ -47,7 +50,7 @@ export const FadeIn = ({
         <motion.div
             ref={ref}
             className={className}
-            initial={{ opacity: 0, scale: zoomIn ? zoomInInitial : 1, y: fadeUp ? '30%' : 0 }}
+            initial={{ opacity: 0, scale: zoomIn ? zoomInInitial : 1, y: fadeUp ? fadeUpinitial : 0 }}
             animate={isInView && { opacity: 1, scale: 1, y: 0 }}
             transition={{
                 duration,
