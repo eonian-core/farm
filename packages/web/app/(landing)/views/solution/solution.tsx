@@ -12,18 +12,17 @@ interface SolutionProps {
 export const Solution = ({ children }: SolutionProps) => {
     const VaultPainting = dynamic(() => import('./vault-painting'))
     const SolutionParallax = dynamic(import('./solution-parallax'), { ssr: false })
+    const FadeInChildren = dynamic(() => import('../../../components/fade-in/fade-in-children'))
 
     return (
         <Container className={styles.pageContainer}>
             <VaultPainting />
 
             <div className={styles.solutionContainer}>
-               
-
                 <div className={styles.solution}>
-                    <div className={styles.content}>
+                    <FadeInChildren className={styles.content}>
                         {children}
-                    </div>
+                    </FadeInChildren>
                 </div>
 
                 <SolutionParallax />
