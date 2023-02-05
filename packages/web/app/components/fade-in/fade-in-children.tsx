@@ -21,6 +21,9 @@ export interface FadeInChildrenProps {
     /** The amount of the element that needs to be visible before triggering the animation, default is 'all' */
     amount?: "some" | "all" | number
 
+    /** Use <ul> as wrapper tag, default false */
+    isUl?: boolean
+
 }
 
 /** Renders in normal div which children fade in sequentaly one by one */
@@ -31,7 +34,8 @@ export const FadeInChildren = ({
     delay = 0.05,
     duration = 0.4,
     initialDelay = 0.2,
-    amount = 'all'
+    amount = 'all',
+    isUl = false
 }: FadeInChildrenProps) => {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, amount })
@@ -45,7 +49,9 @@ export const FadeInChildren = ({
             visible={delayedIsInView} 
             transitionDuration={toMs(duration)}
             wrapperTag={props => (
-                <div {...props} ref={ref} />
+                isUl 
+                    ? <ul {...props} ref={ref} /> 
+                    : <div {...props} ref={ref} />
             )}
         >
             {children}
