@@ -12,7 +12,7 @@ import {
   Point as SVGPoint,
   Runner,
 } from "@svgdotjs/svg.js";
-import { LAPTOP_SCREEN } from "../../../components/resize-hooks/screens";
+import { DESKTOP_SCREEN, TABLET_SCREEN } from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
 import { HIW_ANIMATION_DURATION } from "./constants";
 import debounce from "lodash.debounce";
@@ -31,7 +31,10 @@ interface Props {
 
 interface State {
   isMobileDisplay: boolean;
+  isDesktopDisplay: boolean;
 }
+
+const fontSizeOnDesktop = 1.5;
 
 export default class FlowDiagram extends PureComponent<Props, State> {
   private ref: React.RefObject<HTMLDivElement>;
@@ -96,7 +99,6 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         attributes: {
           fill: "var(--color-text-300)",
           style: "text-transform: uppercase",
-          "font-size": 1,
           "font-weight": "var(--font-semibold)",
           "text-anchor": "middle",
           "dominant-baseline": "central",
@@ -119,6 +121,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     this.state = {
       isMobileDisplay: false,
+      isDesktopDisplay: false,
     };
 
     this.activeStepPoint = null;
@@ -185,10 +188,18 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       return;
     }
     const { width } = container.getBoundingClientRect();
-    const { isMobileDisplay } = this.state;
-    const toMobile = width <= LAPTOP_SCREEN;
+    const { isMobileDisplay, isDesktopDisplay } = this.state;
+    console.log(width, width <= TABLET_SCREEN, width <= DESKTOP_SCREEN, isMobileDisplay, isDesktopDisplay);
+    const toMobile = width <= TABLET_SCREEN;
     if (toMobile !== isMobileDisplay) {
-      this.setState({ isMobileDisplay: toMobile });
+      this.setState({ isMobileDisplay: toMobile, isDesktopDisplay: false });
+      return
+    }
+
+    const toDesktop = width <= DESKTOP_SCREEN
+    if(!toMobile && toDesktop !== isDesktopDisplay) {
+      this.setState({ isDesktopDisplay: toDesktop });
+      return;
     }
   };
 
@@ -365,6 +376,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
   ) {
     const { label, color, position, textOffset } = options;
+    const {isDesktopDisplay} = this.state;
     const { points } = this.params;
     const { attributes: textAttributes } = points.text;
     const { size: circleSize, attributes: circleAttributes } = points.circle;
@@ -394,6 +406,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const textElement = pointGroup.text(label).attr({
       ...textAttributes,
       "text-anchor": textAnchor,
+      "font-size": isDesktopDisplay ? fontSizeOnDesktop : 1,
       x: textX,
       y: textY,
     });

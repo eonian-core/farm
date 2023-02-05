@@ -9,7 +9,7 @@ import styles from "./solution-parallax.module.scss";
 const BackgroundTextScreenMap = {
   [ScreenName.ULTRA_WIDE]: {x: 1, y: -1.5}, 
   [ScreenName.DESKTOP]: {x: 0.7, y: -1.5},
-  [ScreenName.LAPTOP]: {x: 0.9, y: -1.5},
+  [ScreenName.LAPTOP]: {x: 0.9, y: -1.0},
   [ScreenName.TABLET]: {x: 0.75, y: -1.2},
   [ScreenName.MOBILE]: {x: 0.6, y: -1.1},
   [ScreenName.SMALL_MOBILE]: {x: 0.4, y: -0.8},
