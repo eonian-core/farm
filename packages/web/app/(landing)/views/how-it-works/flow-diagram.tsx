@@ -189,7 +189,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
     const { width } = container.getBoundingClientRect();
     const { isMobileDisplay, isDesktopDisplay } = this.state;
-    console.log(width, width <= TABLET_SCREEN, width <= DESKTOP_SCREEN, isMobileDisplay, isDesktopDisplay);
+    
     const toMobile = width <= TABLET_SCREEN;
     if (toMobile !== isMobileDisplay) {
       this.setState({ isMobileDisplay: toMobile, isDesktopDisplay: false });
@@ -498,9 +498,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const endX = isOnBottom ? pointPosition.x : cardPosition.x;
     const endY = isOnBottom ? pointPosition.y : cardPosition.y;
 
-    const diffY = endY - startY;
-    const halfDiffY = startY + diffY / 2;
-    const fY = halfDiffY;
+    const diffY = isOnBottom ? -1 : 1;
+    const fY = startY + diffY;
 
     const step = Math.min(Math.abs(endX - startX) / 2, 1);
 
