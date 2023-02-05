@@ -14,15 +14,18 @@ interface ProblemProps {
  */
 export const Problem = ({children}: ProblemProps) => {
     const ProblemParallax = dynamic(import('./problem-parallax'))
+    const FadeIn = dynamic(import('../../../components/fade-in/fade-in'))
     
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.problemWrapper}>
-                <div className={styles.problem}>
-                    <div className={styles.content}>
-                        {children}
+                <FadeIn className={styles.problemContainer}>
+                    <div className={styles.problem}>
+                        <div className={styles.content}>
+                            {children}
+                        </div>
                     </div>
-                </div>
+                </FadeIn>
                 <ProblemParallax />
             </div>
         </Container>

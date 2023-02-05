@@ -15,7 +15,7 @@ export const ProblemParallax = () => {
   const isSmallScreen = useIsDesktopOrSmaller();
 
   return (
-    <ParallaxContainer>
+    <ParallaxContainer className={styles.parallaxContainer}>
       <ParallaxBlock
         x={!isSmallScreen ? -0.1 : 0.3}
         y={!isSmallScreen ? 0.2 : -0.8}
