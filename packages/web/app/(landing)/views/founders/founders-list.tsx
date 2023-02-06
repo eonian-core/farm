@@ -1,5 +1,6 @@
-import dynamic from "next/dynamic";
 import React from "react";
+import FadeInChildList from "../../../components/fade-in/fade-in-child-list";
+import FadeInList from "../../../components/fade-in/fade-in-list";
 import { useIsTabletOrSmaller } from "../../../components/resize-hooks/screens";
 import styles from "./founders-list.module.scss";
 
@@ -8,16 +9,18 @@ interface Props {
 }
 
 const FoundersList: React.FC<Props> = ({ children }) => {
-  const FadeInChildren = dynamic(() => import('../../../components/fade-in/fade-in-children'));
 
   const isTabletOrSmaller = useIsTabletOrSmaller()
 
   return (
-    <FadeInChildren 
+    <FadeInChildList 
       className={styles.container} 
       isUl
-      amount={!isTabletOrSmaller ? 'all' : 0.3}
-      >{children}</FadeInChildren>
+      amount={!isTabletOrSmaller ? 0.9 : 0.1}
+      initialDelay={0.3}
+      delay={0.2}
+      >{children}
+      </FadeInChildList>
   );
 };
 

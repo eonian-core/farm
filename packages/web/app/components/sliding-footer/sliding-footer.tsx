@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
+import LandingOnlyRadial from "../footer-radial/footer-radial";
 import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
 import styles from "./sliding-footer.module.scss";
-import dynamic from "next/dynamic";
+
 
 interface SlidingFooterProps {
   children: React.ReactNode;
@@ -24,8 +25,6 @@ const SlidingFooter: React.FC<SlidingFooterProps> = ({ children, footer }) => {
     const { current: footer } = footerRef;
     setMargin(Math.max(footer?.offsetHeight ?? 0, minFooterHeight));
   }, []);
-
-  const LandingOnlyRadial = dynamic(import("../footer-radial/footer-radial"), { ssr: false }) // ssr can break layout
 
   return (
     <>

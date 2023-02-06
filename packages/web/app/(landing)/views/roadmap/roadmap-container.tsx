@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import dynamic from "next/dynamic";
+import FadeIn from "../../../components/fade-in/fade-in";
 import styles from './roadmap-container.module.scss'
 
 export interface RoadmapContainerProps {
@@ -7,7 +7,6 @@ export interface RoadmapContainerProps {
 }
 
 export const RoadmapContainer = ({ children }: RoadmapContainerProps) => {
-    const FadeIn = dynamic(() => import('../../../components/fade-in/fade-in'));
 
     return (
         <FadeIn 

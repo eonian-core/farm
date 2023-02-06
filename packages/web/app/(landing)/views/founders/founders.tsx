@@ -1,5 +1,6 @@
-import dynamic from "next/dynamic";
 import React from "react";
+import FadeIn from "../../../components/fade-in/fade-in";
+import FadeInList from "../../../components/fade-in/fade-in-list";
 import { useIsMobileOrSmaller } from "../../../components/resize-hooks/screens";
 import styles from "./founders.module.scss";
 
@@ -8,12 +9,17 @@ interface Props {
 }
 
 const Founders: React.FC<Props> = ({ children }) => {
-  const FadeInChildren = dynamic(() => import('../../../components/fade-in/fade-in-children'));
 
   const isMobileOrSmaller = useIsMobileOrSmaller()
 
   return (
-    <FadeInChildren className={styles.container} amount={!isMobileOrSmaller ? 0.3 : 0.2} initialDelay={0} delay={0.3}>{children}</FadeInChildren>
+    <FadeInList
+      className={styles.container}
+      amount={!isMobileOrSmaller ? 0.3 : 0.2}
+      initialDelay={0}
+      delay={0.2}>
+      {children}
+    </FadeInList>
   );
 };
 

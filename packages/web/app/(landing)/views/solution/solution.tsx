@@ -1,8 +1,10 @@
-import dynamic from 'next/dynamic'
-
+import { useRef } from "react"
 import Container from "../../../components/contrainer/container"
+import FadeInList from "../../../components/fade-in/fade-in-list"
 import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
+import SolutionParallax from './solution-parallax'
 import styles from './solution.module.scss'
+import VaultPainting from './vault-painting'
 
 // Props for the Solution component
 interface SolutionProps {
@@ -11,10 +13,6 @@ interface SolutionProps {
 }
 
 export const Solution = ({ children }: SolutionProps) => {
-    const VaultPainting = dynamic(() => import('./vault-painting'))
-    const SolutionParallax = dynamic(import('./solution-parallax'), { ssr: false })
-    const FadeInChildren = dynamic(() => import('../../../components/fade-in/fade-in-children'))
-
     const isMobileOrSmaller = useIsMobileOrSmaller()
 
     return (
@@ -22,10 +20,10 @@ export const Solution = ({ children }: SolutionProps) => {
             <VaultPainting />
 
             <div className={styles.solutionContainer}>
-                <div className={styles.solution}>
-                    <FadeInChildren className={styles.content} amount={!isMobileOrSmaller ? "all" : 0.3}>
+                <div className={styles.solution} >
+                    <FadeInList className={styles.content} amount={!isMobileOrSmaller ? 0.9 : 'some'} initialDelay={0}>
                         {children}
-                    </FadeInChildren>
+                    </FadeInList>
                 </div>
 
                 <SolutionParallax />

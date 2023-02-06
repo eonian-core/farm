@@ -1,9 +1,8 @@
-import dynamic from 'next/dynamic';
-import Image from 'next/image'
-
 import Container from "../../../components/contrainer/container";
+import FadeInList from "../../../components/fade-in/fade-in-list";
 import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
 import { useLocalSocials } from '../../../socials';
+import InDevelopmentParallax from './in-development-parallax';
 import styles from './in-development.module.scss';
 import { Socials } from './socials';
 
@@ -15,24 +14,22 @@ interface ContainerProps {
 export const InDevelopment = ({children}: ContainerProps) => {
     const socials = useLocalSocials()
     const isTabletOrSmaller = useIsTabletOrSmaller()
-
-    const InDevelopmentParallax = dynamic(import('./in-development-parallax'))
-    const FadeInChildren = dynamic(import('../../../components/fade-in/fade-in-children'))
     
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.inDevelopmentWrapper}>
                 <InDevelopmentParallax />
                 
-                <FadeInChildren 
+                <FadeInList 
                     className={styles.inDevelopment} 
                     childClassName={styles.inDevelopmentChild} 
-                    amount={isTabletOrSmaller ? 0.4 : 0.8}
+                    amount={isTabletOrSmaller ? 'some': 0.8}
+                    initialDelay={0}
                 >
                     {children}
 
                     <Socials socials={socials} />
-                </FadeInChildren>
+                </FadeInList>
             </div>
         </Container>
     );

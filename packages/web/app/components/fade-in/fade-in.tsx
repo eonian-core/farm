@@ -26,7 +26,10 @@ export interface FadeInProps {
 
     /** Should the animation play only once, default is true */
     once?: boolean
-    /** The amount of the element that needs to be visible before triggering the animation, default is 'all' */
+    /** 
+     * The amount of the element that needs to be visible before triggering the animation, default is '0.9' 
+     * do not use 'all', produce sometimes hardly found bugs
+     * */
     amount?: "some" | "all" | number
 }
 
@@ -41,7 +44,7 @@ export const FadeIn = ({
     fadeUp = true,
     fadeUpinitial = '30%',
     once = true,
-    amount = 'all'
+    amount = 0.9
 }: FadeInProps) => {
     const ref = useRef(null)
     const isInView = useInView(ref, { once, amount })
