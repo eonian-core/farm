@@ -7,6 +7,7 @@ import React, {
     useRef,
     useState,
 } from "react";
+import FadeInChildList from "./fade-in-child-list";
 
 interface FadeInListProps {
     /** The delay before the animation starts, default 0.2s */
@@ -24,7 +25,6 @@ interface FadeInListProps {
 
     /** Use <ul> as wrapper tag, default false */
     isUl?: boolean
-    onComplete?: () => any;
 }
 
 export interface FadeInListContextState {
@@ -47,77 +47,22 @@ export default function FadeInList({
     childClassName,
     amount = 0.9,
     isUl,
-    onComplete
 }: PropsWithChildren<FadeInListProps>) {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, amount })
-    const delayedIsInView = useDelay(toMs(initialDelay), isInView)
-
-    const [maxIsVisible, setMaxIsVisible] = useState(0);
-
-    useEffect(() => {
-        let count = Children.count(children);
-        if (!delayedIsInView) {
-            // Animate all children out
-            count = 0;
-        }
-
-        if (count == maxIsVisible) {
-            // We're done updating maxVisible, notify when animation is done
-            const timeout = setTimeout(() => {
-                onComplete && onComplete();
-            }, toMs(duration));
-            return () => clearTimeout(timeout);
-        }
-
-        // Move maxIsVisible toward count
-        const increment = count > maxIsVisible ? 1 : -1;
-        const timeout = setTimeout(() => {
-            setMaxIsVisible(maxIsVisible + increment);
-        }, toMs(delay));
-
-        return () => clearTimeout(timeout);
-    }, [
-        Children.count(children),
-        delay,
-        maxIsVisible,
-        delayedIsInView,
-        duration,
-        onComplete
-    ]);
 
     const WrapperTag = isUl ? motion.ul : motion.div;
 
     return (
         <WrapperTag ref={ref} className={className}>
-            <FadeInListContext.Provider value={{isVisible: delayedIsInView}}>
-                {Children.map(children, (child, i) => (
-                    <div
-                        className={childClassName}
-                        style={{
-                            transition: `opacity ${duration}s, transform ${duration}s`,
-                            transform: maxIsVisible > i ? "none" : "translateY(20px)",
-                            opacity: maxIsVisible > i ? 1 : 0,
-                        }}
-                    >
-                        {child}
-                    </div>
-                ))}
+            <FadeInListContext.Provider value={{isVisible: isInView}}>
+                <FadeInChildList
+                    duration={duration}
+                    delay={delay}
+                    initialDelay={initialDelay}
+                    className={childClassName}
+                >{children}</FadeInChildList>
             </FadeInListContext.Provider>
         </WrapperTag>
     );
-}
-
-export const toMs = (seconds: number) => seconds * 1000
-
-/** Add delay between change state */
-export const useDelay = (delay: number, state: boolean) => {
-    const [delayedState, setDelayedState] = useState(state)
-
-    useEffect(() => {
-        const timeout = setTimeout(() => setDelayedState(state), delay)
-        return () => clearTimeout(timeout)
-    }, [state, delay])
-
-    return delayedState
 }
