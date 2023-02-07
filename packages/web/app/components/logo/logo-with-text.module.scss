@@ -1,4 +1,4 @@
-.logo {
+a.logo {
     display: flex;
 
     font-size: var(--font-size-500);
@@ -12,9 +12,8 @@
 
     text-transform: uppercase;
 
-    &, span {
-        color: var(--color-text-300);
-    }
+    color: var(--color-text-300);
+
     &:hover, &:hover span {
         color: var(--color-text-100);
     }   
@@ -23,4 +22,5 @@
 
 .logoIcon {
     margin-top: -0.1rem;
+    color: var(--color-text-300);
 }
