@@ -7,9 +7,11 @@ import styles from "./page.module.css";
 import Hero from "./views/hero/hero";
 import PageLoader from "../components/page-loader/page-loader";
 import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
+import Mbr from "../components/mobile-break/mobile-break";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
+  Mbr, // no lazy loading or it create a flash of content
   h2: dynamic(import("../components/heading/heading").then(({ H2 }) => H2)),
   h3: dynamic(import("../components/heading/heading").then(({ H3 }) => H3)),
   Problem: dynamic(import("./views/problem/problem")),
@@ -37,7 +39,6 @@ const components: MDXComponents = {
   Target: dynamic(
     import("../components/card/card").then(({ Target }) => Target)
   ),
-  Mbr: dynamic(import("../components/mobile-break/mobile-break")),
   HowItWorks: dynamic(import("./views/how-it-works/how-it-works")),
   FlowSlider: dynamic(import("./views/how-it-works/flow-slider")),
   FlowSliderItem: dynamic(import("./views/how-it-works/flow-slider-item")),

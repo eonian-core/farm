@@ -1,5 +1,7 @@
-import dynamic from "next/dynamic"
 import Container from "../../../components/contrainer/container"
+import FadeIn from "../../../components/fade-in/fade-in"
+import { useIsMobileOrSmaller } from "../../../components/resize-hooks/screens"
+import ProblemParallax from "./problem-parallax"
 import styles from './problem.module.scss'
 
 
@@ -13,16 +15,20 @@ interface ProblemProps {
  * @param children - content of the block
  */
 export const Problem = ({children}: ProblemProps) => {
-    const ProblemParallax = dynamic(import('./problem-parallax'))
+
+    const isMobileOrSmaller = useIsMobileOrSmaller()
     
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.problemWrapper}>
-                <div className={styles.problem}>
-                    <div className={styles.content}>
-                        {children}
+                <FadeIn className={styles.problemContainer} amount={!isMobileOrSmaller ? 0.5 : 0.3} delay={0.3}>
+                    <div className={styles.problem}>
+                        <div className={styles.content}>
+                            {children}
+                        </div>
                     </div>
-                </div>
+                </FadeIn>
+
                 <ProblemParallax />
             </div>
         </Container>

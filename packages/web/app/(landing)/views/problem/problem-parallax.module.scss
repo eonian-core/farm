@@ -1,5 +1,11 @@
 @import "../../../screen.scss";
 
+.parallaxContainer {
+  img {
+    transition: 0.3s;
+  }
+}
+
 .ethereumBox {
   z-index: -150;
 }
@@ -11,7 +17,6 @@
 .imageContainer {
   position: relative;
   height: 100%;
-
 
 }
 

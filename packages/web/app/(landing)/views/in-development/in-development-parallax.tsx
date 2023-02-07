@@ -3,15 +3,16 @@ import Image from "next/image";
 
 import ParallaxContainer from "../../../components/parallax/parallax-container";
 import ParallaxBlock from "../../../components/parallax/parallax-block";
-import { ScreenName, useIsDesktopOrSmaller, useScreenName } from "../../../components/resize-hooks/screens";
+import { ScreenName, useIsDesktopOrSmaller, useIsTabletOrSmaller, useScreenName } from "../../../components/resize-hooks/screens";
 
 import styles from "./in-development-parallax.module.scss";
 import Neon64Pic from './assets/neon-46.png'
 import FixedBlock from "../../../components/parallax/fixed-block";
+import FadeIn from "../../../components/fade-in/fade-in";
 
 const BackgroundTextScreenMap = {
   [ScreenName.ULTRA_WIDE]: { x: 0.3, y: -1.4 },
-  [ScreenName.DESKTOP]: { x: 0.35, y: -1.4 },
+  [ScreenName.DESKTOP]: { x: 0.5, y: -1.1 },
   [ScreenName.LAPTOP]: { x: 0.5, y: -1.1 },
   [ScreenName.TABLET]: { x: 0.25, y: -1.55 },
   [ScreenName.MOBILE]: { x: 0.1, y: '-60rem' },
@@ -22,6 +23,13 @@ export const InDevelopmentParallax = () => {
   const screen = useScreenName();
   const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
   const isSmallMobile = screen === ScreenName.SMALL_MOBILE
+
+  const isTabletOrSmaller = useIsTabletOrSmaller()
+  if(isTabletOrSmaller) {
+    return <FadeIn className={styles.imageContainer} zoomIn zoomInInitial={0.5}>
+      <NeonImage />
+    </FadeIn>
+  }
 
   return (
     <ParallaxContainer>

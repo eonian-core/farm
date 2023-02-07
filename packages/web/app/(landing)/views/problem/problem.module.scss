@@ -23,8 +23,14 @@
     justify-content: center;
     position: relative;
 
-    &::before {
-        content: '';
+    z-index: -99;
+}
+
+.problemContainer {
+    position: relative;
+
+    &:before {
+        content: "";
         position: absolute;
         top: calc(-1 * var(--border-radius-400));
         left: calc(-1 * var(--border-radius-400));
@@ -37,8 +43,6 @@
         animation: animatedgradient 20s ease alternate infinite;
         background-size: 300% 300%;
     }
-
-    z-index: -99;
 }
 
 .problem {
@@ -73,13 +77,15 @@
 }
 
 @media (max-width: $screen-tablet) {
-    .problemWrapper, .problem {
+
+    .problemWrapper,
+    .problem {
         width: 100%;
     }
 
     .problem {
         padding: var(--padding-700) calc(var(--width-gap) * 0.5);
-        
+
     }
 
     .pageContainer {
@@ -103,7 +109,7 @@
         padding: 0 !important;
     }
 
-    .problemWrapper {
+    .problemContainer {
         &::before {
             border-radius: 0;
 
