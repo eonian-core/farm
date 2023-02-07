@@ -21,7 +21,7 @@ export const Problem = ({children}: ProblemProps) => {
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.problemWrapper}>
-                <FadeIn className={styles.problemContainer} amount={!isMobileOrSmaller ? 0.5 : 0.3} delay={0}>
+                <FadeIn className={styles.problemContainer} amount={!isMobileOrSmaller ? 0.5 : 0.3} delay={0.3}>
                     <div className={styles.problem}>
                         <div className={styles.content}>
                             {children}

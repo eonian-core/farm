@@ -15,7 +15,9 @@ export const ProblemParallax = () => {
   const isSmallScreen = useIsDesktopOrSmaller();
 
   return (
-    <ParallaxContainer className={styles.parallaxContainer}>
+    <ParallaxContainer className={styles.parallaxContainer} fadeIn={{
+      delay: 0.2,
+    }}>
       <ParallaxBlock
         x={!isSmallScreen ? -0.1 : 0.3}
         y={!isSmallScreen ? 0.2 : -0.8}
