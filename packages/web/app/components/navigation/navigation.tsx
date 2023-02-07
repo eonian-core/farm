@@ -4,7 +4,10 @@ import { InternalLink } from "../links/links";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
 import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
-import Menu from "./menu"; // TODO: use async import, when framer motion will support it
+import Menu from "./menu";
+
+
+// TODO: highlight or cross out link for current page
 
 export interface NavigationProps {
   onStateChange?: (isOpen: boolean) => void;
