@@ -89,11 +89,9 @@ function extractStepLabels(children: React.ReactNode): string[] {
 
 /** Switch state to true only once */
 export const useOnce = (target: boolean): boolean => {
-  const [state, setState] = React.useState(false);
-  
-  React.useEffect(() => {
-    setState(target);
-  }, [state || target]);
+  const ref = React.useRef<boolean>(target);
 
-  return state;
+  ref.current ||= target;
+
+  return ref.current;
 }
