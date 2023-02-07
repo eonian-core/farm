@@ -1,10 +1,11 @@
 import React from 'react'
-import { H3Context } from '../heading/heading'
-import IconExternal from '../icons/icon-external'
+import clsx from 'clsx';
+import Image from 'next/image';
+import { StaticImageData } from 'next/dist/client/image';
 
+import { H3Context } from '../heading/heading'
 import styles from './image-card.module.scss'
-import Image from "next/image";
-import {StaticImageData} from "next/dist/client/image";
+import IconExternal from '../icons/icon-external'
 
 /** Props for Card component */
 export interface ImageCardProps {
@@ -14,6 +15,8 @@ export interface ImageCardProps {
   image: StaticImageData
   /** Alt image name */
   alt: string
+  /** Vertical orientation */
+  isVertical: boolean
   /**
    * Children of card 
    * expect one h3 header and one p element and Target component
@@ -22,10 +25,10 @@ export interface ImageCardProps {
 }
 
 /** Card component which primarly wraps block with header and text as card  */
-export const ImageCard = ({ href, image, alt, children }: ImageCardProps) => (
+export const ImageCard = ({ href, image, alt = '', isVertical = false, children }: ImageCardProps) => (
   <a
     href={href}
-    className={styles.imageCard}
+    className={clsx(styles.imageCard, {[styles.imageCardVertical]: isVertical})}
     target="_blank"
     rel="noopener noreferrer"
   >

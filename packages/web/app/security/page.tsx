@@ -13,13 +13,12 @@ const components: MDXComponents = {
   h2: heading.H2,
   Column: dynamic(import('./columns/columns')),
   ImageCard: dynamic(import('../components/image-card/image-card')),
+  Card: dynamic(import('../components/card/card')),
   Target: dynamic(import("../components/image-card/image-card").then(({Target}) => Target)),
   InternalLink: dynamic(import('../components/links/links').then(({ InternalLink }) => InternalLink)),
   Approach: dynamic(import('./views/approach/approach')),
   SecOps: dynamic(import('./views/secops/secops')),
   SecOpsDescription: dynamic(import('./views/secops/secops-description')),
-  RiskModel: dynamic(import('./views/secops/risk-model')),
-  CodeReview: dynamic(import('./views/secops/code-review')),
 }
 
 

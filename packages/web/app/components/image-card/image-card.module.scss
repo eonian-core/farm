@@ -51,6 +51,51 @@
 
     @include flare-effect-on-hover;
 
+    //TODO remove styles duplication with imageCardVertical
+    span {
+        display: inline-block;
+        transition: transform 200ms;
+    }
+
+    h3 {
+        font-weight: var(--font-semibold);
+        font-size: var(--font-size-750);
+        line-height: var(--line-height-700);
+        margin-bottom: var(--margin-100);
+        color: var(--color-text-400);
+        transition: transform 200ms;
+    }
+
+    p {
+        color: var(--color-text-400);
+        font-size: var(--font-size-600);
+        line-height: var(--line-height-600);
+        margin-bottom: 0;
+    }
+
+    &:hover {
+        box-shadow: inset 0 0 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 9px -1px rgba(0, 0, 0, 0.4);
+    }
+
+    &:active {
+        box-shadow: inset 0 0 24px -12px rgba(0, 0, 0, 0.712);
+    }
+}
+
+.imageCardVertical {
+    border-radius: var(--border-radius-500);
+    background: var(--color-background-highlight);
+    box-shadow: inset 0 0 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 6px -1px rgba(34, 33, 33, 0.493);
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+
+    margin-top: var(--margin-500);
+
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+
+    @include flare-effect-on-hover;
+
     span {
         display: inline-block;
         transition: transform 200ms;
