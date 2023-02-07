@@ -7,6 +7,8 @@ import styles from "./navigation.module.scss";
 import { Inter } from "@next/font/google";
 import clsx from "clsx";
 
+// TODO: try to implement css version https://codepen.io/jhancock532/pen/GRZrLwY
+
 export interface MenuProps {
     children: React.ReactNode;
     isOpen?: boolean;
@@ -28,38 +30,21 @@ const menuVariants = {
 };
 
 export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
-    const containerRef = useRef(null);
-    const [hamburgerRef, setHamburgerRef] = useState<MutableRefObject<HTMLDivElement | null>>({ current: null }); // Need rerender to calculate dimensions
-    const { height = 0 } = useDimensions(containerRef) || {};
-    const dimensions = useDimensions(hamburgerRef);
-    const animation = useMenuAnimation(dimensions);
 
     return (
-        <motion.div
-            initial={false}
-            animate={isOpen ? "open" : "closed"}
-            custom={height}
-            ref={containerRef}
-            className={styles.menuWrapper}
+        <div
+            className={clsx(styles.menuWrapper, {[styles.menuOpen]: isOpen})}
         >
-            {animation && (
-                <motion.div className={styles.menuBackground} variants={animation} >
-                    <motion.ul variants={menuVariants} className={clsx(inter.className, styles.menuList)}>
-                        {children}
-                    </motion.ul>
-                </motion.div>)
-            }
+            <div className={styles.menuBackground} >
+                <ul className={clsx(inter.className, styles.menuList)}>
+                    {children}
+                </ul>
+            </div>
 
             <div className={styles.hamburger}>
-                <HamburgerMenu active={isOpen} onClick={toggleMenu} ref={
-                    ref => {
-                        if (!hamburgerRef.current && ref) {
-                            setHamburgerRef({ current: ref })
-                        }
-                    }
-                } />
+                <HamburgerMenu active={isOpen} onClick={toggleMenu} />
             </div>
-        </motion.div>
+        </div>
     );
 }
 
