@@ -1,9 +1,10 @@
 import Image from "next/image"
-import { motion, useInView } from "framer-motion"
+import { motion } from "framer-motion"
 import { useRef } from "react"
 
 import vaultPic from './assets/vault2.png'
 import styles from "./vault-painting.module.scss"
+import { useInView } from "../../../components/use-in-view/use-in-view"
 
 
 export const VaultPainting = () => {

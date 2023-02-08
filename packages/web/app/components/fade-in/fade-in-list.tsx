@@ -1,30 +1,14 @@
-import { motion, useInView } from "framer-motion";
+import { ForwardRefComponent, motion, } from "framer-motion";
 import React, {
-    Children,
-    JSXElementConstructor,
     PropsWithChildren,
-    useEffect,
     useRef,
-    useState,
 } from "react";
-import FadeInChildList from "./fade-in-child-list";
+import { useInView } from "../use-in-view/use-in-view";
+import FadeInChildList, { FadeInChildListProps } from "./fade-in-child-list";
 
-interface FadeInListProps {
-    /** The delay before the animation starts, default 0.2s */
-    initialDelay?: number
-    /** The delay between each child, default 0.05s */
-    delay?: number
-    /** The duration of the animation, 0.4s */
-    duration?: number
-
-    className?: string;
+export interface FadeInListProps extends FadeInWrapperProps, FadeInChildListProps {
+    /** Class for children item wrappers */
     childClassName?: string;
-
-    /** The amount of the element that needs to be visible before triggering the animation, default is 'all' */
-    amount?: "some" | "all" | number
-
-    /** Use <ul> as wrapper tag, default false */
-    isUl?: boolean
 }
 
 export interface FadeInListContextState {
@@ -39,29 +23,68 @@ export const FadeInListContext = React.createContext<FadeInListContextState>({
 export const useFadeInListContext = () => React.useContext(FadeInListContext)
 
 export default function FadeInList({
-    duration = 0.4,
-    delay = 0.05,
-    initialDelay = 0.2,
+    children,
+    childClassName,
+    ...props
+}: PropsWithChildren<FadeInListProps>) {
+    return (
+        <FadeInWrapper {...props}>
+            <FadeInChildList
+                {...props}
+                className={childClassName}
+            >{children}</FadeInChildList>
+        </FadeInWrapper>
+    )
+}
+
+export interface FadeInWrapperProps extends PropsWithChildren {
+    /** Use <ul> as wrapper tag, default false */
+    isUl?: boolean
+    /** Use <section> as wrapper tag, default false */
+    isSection?: boolean
+
+    className?: string;
+
+    /** The amount of the element that needs to be visible before triggering the animation, default is 'all' */
+    amount?: "some" | "all" | number
+    /** Trigger the animation only once, default true */
+    once?: boolean
+}
+
+export const FadeInWrapper = ({
     children,
     className,
-    childClassName,
     amount = 0.9,
+    once = true,
     isUl,
-}: PropsWithChildren<FadeInListProps>) {
+    isSection,
+}: FadeInWrapperProps) => {
     const ref = useRef(null)
-    const isInView = useInView(ref, { once: true, amount })
+    const isInView = useInView(ref, { once, amount })
+    
 
-    const WrapperTag = isUl ? motion.ul : motion.div;
+    // Possible to pass wrapper component through props
+    // but it in some situations breaks react refs on mobile 
+    let WrapperTag: ForwardRefComponent<any, any> = motion.div;
+    if (isUl) {
+        WrapperTag = motion.ul;
+    }
+    if (isSection) {
+        WrapperTag = motion.section;
+        console.log('isInView', isInView, className, amount);
+        return (
+            <motion.section ref={ref} className={className}>
+                <FadeInListContext.Provider value={{ isVisible: isInView }}>
+                    {children}
+                </FadeInListContext.Provider>
+            </motion.section>
+        );
+    }
 
     return (
         <WrapperTag ref={ref} className={className}>
-            <FadeInListContext.Provider value={{isVisible: isInView}}>
-                <FadeInChildList
-                    duration={duration}
-                    delay={delay}
-                    initialDelay={initialDelay}
-                    className={childClassName}
-                >{children}</FadeInChildList>
+            <FadeInListContext.Provider value={{ isVisible: isInView }}>
+                {children}
             </FadeInListContext.Provider>
         </WrapperTag>
     );

@@ -16,7 +16,7 @@ export interface NavigationProps {
 const showCommunity = process.env.NEXT_PUBLIC_FEATURE_COMMUNITY_PAGE === 'true';
 const showFooter = process.env.NEXT_PUBLIC_FEATURE_FAQ_PAGE === 'true';
 
-interface NavigationItem {
+export interface NavigationItem {
   href: string,
   label: string
 }
@@ -49,15 +49,11 @@ export default function Navigation({ onStateChange }: NavigationProps) {
         </div>
 
         <ul className={styles.topBarList}>
-          {links.map(({ href, label }) => (
-            <MenuItem key={href} href={href} onClick={closeMenu}>{label}</MenuItem>
-          ))}
+          <MenuItemList links={links} onClick={closeMenu} />
         </ul>
 
         <Menu isOpen={isOpen} toggleMenu={toggleMenu}>
-          {mobileLinks.map(({ href, label }) => (
-            <MenuItem key={href} href={href} onClick={closeMenu}>{label}</MenuItem>
-          ))}
+          <MenuItemList links={mobileLinks} onClick={closeMenu} />
         </Menu>
 
       </div>
@@ -65,3 +61,15 @@ export default function Navigation({ onStateChange }: NavigationProps) {
   );
 }
 
+export interface MenuItemListProps {
+  links: Array<NavigationItem>
+  onClick: () => void
+}
+
+export const MenuItemList = ({ links, onClick }: MenuItemListProps) => (
+  <>
+    {links.map(({ href, label }) => (
+      <MenuItem key={href} href={href} onClick={onClick}>{label}</MenuItem>
+    ))}
+  </>
+)
