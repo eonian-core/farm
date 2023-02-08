@@ -1,10 +1,28 @@
+@import "../../../screen.scss";
+
 .container {
+  display: flex;
+  flex-direction: column;
+
   position: relative;
 
   margin: var(--margin-800) 0;
 
-  & > span,
-  & > h2 {
-    padding-left: var(--padding-500);
+  // fade in children wrap each element in div
+  &>div {
+
+    &>span,
+    &>h2 {
+      padding-left: var(--padding-500);
+    }
+
+    @media (max-width: $screen-tablet) {
+
+      &>h2 {
+        padding-left: 0;
+        text-align: center;
+      }
+    }
   }
+
 }

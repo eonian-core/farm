@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import { Inter } from "@next/font/google";
-import Balancer from 'react-wrap-balancer'; // very tiny, can be imported synchroniusly
 
 import styles from './heading.module.scss'
 import IconExternal from '../icons/icon-external';
@@ -16,7 +15,7 @@ export const H1 = ({ children }: { children?: React.ReactNode }) => (
 )
 
 export const H2 = ({ children }: { children?: React.ReactNode }) => (
-    <h2 className={clsx(styles.header2, inter.className)}><Balancer>{children}</Balancer></h2>
+    <h2 className={clsx(styles.header2, inter.className)}>{children}</h2>
 )
 
 export interface H3ContextState {

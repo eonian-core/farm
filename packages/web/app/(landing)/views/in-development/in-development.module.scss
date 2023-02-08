@@ -19,6 +19,12 @@
 
     max-width: var(--width-700);
 
+
+
+    z-index: 1;
+}
+
+.inDevelopmentChild {
     & > p {
         color: var(--color-text-400);
         font-size: var(--font-size-600);
@@ -29,8 +35,6 @@
     & > p, & > a {
         max-width: var(--width-600);
     }
-
-    z-index: 1;
 }
 
 @media (max-width: $screen-tablet) {
@@ -45,7 +49,7 @@
 }
 
 @media (max-width: $screen-mobile) {
-    .inDevelopment {
+    .inDevelopmentChild {
         p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);

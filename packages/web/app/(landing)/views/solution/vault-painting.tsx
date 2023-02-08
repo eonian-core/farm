@@ -8,7 +8,7 @@ import styles from "./vault-painting.module.scss"
 
 export const VaultPainting = () => {
     const ref = useRef(null)
-    const isInView = useInView(ref, { once: true })
+    const isInView = useInView(ref, { once: true, amount: 0.5 })
 
     return (
         <div className={styles.wrapper}>
@@ -19,7 +19,7 @@ export const VaultPainting = () => {
                 animate={isInView && { opacity: 1, x: 0, rotate: 357 }}
                 transition={{
                     duration: 1,
-                    delay: 0.5,
+                    delay: 0.2,
                     ease: [0, 0.71, 0.2, 1.01]
                 }}
             >
