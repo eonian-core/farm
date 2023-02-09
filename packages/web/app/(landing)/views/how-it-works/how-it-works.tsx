@@ -1,9 +1,9 @@
 "use client";
 import clsx from "clsx";
-import { useInView } from "framer-motion";
 import React from "react";
 import Container from "../../../components/contrainer/container";
 import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
+import { useInView } from "../../../components/use-in-view/use-in-view";
 import { HIW_AUTOSCROLL_DURATION } from "./constants";
 import { HIWContextState, defaultHIWContextState, HIWContext } from "./context";
 import { FlowSliderItemProps } from "./flow-slider-item";

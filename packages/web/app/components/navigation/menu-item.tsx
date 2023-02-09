@@ -1,33 +1,12 @@
+import clsx from "clsx";
 import * as React from "react";
-import { motion } from "framer-motion";
+import { InternalLink, LinkWithIconProps } from "../links/links";
+import styles from "./navigation.module.scss";
 
-const variants = {
-    open: {
-        y: 0,
-        opacity: 1,
-        transition: {
-            y: { stiffness: 1000, velocity: -100 }
-        }
-    },
-    closed: {
-        y: 50,
-        opacity: 0,
-        transition: {
-            y: { stiffness: 1000 }
-        }
-    }
-};
 
-export interface MenuItemProps {
-    children: React.ReactNode;
-}
+export const MenuItem = ({ className, ...props }: LinkWithIconProps) => (
+    <li className={clsx(styles.menuItem, className)}>
+        <InternalLink {...props} />
+    </li>
+);
 
-export const MenuItem = ({ children }: MenuItemProps) => {
-    return (
-        <motion.li
-            variants={variants}
-        >
-            {children}
-        </motion.li>
-    );
-};

@@ -1,15 +1,12 @@
-import { motion, useInView } from "framer-motion";
 import React, {
     Children,
-    JSXElementConstructor,
     PropsWithChildren,
     useEffect,
-    useRef,
     useState,
 } from "react";
 import { useFadeInListContext } from "./fade-in-list";
 
-interface FadeInChildListProps {
+export interface FadeInChildListProps extends PropsWithChildren {
     /** The delay before the animation starts, default 0.2s */
     initialDelay?: number
     /** The delay between each child, default 0.05s */
@@ -18,7 +15,6 @@ interface FadeInChildListProps {
     duration?: number
 
     className?: string;
-
 }
 
 export default function FadeInChildList({
@@ -27,7 +23,7 @@ export default function FadeInChildList({
     initialDelay = 0.2,
     children,
     className,
-}: PropsWithChildren<FadeInChildListProps>) {
+}: FadeInChildListProps) {
     const { isVisible } = useFadeInListContext()
     const delayedIsInView = useDelay(toMs(initialDelay), isVisible)
 

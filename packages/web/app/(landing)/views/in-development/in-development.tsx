@@ -11,19 +11,19 @@ interface ContainerProps {
     children: React.ReactNode
 };
 
-export const InDevelopment = ({children}: ContainerProps) => {
+export const InDevelopment = ({ children }: ContainerProps) => {
     const socials = useLocalSocials()
     const isTabletOrSmaller = useIsTabletOrSmaller()
-    
+
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.inDevelopmentWrapper}>
                 <InDevelopmentParallax />
-                
-                <FadeInList 
-                    className={styles.inDevelopment} 
-                    childClassName={styles.inDevelopmentChild} 
-                    amount={isTabletOrSmaller ? 'some': 0.8}
+
+                <FadeInList
+                    className={styles.inDevelopment}
+                    childClassName={styles.inDevelopmentChild}
+                    amount={isTabletOrSmaller ? 0.3 : 0.8}
                     initialDelay={0}
                 >
                     {children}

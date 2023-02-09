@@ -1,6 +1,7 @@
-import { motion, useInView } from "framer-motion"
+import { motion } from "framer-motion"
 import { useRef } from "react"
 import React from "react";
+import { useInView } from "../use-in-view/use-in-view";
 
 
 export interface FadeInProps extends Omit<FadeInBodyProps, 'isInView'> {
@@ -14,7 +15,7 @@ export interface FadeInProps extends Omit<FadeInBodyProps, 'isInView'> {
 }
 
 /** Renders in normal div which will appear visible only on view */
-export const FadeIn = ({once = true,amount = 0.9, ...props}: FadeInProps) => {
+export const FadeIn = ({once = true, amount = 0.9, ...props}: FadeInProps) => {
     const ref = useRef(null)
     const isInView = useInView(ref, { once, amount })
 

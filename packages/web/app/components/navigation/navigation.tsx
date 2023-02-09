@@ -4,7 +4,10 @@ import { InternalLink } from "../links/links";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
 import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
-import Menu from "./menu"; // TODO: use async import, when framer motion will support it
+import Menu from "./menu";
+
+
+// TODO: highlight or cross out link for current page
 
 export interface NavigationProps {
   onStateChange?: (isOpen: boolean) => void;
@@ -13,12 +16,20 @@ export interface NavigationProps {
 const showCommunity = process.env.NEXT_PUBLIC_FEATURE_COMMUNITY_PAGE === 'true';
 const showFooter = process.env.NEXT_PUBLIC_FEATURE_FAQ_PAGE === 'true';
 
+export interface NavigationItem {
+  href: string,
+  label: string
+}
+
 const links = [
   showCommunity && { href: '/community', label: 'Community' },
   showFooter && { href: '/faq', label: 'FAQ' }
-].filter(Boolean) as Array<{ href: string, label: string }>;
+].filter(Boolean) as Array<NavigationItem>;
 
-
+const mobileLinks: Array<NavigationItem> = [
+  { href: '/', label: 'Home' },
+  ...links
+]
 
 export default function Navigation({ onStateChange }: NavigationProps) {
 
@@ -30,12 +41,6 @@ export default function Navigation({ onStateChange }: NavigationProps) {
     onStateChange && onStateChange(isOpen);
   }, [isOpen, onStateChange]);
 
-  const items = links.map(({ href, label }) => (
-    <MenuItem key={href}>
-      <InternalLink href={href} onClick={closeMenu}>{label}</InternalLink>
-    </MenuItem>
-  ))
-
   return (
     <nav className={styles.navigation} id={TOP_ELELEMENT_ID}>
       <div className={styles.content}>
@@ -44,11 +49,11 @@ export default function Navigation({ onStateChange }: NavigationProps) {
         </div>
 
         <ul className={styles.topBarList}>
-          {items}
+          <MenuItemList links={links} onClick={closeMenu} />
         </ul>
 
         <Menu isOpen={isOpen} toggleMenu={toggleMenu}>
-          {items}
+          <MenuItemList links={mobileLinks} onClick={closeMenu} />
         </Menu>
 
       </div>
@@ -56,3 +61,15 @@ export default function Navigation({ onStateChange }: NavigationProps) {
   );
 }
 
+export interface MenuItemListProps {
+  links: Array<NavigationItem>
+  onClick: () => void
+}
+
+export const MenuItemList = ({ links, onClick }: MenuItemListProps) => (
+  <>
+    {links.map(({ href, label }) => (
+      <MenuItem key={href} href={href} onClick={onClick}>{label}</MenuItem>
+    ))}
+  </>
+)
