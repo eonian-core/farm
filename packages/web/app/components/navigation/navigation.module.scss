@@ -74,8 +74,6 @@
     .menuItem {
         opacity: 0;
         transform: translateY(-0.5rem) translateX(0);
-        transition: 0.5s all;
-        transition-delay: 0.5s;
     
         a {
             color: var(--color-text-300);
@@ -112,30 +110,118 @@
     height: var(--navigation-height);
 }
 
-$background-position: calc(100% - var(--padding-500) - var(--font-size-800) / 2) calc(var(--navigation-height) / 2);
-
 .menuBackground {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
     width: 100vw;
-    background: linear-gradient(to right top, #4f1c7c 30%, #460db9 70%, #275db3 100%);
-    clip-path: circle(0% at $background-position);
-    transition: clip-path 1s cubic-bezier(0.65, 0, 0.35, 1);
+
+    ul:before {
+        content: "";
+        position: absolute;
+        top: calc(var(--navigation-height) / 4 - 0.3rem);
+        right: calc(var(--padding-500) - var(--font-size-800) / 2 + 0.4rem);
+        background: linear-gradient(to bottom, #4f1c7c 30%, #460db9 70%, #275db3 100%);
+
+        border-radius: 50%;
+
+        width: 3rem;
+        height: 3rem;
+
+        opacity: 0;
+        transform: scale(0.1);
+
+        
+        
+    }    
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.1);
+    }
+
+    5% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(50);
+    }
+}
+
+.menuEnter {
+    ul:before {
+        opacity: 1;
+        transform: scale(0.1);
+    }
 }
 
 
-
-
-.menuOpen {
-    .menuBackground {
-        clip-path: circle(200% at $background-position);
+.menuEnterActive  {
+    ul:before {
+        opacity: 1;
+        transform: scale(50);
+        transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
     .menuItem {
         opacity: 1;
         transform: translateY(0) translateX(0);
+        transition: 0.5s all;
+        transition-delay: 0.5s;
+    }
+}
+
+.menuEnterDone {
+    ul:before {
+        opacity: 1;
+        transform: scale(50);
+    }
+
+    .menuItem {
+        opacity: 1;
+        transform: translateY(0) translateX(0);
+    }
+}
+
+.menuExit {
+    ul:before {
+        opacity: 1;
+        transform: scale(50);
+    }
+
+    .menuItem {
+        opacity: 1;
+        transform: translateY(0) translateX(0);
+    }
+}
+
+.menuExitActive {
+    ul:before {
+        transform: scale(0.1);
+        transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .menuItem {
+        opacity: 0;
+        transform: translateY(-0.5rem) translateX(0);
+        transition: 0.5s all;
+    }
+}
+
+.menuExitDone {
+    ul:before {
+        transform: scale(0.1);
+    }
+
+    .menuItem {
+        opacity: 0;
+        transform: translateY(-0.5rem) translateX(0);
     }
 }
 

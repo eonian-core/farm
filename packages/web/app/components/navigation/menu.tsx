@@ -1,5 +1,5 @@
 import { useState, useRef, MutableRefObject, useMemo } from "react";
-import { motion } from "framer-motion";
+import { CSSTransition } from "react-transition-group";
 
 import { HamburgerMenu } from "../hamburger-menu/hamburger-menu";
 import { DimensionalState, useDimensions } from "./use-dimensions";
@@ -22,16 +22,26 @@ const inter = Inter({
 
 
 export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
+    const nodeRef = useRef(null);
 
     return (
         <div
             className={clsx(styles.menuWrapper, {[styles.menuOpen]: isOpen})}
         >
-            <div className={styles.menuBackground} >
-                <ul className={clsx(inter.className, styles.menuList)}>
-                    {children}
-                </ul>
-            </div>
+            <CSSTransition nodeRef={nodeRef} in={isOpen} timeout={1000} classNames={{
+                enter: styles.menuEnter,
+                enterActive: styles.menuEnterActive,
+                enterDone: styles.menuEnterDone,
+                exit: styles.menuExit,
+                exitActive: styles.menuExitActive,
+                exitDone: styles.menuExitDone
+            }}>
+                <div ref={nodeRef} className={styles.menuBackground} >
+                    <ul className={clsx(inter.className, styles.menuList)}>
+                        {children}
+                    </ul>
+                </div>
+            </CSSTransition>
 
             <div className={styles.hamburger}>
                 <HamburgerMenu active={isOpen} onClick={toggleMenu} />
