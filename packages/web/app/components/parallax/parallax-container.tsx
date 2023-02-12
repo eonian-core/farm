@@ -1,7 +1,8 @@
 import clsx from "clsx";
-import { MotionValue, useInView, useScroll } from "framer-motion";
+import { MotionValue, useScroll } from "framer-motion";
 import { createContext, useContext, useRef } from "react";
 import { FadeInBody, FadeInProps } from "../fade-in/fade-in";
+import { useInView } from "../use-in-view/use-in-view";
 import styles from "./parallax-container.module.scss";
 
 const ScrollYContext = createContext<MotionValue<number> | null>(null)
