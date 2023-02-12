@@ -1,8 +1,18 @@
+@import "../screen.scss";
+
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+
   min-height: 100vh;
-  padding-bottom: var(--margin-1000);
+  width: 100%;
+  height: 100%;
+
+  max-width: var(--max-width);
+  padding: 0 var(--width-gap);
+  padding-top: var(--navigation-height);
+  padding-bottom: var(--padding-500);
+
 }
