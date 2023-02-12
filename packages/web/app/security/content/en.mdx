@@ -1,6 +1,7 @@
 import robotPic from "../assets/robot.png";
 import umbrellaPic from "../assets/umbrella.png";
-import magnifierPic from "../assets/magnifier.png"; import DeepSecurity from "../views/deepsecurity/deepsecurity";
+import magnifierPic from "../assets/magnifier.png"; import DeepSecurity from "../views/deepsecurity/deepsecurity"; import SecOpsCards
+    from "../views/secops/secops-cards";
 
 <Approach>
     <Column>
@@ -40,40 +41,44 @@ import magnifierPic from "../assets/magnifier.png"; import DeepSecurity from "..
         <Target>See full list</Target>
     </ImageCard>
     <Column>
-        <ImageCard href={'/security/all-reviews'} image={magnifierPic} alt={'robot picture'}>
-            ### Code Review
+        <SecOpsCards>
+            <ImageCard href={'/security/all-reviews'} image={magnifierPic} alt={'robot picture'} >
+                ### Code Review
 
-            Each line of code was reviewed multiple times for high
-            level logic issues, security vulnerabilities, or gas
-            usage inefficiencies
+                Each line of code was reviewed multiple times for high
+                level logic issues, security vulnerabilities, or gas
+                usage inefficiencies
 
-            <Target>See all reviews</Target>
-        </ImageCard>
-        <Card href={'/security/code-coverage'}>
-            ### Code coverage
-            # 100%
+                <Target>See all reviews</Target>
+            </ImageCard>
+            <Card href={'/security/code-coverage'}>
+                ### Code coverage
+                ## 100%
 
-            All Smart Contracts fully covered with Functional and Security Tests
+                All Smart Contracts fully covered with Functional and Security Tests
 
-            <Target>See test reports</Target>
-        </Card>
-        <Card href={'/security/analysis-report'}>
-            ### Code issues
-            # Zero
+                <Target>See test reports</Target>
+            </Card>
+            <Card href={'/security/analysis-report'}>
+                ### Code issues
+                ## Zero
 
-            We use static code analysis to continuesly validate all contracts end resolve all code issues
+                We use static code analysis to continuesly validate all contracts end resolve all code issues
 
-            <Target>See analysis reports</Target>
-        </Card>
-        <Card href={'/security/health-status'}>
-            ### Health status
-            # Green
+                <Target>See analysis reports</Target>
+            </Card>
+            <Card href={'/security/health-status'}>
+                ### Health status
+                <SecOpsStatusIndicator>
+                    #### Green
+                </SecOpsStatusIndicator>
 
-            Our monitoring system show current liquidity management status,
-            so you always know that you deposit money in correctly working protocol without any hacks
+                Our monitoring system show current liquidity management status,
+                so you always know that you deposit money in correctly working protocol without any hacks
 
-            <Target>See health status</Target>
-        </Card>
+                <Target>See health status</Target>
+            </Card>
+        </SecOpsCards>
     </Column>
 </SecOps>
 <DeepSecurity>

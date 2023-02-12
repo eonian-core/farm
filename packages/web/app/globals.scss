@@ -232,7 +232,10 @@
         --color-success-700: hsl(142, 72%, 29%);
         --color-success-800: hsl(143, 64%, 24%);
         --color-success-900: hsl(144, 61%, 20%);
-  
+
+  // gap
+    --gap-100: 10px;
+
   // margin
     --margin-50: 0.25rem;
     --margin-100: 0.5rem;
@@ -281,6 +284,7 @@
     
   // height
     --navigation-height: 5rem;
+    --inicator-height: 1.5rem;
 
   // border radius
     --border-radius-300: 3px;

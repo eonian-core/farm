@@ -22,6 +22,24 @@
         letter-spacing: var(--letter-black-500);
     }
 
+    h2 {
+        font-size: var(--font-size-900);
+        line-height: var(--line-height-1120);
+        letter-spacing: var(--letter-black-500);
+        color: var(--color-text-400);
+        background: none;
+        background-clip: initial;
+        -webkit-background-clip: initial;
+        -webkit-text-fill-color: initial;
+    }
+
+    h4 {
+        font-size: var(--font-size-1000);
+        line-height: var(--line-height-1120);
+        letter-spacing: var(--letter-black-500);
+        color: var(--color-success-400);
+    }
+
     p {
         max-width: var(--width-1200);
     }
@@ -38,23 +56,24 @@
     }
 }
 
-.paintingUmbrella {
-    position: relative;
-
-    &::before {
-        content: "";
-        position: absolute;
-        top: 5%;
-        left: 15%;
-        height: calc(50%);
-        width: calc(70%);
-        background: var(--color-accent-background-gradient);
-        border-radius: 30%;
-        z-index: -1;
-        animation: animatedgradient 30s ease alternate infinite;
-        background-size: 300% 300%;
-        filter: blur(40px);
+.secOpsCards {
+    img {
+        width: var(--width-400);
     }
+}
+
+.secOpsStatusIndicatorContainer {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    gap: var(--gap-100);
+}
+.secOpsStatusIndicator {
+    width: var(--inicator-height);
+    height: var(--inicator-height);
+    border-radius: var(--inicator-height);
+    background-color: var(--color-success-400);
 }
 
 @media (max-width: $screen-mobile) {
@@ -79,3 +98,6 @@
         grid-template-columns: 2fr 1fr;
     }
 }
+
+//small mobile
+//ultro wide
