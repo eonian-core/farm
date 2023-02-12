@@ -1,0 +1,7 @@
+.imageContainer {
+    position: relative;
+
+    & > img {
+        transition: opacity 5s ease-out;
+    }
+}

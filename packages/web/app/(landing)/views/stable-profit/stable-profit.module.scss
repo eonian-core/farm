@@ -1,0 +1,36 @@
+@import "../../../screen.scss";
+
+.fx {
+  will-change: filter;
+
+  filter: blur(10px) hue-rotate(10deg);
+
+  &--animated {
+    animation: hueRotationDesktop 10s ease-in-out infinite;
+    @media (max-width: $screen-tablet) {
+      animation: none;
+    }
+  }
+}
+
+@keyframes hueRotationDesktop {
+  0% {
+    filter: blur(10px) hue-rotate(10deg);
+  }
+
+  25% {
+    filter: blur(20px) hue-rotate(20deg);
+  }
+
+  50% {
+    filter: blur(30px) hue-rotate(30deg);
+  }
+
+  75% {
+    filter: blur(20px) hue-rotate(20deg);
+  }
+
+  100% {
+    filter: blur(10px) hue-rotate(10deg);
+  }
+}

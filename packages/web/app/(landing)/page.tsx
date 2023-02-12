@@ -8,6 +8,9 @@ import Hero from "./views/hero/hero";
 import PageLoader from "../components/page-loader/page-loader";
 import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
 import Mbr from "../components/mobile-break/mobile-break";
+import StableProfit from "./views/stable-profit/stable-profit";
+import ColumnItem from "../components/page-with-columns/column-item";
+import SafeInvestments from "./views/safe-investments/safe-investments";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
@@ -49,6 +52,9 @@ const components: MDXComponents = {
       loading: () => <FlowDiagramLoader />,
     }
   ),
+  StableProfit,
+  SafeInvestments,
+  ColumnItem,
 };
 
 export default function Home() {

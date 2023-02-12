@@ -1,0 +1,36 @@
+@import "../../screen.scss";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.columns {
+  position: relative;
+  max-width: var(--width-800);
+  padding: var(--padding-600);
+  z-index: 1;
+
+  transform: translateX(var(--gap));
+  border-radius: var(--border-radius-500);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-background-end);
+    opacity: 0.85;
+  }
+}
+
+.image {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}

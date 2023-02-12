@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.columns {
+    display: flex;
+    flex-direction: row;
+}
+
+.column {
+    &:not(:last-child) {
+        margin-right: var(--margin-200);
+    }
+
+    & + & {
+        margin-left: var(--margin-200);
+    }
+
+    & > * {
+        margin: var(--margin-400) 0;
+    }
+}
