@@ -19,7 +19,7 @@ export const WhatIsEonianParallax = () => {
       delay: 0.1,
     }}>
       <ParallaxBlock
-        x={!isSmallScreen ? -0.2 : 0.3}
+        x={!isSmallScreen ? -0.1 : 0.3}
         y={!isSmallScreen ? 0.2 : -0.8}
         scale={0.2}
         spring={{ stiffness: 500, damping: 80, restDelta: 0.001 }}

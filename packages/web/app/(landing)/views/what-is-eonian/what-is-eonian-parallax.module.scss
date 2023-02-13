@@ -1,6 +1,8 @@
 @import "../../../screen.scss";
 
 .parallaxContainer {
+  pointer-events: none;
+
   img {
     transition: 0.3s;
   }

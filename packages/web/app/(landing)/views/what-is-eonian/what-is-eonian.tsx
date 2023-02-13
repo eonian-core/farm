@@ -21,8 +21,7 @@ export const WhatIsEonian = ({children}: WhatIsEonianProps) => {
     return (
         <Container className={styles.pageContainer}>
             <div className={styles.wrapper}>
-                <WhatIsEonianParallax />
-
+                
                 <FadeIn className={styles.textContainer} amount={!isMobileOrSmaller ? 0.5 : 0.2} delay={0.2}>
                     <div className={styles.whatIsEonian}>
                         <div className={styles.content}>
@@ -31,7 +30,7 @@ export const WhatIsEonian = ({children}: WhatIsEonianProps) => {
                     </div>
                 </FadeIn>
 
-                
+                <WhatIsEonianParallax />
             </div>
         </Container>
     )
