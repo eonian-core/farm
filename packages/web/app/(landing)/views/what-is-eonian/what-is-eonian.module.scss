@@ -1,6 +1,6 @@
 @import "../../../screen.scss";
 
-@keyframes animatedgradient {
+@keyframes animatedGradient {
     0% {
         background-position: 0% 50%;
     }
@@ -14,7 +14,7 @@
     }
 }
 
-.problemWrapper {
+.wrapper {
 
     height: 100%;
     display: flex;
@@ -23,10 +23,10 @@
     justify-content: center;
     position: relative;
 
-    z-index: -99;
+    // z-index: -99;
 }
 
-.problemContainer {
+.textContainer {
     position: relative;
 
     &:before {
@@ -40,12 +40,12 @@
         background: var(--color-accent-background-gradient);
         border-radius: calc(2 * var(--border-radius-400));
         z-index: -1;
-        animation: animatedgradient 20s ease alternate infinite;
+        animation: animatedGradient 20s ease alternate infinite;
         background-size: 300% 300%;
     }
 }
 
-.problem {
+.whatIsEonian {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,23 +67,31 @@
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
         margin-bottom: var(--margin-200);
+
+        a {
+            text-decoration: underline;
+      
+            &:hover {
+              color: var(--color-text-300);
+            }
+          }
     }
 }
 
 @media (prefers-reduced-motion) {
-    .problem::before {
+    .whatIsEonian::before {
         animation: none;
     }
 }
 
 @media (max-width: $screen-tablet) {
 
-    .problemWrapper,
-    .problem {
+    .wrapper,
+    .whatIsEonian {
         width: 100%;
     }
 
-    .problem {
+    .whatIsEonian {
         padding: var(--padding-700) calc(var(--width-gap) * 0.5);
 
     }
@@ -98,7 +106,7 @@
 
     $border-width: var(--margin-300);
 
-    .problem {
+    .whatIsEonian {
         margin: 0 $border-width;
         max-width: calc(100vw - $border-width * 2);
         padding-left: calc(var(--width-gap) * 0.8);
@@ -109,7 +117,7 @@
         padding: 0 !important;
     }
 
-    .problemContainer {
+    .textContainer {
         &::before {
             border-radius: 0;
 

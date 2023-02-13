@@ -1,7 +1,6 @@
 import Container from "../../../components/contrainer/container"
 import FadeIn from "../../../components/fade-in/fade-in"
 import { useIsMobileOrSmaller } from "../../../components/resize-hooks/screens"
-import ProblemParallax from "./problem-parallax"
 import styles from './problem.module.scss'
 
 
@@ -28,8 +27,6 @@ export const Problem = ({children}: ProblemProps) => {
                         </div>
                     </div>
                 </FadeIn>
-
-                <ProblemParallax />
             </div>
         </Container>
     )

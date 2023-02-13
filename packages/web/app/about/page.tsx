@@ -10,6 +10,9 @@ import heading from "../components/heading/heading";
 const components: MDXComponents = {
   h1: heading.H1,
   h2: heading.H2,
+  Problem: dynamic(import("./views/problem/problem")),
+  blockquote: dynamic(import("../components/category/category")) as any,
+  Solution: dynamic(import("./views/solution/solution")),
 }
 
 
