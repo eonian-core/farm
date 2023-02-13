@@ -22,26 +22,28 @@
     align-items: center;
     justify-content: center;
     position: relative;
-
-    // z-index: -99;
 }
 
 .textContainer {
     position: relative;
 
     &:before {
+        --blur-size: 1rem;
+
         content: "";
         position: absolute;
-        top: calc(-1 * var(--border-radius-400));
-        left: calc(-1 * var(--border-radius-400));
-        height: calc(100% + var(--border-radius-400) * 2);
-        width: calc(100% + var(--border-radius-400) * 2);
+        top: var(--blur-size);
+        left: var(--blur-size);
+        height: calc(100% - 2 * var(--blur-size));
+        width: calc(100% - 2 * var(--blur-size));
 
         background: var(--color-accent-background-gradient);
         border-radius: calc(2 * var(--border-radius-400));
         z-index: -1;
         animation: animatedGradient 20s ease alternate infinite;
         background-size: 300% 300%;
+        mix-blend-mode: screen;
+        filter: blur(3rem);
     }
 }
 
