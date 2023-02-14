@@ -275,6 +275,8 @@
     --width-800: calc(8 * var(--width-column) + 7 * var(--width-gap));
     --width-900: calc(9 * var(--width-column) + 8 * var(--width-gap));
     --width-1000: calc(10 * var(--width-column) + 9 * var(--width-gap));
+    --width-1100: calc(11 * var(--width-column) + 10 * var(--width-gap));
+    --width-1200: calc(12 * var(--width-column) + 11 * var(--width-gap));
 
     --max-width: calc(1360px + 2 * var(--width-gap)); // must be lower than ultra wide and bigger than desctop screen
     
