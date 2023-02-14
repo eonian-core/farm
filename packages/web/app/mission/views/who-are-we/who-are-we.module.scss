@@ -72,6 +72,16 @@
 
     width: 100%;
     max-width: var(--width-600);
+
+    p {
+        color: var(--color-text-400);
+        font-size: var(--font-size-600);
+        line-height: var(--line-height-600);
+        margin-bottom: var(--margin-200);
+
+        
+        
+    }
 }
 
 .name {
@@ -94,13 +104,5 @@
 
     max-width: var(--width-600);
 
-    p {
-        color: var(--color-text-400);
-        font-size: var(--font-size-600);
-        line-height: var(--line-height-600);
-        margin-bottom: var(--margin-200);
-
-        
-        
-    }
+    
 }

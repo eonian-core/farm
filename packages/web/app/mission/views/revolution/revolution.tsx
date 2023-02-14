@@ -8,6 +8,7 @@ import { Socials } from '../../../components/socials/socials';
 
 import styles from './revolution.module.scss';
 import cityPic from './assets/sci-fi-city-from-golden-lake.png';
+import FadeIn from '../../../components/fade-in/fade-in';
 
 interface ContainerProps {
     /** content of the block, expected to have: h2, p  and Card elements */
@@ -34,9 +35,16 @@ export const Revolution = ({ children }: ContainerProps) => {
 
                 </FadeInList>
 
-                <div className={styles.imageContainer}>
+                <FadeIn 
+                    className={styles.imageContainer}
+                    delay={0.3} 
+                    amount={0.1} 
+                    fadeUp={false} 
+                    fadeHorizontal
+                    fadeHorizontalInitial='20%'
+                    >
                     <Image src={cityPic} alt="Futuristic cityscape view from golden lake" placeholder="blur" />
-                </div>
+                </FadeIn>
             </div>
         </Container>
     );

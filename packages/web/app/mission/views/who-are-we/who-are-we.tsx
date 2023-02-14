@@ -5,20 +5,26 @@ import Container from "../../../components/contrainer/container";
 import FadeIn from "../../../components/fade-in/fade-in";
 import styles from './who-are-we.module.scss'
 import futurePic from './assets/space-rocket-starting-in-scify-city.png'
+import FadeInList from '../../../components/fade-in/fade-in-list';
 
 
 export const WhoWeAre = ({children}: PropsWithChildren) => {
     return (
         <Container>
-            <FadeIn className={styles.whoAreWe} delay={0.3} amount={0.1}>
-                <div className={styles.content}>
+            <div className={styles.whoAreWe}>
+                <FadeInList className={styles.content} delay={0.1} amount={0.1}>
                     {children}
-                </div>
+                </FadeInList>
 
-                <div className={styles.imageContainer}>
+                <FadeIn 
+                    className={styles.imageContainer}
+                    delay={0.3} 
+                    amount={0.1} 
+                    fadeUpInitial='20%'
+                    >
                     <Image src={futurePic} alt="Rocket starting in cityscape of future city" placeholder="blur" />
-                </div>
-            </FadeIn>
+                </FadeIn>
+            </div>
         </Container>
     )
 }
