@@ -1,11 +1,11 @@
 import Container from "../../../components/contrainer/container"
 import FadeIn from "../../../components/fade-in/fade-in"
 import { useIsMobileOrSmaller } from "../../../components/resize-hooks/screens"
-import WhatIsEonianParallax from "./what-is-eonian-parallax"
-import styles from './what-is-eonian.module.scss'
+import WhatIsEonianParallax from "./eonian-is-parallax"
+import styles from './eonian-is.module.scss'
 
 
-interface WhatIsEonianProps {
+interface EonianIsProps {
     /** content of the block, expected to have: Category, h2 and p elements */
     children: React.ReactNode
 }
@@ -14,7 +14,7 @@ interface WhatIsEonianProps {
  * Block with explanation what is Eonian
  * @param children - content of the block
  */
-export const WhatIsEonian = ({children}: WhatIsEonianProps) => {
+export const EonianIs = ({children}: EonianIsProps) => {
 
     const isMobileOrSmaller = useIsMobileOrSmaller()
     
@@ -36,4 +36,4 @@ export const WhatIsEonian = ({children}: WhatIsEonianProps) => {
     )
 }
 
-export default WhatIsEonian;
+export default EonianIs;

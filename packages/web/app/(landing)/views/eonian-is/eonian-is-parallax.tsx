@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./what-is-eonian-parallax.module.scss";
+import styles from "./eonian-is-parallax.module.scss";
 import Image from "next/image";
 import clsx from "clsx";
 

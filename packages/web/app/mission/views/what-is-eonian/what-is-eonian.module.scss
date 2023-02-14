@@ -1,0 +1,56 @@
+@import "../../../screen.scss";
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    position: relative;
+    width: 100%;
+}
+
+.whatIsEonian {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    position: relative;
+    width: 100%;
+
+    max-width: var(--width-700);
+
+    z-index: 1;
+}
+
+.child {
+    & > p {
+        color: var(--color-text-400);
+        font-size: var(--font-size-600);
+        line-height: var(--line-height-600);
+        margin-bottom: var(--margin-200);
+    }
+
+    & > p, & > a {
+        max-width: var(--width-600);
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .whatIsEonian {
+        max-width: var(--width-600);
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .child {
+        p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+        }
+    }
+}

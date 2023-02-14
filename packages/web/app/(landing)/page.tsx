@@ -14,7 +14,7 @@ const components: MDXComponents = {
   Mbr, // no lazy loading or it create a flash of content
   h2: dynamic(import("../components/heading/heading").then(({ H2 }) => H2)),
   h3: dynamic(import("../components/heading/heading").then(({ H3 }) => H3)),
-  WhatIsEonian: dynamic(import("./views/what-is-eonian/what-is-eonian")),
+  EonianIs: dynamic(import("./views/eonian-is/eonian-is")),
   Founders: dynamic(import("./views/founders/founders")),
   FoundersList: dynamic(import("./views/founders/founders-list")),
   Founder: dynamic(import("./views/founders/founder")),
