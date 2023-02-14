@@ -16,7 +16,11 @@ const components: MDXComponents = {
   Problem: dynamic(import("./views/problem/problem")),
   blockquote: dynamic(import("../components/category/category")) as any,
   Solution: dynamic(import("./views/solution/solution")),
-  WhatIsEonian: dynamic(import("./views/what-is-eonian/what-is-eonian")),
+  Revolution: dynamic(import("./views/revolution/revolution")),
+  Card: dynamic(import("../components/card/card")),
+  Target: dynamic(
+    import("../components/card/card").then(({ Target }) => Target)
+  ),
 }
 
 

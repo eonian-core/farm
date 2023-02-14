@@ -1,5 +1,5 @@
-import ExternalLink from "../../../components/links/external-link";
-import { SocialLink } from "../../../socials";
+import ExternalLink from "../links/external-link";
+import { SocialLink } from "../../socials";
 
 import styles from "./socials.module.scss";
 
