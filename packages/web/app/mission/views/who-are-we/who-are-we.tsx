@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 import Container from "../../../components/contrainer/container";
 import FadeIn from "../../../components/fade-in/fade-in";
 import styles from './who-are-we.module.scss'
-import futureCityscapePic from './assets/cityscape-of-future-city.png'
+import futurePic from './assets/space-rocket-starting-in-scify-city.png'
 
 
 export const WhoWeAre = ({children}: PropsWithChildren) => {
@@ -16,7 +16,7 @@ export const WhoWeAre = ({children}: PropsWithChildren) => {
                 </div>
 
                 <div className={styles.imageContainer}>
-                    <Image src={futureCityscapePic} alt="Cityscape of future city" placeholder="blur" />
+                    <Image src={futurePic} alt="Rocket starting in cityscape of future city" placeholder="blur" />
                 </div>
             </FadeIn>
         </Container>
