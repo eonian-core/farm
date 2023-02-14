@@ -9,7 +9,7 @@ export interface ResourceItem {
 const list: Array<ResourceItem> = [
     { href: "/community", label: "Community", isEnabled: features.showCommunity },
     { href: "/faq", label: "FAQ", isEnabled: features.showFaq },
-    { href: "/about", label: "About", isEnabled: features.showAbout },
+    { href: "/mission", label: "Mission", isEnabled: features.showMission },
 ]
     .filter(({ isEnabled }) => isEnabled)
 
