@@ -11,15 +11,17 @@
 }
 
 .column {
+    flex: 1;
+
     &:not(:last-child) {
-        margin-right: var(--margin-200);
+        margin-right: var(--margin-300);
     }
 
     & + & {
-        margin-left: var(--margin-200);
+        margin-left: var(--margin-300);
     }
 
     & > * {
-        margin: var(--margin-400) 0;
+        margin: var(--margin-600) 0;
     }
 }

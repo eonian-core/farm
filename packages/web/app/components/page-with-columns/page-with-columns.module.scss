@@ -4,11 +4,13 @@
   display: flex;
   flex-direction: row;
   position: relative;
+  
+  color: var(--color-text-400)
 }
 
 .columns {
   position: relative;
-  max-width: var(--width-800);
+  max-width: var(--width-900);
   padding: var(--padding-600);
   z-index: 1;
 

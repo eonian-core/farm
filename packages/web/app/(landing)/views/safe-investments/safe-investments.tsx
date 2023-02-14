@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Image from "next/image";
 import PageWithColumns from "../../../components/page-with-columns/page-with-columns";
 
@@ -10,7 +10,6 @@ import image3 from "./images/3.png";
 import image4 from "./images/4.png";
 import image5 from "./images/5.png";
 
-const IMAGE_CHANGE_INTERVAL = 1000;
 const IMAGES = [image1, image2, image3, image4, image5];
 
 interface Props {
@@ -20,7 +19,7 @@ interface Props {
 const SafeInvestments: React.FC<Props> = ({ children }) => {
   return (
     <PageWithColumns
-      renderImage={(isInView) => <PageSideImage isInView={isInView} />}
+      renderImage={() => <PageSideImage />}
       invert
     >
       {children}
@@ -28,56 +27,53 @@ const SafeInvestments: React.FC<Props> = ({ children }) => {
   );
 };
 
-function PageSideImage(props: { isInView: boolean }) {
-  const { isInView } = props;
-
-  const once = React.useRef(false);
-
-  const [isReady, setIsReady] = React.useState(false);
-  const [isLoaded, setIsLoaded] = React.useState(false);
+function PageSideImage() {
+  const initialized = React.useRef(false);
 
   const [imageIndex, setImageIndex] = React.useState(0);
-  const [nextImageIndex, setNextImageIndex] = React.useState(2);
+  const [size, setSize] = React.useState({ width: 0, height: 0})
 
-  const handleLoadingComplete = React.useCallback(() => {
-    setIsLoaded(true);
-  }, []);
-
-  React.useEffect(() => {
-    if (isLoaded && isInView && !once.current) {
-      setIsReady(true);
-      once.current = true;
-    }
-  }, [isLoaded, isInView]);
+  const handleLoadingComplete = React.useCallback(
+    (image: HTMLImageElement) => {
+      const index = +image.getAttribute("data-idx")!;
+      const nextImageIndex = getNextIndex(imageIndex);
+      if (!initialized.current && index === nextImageIndex) {
+        setSize({
+          width: +image.getAttribute("width")!,
+          height: +image.getAttribute("height")!,
+        });
+        setImageIndex(nextImageIndex);
+        initialized.current = true;
+      }
+    },
+    [imageIndex]
+  );
 
   const handleTransitionEnd = React.useCallback(() => {
-    if (isReady) {
-      const nextIndex = getNextIndex(imageIndex);
-      setImageIndex(nextIndex);
-    } else {
-      const nextIndex = getNextIndex(nextImageIndex);
-      setNextImageIndex(nextIndex);
-    }
-    setIsReady(!isReady);
-  }, [imageIndex, isReady, nextImageIndex]);
+    const nextImageIndex = getNextIndex(imageIndex);
+    setImageIndex(nextImageIndex);
+  }, [imageIndex]);
 
   return (
-    <div className={styles.imageContainer}>
-      <Image
-        src={IMAGES[imageIndex]}
-        alt={String(imageIndex)}
-        placeholder="blur"
-        onLoadingComplete={handleLoadingComplete}
-        fill
-        style={{ opacity: isReady ? 0.0 : 1.0 }}
-      />
-      <Image
-        src={IMAGES[nextImageIndex]}
-        alt={String(nextImageIndex)}
-        placeholder="blur"
-        style={{ opacity: isReady ? 1.0 : 0.0 }}
-        onTransitionEnd={handleTransitionEnd}
-      />
+    <div
+      className={styles.imageContainer}
+      style={{ width: `${size.width}px`, height: `${size.height}px` }}
+    >
+      {IMAGES.map((image, index) => {
+        const isCurrent = index === imageIndex;
+        return (
+          <Image
+            key={index}
+            data-idx={index}
+            src={image}
+            alt={String(index)}
+            placeholder="blur"
+            style={{ opacity: !isCurrent || !initialized.current ? 0.0 : 1.0 }}
+            onLoadingComplete={handleLoadingComplete}
+            onTransitionEnd={handleTransitionEnd}
+          />
+        );
+      })}
     </div>
   );
 }
