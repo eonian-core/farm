@@ -1,9 +1,16 @@
 @import "../../../screen.scss";
 
+section.pageContainer {
+    min-height: fit-content;
+    padding-top: var(--padding-500);
+    padding-bottom: var(--padding-1000);
+}
+
 .wrapper {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     position: relative;
     width: 100%;
 }
@@ -17,13 +24,15 @@
     position: relative;
     width: 100%;
 
-    max-width: var(--width-700);
+    max-width: var(--width-600);
 
-    z-index: 1;
+    z-index: 2;
 }
 
 .imageContainer {
     position: relative;
+    margin-left: calc(var(--width-gap) * 2);
+    z-index: 1;
 
     &:before {
         --blur-size: 1rem;

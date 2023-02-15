@@ -26,7 +26,7 @@ export const Revolution = ({ children }: ContainerProps) => {
                 <FadeInList
                     className={styles.revolution}
                     childClassName={styles.child}
-                    amount={isTabletOrSmaller ? 0.3 : 0.8}
+                    amount={isTabletOrSmaller ? 0.1 : 0.3}
                     initialDelay={0}
                 >
                     {children}

@@ -1,3 +1,7 @@
+.container {
+    min-height: calc(100vh - var(--navigation-height));
+}
+
 .whoAreWe {
     display: flex;
     flex-direction: row;
@@ -7,9 +11,6 @@
     max-width: var(--width-1100);
     perspective: 50rem;
     
-
-
-
     h1 {
         width: 100%;
         margin-bottom: 0;
@@ -78,8 +79,6 @@
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
         margin-bottom: var(--margin-200);
-
-        
         
     }
 }

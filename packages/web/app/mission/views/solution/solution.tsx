@@ -1,10 +1,6 @@
-import { useRef } from "react"
 import Container from "../../../components/contrainer/container"
-import FadeInContainer from "../../../components/contrainer/fade-in-container"
-import FadeInChildList from "../../../components/fade-in/fade-in-child-list"
 import FadeInList from "../../../components/fade-in/fade-in-list"
 import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
-import SolutionParallax from './solution-parallax'
 import styles from './solution.module.scss'
 import VaultPainting from './vault-painting'
 
@@ -23,12 +19,10 @@ export const Solution = ({ children }: SolutionProps) => {
 
             <div className={styles.solutionContainer}>
                 <div className={styles.solution} >
-                    <FadeInList className={styles.content} amount={!isMobileOrSmaller ? 0.9 : 0.3} initialDelay={0}>
+                    <FadeInList className={styles.content} amount={!isMobileOrSmaller ? 0.3 : 0.1} initialDelay={0}>
                         {children}
                     </FadeInList>
                 </div>
-
-                <SolutionParallax />
 
             </div>
 
