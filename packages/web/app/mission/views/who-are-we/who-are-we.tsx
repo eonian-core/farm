@@ -10,7 +10,7 @@ import FadeInList from '../../../components/fade-in/fade-in-list';
 
 export const WhoWeAre = ({children}: PropsWithChildren) => {
     return (
-        <Container className={styles.container}>
+        <Container>
             <div className={styles.whoAreWe}>
                 <FadeInList className={styles.content} delay={0.1} amount={0.1}>
                     {children}
