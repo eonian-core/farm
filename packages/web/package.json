@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006 --quiet --no-open",
-    "build:storybook": "storybook build",
+    "build:storybook": "storybook build --debug-webpack",
     "serve:storybook": "serve ./storybook-static",
     "production": "next build && next start",
     "open:next": "opener http://localhost:3000",
