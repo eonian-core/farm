@@ -33,13 +33,6 @@
         -webkit-text-fill-color: initial;
     }
 
-    h4 {
-        font-size: var(--font-size-1000);
-        line-height: var(--line-height-1120);
-        letter-spacing: var(--letter-black-500);
-        color: var(--color-success-400);
-    }
-
     p {
         max-width: var(--width-1200);
     }
@@ -60,6 +53,14 @@
     img {
         width: var(--width-400);
     }
+
+    h4 {
+        font-size: var(--font-size-1000);
+        font-weight: var(--font-bold);
+        line-height: var(--line-height-1120);
+        letter-spacing: var(--letter-black-500);
+        color: var(--color-success-400);
+    }
 }
 
 .secOpsStatusIndicatorContainer {
@@ -75,6 +76,21 @@
     height: var(--inicator-height);
     border-radius: var(--inicator-height);
     background-color: var(--color-success-400);
+}
+
+@media (max-width: $screen-desktop) {
+    .secOps {
+        grid-template-columns: var(--width-300) var(--width-500);
+        grid-row-gap: var(--padding-300);
+    }
+}
+
+@media (max-width: $screen-laptop) {
+    .secOps {
+        img {
+            width: 100%;
+        }
+    }
 }
 
 @media (max-width: $screen-tablet) {

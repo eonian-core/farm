@@ -35,10 +35,15 @@ export const H3 = ({ children }: { children?: React.ReactNode }) => {
     )
 }
 
+export const H4 = ({ children }: { children?: React.ReactNode }) => (
+    <h4 className={clsx(styles.header4, inter.className)}>{children}</h4>
+)
+
 const heading = {
     H1,
     H2,
-    H3
+    H3,
+    H4
 }
 
 export default heading

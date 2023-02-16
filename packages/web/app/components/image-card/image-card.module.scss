@@ -114,7 +114,11 @@
 @media (max-width: $screen-laptop) {
     .imageCard {
         img {
-            width: var(--width-400);
+            --w: 100%;
+            --ratio: 1; /* width / height */
+
+            width: var(--w);
+            height: calc(var(--w)/var(--ratio));
         }
     }
 }

@@ -30,10 +30,9 @@
     width: 100%;
     margin-bottom: 0;
 
-    font-size: var(--font-size-1150);
+    font-size: var(--font-size-1125);
     font-weight: var(--font-black);
     line-height: var(--line-height-1165);
-    letter-spacing: var(--letter-black-400);
   }
 
   p {
@@ -91,8 +90,8 @@
     grid-template-columns: 1fr;
 
     h1 {
-      font-size: var(--font-size-1000);
-      line-height: var(--line-height-1000);
+      font-size: var(--font-size-700);
+      line-height: var(--line-height-400);
       letter-spacing: var(--letter-black-500);
     }
 

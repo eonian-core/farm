@@ -11,6 +11,8 @@ import {InternalLink} from "../components/links/links";
 const components: MDXComponents = {
   h1: heading.H1,
   h2: heading.H2,
+  h3: heading.H3,
+  h4: heading.H4,
   Column: dynamic(import('./columns/columns')),
   ImageCard: dynamic(import('../components/image-card/image-card')),
   Card: dynamic(import('../components/card/card')),
@@ -21,6 +23,7 @@ const components: MDXComponents = {
   SecOpsDescription: dynamic(import('./views/secops/secops-description')),
   SecOpsCards: dynamic(import('./views/secops/secops-cards')),
   SecOpsStatusIndicator: dynamic(import('./views/secops/secops-status-indicator')),
+  SecOpsCodeReview: dynamic(import('./views/secops/secops-code-review')),
   DeepSecurity: dynamic(import('./views/deepsecurity/deepsecurity')),
   DeepSecurityDescription: dynamic(import('./views/deepsecurity/deepsecurity-description')),
 }
