@@ -80,8 +80,16 @@ section.pageContainer {
     }
 }
 
+@media (max-width: $screen-laptop) {
+    section.pageContainer {
+        padding-top: var(--padding-1000);
+        padding-bottom: var(--padding-500);
+    }
+}
+
 @media (max-width: $screen-tablet) {
 
+    .problemContainer,
     .problemWrapper,
     .problem {
         width: 100%;
@@ -109,8 +117,11 @@ section.pageContainer {
         padding-right: calc(var(--width-gap) * 0.8);
     }
 
-    .pageContainer {
-        padding: 0 !important;
+    section.pageContainer {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: var(--padding-800);
+        padding-bottom: var(--padding-800);
     }
 
     .problemContainer {

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useLocalSocials } from '../../../socials';
 import Container from "../../../components/contrainer/container";
 import FadeInList from "../../../components/fade-in/fade-in-list";
-import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
+import { useIsLaptopOrSmaller, useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
 import { Socials } from '../../../components/socials/socials';
 
 import styles from './revolution.module.scss';
@@ -17,6 +17,7 @@ interface ContainerProps {
 
 export const Revolution = ({ children }: ContainerProps) => {
     const socials = useLocalSocials()
+    const isLaptopOrSmaller = useIsLaptopOrSmaller()
     const isTabletOrSmaller = useIsTabletOrSmaller()
 
     return (
@@ -39,8 +40,8 @@ export const Revolution = ({ children }: ContainerProps) => {
                     className={styles.imageContainer}
                     delay={0.3} 
                     amount={0.1} 
-                    fadeUp={false} 
-                    fadeHorizontal
+                    fadeUp={!isLaptopOrSmaller} 
+                    fadeHorizontal={isLaptopOrSmaller}
                     fadeHorizontalInitial='20%'
                     >
                     <Image src={cityPic} alt="Futuristic cityscape view from golden lake" placeholder="blur" />
