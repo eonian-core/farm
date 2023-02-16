@@ -69,6 +69,7 @@
     align-items: center;
     gap: var(--gap-100);
 }
+
 .secOpsStatusIndicator {
     width: var(--inicator-height);
     height: var(--inicator-height);
@@ -76,28 +77,22 @@
     background-color: var(--color-success-400);
 }
 
-@media (max-width: $screen-mobile) {
+@media (max-width: $screen-tablet) {
     .secOps {
         align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: 1fr;
 
         &:first-child {
             justify-content: flex-end;
             grid-column: 1;
         }
     }
-}
-@media (max-width: $screen-desktop) {
-    .secOps {
-        grid-template-columns: var(--width-500) var(--width-200);
-        grid-row-gap: var(--padding-300);
+
+    .secOpsCards {
+        img {
+            width: 100%;
+        }
     }
 }
-
-@media (max-width: $screen-tablet) {
-    .secOps {
-        grid-template-columns: 2fr 1fr;
-    }
-}
-
-//small mobile
-//ultro wide

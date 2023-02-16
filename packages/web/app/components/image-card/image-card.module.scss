@@ -89,7 +89,6 @@
     flex-direction: column;
     justify-content: space-between;
     width: 100%;
-    height: 100%;
     padding: var(--padding-400);
     padding-bottom: var(--padding-300);
 }
@@ -103,15 +102,92 @@
     
 }
 
-
-@media (max-width: $screen-mobile) {
+@media (max-width: $screen-desktop) {
     .imageCard {
+        img {
+            width: var(--width-500);
+            height: var(--width-500);
+        }
+    }
+}
+
+@media (max-width: $screen-laptop) {
+    .imageCard {
+        img {
+            width: var(--width-400);
+        }
+    }
+}
+
+
+@media (max-width: $screen-tablet) {
+    .imageCard {
+        display: flex;
+        flex-direction: column;
 
         h3 {
             font-size: var(--font-size-700);
             line-height: var(--line-height-700);
         }
+
+        img {
+            --w: 100%;
+            --ratio: 1; /* width / height */
+
+            width: var(--w);
+            height: calc(var(--w)/var(--ratio));
+        }
         
+        .target, p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+        }
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .imageCard {
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            font-size: var(--font-size-700);
+            line-height: var(--line-height-700);
+        }
+
+        img {
+            --w: 100%;
+            --ratio: 1; /* width / height */
+
+            width: var(--w);
+            height: calc(var(--w)/var(--ratio));
+        }
+
+        .target, p {
+            font-size: var(--font-size-500);
+            line-height: var(--line-height-500);
+        }
+    }
+}
+
+@media (max-width: $screen-small-mobile) {
+    .imageCard {
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+            font-size: var(--font-size-700);
+            line-height: var(--line-height-700);
+        }
+
+        img {
+            --w: 100%;
+            --ratio: 1; /* width / height */
+
+            width: var(--w);
+            height: calc(var(--w)/var(--ratio));
+        }
+
         .target, p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);
