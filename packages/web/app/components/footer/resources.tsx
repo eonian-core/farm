@@ -26,9 +26,9 @@ export const Resources = () => {
                 Resources
             </h5>
             <ul>
-                {list.map(({ href, label }, index) => (
+                {list.map(({ href, label }) => (
                     <li key={href}>
-                        <InternalLink href={href} >{label}</InternalLink>
+                        <InternalLink href={href}>{label}</InternalLink>
                     </li>
                 ))}
 
