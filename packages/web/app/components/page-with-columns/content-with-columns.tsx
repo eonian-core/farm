@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import React from "react";
+import FadeInList from "../fade-in/fade-in-list";
 import { MOBILE_SCREEN } from "../resize-hooks/screens";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
 import { ColumnItemProps } from "./column-item";
@@ -33,9 +34,14 @@ const ContentWithColumns: React.FC<Props> = ({ children, className }) => {
 
   function renderColumn(items: React.ReactElement[], index: number) {
     return (
-      <div key={index} className={styles.column}>
+      <FadeInList
+        key={index}
+        amount="some"
+        initialDelay={0.1}
+        className={styles.column}
+      >
         {items.map((item) => item)}
-      </div>
+      </FadeInList>
     );
   }
 };

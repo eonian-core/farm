@@ -24,14 +24,15 @@ const PageWithColumns: React.FC<Props> = ({
   invert = false,
 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
+
   const isInView = useInView(ref);
 
-  const { x, opacity, imageOpacity, imageX } = useTransformParams(ref, invert);
+  const { x, imageX, opacity, imageOpacity, imageScale } = useProgress(ref, invert);
 
   return (
     <Container ref={ref} className={styles.container}>
       <motion.div
-        style={{ opacity: imageOpacity, x: imageX }}
+        style={{ opacity: imageOpacity, x: imageX, scale: imageScale }}
         className={styles.image}
       >
         {typeof renderImage === "function"
@@ -57,37 +58,28 @@ function useShift(windowWidth: number) {
   return 200;
 }
 
-function useTransformParams<T extends HTMLElement>(
+function useProgress<T extends HTMLElement>(
   ref: React.RefObject<T>,
   invert: boolean
 ) {
   const { width: windowWidth = 0 } = useWindowSize();
-  const yViewThreshold = windowWidth < DESKTOP_SCREEN ? "center" : 0.75;
+  const yViewThreshold = windowWidth < DESKTOP_SCREEN ? "center" : 0.85;
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", `start ${yViewThreshold}`],
   });
 
-  const shift = useShift(windowWidth);
-
-  const transform = useTransform(
-    scrollYProgress,
-    [1, 0],
-    invert ? [-shift, -windowWidth / 2] : [shift, windowWidth / 2]
-  );
-
-  const opacity = useTransform(scrollYProgress, [0.5, 1], [0, 0.4]);
-
-  const x = useSpring(transform, {
-    stiffness: 200,
-    damping: 60,
-  });
+  const shift = useShift(windowWidth) * (invert ? -1 : 1);
 
   return {
-    x,
     opacity: scrollYProgress,
-    imageOpacity: opacity,
-    imageX: invert ? shift : -shift,
+    imageOpacity: useTransform(scrollYProgress, [0.5, 1], [0, 0.4]),
+    imageScale: useSpring(scrollYProgress, {
+      stiffness: 200,
+      damping: 60,
+    }),
+    imageX: -shift,
+    x: shift,
   };
 }
 
