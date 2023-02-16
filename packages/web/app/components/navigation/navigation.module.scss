@@ -117,6 +117,8 @@
     bottom: 0;
     width: 100vw;
 
+    display: none;
+
     ul:before {
         content: "";
         position: absolute;
@@ -155,6 +157,8 @@
 }
 
 .menuEnter {
+    display: block;
+    
     ul:before {
         opacity: 1;
         transform: scale(0.1);
@@ -163,6 +167,8 @@
 
 
 .menuEnterActive  {
+    display: block;
+
     ul:before {
         opacity: 1;
         transform: scale(50);
@@ -178,6 +184,8 @@
 }
 
 .menuEnterDone {
+    display: block;
+
     ul:before {
         opacity: 1;
         transform: scale(50);
@@ -190,6 +198,8 @@
 }
 
 .menuExit {
+    display: block;
+
     ul:before {
         opacity: 1;
         transform: scale(50);
@@ -202,6 +212,8 @@
 }
 
 .menuExitActive {
+    display: block;
+
     ul:before {
         transform: scale(0.1);
         transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
@@ -215,6 +227,8 @@
 }
 
 .menuExitDone {
+    display: none;
+
     ul:before {
         transform: scale(0.1);
     }
