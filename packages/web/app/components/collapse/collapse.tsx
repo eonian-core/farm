@@ -1,7 +1,6 @@
 import styles from "./collapse.module.scss";
 import React, { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { usePathname, useSearchParams } from "next/navigation";
 import { useLocationHash } from "./use-location-hash";
 
 interface CollapseProp {
