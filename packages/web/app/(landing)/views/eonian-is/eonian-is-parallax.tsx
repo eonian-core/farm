@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./problem-parallax.module.scss";
+import styles from "./eonian-is-parallax.module.scss";
 import Image from "next/image";
 import clsx from "clsx";
 
@@ -11,12 +11,12 @@ import ethereumCrystalPic from './assets/ethereum_crystal_2.png'
 import pyramidCristalPic from './assets/crystal_4.png'
 import { useIsDesktopOrSmaller } from "../../../components/resize-hooks/screens";
 
-export const ProblemParallax = () => {
+export const WhatIsEonianParallax = () => {
   const isSmallScreen = useIsDesktopOrSmaller();
 
   return (
     <ParallaxContainer className={styles.parallaxContainer} fadeIn={{
-      delay: 0.2,
+      delay: 0.1,
     }}>
       <ParallaxBlock
         x={!isSmallScreen ? -0.1 : 0.3}
@@ -55,7 +55,7 @@ export const ProblemParallax = () => {
 }
 
 
-export default ProblemParallax;
+export default WhatIsEonianParallax;
 
 export const BitcoinImage = () => (
   <div className={clsx(styles.imageContainer, styles.bitcoinImageContainer)}>

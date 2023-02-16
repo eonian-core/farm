@@ -1,10 +1,11 @@
 import React from "react";
 import LogoWithText from "../logo/logo-with-text";
-import globalSocials, { SocialLink, useLocalSocials } from "../../socials";
+import { useLocalSocials } from "../../socials";
 import styles from './footer.module.scss'
-import { InternalLink } from "../links/links";
 import clsx from "clsx";
-import ExternalLink from "../links/external-link";
+import { Resources } from "./resources";
+import { Socials } from "./socials";
+
 
 const Footer = () => {
   const socials = useLocalSocials()
@@ -34,45 +35,4 @@ const Footer = () => {
 
 export default Footer;
 
-export const Resources = () => {
-  const showFooter = process.env.NEXT_PUBLIC_FEATURE_FAQ_PAGE === 'true';
-  const showCommunity = process.env.NEXT_PUBLIC_FEATURE_COMMUNITY_PAGE === 'true';
 
-  // if at least one feautre is enabled, the footer resources will be shown
-  if (![showFooter, showCommunity].some(Boolean)) {
-    return null;
-  }
-
-  return (
-    <div className="mx-12 mb-6">
-      <h5 className="text-xl font-medium leading-normal">
-        Resources
-      </h5>
-      <ul>
-        
-        {showFooter && (
-          <li><InternalLink href="/faq" >FAQ</InternalLink></li>
-        )}
-
-        {showCommunity && (
-          <li><InternalLink href="/community" >Community</InternalLink></li>
-        )}
-        
-      </ul>
-    </div>
-  )
-}
-
-export const Socials = ({ socials }: { socials: Array<SocialLink> }) => (
-  <div className="mx-12 mb-6">
-    <h5 className="text-xl font-medium leading-normal">Social</h5>
-
-    <ul className={styles.socials}>{
-
-      socials.map(({ name, href, icon }) => (
-        <li key={name}><ExternalLink href={href} icon={icon} /></li>
-      ))
-
-    }</ul>
-  </div>
-)
