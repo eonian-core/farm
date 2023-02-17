@@ -14,6 +14,12 @@
     }
 }
 
+section.pageContainer {
+    min-height: fit-content;
+    padding-top: var(--padding-500);
+    padding-bottom: var(--padding-500);
+}
+
 .problemWrapper {
 
     height: 100%;
@@ -22,8 +28,6 @@
     align-items: center;
     justify-content: center;
     position: relative;
-
-    z-index: -99;
 }
 
 .problemContainer {
@@ -54,7 +58,7 @@
     padding: var(--padding-800);
 
     border-radius: var(--border-radius-450);
-    background: var(--color-background-highlight);
+    background: var(--color-background-start);
 
     height: 100%;
 }
@@ -76,8 +80,16 @@
     }
 }
 
+@media (max-width: $screen-laptop) {
+    section.pageContainer {
+        padding-top: var(--padding-1000);
+        padding-bottom: var(--padding-500);
+    }
+}
+
 @media (max-width: $screen-tablet) {
 
+    .problemContainer,
     .problemWrapper,
     .problem {
         width: 100%;
@@ -105,8 +117,11 @@
         padding-right: calc(var(--width-gap) * 0.8);
     }
 
-    .pageContainer {
-        padding: 0 !important;
+    section.pageContainer {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: var(--padding-800);
+        padding-bottom: var(--padding-800);
     }
 
     .problemContainer {

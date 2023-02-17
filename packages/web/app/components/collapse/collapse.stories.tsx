@@ -7,7 +7,7 @@ import CollapseContent from "./collapse-content";
 import '../../tailwind.css'
 
 const meta: Meta<typeof Collapse> = {
-    title: 'Views/Collapse',
+    title: 'Components/Collapse',
     component: Collapse,
     tags: ['autodocs']
 }

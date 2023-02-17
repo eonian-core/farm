@@ -1,10 +1,10 @@
 import styles from "./navigation.module.scss";
 import LogoWithText from "../logo/logo-with-text";
-import { InternalLink } from "../links/links";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
 import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
 import Menu from "./menu";
+import { links, mobileLinks, NavigationItem } from "./links";
 
 
 // TODO: highlight or cross out link for current page
@@ -12,24 +12,6 @@ import Menu from "./menu";
 export interface NavigationProps {
   onStateChange?: (isOpen: boolean) => void;
 }
-
-const showCommunity = process.env.NEXT_PUBLIC_FEATURE_COMMUNITY_PAGE === 'true';
-const showFooter = process.env.NEXT_PUBLIC_FEATURE_FAQ_PAGE === 'true';
-
-export interface NavigationItem {
-  href: string,
-  label: string
-}
-
-const links = [
-  showCommunity && { href: '/community', label: 'Community' },
-  showFooter && { href: '/faq', label: 'FAQ' }
-].filter(Boolean) as Array<NavigationItem>;
-
-const mobileLinks: Array<NavigationItem> = [
-  { href: '/', label: 'Home' },
-  ...links
-]
 
 export default function Navigation({ onStateChange }: NavigationProps) {
 

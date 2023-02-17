@@ -4,7 +4,7 @@ import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
 import { useLocalSocials } from '../../../socials';
 import InDevelopmentParallax from './in-development-parallax';
 import styles from './in-development.module.scss';
-import { Socials } from './socials';
+import { Socials } from '../../../components/socials/socials';
 
 interface ContainerProps {
     /** content of the block, expected to have: h2, p  and Card elements */

@@ -1,7 +1,7 @@
 @import "../../../screen.scss";
 @import "../../../components/styles/gradient-text.mixin.scss";
 
-.pageContainer {
+section.pageContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -53,6 +53,17 @@
   }
 }
 
+@media (max-width: $screen-laptop) {
+  section.pageContainer {
+    flex-direction: column-reverse;
+  }
+
+  .solution {
+    padding-left: var(--padding-700);
+  }
+}
+
+
 @media (max-width: $screen-tablet) {
   .solutionContainer,
   .solution {
@@ -63,25 +74,16 @@
     padding: var(--padding-700) calc(var(--width-gap) * 0.5);
   }
 
-  .pageContainer {
+  section.pageContainer {
     padding: calc(var(--width-gap) * 0.5);
   }
 }
 
-@media (max-width: $screen-laptop) {
-  .pageContainer {
-    flex-direction: column-reverse;
-  }
-
-  .solution {
-    padding-left: var(--padding-700);
-  }
-}
 
 @media (max-width: $screen-mobile) {
-  .pageContainer {
+  section.pageContainer {
     padding: 0;
-    padding-bottom: var(--padding-900);
+    padding-bottom: var(--padding-800);
   }
 
   .solution {
