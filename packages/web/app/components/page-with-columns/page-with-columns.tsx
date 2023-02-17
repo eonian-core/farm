@@ -11,23 +11,29 @@ import {
 } from "../../components/resize-hooks/screens";
 
 import styles from "./page-with-columns.module.scss";
+import clsx from "clsx";
 
 interface Props {
   children: React.ReactNode;
   invert?: boolean;
   renderImage: React.ReactNode | ((isInView: boolean) => React.ReactNode);
+  darkBackground?: boolean;
 }
 
 const PageWithColumns: React.FC<Props> = ({
   children,
   renderImage,
   invert = false,
+  darkBackground = false,
 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const isInView = useInView(ref);
 
-  const { x, imageX, opacity, imageOpacity, imageScale } = useProgress(ref, invert);
+  const { x, imageX, opacity, imageOpacity, imageScale } = useProgress(
+    ref,
+    invert
+  );
 
   return (
     <Container ref={ref} className={styles.container}>
@@ -40,7 +46,11 @@ const PageWithColumns: React.FC<Props> = ({
           : renderImage}
       </motion.div>
       <motion.div style={{ x, opacity }}>
-        <ContentWithColumns className={styles.columns}>
+        <ContentWithColumns
+          className={clsx(styles.columns, {
+            [styles["columns--background"]]: darkBackground,
+          })}
+        >
           {children}
         </ContentWithColumns>
       </motion.div>
