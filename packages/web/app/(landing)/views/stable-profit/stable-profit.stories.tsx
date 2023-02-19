@@ -1,6 +1,5 @@
 import type { Meta, StoryFn } from "@storybook/react";
 import { H2 } from "../../../components/heading/heading";
-import ColumnItem from "../../../components/page-with-columns/column-item";
 import StableProfit from "./stable-profit";
 
 const meta: Meta<typeof StableProfit> = {

@@ -1,6 +1,5 @@
 import type { Meta, StoryFn } from "@storybook/react";
 import { H2 } from "../../../components/heading/heading";
-import ColumnItem from "../../../components/page-with-columns/column-item";
 import SafeInvestments from "./safe-investments";
 
 const meta: Meta<typeof SafeInvestments> = {
