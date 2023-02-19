@@ -7,9 +7,9 @@ export interface NavigationItem {
 }
 
 export const links = [
-    features.showCommunity && { href: '/community', label: 'Community' },
-    features.showFaq && { href: '/faq', label: 'FAQ' },
     features.showMission && { href: '/mission', label: 'Mission' },
+    features.showFaq && { href: '/faq', label: 'FAQ' },
+    features.showCommunity && { href: '/community', label: 'Community' },
 ].filter(Boolean) as Array<NavigationItem>;
 
 export const mobileLinks: Array<NavigationItem> = [
