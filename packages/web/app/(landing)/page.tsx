@@ -51,8 +51,8 @@ const components: MDXComponents = {
   ),
   StableProfit: dynamic(import("./views/stable-profit/stable-profit")),
   SafeInvestments: dynamic(import("./views/safe-investments/safe-investments")),
-  ColumnItem: dynamic(import("../components/page-with-columns/column-item")),
   Features: dynamic(import("./views/features/features")),
+  ul: dynamic(import("./views/features/features-list")),
 };
 
 export default function Home() {

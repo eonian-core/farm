@@ -3,6 +3,7 @@ import React from "react";
 import styles from "./features.module.scss";
 import Container from "../../../components/contrainer/container";
 import clsx from "clsx";
+import FadeInList from "../../../components/fade-in/fade-in-list";
 
 export interface ImageProps {
     className: string
@@ -22,13 +23,13 @@ const Features: React.FC<StableProfitProps> = ({ children, image, right }) => {
 
     return (
         <Container>
-            <div className={clsx(styles.wrapper, {[styles.right]: right})}>
+            <FadeInList className={clsx(styles.wrapper, {[styles.right]: right})} amount={0.3} initialDelay={0}>
                 {!right && Image}
                 
                 <div className={clsx(styles.features, {[styles.right]: right})}>{children}</div>
 
                 {right && Image}
-            </div>
+            </FadeInList>
         </Container>
     );
 };
