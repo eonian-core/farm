@@ -1,25 +1,33 @@
 import React from "react";
-import Image from "next/image";
-import clsx from "clsx";
 
 import styles from "./features.module.scss";
 import Container from "../../../components/contrainer/container";
-import citySrc from "./assets/sci-fi-city-with-rocket.png";
+import clsx from "clsx";
 
-interface StableProfitProps extends React.PropsWithChildren {
-
+export interface ImageProps {
+    className: string
 }
 
-const Features: React.FC<StableProfitProps> = ({ children }) => {
+interface StableProfitProps extends React.PropsWithChildren {
+    /** Image which will be rendered */
+    image: (props: ImageProps) => React.ReactNode
+    /** Show image on right side */
+    right?: boolean
+}
+
+const Features: React.FC<StableProfitProps> = ({ children, image, right }) => {
+    const Image = image({
+        className: clsx(styles.image, {[styles.right]: right})
+    });
+
     return (
         <Container>
-            <div className={styles.wrapper}>
-                <div className={styles.image}>
-                    <Image src={citySrc} alt="sci-fy cityscape with launching rocket" placeholder="blur" />
-                </div>
+            <div className={clsx(styles.wrapper, {[styles.right]: right})}>
+                {!right && Image}
+                
+                <div className={clsx(styles.features, {[styles.right]: right})}>{children}</div>
 
-                <div className={styles.features}>{children}</div>
-
+                {right && Image}
             </div>
         </Container>
     );

@@ -57,36 +57,12 @@
 }
 
 .image {
-    position: relative;
     margin-right: var(--margin-600);
     z-index: 1;
 
-    &:before {
-        --blur-size: 1rem;
-
-        content: "";
-        position: absolute;
-        top: var(--blur-size);
-        left: var(--blur-size);
-        height: calc(100% - 2 * var(--blur-size));
-        width: calc(100% - 2 * var(--blur-size));
-
-        background: linear-gradient(to bottom, 
-            #190491,
-            #024e7a, 
-            #0616a7,
-            #020e7a,  
-            #880C86, 
-            #e20494, 
-            #13DDD4,  
-            #FE7B3A,
-            #310aa8,
-            #21017a
-        );
-        border-radius: calc(2 * var(--border-radius-400));
-        z-index: -1;
-        mix-blend-mode: screen;
-        filter: blur(3rem);
+    &.right {
+        margin-left: var(--margin-700);
+        margin-right: 0;
     }
 
     img {
@@ -95,8 +71,6 @@
 
         max-width: var(--width-600);
         box-shadow: 0px 16px 31px -10px rgb(5, 6, 17);
-
-        transform: rotate3d(0, 1, 0, -3deg);
         
     }
 }

@@ -38,29 +38,36 @@ const Template: StoryFn<typeof SafeInvestments> = (props) => {
         and software development life cycle (SSDLC) monitoring and testing
         methods, we strive to deliver the safest solution possible.
       </p>
-      <ColumnItem title="Hacks Protection">
-        We constantly monitor DeFi-related hacks in other protocols and develop
-        defense mechanisms to keep our contracts safe from potential threats.
-      </ColumnItem>
-      <ColumnItem title="Fraud Monitoring">
-        We continuously monitor the transactions of investment protocols and
-        take action to ensure the security of our clients investments by
-        promptly withdrawing funds in case of any suspicious activity.
-      </ColumnItem>
-      <ColumnItem title="Independent Audits">
-        We conduct independent 95-point audits of investment protocols to
-        thoroughly evaluate their security and ensure that we only select the
-        safest options for our clients.
-      </ColumnItem>
-      <ColumnItem title="Vertical Safety Integration">
-        We collaborate with the teams of investment protocols to proactively
-        identify and address vulnerabilities to prevent potential abuse.
-      </ColumnItem>
-      <ColumnItem title="Permissionless Protocol">
-        Our protocol is decentralized and operates on permissionless model. Our
-        smart contracts are designed to ensure that only you have access to your
-        tokens.
-      </ColumnItem>
+      <ul>
+        <li>
+          <h3>Hacks Protection</h3>
+          We constantly monitor DeFi-related hacks in other protocols and develop
+          defense mechanisms to keep our contracts safe from potential threats.
+        </li>
+        <li>
+          <h3>Fraud Monitoring</h3>
+          We continuously monitor the transactions of investment protocols and
+          take action to ensure the security of our clients investments by
+          promptly withdrawing funds in case of any suspicious activity.
+        </li>
+        <li>
+          <h3>Independent Audits</h3>
+          We conduct independent 95-point audits of investment protocols to
+          thoroughly evaluate their security and ensure that we only select the
+          safest options for our clients.
+        </li>
+        <li>
+          <h3>Vertical Safety Integration</h3>
+          We collaborate with the teams of investment protocols to proactively
+          identify and address vulnerabilities to prevent potential abuse.
+        </li>
+        <li>
+          <h3>Permissionless Protocol</h3>
+          Our protocol is decentralized and operates on permissionless model. Our
+          smart contracts are designed to ensure that only you have access to your
+          tokens.
+        </li>
+      </ul>
     </SafeInvestments>
   );
 };
