@@ -28,6 +28,7 @@
         color: var(--color-text-400);
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
+
         margin-bottom: var(--margin-800);
         max-width: var(--width-600);
     }
@@ -36,7 +37,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: auto;
-        gap: var(--margin-600) var(--margin-900);
+        gap: var(--margin-600) var(--margin-700);
 
         li {
             color: var(--color-text-450);
