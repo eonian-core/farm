@@ -4,6 +4,7 @@ import styles from "./features.module.scss";
 import Container from "../../../components/contrainer/container";
 import clsx from "clsx";
 import FadeInList from "../../../components/fade-in/fade-in-list";
+import { useIsMobileOrSmaller } from "../../../components/resize-hooks/screens";
 
 export interface ImageProps {
     className: string
@@ -14,16 +15,19 @@ interface StableProfitProps extends React.PropsWithChildren {
     image: (props: ImageProps) => React.ReactNode
     /** Show image on right side */
     right?: boolean
+    className?: string
 }
 
-const Features: React.FC<StableProfitProps> = ({ children, image, right }) => {
+const Features: React.FC<StableProfitProps> = ({ children, image, right, className }) => {
+    const isMobileOrSmaller = useIsMobileOrSmaller()
+
     const Image = image({
         className: clsx(styles.image, {[styles.right]: right})
     });
 
     return (
         <Container>
-            <FadeInList className={clsx(styles.wrapper, {[styles.right]: right})} amount={0.3} initialDelay={0}>
+            <FadeInList className={clsx(className, styles.wrapper, {[styles.right]: right})} amount={!isMobileOrSmaller ? 0.3 : 0.1} initialDelay={0}>
                 {!right && Image}
                 
                 <div className={clsx(styles.features, {[styles.right]: right})}>{children}</div>

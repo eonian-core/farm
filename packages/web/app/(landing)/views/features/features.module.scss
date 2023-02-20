@@ -1,3 +1,4 @@
+@import "../../../screen.scss";
 
 .wrapper {
     display: flex;
@@ -71,6 +72,87 @@
 
         max-width: var(--width-600);
         box-shadow: 0px 16px 31px -10px rgb(5, 6, 17);
-        
+
+    }
+}
+
+@media (max-width: $screen-desktop) {
+    .features ul {
+        gap: var(--margin-400) var(--margin-600);
+    }
+
+    .image img {
+        height: auto;
+        width: 30vw;
+
+        max-height: 80vh;
+    }
+}
+
+@media (max-width: $screen-laptop) {
+    .wrapper {
+        align-items: flex-start;
+    }
+
+    .image {
+        margin-right: var(--margin-500);
+
+        &.right {
+            margin-left: var(--margin-500);
+            margin-right: 0;
+        }
+
+        img {
+            height: auto;
+            width: 40vw;
+        }
+    }
+}
+@media (max-width: $screen-tablet) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+
+        &.right {
+            flex-direction: column-reverse;
+        }
+    }
+
+    .image {
+        margin-right: 0;
+        margin-left: 0;
+        margin-bottom: var(--margin-600);
+
+        &.right {
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        img {
+            height: 60vh;
+            width: auto;
+        }
+    }
+
+
+}
+@media (max-width: $screen-small-mobile) {
+    .features {
+        ul {
+            grid-template-columns: 1fr;
+
+            li {
+                max-width: none;
+            }
+        }
+    }
+
+    .image {
+        img {
+            height: auto;
+            width: 100%;
+
+            max-height: 80vh;
+        }
     }
 }
