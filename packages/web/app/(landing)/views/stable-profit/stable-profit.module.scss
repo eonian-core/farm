@@ -1,36 +1,32 @@
 @import "../../../screen.scss";
 
-.fx {
-  will-change: filter;
+.image {
+  position: relative;
 
-  filter: blur(10px) hue-rotate(10deg);
+  &:before {
+    --blur-size: 1rem;
 
-  &--animated {
-    animation: hueRotationDesktop 10s ease-in-out infinite;
-    @media (max-width: $screen-tablet) {
-      animation: none;
-    }
-  }
-}
+    content: "";
+    position: absolute;
+    top: var(--blur-size);
+    left: var(--blur-size);
+    height: calc(100% - 2 * var(--blur-size));
+    width: calc(100% - 2 * var(--blur-size));
 
-@keyframes hueRotationDesktop {
-  0% {
-    filter: blur(10px) hue-rotate(10deg);
-  }
-
-  25% {
-    filter: blur(20px) hue-rotate(20deg);
-  }
-
-  50% {
-    filter: blur(30px) hue-rotate(30deg);
-  }
-
-  75% {
-    filter: blur(20px) hue-rotate(20deg);
-  }
-
-  100% {
-    filter: blur(10px) hue-rotate(10deg);
+    background: linear-gradient(to bottom,
+      #2A2F62,
+      #0d6496,
+      #5F2A6C,
+      #7a308d,
+      #f792f7,
+      #F47995,
+      #832E8A,
+      #3A2253,
+      #B7416B,
+      #200430);
+    border-radius: calc(2 * var(--border-radius-400));
+    z-index: -1;
+    mix-blend-mode: screen;
+    filter: blur(3rem);
   }
 }

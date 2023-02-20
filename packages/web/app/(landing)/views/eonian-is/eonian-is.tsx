@@ -22,7 +22,7 @@ export const EonianIs = ({children}: EonianIsProps) => {
         <Container className={styles.pageContainer}>
             <div className={styles.wrapper}>
                 
-                <FadeIn className={styles.textContainer} amount={!isMobileOrSmaller ? 0.5 : 0.2} delay={0.2}>
+                <FadeIn className={styles.textContainer} amount={!isMobileOrSmaller ? 0.3 : 0.2} delay={0}>
                     <div className={styles.whatIsEonian}>
                         <div className={styles.content}>
                             {children}

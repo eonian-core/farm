@@ -69,14 +69,6 @@
         font-size: var(--font-size-600);
         line-height: var(--line-height-600);
         margin-bottom: var(--margin-200);
-
-        a {
-            text-decoration: underline;
-      
-            &:hover {
-              color: var(--color-text-300);
-            }
-          }
     }
 }
 

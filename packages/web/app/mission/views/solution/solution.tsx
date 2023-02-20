@@ -1,6 +1,7 @@
 import Container from "../../../components/contrainer/container"
 import FadeInList from "../../../components/fade-in/fade-in-list"
 import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
+import SolutionParallax from "./solution-parallax"
 import styles from './solution.module.scss'
 import VaultPainting from './vault-painting'
 
@@ -23,6 +24,8 @@ export const Solution = ({ children }: SolutionProps) => {
                         {children}
                     </FadeInList>
                 </div>
+
+                <SolutionParallax />
 
             </div>
 

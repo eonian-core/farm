@@ -30,7 +30,14 @@ export default function FadeInChildList({
 
   return (
     <>
-      {Children.map(children, (child, i) => (
+      {Children.map(children, (child, i) =>{
+        
+        // fix for rendering li items
+        if(!child || child === '\n') {
+          return
+        }
+
+        return (
         <div
           className={className}
           style={{
@@ -41,7 +48,7 @@ export default function FadeInChildList({
         >
           {child}
         </div>
-      ))}
+      )})}
     </>
   );
 }
