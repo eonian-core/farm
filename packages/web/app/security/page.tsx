@@ -7,13 +7,13 @@ import styles from "./page.module.scss";
 import heading from "../components/heading/heading";
 import {InternalLink} from "../components/links/links";
 
-
 const components: MDXComponents = {
   h1: heading.H1,
   h2: heading.H2,
   h3: heading.H3,
   h4: heading.H4,
   Column: dynamic(import('./columns/columns')),
+  ApproachDescription: dynamic(import('./views/approach/approach-description')),
   ImageCard: dynamic(import('../components/image-card/image-card')),
   Card: dynamic(import('../components/card/card')),
   Target: dynamic(import("../components/image-card/image-card").then(({Target}) => Target)),
