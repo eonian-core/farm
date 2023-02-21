@@ -108,6 +108,7 @@
       --color-text-200: hsl(240, 6%, 90%);
       --color-text-300: hsl(240, 5%, 84%);
       --color-text-400: hsl(240, 5%, 65%);
+      --color-text-450: hsl(240, 4%, 55%);
       --color-text-500: hsl(240, 4%, 46%); // Default color
       --color-text-600: hsl(240, 5%, 34%);
       --color-text-700: hsl(240, 5%, 26%);
@@ -275,6 +276,8 @@
     --width-800: calc(8 * var(--width-column) + 7 * var(--width-gap));
     --width-900: calc(9 * var(--width-column) + 8 * var(--width-gap));
     --width-1000: calc(10 * var(--width-column) + 9 * var(--width-gap));
+    --width-1100: calc(11 * var(--width-column) + 10 * var(--width-gap));
+    --width-1200: calc(12 * var(--width-column) + 11 * var(--width-gap));
 
     --max-width: calc(1360px + 2 * var(--width-gap)); // must be lower than ultra wide and bigger than desctop screen
     
@@ -312,5 +315,5 @@ a {
 
 html {
   color-scheme: dark;
-
+  scroll-behavior: smooth;
 }
