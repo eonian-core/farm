@@ -1,5 +1,3 @@
-
-
 import { NextSeoProps } from 'next-seo';
 
 export interface PageSeoProps {
@@ -23,13 +21,13 @@ export const generatePageSpecificSeo = ({title, description}: PageSeoProps) => (
 
 export const NEXT_SEO_DEFAULT: NextSeoProps = {
   title: 'Eonian Protocol | Home',
-  description: 'Decentralised and secure protocol for passive investments with peace in mind.',
+  description: 'Decentralized and secure protocol for passive investments with peace of mind.',
   openGraph: {
     type: 'website',
     locale: 'en_IE',
     url: 'https://eonian.finance/',
     title: 'Eonian | Crypto yield aggregator that cares about security',
-    description: 'Decentralised and secure real yeild protocol for passive investments with peace in mind.',
+    description: 'Decentralized and secure real yeild protocol for passive investments with peace of mind.',
     images: [
       {
         url: 'https://eonian.finance/assets/preview-open-graph.png',
