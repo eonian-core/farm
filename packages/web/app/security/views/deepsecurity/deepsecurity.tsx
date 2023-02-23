@@ -14,7 +14,7 @@ export default function DeepSecurity({
         <div className={styles.deepSecurity}>
             {children}
             <div className={styles.imageContainer}>
-                <Image src={electronicCircuitPic} alt="Rocket starting in cityscape of future city" placeholder="blur"/>
+                <Image src={electronicCircuitPic} alt="Electronics circuit board with locks" placeholder="blur"/>
             </div>
         </div>
     );

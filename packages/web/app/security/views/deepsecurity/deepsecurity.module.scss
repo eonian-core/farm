@@ -25,14 +25,13 @@
 
     p {
         max-width: var(--width-1200);
+        color: var(--color-text-200)
     }
 }
 
 .deepSecurityDescription {
     align-items: center;
     justify-content: flex-end;
-
-    grid-column: 1 / 3;
 
     p {
         max-width: var(--width-1100);
@@ -41,8 +40,7 @@
 
 .imageContainer {
     position: absolute;
-    //margin-left: var(--margin-500);
-    right: 0;
+    right: calc((100% - var(--width-400) - var(--width-700) - var(--width-gap)) / 2 );
     z-index: -1;
 
     &:before {
@@ -76,7 +74,7 @@
         height: auto;
         width: 50vw;
 
-        max-width: var(--width-1000);
+        max-width: var(--width-600);
         box-shadow: 0 16px 31px -10px rgb(5, 6, 17);
 
         transform: rotate3d(0, 1, 0, -3deg);
@@ -85,25 +83,52 @@
 }
 
 
-@media (max-width: $screen-mobile) {
-    .deepSecurity {
-        align-items: flex-start;
 
-        &:first-child {
-            justify-content: flex-end;
-            grid-column: 1;
-        }
-    }
-}
 @media (max-width: $screen-desktop) {
     .deepSecurity {
         grid-template-columns: var(--width-500) var(--width-200);
         grid-row-gap: var(--padding-300);
+        margin-bottom: var(--margin-1000);
+    }
+
+    .imageContainer {
+        right: 0;
+
+        img {
+            height: auto;
+            width: 40vw;
+
+            max-width: var(--width-800);
+        }
     }
 }
 
 @media (max-width: $screen-tablet) {
     .deepSecurity {
-        grid-template-columns: 2fr 1fr;
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .imageContainer {
+        position: inherit;
+        right: 0;
+        width: 100%;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+
+@media (max-width: $screen-mobile) {
+    .deepSecurity {
+        margin-bottom: var(--margin-800);
+
+        &:first-child {
+            justify-content: flex-end;
+            grid-column: 1;
+        }
     }
 }
