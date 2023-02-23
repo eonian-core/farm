@@ -12,7 +12,7 @@ export const RoadmapContainer = ({ children }: RoadmapContainerProps) => {
         <FadeIn 
             className={clsx("flex min-h-fit w-full flex-col justify-center overflow-hidden sm:items-center", styles.roadmapContainer)}
             amount={0.3}
-            fadeUpinitial="10%"
+            fadeUpInitial="10%"
         >
             {children}
         </FadeIn>

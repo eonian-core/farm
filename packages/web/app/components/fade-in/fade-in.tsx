@@ -43,7 +43,12 @@ export interface FadeInBodyProps {
     /** Should the animation fade up, default is true */
     fadeUp?: boolean
     /** The initial y position of the element when fade up, default is '30%' */
-    fadeUpinitial?: string
+    fadeUpInitial?: string
+
+    /** Should the animation fade horizontal, default is false */
+    fadeHorizontal?: boolean
+    /** The initial x position of the element when fade horizontal, default is '30%' */
+    fadeHorizontalInitial?: string
 
     /** Show or not content */
     isInView?: boolean
@@ -59,13 +64,15 @@ export const FadeInBody = React.forwardRef<HTMLDivElement, FadeInBodyProps>(({
     zoomIn = false,
     zoomInInitial = 0.9,
     fadeUp = true,
-    fadeUpinitial = '30%',
+    fadeUpInitial = '30%',
+    fadeHorizontal = false,
+    fadeHorizontalInitial = '30%'
 }, ref) => {
     return <motion.div
         ref={ref}
         className={className}
-        initial={{ opacity: 0, scale: zoomIn ? zoomInInitial : 1, y: fadeUp ? fadeUpinitial : 0 }}
-        animate={isInView && { opacity: 1, scale: 1, y: 0 }}
+        initial={{ opacity: 0, scale: zoomIn ? zoomInInitial : 1, y: fadeUp ? fadeUpInitial : 0, x: fadeHorizontal ? fadeHorizontalInitial : 0 }}
+        animate={isInView && { opacity: 1, scale: 1, y: 0, x: 0 }}
         transition={{
             duration,
             delay,

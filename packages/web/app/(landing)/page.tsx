@@ -8,15 +8,15 @@ import Hero from "./views/hero/hero";
 import PageLoader from "../components/page-loader/page-loader";
 import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
 import Mbr from "../components/mobile-break/mobile-break";
+import { LinkInText } from "../components/links/link-in-text";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
   Mbr, // no lazy loading or it create a flash of content
+  a: LinkInText as any, // no lazy loading for links, prevent flash of content
   h2: dynamic(import("../components/heading/heading").then(({ H2 }) => H2)),
   h3: dynamic(import("../components/heading/heading").then(({ H3 }) => H3)),
-  Problem: dynamic(import("./views/problem/problem")),
-  Category: dynamic(import("../components/category/category")),
-  Solution: dynamic(import("./views/solution/solution")),
+  EonianIs: dynamic(import("./views/eonian-is/eonian-is")),
   Founders: dynamic(import("./views/founders/founders")),
   FoundersList: dynamic(import("./views/founders/founders-list")),
   Founder: dynamic(import("./views/founders/founder")),
@@ -49,6 +49,10 @@ const components: MDXComponents = {
       loading: () => <FlowDiagramLoader />,
     }
   ),
+  StableProfit: dynamic(import("./views/stable-profit/stable-profit")),
+  SafeInvestments: dynamic(import("./views/safe-investments/safe-investments")),
+  Features: dynamic(import("./views/features/features")),
+  ul: dynamic(import("./views/features/features-list")),
 };
 
 export default function Home() {

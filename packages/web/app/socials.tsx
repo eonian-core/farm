@@ -43,6 +43,7 @@ export const socials: LocalesSocials = {
     {
       name: "Discord",
       icon: <IconDiscord />,
+
       href: "https://discord.gg/5p6F5ygZWn",
 
     },

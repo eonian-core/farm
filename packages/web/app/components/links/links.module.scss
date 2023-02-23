@@ -1,10 +1,9 @@
-
 .baseLink {
     color: var(--color-text-400);
     text-decoration: none;
 
     // Not contain font size for easy reusing
-    
+
     &:hover {
         color: var(--color-text-200);
     }
@@ -42,4 +41,8 @@
 
 .onlyText {
     display: inline;
+}
+
+.linkInText {
+    text-decoration: underline;
 }
