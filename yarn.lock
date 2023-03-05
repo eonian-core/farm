@@ -6181,6 +6181,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@yarnpkg/lockfile@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
+  integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
+
 "@zeit/schemas@2.21.0":
   version "2.21.0"
   resolved "https://registry.yarnpkg.com/@zeit/schemas/-/schemas-2.21.0.tgz#cd242c6551ffb51830049d68d9743ab65b45b820"
@@ -8031,6 +8036,13 @@ command-line-usage@^6.1.0:
     chalk "^2.4.2"
     table-layout "^1.0.2"
     typical "^5.2.0"
+
+commander-plus@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/commander-plus/-/commander-plus-0.0.6.tgz#280e9d3e30a392d8cda0f3d2721b856c832f602b"
+  integrity sha512-exkj0VqadsWHY4waXhdcybPuUGeLlFM3MMUmla8G8GR0yQYsMo2Ldsx33nm/68082g8mJQvdVCVFmrOvgLcUWQ==
+  dependencies:
+    keypress "0.1.x"
 
 commander@2.18.0:
   version "2.18.0"
@@ -10822,6 +10834,15 @@ gauge@^4.0.3:
     strip-ansi "^6.0.1"
     wide-align "^1.1.5"
 
+generate-lockfile@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/generate-lockfile/-/generate-lockfile-0.0.12.tgz#677ebfa137ceaa89577dec1b40389031f78c618c"
+  integrity sha512-uqZ0ZoCtn2r2tH3fkzAwZjXEXamjL/ZCGHCgZ1FJcRVgRNHsVSZBt7ZfRTqPXrZGi45k2cT/OsTEP8y8hrnDUQ==
+  dependencies:
+    "@yarnpkg/lockfile" "^1.1.0"
+    chalk "^4.1.0"
+    commander-plus "^0.0.6"
+
 gensync@^1.0.0-beta.2:
   version "1.0.0-beta.2"
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
@@ -13086,6 +13107,11 @@ keccak@3.0.2, keccak@^3.0.0, keccak@^3.0.2:
     node-addon-api "^2.0.0"
     node-gyp-build "^4.2.0"
     readable-stream "^3.6.0"
+
+keypress@0.1.x:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/keypress/-/keypress-0.1.0.tgz#4a3188d4291b66b4f65edb99f806aa9ae293592a"
+  integrity sha512-x0yf9PL/nx9Nw9oLL8ZVErFAk85/lslwEP7Vz7s5SI1ODXZIgit3C5qyWjw4DxOuO/3Hb4866SQh28a1V1d+WA==
 
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
   version "3.2.2"

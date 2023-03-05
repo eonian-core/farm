@@ -14,7 +14,9 @@
   overflow: hidden;
 
   // delay appearance, to fix bug during loading
-  animation: appearOnlyOpacity 0.5s ease-out 5s;
+  animation: appearOnlyOpacity 0.5s ease-out forwards;
+  animation-delay: 3s;
+  opacity: 0;
 
   @media (max-width: $screen-tablet) {
     width: 2200px;
