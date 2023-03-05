@@ -16,21 +16,11 @@
 
     grid-row-gap: var(--padding-500);
 
-    h1 {
-        font-size: var(--font-size-1000);
-        line-height: var(--line-height-1120);
-        letter-spacing: var(--letter-black-500);
-    }
-
     h2 {
-        font-size: var(--font-size-900);
+        font-size: var(--font-size-1100);
         line-height: var(--line-height-1120);
         letter-spacing: var(--letter-black-500);
-        color: var(--color-text-400);
-        background: none;
-        background-clip: initial;
-        -webkit-background-clip: initial;
-        -webkit-text-fill-color: initial;
+        width: 100%;
     }
 
     p {
@@ -72,9 +62,9 @@
 }
 
 .secOpsStatusIndicator {
-    width: var(--inicator-height);
-    height: var(--inicator-height);
-    border-radius: var(--inicator-height);
+    width: var(--indicator-height);
+    height: var(--indicator-height);
+    border-radius: var(--indicator-height);
     background-color: var(--color-success-400);
 }
 

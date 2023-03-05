@@ -34,7 +34,7 @@ export const NEXT_SEO_DEFAULT: NextSeoProps = {
         width: 1024,
         height: 697,
         alt: 'Make crpto work for you',
-        type: 'images/png',
+        type: 'image/png',
       },
     ],
     siteName: 'Eonian DAO',
