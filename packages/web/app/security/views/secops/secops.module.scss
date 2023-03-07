@@ -21,6 +21,7 @@
         line-height: var(--line-height-1120);
         letter-spacing: var(--letter-black-500);
         width: 100%;
+        grid-column: 1 / 3;
     }
 
     p {
@@ -91,6 +92,11 @@
         display: flex;
         flex-direction: column;
         grid-template-columns: 1fr;
+
+        h2 {
+            font-size: var(--font-size-800);
+            line-height: var(--line-height-800);
+        }
 
         &:first-child {
             justify-content: flex-end;
