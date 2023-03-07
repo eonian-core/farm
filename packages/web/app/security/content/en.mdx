@@ -1,8 +1,3 @@
-import umbrellaPic from "../assets/umbrella.png";
-import magnifierPic from "../assets/magnifier.png";
-import DeepSecurity from "../views/deepsecurity/deepsecurity";
-import SecOpsCards from "../views/secops/secops-cards";
-
 <Approach>
     <Column>
         # We are Proud of Our Security
@@ -31,17 +26,17 @@ import SecOpsCards from "../views/secops/secops-cards";
         creating new practices, which can be implemented
         only in DeFi.
     </SecOpsDescription>
-    <ImageCard href={'/security/full-list'} image={umbrellaPic} alt={'robot picture'} isVertical={true}>
+    <SecOpsRiskThreatModel>
         ### Risk & Threat model
 
         We designed protocol while keeping in mind many
         know vulnerabilities of popular smart contracts
 
         <Target>See full list</Target>
-    </ImageCard>
+    </SecOpsRiskThreatModel>
     <Column>
         <SecOpsCards>
-            <SecOpsCodeReview href={'/security/all-reviews'} image={magnifierPic} alt={'robot picture'} >
+            <SecOpsCodeReview>
                 ### Code Review
 
                 Each line of code was reviewed multiple times for high
@@ -52,7 +47,7 @@ import SecOpsCards from "../views/secops/secops-cards";
             </SecOpsCodeReview>
             <Card href={'/security/code-coverage'}>
                 ### Code coverage
-                #### 100%
+                > 100%
 
                 All Smart Contracts fully covered with Functional and Security Tests
 
@@ -60,7 +55,7 @@ import SecOpsCards from "../views/secops/secops-cards";
             </Card>
             <Card href={'/security/analysis-report'}>
                 ### Code issues
-                #### Zero
+                > Zero
 
                 We use static code analysis to continuesly validate all contracts end resolve all code issues
 
@@ -69,7 +64,7 @@ import SecOpsCards from "../views/secops/secops-cards";
             <Card href={'/security/health-status'}>
                 ### Health status
                 <SecOpsStatusIndicator>
-                    #### Green
+                    > Green
                 </SecOpsStatusIndicator>
 
                 Our monitoring system show current liquidity management status,

@@ -1,17 +1,9 @@
 import React from "react";
 import ImageCard from "../../../components/image-card/image-card";
-import {StaticImageData} from 'next/dist/client/image';
 import {useIsLaptopOrSmaller} from "../../../components/resize-hooks/screens";
+import magnifierPic from "../../assets/magnifier.png";
 
 export interface SecOpsCodeReviewProps {
-    /** Link to external page */
-    href: string
-    /** Path to image */
-    image: StaticImageData
-    /** Alt image name */
-    alt: string
-    /** Vertical orientation */
-    isVertical: boolean
     /**
      * Children of card
      * expect one h3 header and one p element and Target component
@@ -19,11 +11,11 @@ export interface SecOpsCodeReviewProps {
     children: React.ReactNode
 }
 
-export default function SecOpsCodeReview({href, image, alt = '', children}: SecOpsCodeReviewProps) {
+export default function SecOpsCodeReview({children}: SecOpsCodeReviewProps) {
     const isLaptopOrSmaller = useIsLaptopOrSmaller()
 
     return (
-        <ImageCard href={href} image={image} alt={alt} isVertical={!!isLaptopOrSmaller}>
+        <ImageCard href={'/security/all-reviews'} image={magnifierPic} alt={'robot picture'} isVertical={!!isLaptopOrSmaller}>
             {children}
         </ImageCard>
     );

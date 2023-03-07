@@ -24,6 +24,8 @@ const components: MDXComponents = {
   SecOpsCards: dynamic(import('./views/secops/secops-cards')),
   SecOpsStatusIndicator: dynamic(import('./views/secops/secops-status-indicator')),
   SecOpsCodeReview: dynamic(import('./views/secops/secops-code-review')),
+  SecOpsRiskThreatModel: dynamic(import('./views/secops/secops-risk-threat-model')),
+  blockquote: dynamic(import('./views/secops/secops-indicator-label')) as any,
   DeepSecurity: dynamic(import('./views/deepsecurity/deepsecurity')),
   DeepSecurityDescription: dynamic(import('./views/deepsecurity/deepsecurity-description')),
 }
