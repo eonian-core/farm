@@ -10,6 +10,7 @@ export const links = [
     features.showMission && { href: '/mission', label: 'Mission' },
     features.showFaq && { href: '/faq', label: 'FAQ' },
     features.showCommunity && { href: '/community', label: 'Community' },
+    features.showSecurity && { href: '/security', label: 'Security' },
 ].filter(Boolean) as Array<NavigationItem>;
 
 export const mobileLinks: Array<NavigationItem> = [

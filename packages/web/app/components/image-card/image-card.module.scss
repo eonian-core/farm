@@ -84,6 +84,13 @@
     flex-direction: column;
 }
 
+.inactive {
+    pointer-events: none;
+    color: gray;
+    text-decoration: none;
+    cursor: default;
+}
+
 .content {
     display: flex;
     flex-direction: column;

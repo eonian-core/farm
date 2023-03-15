@@ -17,6 +17,8 @@ export interface ImageCardProps {
   alt: string
   /** Vertical orientation */
   isVertical: boolean
+  /** Inactive behavior */
+  isInactive?: boolean
   /**
    * Children of card 
    * expect one h3 header and one p element and Target component
@@ -25,10 +27,10 @@ export interface ImageCardProps {
 }
 
 /** Card component which primarly wraps block with header and text as card  */
-export const ImageCard = ({ href, image, alt = '', isVertical = false, children }: ImageCardProps) => (
+export const ImageCard = ({ href, image, alt = '', isVertical = false, isInactive = false,  children }: ImageCardProps) => (
   <a
     href={href}
-    className={clsx(styles.imageCard, {[styles.imageCardVertical]: isVertical})}
+    className={clsx(styles.imageCard, {[styles.imageCardVertical]: isVertical}, {[styles.inactive]: isInactive})}
     target="_blank"
     rel="noopener noreferrer"
   >
