@@ -67,8 +67,15 @@
         font-weight: var(--font-bold);
         line-height: var(--line-height-1120);
         letter-spacing: var(--letter-black-500);
-        color: var(--color-success-400);
     }
+}
+
+.indicatorLabelGreen {
+    font-size: var(--font-size-1000);
+    font-weight: var(--font-bold);
+    line-height: var(--line-height-1120);
+    letter-spacing: var(--letter-black-500);
+    color: var(--color-success-400);
 }
 
 @media (max-width: $screen-desktop) {

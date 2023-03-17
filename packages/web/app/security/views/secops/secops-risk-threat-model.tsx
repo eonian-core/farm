@@ -14,7 +14,13 @@ export interface SecOpsRiskThreatModelProps {
 /** Card component which primarly wraps block with header and text as card  */
 export default function SecOpsRiskThreatModel({children}: SecOpsRiskThreatModelProps) {
     return (
-        <ImageCard href={'/security/full-list'} image={umbrellaPic} alt={'umbrella picture'} isVertical={true}>
+        <ImageCard
+            href={'/security/full-list'}
+            image={umbrellaPic}
+            alt={'umbrella picture'}
+            isVertical={true}
+            disabled
+        >
             {children}
         </ImageCard>
     );

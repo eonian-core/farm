@@ -6,71 +6,78 @@
     width: 100%;
     height: 100%;
 
-    display: grid;
-    grid-template-columns: var(--width-400) var(--width-700);
-    grid-gap: var(--width-gap);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    max-width: var(--width-1100);
+    perspective: 50rem;
+}
 
-    grid-row-gap: var(--padding-500);
+.description {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 
-    h1 {
-        grid-column: 1 / 3;
-    }
-
-    a {
-        grid-column: 1 / 3;
-    }
-
-    img {
-        width: 100%;
-    }
+    width: 100%;
+    max-width: var(--width-600);
 }
 
 .painting {
     position: relative;
+    margin-right: var(--margin-500);
+
+    box-shadow: 0 16px 31px -10px rgb(5, 6, 17);
+
+    img {
+        height: auto;
+        width: 40vw;
+    }
 
     &::before {
+        --blur-size: 1rem;
+
         content: "";
         position: absolute;
-        top: 5%;
-        left: 15%;
-        height: calc(50%);
-        width: calc(70%);
-        background: var(--color-accent-background-gradient);
-        border-radius: 30%;
+        top: var(--blur-size);
+        left: var(--blur-size);
+        height: calc(100% - 2 * var(--blur-size));
+        width: calc(100% - 2 * var(--blur-size));
+
+        background: linear-gradient(to bottom,
+                #024e7a,
+                #880C86,
+                #C60782,
+                #FC4B53,
+                #5428BF,
+                #5428BF,
+                #5428BF,
+                #5428BF,
+                #101445,
+                #0B1D51);
+        border-radius: calc(2 * var(--border-radius-400));
         z-index: -1;
-        animation: animatedgradient 30s ease alternate infinite;
-        background-size: 300% 300%;
-        filter: blur(40px);
+        mix-blend-mode: screen;
+        filter: blur(3rem);
     }
 }
 
-.robotImage {
-    box-shadow: 0 16px 31px -10px rgb(5, 6, 17);
-}
-
-@media (max-width: $screen-desktop) {
+@media (max-width: $screen-laptop) {
     .approach {
-        grid-template-columns: var(--width-300) var(--width-500);
-        grid-row-gap: var(--padding-300);
-    }
-}
-
-@media (max-width: $screen-tablet) {
-    .approach {
-        display: flex;
         flex-direction: column;
-        grid-template-columns: 2fr 1fr;
-    }
-}
-
-@media (max-width: $screen-mobile) {
-    .approach {
-        align-items: flex-start;
 
         &:first-child {
             justify-content: flex-end;
             grid-column: 1;
+        }
+
+        .painting {
+            margin-right: 0;
+
+            img {
+                width: 100%;
+            }
         }
     }
 }

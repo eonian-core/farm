@@ -15,7 +15,13 @@ export default function SecOpsCodeReview({children}: SecOpsCodeReviewProps) {
     const isLaptopOrSmaller = useIsLaptopOrSmaller()
 
     return (
-        <ImageCard href={'/security/all-reviews'} image={magnifierPic} alt={'robot picture'} isVertical={!!isLaptopOrSmaller}>
+        <ImageCard
+            href={'/security/all-reviews'}
+            image={magnifierPic}
+            alt={'robot picture'}
+            isVertical={!!isLaptopOrSmaller}
+            disabled
+        >
             {children}
         </ImageCard>
     );

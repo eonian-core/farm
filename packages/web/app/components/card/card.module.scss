@@ -41,9 +41,8 @@
     padding: var(--padding-400);
     padding-bottom: var(--padding-300);
     border-radius: var(--border-radius-500);
-    transition: background 200ms, border 200ms;
     background: var(--color-background-highlight);
-    box-shadow: inset 0px 0px 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 6px -1px rgba(34, 33, 33, 0.493);
+    box-shadow: inset 0 0 12px -1px rgba(88, 88, 94, 0.26), 0px 0px 6px -1px rgba(34, 33, 33, 0.493);
     transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 
     margin-top: var(--margin-500);
@@ -82,6 +81,14 @@
     &:active {
         box-shadow: inset 0px 0px 24px -12px rgba(0, 0, 0, 0.712);
     }
+}
+
+.disabled {
+    pointer-events: none;
+    cursor: default;
+    background: var(--color-background-start);
+    box-shadow: none;
+    border: 3px dashed var(--color-neutral-500);
 }
 
 .target {

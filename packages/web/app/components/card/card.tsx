@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx';
 import { H3Context } from '../heading/heading'
 import IconExternal from '../icons/icon-external'
 
@@ -8,6 +9,8 @@ import styles from './card.module.scss'
 export interface CardProps {
   /** Link to external page */
   href: string
+  /** Inactive behavior */
+  disabled?: boolean
   /** 
    * Children of card 
    * expect one h3 header and one p element and Target component
@@ -16,9 +19,9 @@ export interface CardProps {
 }
 
 /** Card component which primarly wraps block with header and text as card  */
-export const Card = ({href, children}: CardProps) => (<a
+export const Card = ({href, children, disabled = false}: CardProps) => (<a
     href={href}
-    className={styles.card}
+    className={clsx(styles.card, {[styles.disabled]: disabled})}
     target="_blank"
     rel="noopener noreferrer"
   >

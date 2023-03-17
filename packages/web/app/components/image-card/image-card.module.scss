@@ -84,11 +84,12 @@
     flex-direction: column;
 }
 
-.inactive {
+.disabled {
     pointer-events: none;
-    color: gray;
-    text-decoration: none;
     cursor: default;
+    background: var(--color-background-start);
+    box-shadow: none;
+    border: 3px dashed var(--color-neutral-500);
 }
 
 .content {

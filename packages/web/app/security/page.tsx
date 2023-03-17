@@ -13,7 +13,6 @@ const components: MDXComponents = {
   h3: heading.H3,
   h4: heading.H4,
   Column: dynamic(import('./columns/columns')),
-  ApproachDescription: dynamic(import('./views/approach/approach-description')),
   ImageCard: dynamic(import('../components/image-card/image-card')),
   Card: dynamic(import('../components/card/card')),
   Target: dynamic(import("../components/image-card/image-card").then(({Target}) => Target)),
@@ -26,6 +25,7 @@ const components: MDXComponents = {
   SecOpsCodeReview: dynamic(import('./views/secops/secops-code-review')),
   SecOpsRiskThreatModel: dynamic(import('./views/secops/secops-risk-threat-model')),
   blockquote: dynamic(import('./views/secops/secops-indicator-label')) as any,
+  strong: dynamic(import('./views/secops/secops-indicator-label-green')) as any,
   DeepSecurity: dynamic(import('./views/deepsecurity/deepsecurity')),
   DeepSecurityDescription: dynamic(import('./views/deepsecurity/deepsecurity-description')),
 }
