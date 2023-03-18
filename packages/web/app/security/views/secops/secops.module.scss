@@ -3,6 +3,7 @@
 @import "../../../components/styles/appear.animation.scss";
 
 .secOps {
+    position: relative;
     width: 100%;
     height: 100%;
     min-height: 100vh;
@@ -27,6 +28,12 @@
     p {
         max-width: var(--width-1200);
     }
+}
+
+.imageContainer {
+    position: absolute;
+    width: 50%;
+    top: 55%;
 }
 
 .secOpsDescription {
@@ -82,11 +89,7 @@
     .secOps {
         grid-template-columns: var(--width-300) var(--width-500);
         grid-row-gap: var(--padding-300);
-    }
-}
 
-@media (max-width: $screen-laptop) {
-    .secOps {
         img {
             width: 100%;
         }
@@ -115,5 +118,10 @@
         img {
             width: 100%;
         }
+    }
+
+    .imageContainer {
+        position: relative;
+        width: 100%;
     }
 }

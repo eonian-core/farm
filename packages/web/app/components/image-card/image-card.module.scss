@@ -87,9 +87,9 @@
 .disabled {
     pointer-events: none;
     cursor: default;
-    background: var(--color-background-start);
+    background: none;
     box-shadow: none;
-    border: 3px dashed var(--color-neutral-500);
+    border: 3px dashed var(--color-neutral-600);
 }
 
 .content {
@@ -113,8 +113,11 @@
 @media (max-width: $screen-desktop) {
     .imageCard {
         img {
-            width: var(--width-500);
-            height: var(--width-500);
+            --w: 100%;
+            --ratio: 1; /* width / height */
+
+            width: var(--w);
+            height: calc(var(--w)/var(--ratio));
         }
     }
 }

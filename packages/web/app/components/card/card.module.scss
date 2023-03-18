@@ -86,9 +86,9 @@
 .disabled {
     pointer-events: none;
     cursor: default;
-    background: var(--color-background-start);
+    background: none;
     box-shadow: none;
-    border: 3px dashed var(--color-neutral-500);
+    border: 3px dashed var(--color-neutral-600);
 }
 
 .target {

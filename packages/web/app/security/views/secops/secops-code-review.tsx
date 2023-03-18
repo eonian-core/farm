@@ -1,6 +1,6 @@
 import React from "react";
 import ImageCard from "../../../components/image-card/image-card";
-import {useIsLaptopOrSmaller} from "../../../components/resize-hooks/screens";
+import {useIsDesktopOrSmaller} from "../../../components/resize-hooks/screens";
 import magnifierPic from "../../assets/magnifier.png";
 
 export interface SecOpsCodeReviewProps {
@@ -12,14 +12,14 @@ export interface SecOpsCodeReviewProps {
 }
 
 export default function SecOpsCodeReview({children}: SecOpsCodeReviewProps) {
-    const isLaptopOrSmaller = useIsLaptopOrSmaller()
+    const isDesktopOrSmaller = useIsDesktopOrSmaller()
 
     return (
         <ImageCard
             href={'/security/all-reviews'}
             image={magnifierPic}
             alt={'robot picture'}
-            isVertical={!!isLaptopOrSmaller}
+            isVertical={!!isDesktopOrSmaller}
             disabled
         >
             {children}
