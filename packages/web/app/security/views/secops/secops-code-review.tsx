@@ -1,7 +1,7 @@
 import React from "react";
 import ImageCard from "../../../components/image-card/image-card";
 import {useIsDesktopOrSmaller} from "../../../components/resize-hooks/screens";
-import magnifierPic from "../../assets/magnifier.png";
+import magnifierPic from "./assets/magnifier.png";
 
 export interface SecOpsCodeReviewProps {
     /**

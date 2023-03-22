@@ -30,15 +30,6 @@
   align-items: center;
   min-height: 100vh;
 
-  h1 {
-    width: 100%;
-    margin-bottom: 0;
-
-    font-size: var(--font-size-1125);
-    font-weight: var(--font-black);
-    line-height: var(--line-height-1150);
-  }
-
   p {
     color: var(--color-text-400);
     font-size: var(--font-size-600);
@@ -69,10 +60,6 @@
 @media (max-width: $screen-tablet) {
   .content {
     grid-template-columns: 2fr 1fr;
-
-    h1 {
-      text-align: left;
-    }
 
     p {
       font-size: var(--font-size-600);

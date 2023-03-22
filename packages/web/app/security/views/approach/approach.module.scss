@@ -12,6 +12,15 @@
     justify-content: center;
     max-width: var(--width-1100);
     perspective: 50rem;
+
+    h1 {
+        width: 100%;
+        margin-bottom: 0;
+
+        font-size: var(--font-size-1125);
+        font-weight: var(--font-black);
+        line-height: var(--line-height-1150);
+    }
 }
 
 .description {
@@ -81,3 +90,12 @@
         }
     }
 }
+
+@media (max-width: $screen-tablet) {
+    .approach {
+        h1 {
+            text-align: left;
+        }
+    }
+}
+

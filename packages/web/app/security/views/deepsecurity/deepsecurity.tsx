@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./deepsecurity.module.scss";
 import Image from "next/image";
-import electronicCircuitPic from "../../assets/electronics-circuit.png";
+import electronicCircuitPic from "./assets/electronics-circuit.png";
 import FadeIn from "../../../components/fade-in/fade-in";
 import {useIsMobileOrSmaller} from "../../../components/resize-hooks/screens";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./secops.module.scss";
 import Image from 'next/image';
-import MashBackgroundImage from '../../assets/mash-background.png';
+import MashBackgroundImage from './assets/mash-background.png';
 
 export interface SecOpsProps {
   children: React.ReactNode;

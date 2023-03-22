@@ -1,6 +1,6 @@
 import React from 'react'
 import ImageCard from "../../../components/image-card/image-card";
-import umbrellaPic from "../../assets/umbrella.png";
+import umbrellaPic from "./assets/umbrella.png";
 
 /** Props for Card component */
 export interface SecOpsRiskThreatModelProps {
