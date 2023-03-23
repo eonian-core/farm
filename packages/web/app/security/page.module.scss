@@ -44,12 +44,6 @@
     grid-template-columns: var(--width-500) var(--width-200);
     grid-row-gap: var(--padding-300);
 
-    h1 {
-      font-size: var(--font-size-1130);
-      line-height: var(--line-height-1150);
-      letter-spacing: var(--letter-black-500);
-    }
-
     p {
       font-size: var(--font-size-600);
       line-height: var(--line-height-600);
@@ -75,17 +69,6 @@
   }
   .content {
     grid-template-columns: 1fr;
-
-    h1 {
-      font-size: var(--font-size-900);
-      line-height: var(--line-height-900);
-      letter-spacing: var(--letter-black-500);
-    }
-
-    h2 {
-      font-size: var(--font-size-800);
-      line-height: var(--line-height-800);
-    }
 
     p {
       font-size: var(--font-size-500);

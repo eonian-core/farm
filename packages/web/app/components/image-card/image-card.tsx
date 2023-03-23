@@ -16,7 +16,7 @@ export interface ImageCardProps {
   /** Alt image name */
   alt: string
   /** Vertical orientation */
-  isVertical: boolean
+  isVertical?: boolean
   /** Inactive behavior */
   disabled?: boolean
   /**
@@ -47,10 +47,15 @@ export default ImageCard
 
 export interface TargetProps {
   children: React.ReactNode
+  /** Inactive behavior */
+  disabled?: boolean
 }
 
 
 /** Used to highlight to user where or for what purpose he can use page, to which Card component leads to */
-export const Target = ({children}: TargetProps) => (
-  <span className={styles.target}>{children} <IconExternal size={12} className="ml-1 inline" /></span>
+export const Target = ({children, disabled = false}: TargetProps) => (
+  <span className={styles.target}>
+    {children}
+    <IconExternal size={12} className={clsx("ml-1 inline", {[styles.disabledTarget]: disabled})}/>
+  </span>
 )

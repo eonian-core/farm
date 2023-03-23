@@ -82,6 +82,11 @@
 
 .imageCardVertical {
     flex-direction: column;
+
+    &:after {
+        height: 300%;
+        left: -130%;
+    }
 }
 
 .disabled {
@@ -107,7 +112,10 @@
     color: var(--color-text-500);
     font-size: var(--font-size-600);
     line-height: var(--line-height-600);
-    
+}
+
+.disabledTarget {
+    display: none;
 }
 
 @media (max-width: $screen-desktop) {
@@ -118,6 +126,13 @@
 
             width: var(--w);
             height: calc(var(--w)/var(--ratio));
+        }
+    }
+
+    .imageCardVertical {
+        &:after {
+            height: 200%;
+            left: -130%;
         }
     }
 }
@@ -137,9 +152,6 @@
 
 @media (max-width: $screen-tablet) {
     .imageCard {
-        display: flex;
-        flex-direction: column;
-
         h3 {
             font-size: var(--font-size-700);
             line-height: var(--line-height-700);
@@ -162,9 +174,6 @@
 
 @media (max-width: $screen-mobile) {
     .imageCard {
-        display: flex;
-        flex-direction: column;
-
         h3 {
             font-size: var(--font-size-700);
             line-height: var(--line-height-700);
@@ -187,9 +196,6 @@
 
 @media (max-width: $screen-small-mobile) {
     .imageCard {
-        display: flex;
-        flex-direction: column;
-
         h3 {
             font-size: var(--font-size-700);
             line-height: var(--line-height-700);

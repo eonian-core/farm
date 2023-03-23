@@ -19,7 +19,12 @@
 
         font-size: var(--font-size-1125);
         font-weight: var(--font-black);
-        line-height: var(--line-height-1150);
+        line-height: var(--line-height-1120);
+        margin-top: 1em;
+    }
+
+    p {
+        margin-top: 2em;
     }
 }
 
@@ -91,11 +96,11 @@
     }
 }
 
-@media (max-width: $screen-tablet) {
+@media (max-width: $screen-mobile) {
     .approach {
         h1 {
-            text-align: left;
+            font-size: var(--font-size-900);
+            line-height: var(--line-height-900);
         }
     }
 }
-
