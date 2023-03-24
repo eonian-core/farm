@@ -84,11 +84,27 @@
 
 @media (max-width: $screen-desktop) {
     .secOps {
-        grid-template-columns: var(--width-300) var(--width-500);
-        grid-row-gap: var(--padding-300);
+        align-items: flex-start;
+        display: flex;
+        flex-direction: column;
+        grid-template-columns: 1fr;
+        max-width: var(--width-1100);
+
+        &:first-child {
+            justify-content: flex-end;
+            grid-column: 1;
+        }
 
         img {
             width: 100%;
+        }
+    }
+
+    .secOpsImageCard {
+        margin-top: 0;
+        img {
+            width: 30%;
+            height: auto;
         }
     }
 }
@@ -106,7 +122,7 @@
         }
     }
 
-    .secOpsCards {
+    .secOpsImageCard {
         img {
             width: 100%;
         }
