@@ -38,7 +38,7 @@
     max-width: var(--width-600);
 }
 
-.painting {
+.imageContainer {
     position: relative;
     margin-right: var(--margin-500);
 
@@ -86,12 +86,19 @@
             grid-column: 1;
         }
 
-        .painting {
-            margin-right: 0;
+        h1 {
+            font-size: var(--font-size-1000);
+            font-weight: var(--font-bold);
+            line-height: var(--line-height-1000);
+        }
+    }
 
-            img {
-                width: 100%;
-            }
+    .imageContainer {
+        margin-right: 0;
+
+        img {
+            max-width: var(--width-500);
+            width: 80vw;
         }
     }
 }

@@ -18,7 +18,7 @@ export default function Approach({ children }: ApproachProps) {
         <Container className={styles.pageContainer}>
             <div className={styles.approach} >
                 <FadeIn
-                    className={styles.painting}
+                    className={styles.imageContainer}
                     delay={!isLaptopOrSmaller ? 0.3 : 0.7 }
                     amount={0.1}
                     fadeUpInitial='20%'>

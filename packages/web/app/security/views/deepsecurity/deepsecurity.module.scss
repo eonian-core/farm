@@ -103,11 +103,13 @@
 
     .imageContainer {
         position: inherit;
+        justify-content: center;
+        display: flex;
         right: 0;
         width: 100%;
 
         img {
-            width: 100%;
+            width: 60vw;
             height: auto;
         }
     }
@@ -120,6 +122,12 @@
         &:first-child {
             justify-content: flex-end;
             grid-column: 1;
+        }
+    }
+
+    .imageContainer {
+        img {
+            width: 70vw;
         }
     }
 }
