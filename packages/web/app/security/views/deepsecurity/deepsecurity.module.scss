@@ -94,23 +94,42 @@
     }
 }
 
-@media (max-width: $screen-tablet) {
+@media (max-width: $screen-laptop) {
     .deepSecurity {
-        align-items: flex-start;
         display: flex;
         flex-direction: column;
+        align-items: center;
+        max-width: var(--width-600);
     }
 
     .imageContainer {
+        margin-top: var(--margin-700);
         position: inherit;
-        justify-content: center;
         display: flex;
-        right: 0;
-        width: 100%;
+        width: fit-content;
+        max-width: var(--width-500);
 
         img {
-            width: 60vw;
+            width: 45vw;
             height: auto;
+        }
+
+        &:before {
+            left: 2vw;
+            width: calc(45vw - 2 * var(--blur-size));
+        }
+    }
+}
+
+@media (max-width: $screen-tablet) {
+    .imageContainer {
+        img {
+            width: 60vw;
+        }
+
+        &:before {
+            left: 5vw;
+            width: calc(60vw - 2 * var(--blur-size));
         }
     }
 }
@@ -128,6 +147,11 @@
     .imageContainer {
         img {
             width: 70vw;
+        }
+
+        &:before {
+            left: 7vw;
+            width: calc(70vw - 2 * var(--blur-size));
         }
     }
 }

@@ -28,6 +28,7 @@
 }
 
 .imageContainer {
+    z-index: -1;
     position: absolute;
     width: 50%;
     top: 55%;
@@ -88,7 +89,7 @@
         display: flex;
         flex-direction: column;
         grid-template-columns: 1fr;
-        max-width: var(--width-1100);
+        max-width: var(--width-600);
 
         &:first-child {
             justify-content: flex-end;
@@ -103,7 +104,7 @@
     .secOpsImageCard {
         margin-top: 0;
         img {
-            width: 30%;
+            width: 40%;
             height: auto;
         }
     }
@@ -114,16 +115,8 @@
 }
 
 @media (max-width: $screen-laptop) {
-    .secOps {
-        max-width: var(--width-600);
-    }
-
     .secOpsImageCard {
         margin-top: 0;
-        img {
-            width: 40%;
-            height: auto;
-        }
     }
 }
 
