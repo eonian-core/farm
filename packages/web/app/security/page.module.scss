@@ -1,0 +1,80 @@
+@import "../screen.scss";
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: calc(100vh + var(--padding-900));
+  width: 100%;
+  height: 100%;
+
+  max-width: var(--max-width);
+  padding: 0 var(--width-gap);
+  padding-top: var(--navigation-height);
+  padding-bottom: var(--padding-500);
+
+  h3 {
+    text-transform: capitalize;
+  }
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  p {
+    color: var(--color-text-400);
+    font-size: var(--font-size-600);
+    line-height: var(--line-height-600);
+    margin-bottom: var(--margin-200);
+  }
+}
+
+@media (max-width: $screen-desktop) {
+
+  .content {
+    grid-template-columns: var(--width-500) var(--width-200);
+    grid-row-gap: var(--padding-300);
+
+    p {
+      font-size: var(--font-size-600);
+      line-height: var(--line-height-600);
+    }
+  }
+}
+
+@media (max-width: $screen-tablet) {
+  .content {
+    grid-template-columns: 2fr 1fr;
+
+    p {
+      font-size: var(--font-size-600);
+      line-height: var(--line-height-600);
+    }
+  }
+}
+
+
+@media (max-width: $screen-mobile) {
+  .main {
+    padding-top: calc(var(--padding-700) + var(--navigation-height));
+  }
+  .content {
+    grid-template-columns: 1fr;
+
+    p {
+      font-size: var(--font-size-500);
+      line-height: var(--line-height-500);
+
+      max-width: var(--width-500);
+    }
+  }
+}

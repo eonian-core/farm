@@ -10,6 +10,7 @@ const list: Array<ResourceItem> = [
     { href: "/community", label: "Community", isEnabled: features.showCommunity },
     { href: "/faq", label: "FAQ", isEnabled: features.showFaq },
     { href: "/mission", label: "Mission", isEnabled: features.showMission },
+    { href: "/security", label: "Security", isEnabled: features.showSecurity },
 ]
     .filter(({ isEnabled }) => isEnabled)
 

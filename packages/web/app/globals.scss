@@ -32,6 +32,7 @@
     --font-size-1000: 3rem;
     --font-size-1100: 3.75rem;
     --font-size-1120: 4rem;
+    --font-size-1125: 4.5rem;
     --font-size-1130: 5rem;
     --font-size-1150: 6rem;
     --font-size-1180: 8rem;
@@ -233,7 +234,7 @@
         --color-success-700: hsl(142, 72%, 29%);
         --color-success-800: hsl(143, 64%, 24%);
         --color-success-900: hsl(144, 61%, 20%);
-  
+
   // margin
     --margin-50: 0.25rem;
     --margin-100: 0.5rem;
@@ -247,6 +248,7 @@
     --margin-900: 6rem;
     --margin-1000: 10rem;
     --margin-1100: 16rem;
+    --margin-1200: 20rem;
 
   // padding
     --padding-100: 0.5rem;
@@ -283,6 +285,7 @@
     
   // height
     --navigation-height: 5rem;
+    --indicator-height: 1.5rem;
 
   // border radius
     --border-radius-300: 3px;
