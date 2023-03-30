@@ -85,7 +85,7 @@
 
     &:after {
         height: 300%;
-        left: -130%;
+        left: -150%;
     }
 }
 
@@ -112,10 +112,6 @@
     color: var(--color-text-500);
     font-size: var(--font-size-600);
     line-height: var(--line-height-600);
-}
-
-.disabledTarget {
-    display: none;
 }
 
 @media (max-width: $screen-desktop) {
