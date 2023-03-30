@@ -1,16 +1,20 @@
 import React from 'react'
 import clsx from 'clsx';
+import Image from 'next/image';
+import { StaticImageData } from 'next/dist/client/image';
 
 import { H3Context } from '../heading/heading'
 import styles from './image-card.module.scss'
 import IconExternal from '../icons/icon-external'
 
-/** Props for ImageCard component */
+/** Props for Card component */
 export interface ImageCardProps {
   /** Link to external page */
   href: string
-  /** Image */
-  image: React.ReactNode
+  /** Path to image */
+  image: StaticImageData
+  /** Alt image name */
+  alt: string
   /** Vertical orientation */
   isVertical?: boolean
   /** Inactive behavior */
@@ -25,15 +29,14 @@ export interface ImageCardProps {
 }
 
 /** Card component which primarly wraps block with header and text as card  */
-export const ImageCard = ({ href, image, isVertical = false, disabled = false, className,  children }: ImageCardProps) => (
+export const ImageCard = ({ href, image, alt = '', isVertical = false, disabled = false, className,  children }: ImageCardProps) => (
   <a
     href={href}
     className={clsx(styles.imageCard, className, {[styles.imageCardVertical]: isVertical, [styles.disabled]: disabled})}
     target="_blank"
     rel="noopener noreferrer"
-    data-testid="image-card"
   >
-    {image}
+    <Image src={image} alt={alt} placeholder="blur" />
     <div className={styles.content}>
       <H3Context.Provider value={{ isExternalLink: false }}>
         {children}
@@ -55,6 +58,6 @@ export interface TargetProps {
 export const Target = ({children, disabled = false}: TargetProps) => (
   <span className={styles.target}>
     {children}
-    { !disabled && <IconExternal size={12} className={clsx("ml-1 inline")}/> }
+    <IconExternal size={12} className={clsx("ml-1 inline", {[styles.disabledTarget]: disabled})}/>
   </span>
 )
