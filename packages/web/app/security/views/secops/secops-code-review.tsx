@@ -1,4 +1,5 @@
 import React from "react";
+import Image from 'next/image';
 import ImageCard from "../../../components/image-card/image-card";
 import {useIsTabletOrSmaller} from "../../../components/resize-hooks/screens";
 import magnifierPic from "./assets/magnifier.png";
@@ -18,8 +19,12 @@ export default function SecOpsCodeReview({children}: SecOpsCodeReviewProps) {
     return (
         <ImageCard
             href={'/security/all-reviews'}
-            image={magnifierPic}
-            alt={'robot picture'}
+            image={
+                <Image 
+                    src={magnifierPic} 
+                    alt={'robot picture'} 
+                    placeholder="blur" />
+            }
             isVertical={!!isTabletOrSmaller}
             className={styles.secOpsImageCard}
             disabled
