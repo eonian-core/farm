@@ -6,7 +6,7 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
 
 /** Binance Smart Chain Mainnet */
 export const binanceSmartChainFork: ForkData = {
-  url: "https://bsc-dataseed.binance.org",
+  url: "https://bsc.rpc.blxrbdn.com",
   blockNumber: 26890542, // 29.03.2023
   accounts: {
     holderA: "0xe2fc31f816a9b94326492132018c3aecc4a93ae1", // Holder (Binance Hot Wallet)

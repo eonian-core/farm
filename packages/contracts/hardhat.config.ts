@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: process.env.USE_BSC_FORK ? "hardhat" : "ganache",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {
       forking: binanceSmartChainFork,

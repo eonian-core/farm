@@ -16,7 +16,7 @@
     "test:forge": "forge test -vvv",
     "test": "yarn test:hardhat && yarn test:forge",
     "docgen": "hardhat docgen",
-    "postinstall": "forge install && cp -u .env.example .env",
+    "postinstall": "forge install",
     "clean": "forge clean",
     "test:fuzz": "FOUNDRY_FUZZ_RUNS=1000 forge test -vvv",
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
