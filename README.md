@@ -4,7 +4,7 @@ Yield Aggregator dApp and protocol for safe and high reward liquidity mining
 
 ## Development
 
-This monorepository contains protocol contracts and dApp code, as well as all related packages.
+This mono repository contains protocol contracts and dApp code, as well as all related packages.
 
 ### Structure
 
@@ -14,13 +14,12 @@ This monorepository contains protocol contracts and dApp code, as well as all re
 ### Requirements
 
 Install required tools for development
-
-* [foundry](https://book.getfoundry.sh/getting-started/installation.html) - Testing framework for solidity
+* [foundry](https://book.getfoundry.sh/getting-started/installation.html) - The testing framework for solidity
 * [NodeJS](https://nodejs.org/) - Execution environment for JS
 
 ### First Start Guide
 
-1) Install packages from npm and forge:
+1) Install packages from npm and forge
 
 ```bash
 yarn
@@ -34,40 +33,18 @@ yarn
     * [web/readme.md](https://github.com/eonian-core/farm/tree/main/packages/web#readme)
     * [contracts/readme.md](https://github.com/eonian-core/farm/tree/main/packages/contracts#readme)
 
-#### Web Application
-
-To start only Web Application
-
-1) Open web package
-
-```bash
-cd packages/web
-```
-
-2) Install dependencies
-
-```bash
-yarn
-```
-
-3) Start dev server
-
-```bash
-yarn dev
-```
-
 ### Commands
 
-* `yarn start` - start pre-prod enviroment
-* `yarn dev` - start dev enviroment
+* `yarn start` - start pre-prod environment
+* `yarn dev` - start dev environment
 * `yarn test` - run tests in packages
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
-* `dev:contracts` - Setup development enviroment for contracts. Watch files changes and rerun tests.
+* `dev:`contracts` - Set up development environment for contracts. Watch file changes and rerun tests.
 
 ## Deployment
 
-Deployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly. For a web application, PRs also deploy to a preview environment.
+The eployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly. For a web application, PRs also deploy to a preview environment.
 
 ### Deployed Apps
 
