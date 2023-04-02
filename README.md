@@ -4,12 +4,12 @@ Yield Aggregator dApp and protocol for safe and high reward liquidity mining
 
 ## Development
 
-This mono repository contains protocol contracts and dApp code, as well as all related packages.
+This mono-repository contains protocol contracts and dApp code, as well as all related packages.
 
 ### Structure
 
 * `packages/contracts` - Protocol contracts.
-* `packages/web` - dApp package.
+* `packages/web` - The dApp package.
 
 ### Requirements
 
@@ -26,8 +26,8 @@ Install required tools for development
 yarn
 ```
 
-2) Open package which you want to start
-    * `cd packages/web` - Open dApp package
+2) Open the package which you want to start
+    * `cd packages/web` - Open the dApp package
     * `cd packages/contract` - Open contracts package
 
 3) Follow the guide of the package which you want to start
@@ -41,7 +41,7 @@ yarn
 * `yarn test` - run tests in packages
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
-* `dev:`contracts` - Set up development environment for contracts. Watch file changes and rerun tests.
+* `dev:`contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
 
 ## Deployment
 
