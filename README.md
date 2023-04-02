@@ -41,7 +41,7 @@ yarn
 * `yarn test` - run tests in packages
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
-* `dev:`contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
+* `dev:contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
 
 ## Deployment
 

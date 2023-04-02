@@ -71,7 +71,7 @@ all scripts from `./deploy` folder will be executed during startup sequence
 
 Fill in .env with enviroment variables required for deployment to your network
 
-Then run deployment command, in example we will dpeloy to ropstein network
+Then run the deployment command, in example we will dpeloy to ropstein network
 
 ```bash
 npx hardhat --netowrk ropstein deploy
@@ -97,7 +97,7 @@ npx hardhat --network ropsten export './some-path'
 
 ## Performance optimizations
 
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details, see [the](https://hardhat.org/guides/typescript.html#performance-optimizations) documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
 
 ## Deployed Contracts
 
