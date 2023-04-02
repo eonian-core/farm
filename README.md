@@ -14,7 +14,8 @@ This mono repository contains protocol contracts and dApp code, as well as all r
 ### Requirements
 
 Install required tools for development
-* [foundry](https://book.getfoundry.sh/getting-started/installation.html) - The testing framework for solidity
+
+* [Foundry](https://book.getfoundry.sh/getting-started/installation.html) - The testing framework for solidity
 * [NodeJS](https://nodejs.org/) - Execution environment for JS
 
 ### First Start Guide
