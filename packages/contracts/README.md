@@ -1,10 +1,26 @@
 # Protocol contracts
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
-
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+It is a contracts package of Eonian Farm protocol.
 
 ## Development
+
+This package uses a complex setup of both hardhat and forge. They are both used for testing, but only hardhat is used for deployment.
+It is create some complexities in the setup, but it simplifies and speedup testing of contracts.
+
+* Hardhat tests are a threat as integration tests. They use RPC calls and uses JS. They are slower but required to test complex cases like investment strategies, which depend on contracts on the blockchain.
+* Forge tests are a threat as unit tests. They are faster and actively use fuzz testing to increase test case coverage.
+
+## First Start Guide
+
+1) Install dependencies in root of the repository
+
+2) Fill in `.env` with your etherscan url and API key
+
+3) Build contracts, run hardhat and forge tests
+
+```bash,
+yarn test
+```
 
 ### Kkown issues
 
@@ -78,16 +94,6 @@ Export abi and address in json format. Usefull for dApps
 ```bash
 npx hardhat --network ropsten export './some-path'
 ```
-
-## TODO
-
-[x] Add event tests for ERC4626
-[] add solhint in CI process
-[] add test coverage in CI process
-[] add more security validators in CI process
-[] add optimizations in compilation process
-[] add foundry to hardhat remappings support
-[] silent warning for unused arguments in SafeERC4626 contract
 
 ## Performance optimizations
 

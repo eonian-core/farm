@@ -20,21 +20,19 @@ Install required tools for development
 
 ### First Start Guide
 
-#### Smart Contracts
-
 1) Install packages from npm and forge:
 
 ```bash
-$ yarn
+yarn
 ```
 
-2) Fill in `packages/contract/foundry.toml` and `packages/contract/.env` with your etherscan url and API key
+2) Open package which you want to start
+    * `cd packages/web` - Open dApp package
+    * `cd packages/contract` - Open contracts package
 
-3) Run local node, compile and deploy contracts, start dApp:
-
-```bash
-yarn start
-```
+3) Follow the guide of the package which you want to start
+    * [web/readme.md](https://github.com/eonian-core/farm/tree/main/packages/web#readme)
+    * [contracts/readme.md](https://github.com/eonian-core/farm/tree/main/packages/contracts#readme)
 
 #### Web Application
 
@@ -69,14 +67,10 @@ yarn dev
 
 ## Deployment
 
-Deplyment process focused to implement GitOps practices. Basically it means all master (main) builds go to production directly. For web applications PRs also deploys to preview enviroment.
+Deployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly. For a web application, PRs also deploy to a preview environment.
 
 ### Deployed Apps
 
 * <https:/eonian.finance> - Web app deployed Eonian DAO domain.
 * <https://storybook-eonian.vercel.app> - Storybook of Web application components
 
-### CDN
-
-* <https://vercel.com/eonian/farm-app> - Web app project in Vercel
-* <https://vercel.com/eonian/storybook> - Storybook project in Vercel
