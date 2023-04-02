@@ -9,7 +9,7 @@
     "deployments/**/*"
   ],
   "scripts": {
-    "build": "hardhat compile",
+    "build": "hardhat compile && forge build",
     "start": "hardhat node --export-all './deployments/data.json'",
     "deploy-local": "hardhat deploy --reset",
     "test:hardhat": "hardhat test",
