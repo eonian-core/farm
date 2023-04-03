@@ -31,7 +31,13 @@
       "**/@openzeppelin",
       "**/@openzeppelin/**",
       "**/@chainlink",
-      "**/@chainlink/**"
+      "**/@chainlink/**",
+      "**/@nomicfoundation",
+      "**/@nomicfoundation/**",
+      "**/hardhat",
+      "**/hardhat/**",
+      "**/hardhat-*",
+      "**/hardhat-*/**"
     ]
   },
   "devDependencies": {

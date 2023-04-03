@@ -1,6 +1,6 @@
 import hre from "hardhat";
 import { expect } from "chai";
-import { ApeLendingStrategy } from "../../typechain";
+import { ApeLendingStrategy } from "../../typechain-types";
 import constantMap from "../../hardhat/const-map.json";
 import { createLinePreprocessor } from "../../hardhat/const-line-preprocessing-hook";
 

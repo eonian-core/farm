@@ -6,13 +6,15 @@ import {
   ICToken,
   IERC20,
   Vault,
-} from "../../typechain";
+} from "../../typechain-types";
 import { Contract } from "ethers";
 import deployVault from "./helpers/deploy-vault";
 import * as helpers from "@nomicfoundation/hardhat-network-helpers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { binanceSmartChainFork } from "../../hardhat/forks";
 import warp from "./helpers/warp";
+import getToken from "./helpers/get-erc20-token";
+import resetBalance from "./helpers/reset-balance";
 
 describe("Ape Lending Strategy", function () {
   const { ethers } = hre;
@@ -55,10 +57,13 @@ describe("Ape Lending Strategy", function () {
     vault = await deployVault(hre, { asset, rewards, signer: owner });
     hre.tracer.nameTags[vault.address] = "Vault";
 
+    await resetBalance(vault.address, { tokens: [asset] });
+
     strategy = await deployStrategy({ signer: owner, vault });
     hre.tracer.nameTags[strategy.address] = "Strategy";
 
-    assetToken = await getToken(asset);
+
+    assetToken = await getToken(asset, owner);
   }
 
   beforeEach(async function () {
@@ -286,14 +291,6 @@ describe("Ape Lending Strategy", function () {
     await tx.wait();
 
     return contract;
-  }
-
-  async function getToken(token: string): Promise<IERC20 & Contract> {
-    return await ethers.getContractAt<IERC20 & Contract>(
-      "IERC20",
-      token,
-      owner
-    );
   }
 
   async function getCToken(token: string): Promise<ICToken & Contract> {

@@ -18,7 +18,12 @@ contract JobTest is Test {
 
     function setUp() public {
         job = new JobMock();
-        job.__JobMock_init(1001);
+
+        uint256 _minimumBetweenExecutions = 1001;
+        job.__JobMock_init(_minimumBetweenExecutions);
+
+        // set initial time to be greater than _minimumBetweenExecutions
+        vm.warp(_minimumBetweenExecutions * 10);
 
         initialTime = block.timestamp;
 

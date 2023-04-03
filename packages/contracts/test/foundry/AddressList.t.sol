@@ -178,7 +178,7 @@ contract AddressListTest is Test {
         list = list.reorder(newOrder);
     }
 
-    function _filledArray(uint8 length) private returns (address[] memory) {
+    function _filledArray(uint8 length) pure private returns (address[] memory) {
         address[] memory expected = new address[](length);
         for (uint8 i = 0; i < length; i++) {
             expected[i] = vm.addr(i + 1);
