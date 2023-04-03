@@ -17,7 +17,7 @@
     "test": "yarn clean && yarn build && yarn test:hardhat && yarn test:forge",
     "docgen": "hardhat docgen",
     "postinstall": "forge install",
-    "clean": "forge clean",
+    "clean": "forge clean && rm -rf ./artifacts && rm -rf ./cache_hardhat && rm -rf ./out && rm -rf ./typechain-types",
     "test:fuzz": "FOUNDRY_FUZZ_RUNS=1000 forge test -vvv",
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node"

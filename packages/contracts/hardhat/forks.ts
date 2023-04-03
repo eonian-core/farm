@@ -6,7 +6,8 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
 
 /** Binance Smart Chain Mainnet */
 export const binanceSmartChainFork: ForkData = {
-  url: "https://bsc.rpc.blxrbdn.com",
+  // official BSC RPC unstable use unofficail instead
+  url: "https://bsc.getblock.io/beac5e27-711d-4570-abed-8ddb5dd41d9e/mainnet/",
   // do not use blockNumber for BSC, 
   // hardhat or providers cannot correctly exchange non latest block data
   accounts: {
