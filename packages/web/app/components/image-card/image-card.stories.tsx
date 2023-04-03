@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import Image from 'next/image';
 
 import { ImageCard, Target } from './image-card';
 import magnifierPic from "./magnifier.png";
@@ -32,8 +33,7 @@ type Story = StoryObj<typeof ImageCard>;
 export const Default: Story = {
     args: {
         href: 'https://google.com',
-        image: magnifierPic,
-        alt: 'magnifier picture',
+        image: <Image src={magnifierPic} alt="magnifier picture" />,
         children: (<>
             <h3>This is example ImageCard</h3>
             <p>It is used to wrap block with header, image, and text as card.</p>
@@ -45,8 +45,7 @@ export const Default: Story = {
 export const DefaultVertical: Story = {
     args: {
         href: 'https://google.com',
-        image: magnifierPic,
-        alt: 'magnifier picture',
+        image: <Image src={magnifierPic} alt="magnifier picture" />,
         isVertical: true,
         children: (<>
             <h3>This is example ImageCard</h3>
@@ -60,7 +59,7 @@ export const Hover: Story = {
     parameters: {pseudo: { hover: true }},
     args: {
         href: 'https://google.com',
-        image: magnifierPic,
+        image: <Image src={magnifierPic} alt="magnifier picture" />,
         children: (<>
             <h3>This is example ImageCard</h3>
             <p>It is used to wrap block with header, image, and text as card.</p>
@@ -73,7 +72,7 @@ export const Active: Story = {
     parameters: {pseudo: { active: true }},
     args: {
         href: 'https://google.com',
-        image: magnifierPic,
+        image: <Image src={magnifierPic} alt="magnifier picture" />,
         children: (<>
             <h3>This is example ImageCard</h3>
             <p>It is used to wrap block with header, image, and text as card.</p>

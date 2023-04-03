@@ -47,6 +47,7 @@
     img {
         height: auto;
         width: 40vw;
+        max-width: var(--width-500);
     }
 
     &::before {
@@ -97,7 +98,6 @@
         margin-right: 0;
 
         img {
-            max-width: var(--width-500);
             width: 80vw;
         }
     }
