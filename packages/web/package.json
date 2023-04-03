@@ -21,6 +21,7 @@
     "@mdx-js/react": "2.2.1",
     "@next/font": "13.0.7",
     "@next/mdx": "13.1.1",
+    "@nextui-org/react": "^1.0.0-beta.12",
     "@radix-ui/react-collapsible": "^1.0.1",
     "@react-spring/web": "^9.6.1",
     "@svgdotjs/svg.js": "^3.1.2",
@@ -43,7 +44,8 @@
     "react-transition-group": "^4.4.5",
     "react-wrap-balancer": "^0.4.0",
     "tailwindcss": "^3.2.4",
-    "typescript": "4.9.4"
+    "typescript": "4.9.4",
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "7.0.0-beta.20",

@@ -94,7 +94,7 @@
         }
     }
 
-    p {
+    & > p {
         font-size: var(--font-size-700);
         line-height: var(--line-height-500);
         text-align: center;
