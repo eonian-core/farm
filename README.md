@@ -45,7 +45,7 @@ yarn
 
 ## Deployment
 
-The eployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly. For a web application, PRs also deploy to a preview environment.
+The deployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly. For a web application, PRs also deploy to a preview environment.
 
 ### Deployed Apps
 
