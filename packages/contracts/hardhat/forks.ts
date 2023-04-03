@@ -6,8 +6,10 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
 
 /** Binance Smart Chain Mainnet */
 export const binanceSmartChainFork: ForkData = {
-  url: "https://bsc-dataseed.binance.org",
-  blockNumber: 22600879, // 29.10.2022
+  // official BSC RPC unstable use unofficail instead
+  url: "https://bsc.getblock.io/beac5e27-711d-4570-abed-8ddb5dd41d9e/mainnet/",
+  // do not use blockNumber for BSC, 
+  // hardhat or providers cannot correctly exchange non latest block data
   accounts: {
     holderA: "0xe2fc31f816a9b94326492132018c3aecc4a93ae1", // Holder (Binance Hot Wallet)
     holderB: "0x3c783c21a0383057d128bae431894a5c19f9cf06", // Holder (Binance Hot Wallet 8)

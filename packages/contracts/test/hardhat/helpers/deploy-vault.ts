@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish, Overrides, Signer } from "ethers";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import _ from "lodash";
-import { Vault, Vault__factory } from "../../../typechain";
+import { Vault, Vault__factory } from "../../../typechain-types";
 
 async function _deployVault(
   this: any,

@@ -25,15 +25,19 @@ contract GelatoJobAdapterTest is Test {
     // allow sending eth to the test contract
     receive() external payable {}
 
-    function setUp() public {
+    function setUp() public {         
         token = new ERC20Mock("Mock Token", "TKN");
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
 
         job = new GelatoJobAdapterMock();
-        job.initialize(address(ops), 1001, false);
+        
+        uint256 _minimumBetweenExecutions = 1001;
+        job.initialize(address(ops), _minimumBetweenExecutions, false);
 
+        // set initial time to be greater than _minimumBetweenExecutions
+        vm.warp(_minimumBetweenExecutions * 10);
         initialTime = block.timestamp;
 
         vm.label(alice, "alice");
