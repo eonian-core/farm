@@ -123,12 +123,14 @@
   }
 
   &.dark {
+    box-shadow: none;
     color: var(--color-text-400);
     background-color: transparent;
-    border-color: var(--color-neutral-850);
+    border-color: var(--color-text-500);
 
     &:hover {
       background-color: var(--color-neutral-850);
+      border-color: var(--color-neutral-850);
     }
   }
 }
