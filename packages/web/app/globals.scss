@@ -177,6 +177,7 @@
       --color-neutral-600: hsl(0, 0%, 32%);
       --color-neutral-700: hsl(0, 0%, 25%);
       --color-neutral-800: hsl(0, 0%, 15%);
+      --color-neutral-850: hsl(0, 0%, 12%);
       --color-neutral-900: hsl(0, 0%, 9%);
 
     // Accent
@@ -253,7 +254,9 @@
   // padding
     --padding-100: 0.5rem;
     --padding-200: 0.75rem;
+    --padding-250: 0.875rem;
     --padding-300: 1rem;
+    --padding-350: 1.25rem;
     --padding-400: 1.5rem;
     --padding-500: 2rem;
     --padding-600: 2.5rem;
@@ -292,7 +295,11 @@
     --border-radius-400: 5px;
     --border-radius-450: 7px;
     --border-radius-500: 10px;
+    --border-radius-550: 12px;
     --border-radius-600: 15px;
+  
+  // border width
+    --border-width-400: 2px;
 }
 
 * {

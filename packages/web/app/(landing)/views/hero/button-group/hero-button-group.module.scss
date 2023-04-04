@@ -1,0 +1,29 @@
+@import "../../../../screen.scss";
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+
+  margin-top: var(--margin-700);
+
+  & > * + * {
+    margin-left: var(--padding-500);
+  }
+
+  @media (max-width: $screen-desktop) {
+    min-height: 40px;
+  }
+
+  @media (max-width: $screen-small-mobile) {
+    align-self: stretch;
+    flex-direction: column;
+
+    & > * + * {
+      margin-top: var(--margin-300);
+      margin-left: 0;
+    }
+  }
+}

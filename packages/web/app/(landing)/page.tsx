@@ -9,9 +9,14 @@ import PageLoader from "../components/page-loader/page-loader";
 import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
 import Mbr from "../components/mobile-break/mobile-break";
 import { LinkInText } from "../components/links/link-in-text";
+import HeroButtonGroup from "./views/hero/button-group/hero-button-group";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
+  HeroButtonGroup, // there is also no lazy loading for this component, since we need to have margin styles for this component to avoid content jitter
+  HeroButton: dynamic(import("./views/hero/button-group/hero-button"), {
+    ssr: false,
+  }),
   Mbr, // no lazy loading or it create a flash of content
   a: LinkInText as any, // no lazy loading for links, prevent flash of content
   h2: dynamic(import("../components/heading/heading").then(({ H2 }) => H2)),
@@ -23,6 +28,8 @@ const components: MDXComponents = {
   ExternalLink: dynamic(import("../components/links/external-link")),
   IconLinkedIn: dynamic(import("../components/icons/icon-linkedin")),
   IconTwitter: dynamic(import("../components/icons/icon-twitter")),
+  IconExternal: dynamic(import("../components/icons/icon-external")),
+  IconDiscord: dynamic(import("../components/icons/icon-discord")),
   Roadmap: dynamic(import("./views/roadmap/roadmap"), {
     ssr: false, // Disable prerender for Roadmap, it's useless and breaks the layout
     loading: () => <PageLoader />,
@@ -57,6 +64,7 @@ const components: MDXComponents = {
 
 export default function Home() {
   const Content = dynamic(import(`./content/en.mdx`));
+
   return (
     <main className={styles.main}>
       <MDXProvider components={components}>
