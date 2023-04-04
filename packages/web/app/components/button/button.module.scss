@@ -26,6 +26,10 @@
 }
 
 .button {
+  --button-height: 2.5rem;
+  --button-hor-padding: var(--padding-350);
+  --button-min-width: min-content;
+
   color: var(--color-text-100);
 
   position: relative;
@@ -38,7 +42,7 @@
   white-space: nowrap;
 
   width: auto;
-  min-width: min-content;
+  min-width: var(--button-min-width);
   background: transparent;
   background-color: var(--color-primary-600);
 
@@ -48,8 +52,6 @@
   user-select: none;
   cursor: pointer;
 
-  --button-height: 2.5rem;
-  --button-hor-padding: var(--padding-350);
   padding-left: var(--button-hor-padding);
   padding-right: var(--button-hor-padding);
 
@@ -94,6 +96,7 @@
   font-size: var(--font-size-300);
 
   &.wide {
+    --button-min-width: 200px;
     --button-hor-padding: calc(var(--padding-350) * 1.75);
   }
 }
@@ -107,6 +110,7 @@
   font-size: var(--font-size-500);
 
   &.wide {
+    --button-min-width: 230px;
     --button-hor-padding: calc(var(--padding-400) * 1.75);
   }
 }
