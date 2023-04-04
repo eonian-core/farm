@@ -10,7 +10,6 @@ import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
 import Mbr from "../components/mobile-break/mobile-break";
 import { LinkInText } from "../components/links/link-in-text";
 import HeroButtonGroup from "./views/hero/button-group/hero-button-group";
-import { NextUIProvider, createTheme } from "@nextui-org/react";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
@@ -66,26 +65,11 @@ const components: MDXComponents = {
 export default function Home() {
   const Content = dynamic(import(`./content/en.mdx`));
 
-  const theme = createTheme({
-    type: "dark",
-    theme: {
-      colors: {
-        primary: "var(--color-primary-500)",
-        gradient:
-          "linear-gradient(112deg, hsl(270, 35%, 50%) -63.59%, hsl(341, 67%, 50%) -20.3%, var(--color-primary-500) 70.46%)",
-      },
-      space: {},
-      fonts: {},
-    },
-  });
-
   return (
     <main className={styles.main}>
-      <NextUIProvider disableBaseline theme={theme}>
-        <MDXProvider components={components}>
-          <Content />
-        </MDXProvider>
-      </NextUIProvider>
+      <MDXProvider components={components}>
+        <Content />
+      </MDXProvider>
     </main>
   );
 }

@@ -1,11 +1,14 @@
 "use client";
 
-import { Button, ButtonProps } from "@nextui-org/react";
 import React from "react";
 import { useIsDesktopOrSmaller } from "../../../../components/resize-hooks/screens";
-import IconDiscord from "../../../../components/icons/icon-discord";
 import ExternalLink from "../../../../components/links/external-link";
 import FadeIn from "../../../../components/fade-in/fade-in";
+import Button, {
+  Props as ButtonProps,
+} from "../../../../components/button/button";
+
+import styles from "./hero-button.module.scss";
 
 interface Props extends ButtonProps {
   children: React.ReactNode;
@@ -22,19 +25,11 @@ const HeroButton: React.FC<Props> = ({
   const isDesktop = useIsDesktopOrSmaller();
 
   return (
-    <FadeIn>
-      <ExternalLink href={href}>
-        <Button
-          size={isDesktop ? "md" : "lg"}
-          css={{ color: "var(--nextui-colors-primarySolidContrast)" }}
-          auto
-          iconRight={icon}
-          {...restProps}
-        >
-          {children}
-        </Button>
-      </ExternalLink>
-    </FadeIn>
+    <ExternalLink className={styles.button} href={href}>
+      <Button size={isDesktop ? "md" : "lg"} icon={icon} dark wide {...restProps}>
+        {children}
+      </Button>
+    </ExternalLink>
   );
 };
 
