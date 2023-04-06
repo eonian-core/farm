@@ -15,9 +15,11 @@
     "open:next": "opener http://localhost:3000",
     "test": "jest --watch",
     "test:ci": "jest --ci",
-    "mock": "ts-node --esm ./mock.ts"
+    "mock": "ts-node --esm ./mock.ts",
+    "gen:gql-types": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.11",
     "@mdx-js/loader": "2.2.1",
     "@mdx-js/react": "2.2.1",
     "@next/font": "13.0.7",
@@ -50,6 +52,11 @@
   },
   "devDependencies": {
     "@apollo/server": "^4.6.0",
+    "@graphql-codegen/cli": "3.3.0",
+    "@graphql-codegen/client-preset": "3.0.0",
+    "@graphql-codegen/introspection": "3.0.1",
+    "@graphql-codegen/typescript": "^3.0.3",
+    "@graphql-codegen/typescript-resolvers": "^3.2.0",
     "@graphql-tools/graphql-file-loader": "^7.5.16",
     "@graphql-tools/load": "^7.8.13",
     "@graphql-tools/mock": "^8.7.19",
