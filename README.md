@@ -43,7 +43,7 @@ yarn
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
 
-### Known Issues
+### Known Development Issues
 
 Fail during installation of dependency in one of the packages.
 Example `error An unexpected error occurred: "expected workspace package to exist for \"yargs\"".`
