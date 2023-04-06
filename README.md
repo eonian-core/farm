@@ -43,6 +43,17 @@ yarn
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
 
+### Known Issues
+
+Fail during installation of dependency in one of the packages.
+Example `error An unexpected error occurred: "expected workspace package to exist for \"yargs\"".`
+
+Issue still not fixed by yarn: https://github.com/yarnpkg/yarn/issues/7734.
+
+#### Solution
+
+Go to the root directory and run `yarn workspace [package-name] add ...` to add package. Use `@eonian/web` as package name for web package and `@eonian/contracts` for contracts package.
+
 ## Deployment
 
 The deployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly. For a web application, PRs also deploy to a preview environment.
