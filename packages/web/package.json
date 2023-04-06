@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\"",
+    "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\" \"yarn:mock\" ",
     "dev:next": "next dev",
     "build": "next build",
     "start": "next start",

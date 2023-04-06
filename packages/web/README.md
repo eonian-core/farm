@@ -18,16 +18,26 @@ yarn dev
 
 It will start
 
-* NextJS application at [http://localhost:3000](http://localhost:3000) and open page automatically
+* NextJS application at [http://localhost:3000](http://localhost:3000) and the open page automatically
 * Storybook at [http://localhost:6006](http://localhost:6006) or another port of it is busy
 
 ### Storybook
 
-For development of components and independent screens there used Stroybook.
-To start it locally use the following command:
+For the development of components and independent screens, there used Storybook.
+To start it locally, use the following command:
 
 ```bash
 yarn storybook
+```
+
+### Mocking server
+
+For querying data from the blockchain and other services, there used GraphQL. The mocking server allows mocking this API for development purposes.
+
+To start it locally, use the following command:
+
+```bash
+yarn mock
 ```
 
 ### CDN

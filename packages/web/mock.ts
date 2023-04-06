@@ -1,4 +1,4 @@
-import { join, dirname} from 'path';
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
@@ -19,7 +19,7 @@ async function main() {
     // The ApolloServer constructor requires two parameters: your schema
     // definition and your set of resolvers.
     const server = new ApolloServer({
-        schema: addMocksToSchema({schema, mocks })
+        schema: addMocksToSchema({ schema, mocks })
     });
 
     // Passing an ApolloServer instance to the `startStandaloneServer` function:
@@ -30,13 +30,20 @@ async function main() {
         listen: { port: 4000 },
     });
 
-    console.log(`🚀  Server ready at: ${url}`);
+    console.log(`
+╭───────────────────────────────────────────────────╮
+│                                                   │
+│           🚀 Mocking server started!              │
+│                                                   │
+│    Local:            ${url}       │
+│                                                   │
+╰───────────────────────────────────────────────────╯
+    `);
 }
-
 
 main();
 
 const mocks = {
     BigDecimal: () => Math.random() * 10000000,
     BigInt: () => Math.floor(Math.random() * 10000000),
-  };
+};
