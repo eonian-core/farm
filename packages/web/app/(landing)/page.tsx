@@ -10,7 +10,6 @@ import FlowDiagramLoader from "./views/how-it-works/flow-diagram-loader";
 import Mbr from "../components/mobile-break/mobile-break";
 import { LinkInText } from "../components/links/link-in-text";
 import HeroButtonGroup from "./views/hero/button-group/hero-button-group";
-import { client, getVaults, GetVaultsQuery } from "../api";
 
 const components: MDXComponents = {
   Hero, // no lazy loading for Hero, it's the first thing that's rendered
@@ -65,9 +64,6 @@ const components: MDXComponents = {
 
 export default function Home() {
   const Content = dynamic(import(`./content/en.mdx`));
-
-  getVaults()
-    .then((result: any) => console.log(result));
 
   return (
     <main className={styles.main}>

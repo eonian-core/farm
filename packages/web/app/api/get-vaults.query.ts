@@ -1,7 +1,8 @@
 import { gql } from '@apollo/client';
 import { query } from './apollo.client';
+import {GetVaultsQuery} from './gql/graphql';
 
-export const GetVaultsQuery = gql`
+export const GetVaults = gql`
   query GetVaults {
     vaults {
       underlyingAsset {
@@ -21,7 +22,10 @@ export const GetVaultsQuery = gql`
   }
 `;
 
-/** Get list of Vaults */
-export const getVaults = () => query({ query: GetVaultsQuery })
+export type {GetVaultsQuery}
 
-// usage getVaults().then(console.log)
+/** 
+ * Get list of Vaults 
+ * @example getVaults().then(console.log)
+ * */
+export const getVaults = () => query<GetVaultsQuery>({ query: GetVaults })
