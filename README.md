@@ -52,7 +52,7 @@ Issue still not fixed by yarn: https://github.com/yarnpkg/yarn/issues/7734.
 
 #### Solution
 
-Go to the root directory and run `yarn workspace [package-name] add ...` to add package. Use `@eonian/web` as package name for web package and `@eonian/contracts` for contracts package.
+Go to the root directory and run `yarn workspace [package-name] add ...` to add the package. Use `@eonian/web` as the package name for the web package and `@eonian/contracts` for the contracts package.
 
 ## Deployment
 
