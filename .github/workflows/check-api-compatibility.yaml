@@ -1,6 +1,12 @@
-name: Verify Contracts PR
+name: Check dApp API compatibility
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/web/schema.graphql"
+  
   pull_request:
     branches:
       - main
@@ -8,11 +14,11 @@ on:
       - opened
       - synchronize
     paths:
-      - "packages/contracts/**"
+      - "packages/web/schema.graphql"
 
 jobs:
-  test:
-    name: Test contracts
+  check:
+    name: Check GraphQL schema compatibility
     runs-on: ubuntu-latest
 
     steps:
@@ -29,17 +35,13 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
-
-      - name: Run tests (foundry)
+      - name: Generate types
         run: |-
-          cd packages/contracts
-          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv
+          cd packages/web
+          yarn gen:gql-types
 
-      - name: Run tests (hardhat)
+      - name: Build dApp
         run: |-
-          cd packages/contracts
-          USE_BSC_FORK=true yarn test:hardhat
+          cd packages/web
+          yarn build
+

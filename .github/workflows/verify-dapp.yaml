@@ -1,0 +1,43 @@
+name: Verify dApp
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/web/**"
+  
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+    paths:
+      - "packages/web/**"
+
+jobs:
+  check:
+    name: Check GraphQL schema compatibility
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Test dApp
+        run: |-
+          cd packages/web
+          yarn test:ci
+
+
