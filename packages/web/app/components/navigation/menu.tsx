@@ -4,7 +4,7 @@ import { CSSTransition } from "react-transition-group";
 import { HamburgerMenu } from "../hamburger-menu/hamburger-menu";
 import { DimensionalState, useDimensions } from "./use-dimensions";
 import styles from "./navigation.module.scss";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import clsx from "clsx";
 
 

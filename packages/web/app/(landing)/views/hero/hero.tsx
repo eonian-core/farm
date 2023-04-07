@@ -1,5 +1,5 @@
 import React from "react";
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 import Container from "../../../components/contrainer/container";
 import styles from "./hero.module.scss";
 
