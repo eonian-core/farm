@@ -2,6 +2,7 @@
   "name": "@eonian/web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\" \"yarn:mock\" ",
     "dev:next": "next dev",
@@ -54,7 +55,6 @@
     "@apollo/server": "^4.6.0",
     "@graphql-codegen/cli": "3.3.0",
     "@graphql-codegen/client-preset": "3.0.0",
-    "@graphql-codegen/introspection": "3.0.1",
     "@graphql-codegen/typescript": "^3.0.3",
     "@graphql-codegen/typescript-resolvers": "^3.2.0",
     "@graphql-tools/graphql-file-loader": "^7.5.16",
@@ -87,6 +87,5 @@
     "storybook": "7.0.0-beta.20",
     "storybook-addon-pseudo-states": "^2.0.0-next.0",
     "ts-node": "^10.9.1"
-  },
-  "type": "module"
+  }
 }
