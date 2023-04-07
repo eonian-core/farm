@@ -2,6 +2,7 @@
   "name": "@eonian/web",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\"",
     "dev:next": "next dev",
@@ -14,7 +15,8 @@
     "production": "next build && next start",
     "open:next": "opener http://localhost:3000",
     "test": "jest --watch",
-    "test:ci": "jest --ci"
+    "test:ci": "jest --ci",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "2.2.1",
@@ -49,6 +51,7 @@
   },
   "devDependencies": {
     "@apollo/server": "^4.6.0",
+    "@graphql-codegen/cli": "3.3.0",
     "@storybook/addon-essentials": "7.0.0-beta.20",
     "@storybook/addon-interactions": "7.0.0-beta.20",
     "@storybook/addon-links": "7.0.0-beta.20",
@@ -73,7 +76,7 @@
     "sass": "^1.57.0",
     "serve": "^14.1.2",
     "storybook": "7.0.0-beta.20",
-    "storybook-addon-pseudo-states": "^2.0.0-next.0"
-  },
-  "type": "module"
+    "storybook-addon-pseudo-states": "^2.0.0-next.0",
+    "@graphql-codegen/client-preset": "3.0.0"
+  }
 }

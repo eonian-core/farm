@@ -18,26 +18,6 @@
   "workspaces": {
     "packages": [
       "packages/*"
-    ],
-    "nohoist": [
-      "**/ts-node",
-      "**/ts-node/**",
-      "**/typescript",
-      "**/typescript/**",
-      "**/typechain",
-      "**/typechain/**",
-      "**/@typechain",
-      "**/@typechain/**",
-      "**/@openzeppelin",
-      "**/@openzeppelin/**",
-      "**/@chainlink",
-      "**/@chainlink/**",
-      "**/@nomicfoundation",
-      "**/@nomicfoundation/**",
-      "**/hardhat",
-      "**/hardhat/**",
-      "**/hardhat-*",
-      "**/hardhat-*/**"
     ]
   },
   "devDependencies": {
