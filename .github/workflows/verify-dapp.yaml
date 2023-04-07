@@ -17,8 +17,8 @@ on:
       - "packages/web/**"
 
 jobs:
-  check:
-    name: Check GraphQL schema compatibility
+  test:
+    name: Test dApp
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
 
-      - name: Test dApp
+      - name: Run tests
         run: |-
           cd packages/web
           yarn test:ci
