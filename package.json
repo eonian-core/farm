@@ -20,6 +20,24 @@
       "packages/*"
     ]
   },
+  "nohoist": [
+    "**/typescript",
+    "**/typescript/**",
+    "**/typechain",
+    "**/typechain/**",
+    "**/@typechain",
+    "**/@typechain/**",
+    "**/@openzeppelin",
+    "**/@openzeppelin/**",
+    "**/@chainlink",
+    "**/@chainlink/**",
+    "**/@nomicfoundation",
+    "**/@nomicfoundation/**",
+    "**/hardhat",
+    "**/hardhat/**",
+    "**/hardhat-*",
+    "**/hardhat-*/**"
+  ],
   "devDependencies": {
     "generate-lockfile": "^0.0.12",
     "lerna": "^5.1.6"
