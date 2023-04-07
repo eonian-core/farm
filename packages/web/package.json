@@ -14,8 +14,9 @@
     "serve:storybook": "serve ./storybook-static",
     "production": "next build && next start",
     "open:next": "opener http://localhost:3000",
-    "test": "jest --watch",
-    "test:ci": "jest --ci",
+    "test": "yarn jest --watchAll",
+    "test:ci": "yarn jest --ci",
+    "jest": "node --experimental-vm-modules --experimental-specifier-resolution=node ./node_modules/.bin/jest",
     "mock": "ts-node --esm ./mock.ts",
     "gen:gql-types": "graphql-codegen --config codegen.ts"
   },
