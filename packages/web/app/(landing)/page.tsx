@@ -2,11 +2,9 @@
 
 import styles from "./page.module.css";
 
+import Content from "./content/en.mdx";
 
-// import Content from "./content/en.mdx";
 import { MDXProvider } from "@mdx-js/react";
-import { Card } from "@nextui-org/react";
-import dynamic from "next/dynamic";
 import { H2, H3 } from "../components/heading/heading";
 import IconDiscord from "../components/icons/icon-discord";
 import IconExternal from "../components/icons/icon-external";
@@ -32,6 +30,10 @@ import RoadmapContainer from "./views/roadmap/roadmap-container";
 import RoadmapDate from "./views/roadmap/roadmap-date";
 import SafeInvestments from "./views/safe-investments/safe-investments";
 import StableProfit from "./views/stable-profit/stable-profit";
+import Card, { Target } from "../components/card/card";
+import Founders from "./views/founders/founders";
+import FoundersList from "./views/founders/founders-list";
+import Founder from "./views/founders/founder";
 
 const components = {
   Card,
@@ -43,9 +45,9 @@ const components = {
   h2: H2,
   h3: H3,
   EonianIs,
-  Founders: dynamic(import("./views/founders/founders")),
-  FoundersList: dynamic(import("./views/founders/founders-list")),
-  Founder: dynamic(import("./views/founders/founder")),
+  Founders,
+  FoundersList,
+  Founder,
   ExternalLink,
   IconLinkedIn,
   IconTwitter,
@@ -56,9 +58,7 @@ const components = {
   RoadmapContainer,
   RoadmapDate,
   InDevelopment,
-  Target: dynamic(
-    import("../components/card/card").then(({ Target }) => Target)
-  ),
+  Target,
   HowItWorks,
   FlowSlider,
   FlowSliderItem,
@@ -70,7 +70,6 @@ const components = {
 };
 
 export default function Home() {
-  const Content = dynamic(import(`./content/en.mdx`));
   return (
     <main className={styles.main}>
       <MDXProvider components={components}>
