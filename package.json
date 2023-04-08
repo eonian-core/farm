@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "eonian",
   "private": true,
   "scripts": {
     "bootstrap": "lerna bootstrap --use-workspaces",
@@ -20,10 +20,6 @@
       "packages/*"
     ],
     "nohoist": [
-      "**/ts-node",
-      "**/ts-node/**",
-      "**/typescript",
-      "**/typescript/**",
       "**/typechain",
       "**/typechain/**",
       "**/@typechain",
@@ -44,5 +40,9 @@
     "generate-lockfile": "^0.0.12",
     "lerna": "^5.1.6",
     "nx": "^14.3.6"
+  },
+  "dependencies": {
+    "glob": "^8.0.1",
+    "yargs": "^17.6.2"
   }
 }
