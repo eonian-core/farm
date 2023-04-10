@@ -1,6 +1,12 @@
-name: Verify Contracts PR
+name: Verify dApp
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/web/**"
+  
   pull_request:
     branches:
       - main
@@ -8,11 +14,13 @@ on:
       - opened
       - synchronize
     paths:
-      - "packages/contracts/**"
+      - "packages/web/**"
 
 jobs:
+  # Add linting job after migration to nextjs version with given fix https://github.com/vercel/next.js/issues/44424
+  
   test:
-    name: Test contracts
+    name: Test dApp
     runs-on: ubuntu-latest
 
     steps:
@@ -29,17 +37,9 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
-
-      - name: Run tests (foundry)
+      - name: Run tests
         run: |-
-          cd packages/contracts
-          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv
+          cd packages/web
+          yarn test:ci
 
-      - name: Run tests (hardhat)
-        run: |-
-          cd packages/contracts
-          USE_BSC_FORK=true yarn test:hardhat
+

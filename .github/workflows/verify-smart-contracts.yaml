@@ -1,0 +1,51 @@
+name: Verify Smart Contracts
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/contracts/**"
+  
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+    paths:
+      - "packages/contracts/**"
+
+jobs:
+  test:
+    name: Test contracts
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Run tests (foundry)
+        run: |-
+          cd packages/contracts
+          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv
+
+      - name: Run tests (hardhat)
+        run: |-
+          cd packages/contracts
+          USE_BSC_FORK=true yarn test:hardhat

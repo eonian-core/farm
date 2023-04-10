@@ -6,6 +6,8 @@ Yield Aggregator dApp and protocol for safe and high reward liquidity mining
 
 This mono-repository contains protocol contracts and dApp code, as well as all related packages.
 
+For a list of known development issues related to Lerna monorepo, see [development.md](https://github.com/eonian-core/farm/tree/main/development.md).
+
 ### Structure
 
 * `packages/contracts` - Protocol contracts.
@@ -42,6 +44,9 @@ yarn
 * `yarn build:contracts` - Build only contracts
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
+
+
+
 
 ## Deployment
 
