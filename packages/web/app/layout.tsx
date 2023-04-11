@@ -30,20 +30,7 @@ export const metadata: Metadata = {
     site: "@EonianFinance",
     card: "summary_large_image",
   },
-  manifest: "/site.webmanifest",
-  icons: {
-    icon: [
-      { type: "image/png", sizes: "32x32", url: "/favicon-32x32.png" },
-      { type: "image/png", sizes: "16x16", url: "/favicon-16x16.png" },
-    ],
-    shortcut: "/favicon.ico",
-    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
-  },
   themeColor: "#181b1b",
-  other: {
-    "msapplication-TileColor": "#181b1b",
-    "msapplication-config": "/browserconfig.xml",
-  },
   robots: {
     index: true,
     follow: true,
