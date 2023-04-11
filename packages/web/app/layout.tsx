@@ -23,15 +23,6 @@ export const metadata: Metadata = {
     title: "Eonian | Crypto yield aggregator that cares about security",
     description:
       "Decentralized and secure real yeild protocol for passive investments with peace of mind.",
-    images: [
-      {
-        url: "https://eonian.finance/assets/preview-open-graph.png",
-        width: 1024,
-        height: 697,
-        alt: "Make crypto work for you",
-        type: "image/png",
-      },
-    ],
     siteName: "Eonian DAO",
   },
   twitter: {
