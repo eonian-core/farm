@@ -39,4 +39,5 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
+  manifest: "/site.webmanifest",
 };
