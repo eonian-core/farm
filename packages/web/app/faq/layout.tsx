@@ -1,12 +1,10 @@
-import { generatePageSpecificMetadata } from '../../next-seo.config';
+import { Metadata } from 'next';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }
 
-export async function generateMetadata() {
-  return generatePageSpecificMetadata({
-    title: "Eonain FAQ | Frequently asked questions",
-    description: "Frequently asked questions about Eonain, DeFi and crypto",
-  });
-}
+export const metadata: Metadata = {
+  title: "FAQ",
+  description: "Frequently asked questions about Eonain, DeFi and crypto",
+};

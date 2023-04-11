@@ -1,14 +1,12 @@
 import React from "react";
-import { generatePageSpecificMetadata } from "../../next-seo.config";
+import { Metadata } from "next";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }
 
-export async function generateMetadata() {
-  return generatePageSpecificMetadata({
-    title: "Eonian | Mission",
-    description:
-      "Eonian Protocol is a decentralized protocol that allows users to earn interest on their crypto assets",
-  });
-}
+export const metadata: Metadata = {
+  title: "Mission",
+  description:
+    "Eonian Protocol is a decentralized protocol that allows users to earn interest on their crypto assets",
+};

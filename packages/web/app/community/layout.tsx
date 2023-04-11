@@ -1,13 +1,11 @@
-import { generatePageSpecificMetadata } from "../../next-seo.config";
+import { Metadata } from "next";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }
 
-export async function generateMetadata() {
-  return generatePageSpecificMetadata({
-    title: "Eonian | Community",
-    description:
-      "Join the Eonian growing community and make your contribution to the future of investments!",
-  });
-}
+export const metadata: Metadata = {
+  title: "Community",
+  description:
+    "Join the Eonian growing community and make your contribution to the future of investments!",
+};
