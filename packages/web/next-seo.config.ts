@@ -33,7 +33,7 @@ export const NEXT_SEO_METADATA: Metadata = {
         url: "https://eonian.finance/assets/preview-open-graph.png",
         width: 1024,
         height: 697,
-        alt: "Make crpto work for you",
+        alt: "Make crypto work for you",
         type: "image/png",
       },
     ],
