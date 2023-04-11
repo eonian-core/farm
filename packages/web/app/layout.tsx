@@ -53,4 +53,12 @@ export const metadata: Metadata = {
     "msapplication-TileColor": "#181b1b",
     "msapplication-config": "/browserconfig.xml",
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
 };
