@@ -20,7 +20,10 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IE",
     url: "https://eonian.finance/",
-    title: "Eonian | Crypto yield aggregator that cares about security",
+    title: {
+      template: "%s | Eonian Protocol",
+      default: "Eonian | Crypto yield aggregator that cares about security",
+    },
     description:
       "Decentralized and secure real yeild protocol for passive investments with peace of mind.",
     siteName: "Eonian DAO",
@@ -40,4 +43,15 @@ export const metadata: Metadata = {
     },
   },
   manifest: "/site.webmanifest",
+};
+
+export const overrideMetadata = (title: string, description: string): Metadata => {
+  return {
+    title,
+    description,
+    openGraph: {
+      description,
+      title,
+    },
+  };
 };
