@@ -1,3 +1,5 @@
+"use client";
+
 import React, { Component } from "react";
 import PageIntersectionObserver from "./page-intersection-observer";
 import WavePainter from "./wave-painter";
@@ -35,7 +37,7 @@ export default class Waves extends Component<Props> {
   // Previous animation frame start.
   private previousFrameTimestamp: number;
 
-  private readonly pageObserver: PageIntersectionObserver<HTMLCanvasElement>;
+  private pageObserver!: PageIntersectionObserver<HTMLCanvasElement>;
 
   constructor(props: Props) {
     super(props);
@@ -48,14 +50,14 @@ export default class Waves extends Component<Props> {
     this.frameId = 0;
     this.frameInterval = 1000 / 30; // 30 frames per second
     this.previousFrameTimestamp = 0;
+  }
 
+  componentDidMount(): void {
     this.pageObserver = new PageIntersectionObserver(
       this.ref,
       this.toggleSecondaryWavesAnimation
     );
-  }
 
-  componentDidMount(): void {
     this.init();
     this.draw();
 
@@ -154,7 +156,7 @@ export default class Waves extends Component<Props> {
       return;
     }
     this.stopSecondaryWavesAnimation();
-  }
+  };
 
   private startSecondaryWavesAnimation() {
     cancelAnimationFrame(this.frameId);

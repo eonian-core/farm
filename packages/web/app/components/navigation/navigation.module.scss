@@ -52,6 +52,12 @@
     align-items: center;
     justify-content: center;
     gap: var(--margin-400);
+
+    .menuItem {
+        &Active > a {
+            color: var(--color-text-100);
+        }
+    }
 }
 
 .menuList {

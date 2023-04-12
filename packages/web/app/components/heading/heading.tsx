@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Inter } from "@next/font/google";
+import { Inter } from "next/font/google";
 
 import styles from './heading.module.scss'
 import IconExternal from '../icons/icon-external';

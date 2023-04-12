@@ -1,55 +1,57 @@
-'use client';
-
-import { Roboto } from "@next/font/google";
-import { useState } from "react";
-import clsx from "clsx";
-
-import './globals.scss'
-import './tailwind.css'
-
-import Navigation from './components/navigation/navigation'
-import SlidingFooter from "./components/sliding-footer/sliding-footer";
-import Footer from "./components/footer/footer";
-import styles from './layout.module.scss'
-import GoogleAnalytics from "./google-analytics";
-import { LocaleContext } from "./locale";
-
-const roboto = Roboto({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['300', '400', '500', '700', '900'],
-  display: 'block' // force to show font anyway
-})
+import { Metadata } from "next";
+import Root from "./root";
 
 export interface RootLayoutProps {
   children: React.ReactNode;
 }
 
-export default function RootLayout({
-  children,
-}: RootLayoutProps) {
-  const [isMenuOpen, setMenuState] = useState(false);
-
-  const locale = 'en';
-  return (
-    <html lang={locale}>
-      <LocaleContext.Provider value={{current: locale}}>
-        <GoogleAnalytics />
-        {/*
-          <head /> will contain the components returned by the nearest parent
-          head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-        */}
-        <head />
-
-        <body className={clsx(roboto.className, { [styles.menuOpen]: isMenuOpen })}>
-
-          <Navigation onStateChange={setMenuState} />
-
-          <SlidingFooter footer={<Footer />}>
-            {children}
-          </SlidingFooter>
-        </body>
-      </LocaleContext.Provider>
-    </html>
-  );
+export default function RootLayout({ children }: RootLayoutProps) {
+  return <Root>{children}</Root>;
 }
 
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Eonian Protocol",
+    default: "Eonian Protocol",
+  },
+  description:
+    "Decentralized and secure protocol for passive investments with peace of mind.",
+  openGraph: {
+    type: "website",
+    locale: "en_IE",
+    url: "https://eonian.finance/",
+    title: {
+      template: "%s | Eonian Protocol",
+      default: "Eonian | Crypto yield aggregator that cares about security",
+    },
+    description:
+      "Decentralized and secure real yeild protocol for passive investments with peace of mind.",
+    siteName: "Eonian DAO",
+  },
+  twitter: {
+    creator: "@EonianFinance",
+    site: "@EonianFinance",
+    card: "summary_large_image",
+  },
+  themeColor: "#181b1b",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  manifest: "/site.webmanifest",
+};
+
+export const overrideMetadata = (title: string, description: string): Metadata => {
+  return {
+    title,
+    description,
+    openGraph: {
+      description,
+      title,
+    },
+  };
+};
