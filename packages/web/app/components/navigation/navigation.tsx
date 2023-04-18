@@ -5,16 +5,13 @@ import { useState, useEffect, useCallback } from "react";
 import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
 import Menu from "./menu";
 import { links, mobileLinks, NavigationItem } from "./links";
-
-
-// TODO: highlight or cross out link for current page
+import ConnectWallet from "../connect-wallet/ConnectWallet";
 
 export interface NavigationProps {
   onStateChange?: (isOpen: boolean) => void;
 }
 
 export default function Navigation({ onStateChange }: NavigationProps) {
-
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = useCallback(() => setIsOpen(!isOpen), [isOpen]);
   const closeMenu = useCallback(() => setIsOpen(false), []);
@@ -38,20 +35,25 @@ export default function Navigation({ onStateChange }: NavigationProps) {
           <MenuItemList links={mobileLinks} onClick={closeMenu} />
         </Menu>
 
+        <div className={styles.connect}>
+          <ConnectWallet />
+        </div>
       </div>
     </nav>
   );
 }
 
 export interface MenuItemListProps {
-  links: Array<NavigationItem>
-  onClick: () => void
+  links: Array<NavigationItem>;
+  onClick: () => void;
 }
 
 export const MenuItemList = ({ links, onClick }: MenuItemListProps) => (
   <>
     {links.map(({ href, label }) => (
-      <MenuItem key={href} href={href} onClick={onClick}>{label}</MenuItem>
+      <MenuItem key={href} href={href} onClick={onClick}>
+        {label}
+      </MenuItem>
     ))}
   </>
-)
+);
