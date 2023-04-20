@@ -1,4 +1,5 @@
 import * as React from "react";
+import styles from './icon-robot.module.scss';
 
 interface Props extends React.SVGProps<SVGSVGElement> {
     size?: string | number;
@@ -16,6 +17,7 @@ const IconRobot: React.FC<Props> = ({
             height={size}
             width={size}
             data-testid='icon-robot'
+            className={styles.iconRobot}
             {...restProps}
         >
             <path 
