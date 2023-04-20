@@ -3,7 +3,6 @@
 import React from "react";
 import { useIsDesktopOrSmaller } from "../../../../components/resize-hooks/screens";
 import ExternalLink from "../../../../components/links/external-link";
-import FadeIn from "../../../../components/fade-in/fade-in";
 import Button, {
   Props as ButtonProps,
 } from "../../../../components/button/button";

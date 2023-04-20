@@ -8,6 +8,7 @@ import { MDXProvider } from "@mdx-js/react";
 import { H2, H3 } from "../components/heading/heading";
 import IconDiscord from "../components/icons/icon-discord";
 import IconExternal from "../components/icons/icon-external";
+import IconRobot from '../components/icons/icon-robot';
 import IconTwitter from "../components/icons/icon-twitter";
 import IconLinkedIn from "../components/icons/icon-linkedin";
 import ExternalLink from "../components/links/external-link";
@@ -52,6 +53,7 @@ const components = {
   IconLinkedIn,
   IconTwitter,
   IconExternal,
+  IconRobot,
   IconDiscord,
   Roadmap,
   RoadmapCheckpoint,
