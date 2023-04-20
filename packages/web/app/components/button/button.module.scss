@@ -80,6 +80,10 @@
     &:not(.bordered) {
       box-shadow: inset 0 5px 12px -1px rgba(88, 88, 94, 0.356), 0px 5px 15px 1px rgba(34, 33, 33, 0.555);
       @include flare-effect-on-hover;
+
+      &:hover {
+        box-shadow: inset 0 5px 15px -1px rgba(88, 88, 94, 0.534), 0px 10px 20px 1px rgba(34, 33, 33, 0.705);
+      }
     }
   }
 }
