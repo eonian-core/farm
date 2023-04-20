@@ -24,6 +24,14 @@ describe('to-id', () => {
 
         expect(id).toEqual('what-is-secops');
     })
+
+    it('should generate id for with multiple spaces inside.', () => {
+        const text = 'What    is     SecOps?'
+
+        const id = toId(text);
+
+        expect(id).toEqual('what-is-secops');
+    })
 });
 
 describe('trim', () => {
