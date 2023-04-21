@@ -17,7 +17,7 @@
   },
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/contracts"
     ],
     "nohoist": [
       "**/typechain",

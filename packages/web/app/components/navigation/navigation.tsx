@@ -35,7 +35,7 @@ export default function Navigation({ onStateChange }: NavigationProps) {
           <MenuItemList links={mobileLinks} onClick={closeMenu} />
         </Menu>
 
-        <div className={styles.connect}>
+        <div className={styles.right}>
           <ConnectWallet />
         </div>
       </div>

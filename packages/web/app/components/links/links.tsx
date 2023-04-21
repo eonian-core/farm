@@ -63,10 +63,8 @@ export const InternalLink = ({
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (onClick) {
-        onClick(e);
-      }
-      href && dispatch({ type: "SET_PAGE_LOADING", payload: href.toString() });
+      onClick?.(e);
+      dispatch({ type: "SET_PAGE_LOADING", payload: href.toString() });
       onRouteChange();
     },
     [onClick, onRouteChange, href, dispatch]

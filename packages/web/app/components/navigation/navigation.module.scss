@@ -25,7 +25,7 @@
   left: 0;
   right: 0;
 
-  z-index: 100;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,7 +89,7 @@
   }
 }
 
-.connect,
+.right,
 .logo {
   height: 100%;
   max-width: var(--width-300);
@@ -272,6 +272,10 @@
     font-weight: var(--font-black);
     line-height: var(--line-height-1120);
     padding-top: var(--padding-800);
+  }
+
+  .right {
+    display: none;
   }
 }
 
