@@ -139,10 +139,12 @@
 
         opacity: 0;
         transform: scale(0.1);
-
-        
         
     }    
+}
+
+.menuItem {
+    z-index: 100;
 }
 
 @keyframes fadeInScale {
@@ -165,7 +167,7 @@
 .menuEnter {
     display: block;
     
-    ul:before {
+    & > ul:before {
         opacity: 1;
         transform: scale(0.1);
     }
@@ -175,7 +177,7 @@
 .menuEnterActive  {
     display: block;
 
-    ul:before {
+    & > ul:before {
         opacity: 1;
         transform: scale(50);
         transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
@@ -192,7 +194,7 @@
 .menuEnterDone {
     display: block;
 
-    ul:before {
+    & > ul:before {
         opacity: 1;
         transform: scale(50);
     }
@@ -206,7 +208,7 @@
 .menuExit {
     display: block;
 
-    ul:before {
+    & > ul:before {
         opacity: 1;
         transform: scale(50);
     }

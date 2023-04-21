@@ -34,6 +34,21 @@
             }
         }
     }   
+
+}
+
+.highlight {
+    li {
+        svg {
+            color: var(--color-text-300);
+        }
+
+        &:hover {
+            svg {
+                color: var(--color-text-100);
+            }
+        }
+    }
 }
 
 @media (max-width: $screen-mobile) {

@@ -1,6 +1,6 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useCollapseContext } from "./collapse";
-import { toId } from "./to-id";
+import { useToId } from "../heading/to-id";
 
 // props
 interface ColalapseHeaderProps {
@@ -30,9 +30,4 @@ export const ColalapseHeader = ({ children }: ColalapseHeaderProps) => {
 }
 
 export default ColalapseHeader;
-
-/** Momoized verion of to id */
-export const useToId = (slug?: string) => {
-    return useMemo(() => toId(slug), [slug]);
-}
 
