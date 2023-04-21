@@ -8,13 +8,19 @@ const LogoWithText = () => {
   const { isHovered, onMouseOver, onMouseOut } = useHover();
 
   return (
-    <InternalLink href="/" className={styles.logo} onMouseOver={onMouseOver} onMouseOut={onMouseOut}
+    <InternalLink
+      href="/"
+      className={styles.logo}
+      onMouseOver={onMouseOver}
+      onMouseOut={onMouseOut}
       iconClassName={styles.logoIcon}
       icon={
-        <EonianLogo color={isHovered ? 'var(--color-text-100)': 'var(--color-text-300)'} />
+        <EonianLogo
+          color={isHovered ? "var(--color-text-100)" : "var(--color-text-300)"}
+        />
       }
     >
-      Eonian
+      <span className={styles.name}>Eonian</span>
     </InternalLink>
   );
 };

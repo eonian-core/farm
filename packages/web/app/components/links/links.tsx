@@ -63,9 +63,7 @@ export const InternalLink = ({
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (onClick) {
-        onClick(e);
-      }
+      onClick?.(e);
       href && setPageLoading(href.toString());
       onRouteChange();
     },

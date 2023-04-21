@@ -1,6 +1,9 @@
 module.exports = {
   content: ["./app/**/*.tsx"],
   plugins: [require("daisyui")],
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     extend: {
       colors: {
