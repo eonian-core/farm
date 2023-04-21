@@ -5,6 +5,8 @@ import { HamburgerMenu } from "../hamburger-menu/hamburger-menu";
 import styles from "./navigation.module.scss";
 import { Inter } from "next/font/google";
 import clsx from "clsx";
+import { SocialMenuItem } from "./menu-item";
+
 
 export interface MenuProps {
   children: React.ReactNode;
@@ -36,7 +38,10 @@ export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
         }}
       >
         <div ref={nodeRef} className={styles.menuBackground}>
-          <ul className={clsx(inter.className, styles.menuList)}>{children}</ul>
+          <ul className={clsx(inter.className, styles.menuList)}>
+            {children}
+            <SocialMenuItem />
+          </ul>
         </div>
       </CSSTransition>
 
