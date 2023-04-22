@@ -1,39 +1,8 @@
 import React from "react";
 
-///
-/// Reducer
-///
+type ContextType = [pageLoading: string | null, setPageLoading: (value: string) => void];
 
-interface State {
-  pageLoading: string | null;
-}
-
-interface Action {
-  type: "SET_PAGE_LOADING";
-  payload: string | null;
-}
-
-const initialState: State = {
-  pageLoading: null,
-};
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case "SET_PAGE_LOADING": {
-      return { ...state, pageLoading: action.payload };
-    }
-    default:
-      throw Error("Unknown action type");
-  }
-}
-
-///
-/// Context
-///
-
-type ContextType = [state: State, dispatch: React.Dispatch<Action>];
-
-const defaultContextValue: ContextType = [initialState, () => {}];
+const defaultContextValue: ContextType = [null, () => {}];
 
 const Context = React.createContext(defaultContextValue);
 
@@ -42,10 +11,9 @@ interface Props {
 }
 
 export function PageTransitionContextProvider({ children }: Props) {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
-  
+  const state = React.useState<string | null>(null);
   return (
-    <Context.Provider value={[state, dispatch]}>{children}</Context.Provider>
+    <Context.Provider value={state}>{children}</Context.Provider>
   );
 }
 

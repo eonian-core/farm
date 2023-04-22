@@ -59,17 +59,17 @@ export const InternalLink = ({
   ...props
 }: LinkWithIconProps) => {
   const [onRouteChange] = useScrollToTop();
-  const [state, dispatch] = usePageTransitionContext();
+  const [pageLoading, setPageLoading] = usePageTransitionContext();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       if (onClick) {
         onClick(e);
       }
-      href && dispatch({ type: "SET_PAGE_LOADING", payload: href.toString() });
+      href && setPageLoading(href.toString());
       onRouteChange();
     },
-    [onClick, onRouteChange, href, dispatch]
+    [onClick, onRouteChange, href, setPageLoading]
   );
 
   return (

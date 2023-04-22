@@ -11,7 +11,7 @@ import { usePageTransitionContext } from "../../store/page-transition-context";
 const PageLoaderTop = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [{ pageLoading }] = usePageTransitionContext();
+  const [pageLoading] = usePageTransitionContext();
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [animation, setAnimation] = React.useState<Animation | null>(null);
