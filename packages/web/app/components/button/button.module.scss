@@ -140,7 +140,7 @@
     border: 0 solid;
 
     outline: 1px solid;
-    outline-color: rgb(113, 113, 122, 1);
+    outline-color: var(--color-text-500);
     outline-offset: 0px;
 
     transition: all 0.25s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1);
