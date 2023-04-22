@@ -1,11 +1,8 @@
-"use client";
-
 import Link, { LinkProps as NextLinkProps } from "next/link";
 import React, { useCallback } from "react";
 import clsx from "clsx";
 import styles from "./links.module.scss";
 import useScrollToTop from "./useScrollToTop";
-import { usePageTransitionContext } from "../../store/page-transition-context";
 
 export type BaseLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -59,17 +56,15 @@ export const InternalLink = ({
   ...props
 }: LinkWithIconProps) => {
   const [onRouteChange] = useScrollToTop();
-  const [pageLoading, setPageLoading] = usePageTransitionContext();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       if (onClick) {
         onClick(e);
       }
-      href && setPageLoading(href.toString());
       onRouteChange();
     },
-    [onClick, onRouteChange, href, setPageLoading]
+    [onClick, onRouteChange]
   );
 
   return (
