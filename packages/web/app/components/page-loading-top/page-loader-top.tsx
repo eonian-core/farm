@@ -2,17 +2,8 @@
 
 import React from "react";
 import styles from "./page-loader-top.module.scss";
-import {
-  usePathname,
-  useSearchParams,
-} from "next/dist/client/components/navigation";
-import { usePageTransitionContext } from "../../store/page-transition-context";
 
 const PageLoaderTop = () => {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [pageLoading] = usePageTransitionContext();
-
   const ref = React.useRef<HTMLDivElement>(null);
   const [animation, setAnimation] = React.useState<Animation | null>(null);
 
@@ -36,18 +27,7 @@ const PageLoaderTop = () => {
     setAnimation(animation);
   }, []);
 
-  React.useEffect(() => {
-    if (!animation || !pageLoading) {
-      return;
-    }
-    const url = pathname + searchParams.toString();
-    if (!pageLoading || pageLoading === url) {
-      animation?.finish();
-      setTimeout(() => animation.cancel(), 100);
-    } else {
-      animation?.play();
-    }
-  }, [pathname, searchParams, pageLoading, animation]);
+
   return <div ref={ref} className={styles.loader} />;
 };
 
