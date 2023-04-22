@@ -75,14 +75,14 @@
   &.dark {
     box-shadow: 0 1px 2px 0 var(--color-neutral-850);
     color: var(--color-text-400);
-    background-color: var(--color-neutral-850);
+    background-color: var(--color-neutral-900);
 
     &:not(.bordered) {
-      box-shadow: inset 0 5px 12px -1px rgba(88, 88, 94, 0.356), 0px 5px 15px 1px rgba(34, 33, 33, 0.555);
+      box-shadow: inset 0 2px 5px -1px rgba(68, 68, 175, 0.356), 0px 5px 15px 1px rgba(34, 33, 33, 0.555);
       @include flare-effect-on-hover;
 
       &:hover {
-        box-shadow: inset 0 5px 15px -1px rgba(88, 88, 94, 0.534), 0px 10px 20px 1px rgba(34, 33, 33, 0.705);
+        box-shadow: inset 0 2px 5px -1px rgba(68, 68, 175, 0.5), 0px 10px 20px 1px rgba(34, 33, 33, 1);
       }
     }
   }
@@ -96,7 +96,7 @@
 
 .md {
   --button-hor-padding: var(--padding-350);
-  border-radius: var(--border-radius-550);
+  border-radius: var(--border-radius-450);
 
   font-size: var(--font-size-300);
 
@@ -110,7 +110,7 @@
   --button-height: 3rem;
   --button-hor-padding: var(--padding-400);
 
-  border-radius: var(--border-radius-600);
+  border-radius: var(--border-radius-500);
 
   font-size: var(--font-size-500);
 
