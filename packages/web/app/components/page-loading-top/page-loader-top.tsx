@@ -18,34 +18,34 @@ const PageLoaderTop = () => {
     if (!loader) {
       return;
     }
+    const loaderProgress = [
+      { width: "0", opacity: 0.5 },
+      { width: "20vw", opacity: 0.9, offset: 0.1 },
+      { width: "40vw", opacity: 1, offset: 0.3 },
+      { width: "60vw", opacity: 0.9, offset: 0.5 },
+      { width: "100vw", opacity: 0.75 },
+    ];
+    const newAnimation = loader.animate(loaderProgress, {
+      duration: 5000,
+      fill: "forwards",
+    });
+    newAnimation.cancel();
+    return setAnimation(newAnimation);
+  }, []);
 
-    if (!animation) {
-      const loaderProgress = [
-        { width: "0", opacity: 0.5 },
-        { width: "20vw", opacity: 0.9, offset: 0.1 },
-        { width: "40vw", opacity: 1, offset: 0.3 },
-        { width: "60vw", opacity: 0.9, offset: 0.5 },
-        { width: "100vw", opacity: 0.75 },
-      ];
-      const newAnimation = loader.animate(loaderProgress, {
-        duration: 5000,
-        fill: "forwards",
-      });
-      newAnimation.cancel();
-      return setAnimation(newAnimation);
-    }
-
-    if (!pageLoading) {
+  React.useEffect(() => {
+    if (!pageLoading || !animation) {
       return;
     }
 
-    const url = pathname;
-    if (!pageLoading || pageLoading === url) {
-      animation?.finish();
-      setTimeout(() => animation.cancel(), 100);
-    } else {
-      animation?.play();
+    if (pageLoading !== pathname) {
+      animation.play();
+      return;
     }
+
+    animation.finish();
+    const timeout = setTimeout(() => animation.cancel(), 100);
+    return () => clearTimeout(timeout);
   }, [pathname, pageLoading, animation]);
 
   return <div ref={ref} className={styles.loader} />;
