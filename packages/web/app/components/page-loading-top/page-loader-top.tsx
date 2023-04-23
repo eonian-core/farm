@@ -43,7 +43,6 @@ const PageLoaderTop = () => {
     const url = pathname + searchParams.toString();
     if (!pageLoading || pageLoading === url) {
       animation?.finish();
-      setTimeout(() => animation.cancel(), 100);
     } else {
       animation?.play();
     }
