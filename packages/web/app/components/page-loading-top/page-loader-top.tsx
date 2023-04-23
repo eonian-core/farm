@@ -2,11 +2,13 @@
 
 import React from "react";
 import styles from "./page-loader-top.module.scss";
+import { usePathname } from "next/navigation";
 import { usePageTransitionContext } from "../../store/page-transition-context";
 
 const PageLoaderTop = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
+  const pathname = usePathname();
   const [pageLoading] = usePageTransitionContext();
 
   const [animation, setAnimation] = React.useState<Animation | null>(null);
@@ -37,14 +39,14 @@ const PageLoaderTop = () => {
       return;
     }
 
-    const url = "/faq";
+    const url = pathname;
     if (!pageLoading || pageLoading === url) {
       animation?.finish();
       setTimeout(() => animation.cancel(), 100);
     } else {
       animation?.play();
     }
-  }, [pageLoading, animation]);
+  }, [pathname, pageLoading, animation]);
 
   return <div ref={ref} className={styles.loader} />;
 };
