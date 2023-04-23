@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity >=0.8.0;
+pragma solidity ^0.8.19;
 
 import {Job} from "./Job.sol";
 import {IResolver} from "./gelato/IResolver.sol";

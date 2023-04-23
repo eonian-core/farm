@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 /// @notice Interface for Compound-like market (or vault in common terms), that allows to deposit and borrow tokens.
 interface ICToken {
