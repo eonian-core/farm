@@ -2,18 +2,15 @@
 
 import React from "react";
 import styles from "./page-loader-top.module.scss";
-import {
-  usePathname,
-  useSearchParams,
-} from "next/dist/client/components/navigation";
+import { usePathname } from "next/navigation";
 import { usePageTransitionContext } from "../../store/page-transition-context";
 
 const PageLoaderTop = () => {
+  const ref = React.useRef<HTMLDivElement>(null);
+
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [pageLoading] = usePageTransitionContext();
 
-  const ref = React.useRef<HTMLDivElement>(null);
   const [animation, setAnimation] = React.useState<Animation | null>(null);
 
   React.useEffect(() => {
@@ -28,26 +25,29 @@ const PageLoaderTop = () => {
       { width: "60vw", opacity: 0.9, offset: 0.5 },
       { width: "100vw", opacity: 0.75 },
     ];
-    const animation = loader.animate(loaderProgress, {
+    const newAnimation = loader.animate(loaderProgress, {
       duration: 5000,
       fill: "forwards",
     });
-    animation.cancel();
-    setAnimation(animation);
+    newAnimation.cancel();
+    return setAnimation(newAnimation);
   }, []);
 
   React.useEffect(() => {
-    if (!animation || !pageLoading) {
+    if (!pageLoading || !animation) {
       return;
     }
-    const url = pathname + searchParams.toString();
-    if (!pageLoading || pageLoading === url) {
-      animation?.finish();
-      setTimeout(() => animation.cancel(), 100);
-    } else {
-      animation?.play();
+
+    if (pageLoading !== pathname) {
+      animation.play();
+      return;
     }
-  }, [pathname, searchParams, pageLoading, animation]);
+
+    animation.finish();
+    const timeout = setTimeout(() => animation.cancel(), 100);
+    return () => clearTimeout(timeout);
+  }, [pathname, pageLoading, animation]);
+
   return <div ref={ref} className={styles.loader} />;
 };
 
