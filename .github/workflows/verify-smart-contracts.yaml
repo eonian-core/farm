@@ -35,11 +35,6 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: nightly
-
       - name: Lint code
         run: |-
           cd packages/contracts
