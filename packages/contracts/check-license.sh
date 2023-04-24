@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# solhint not support check of license header
-# as result need implement custom check
+# solhint doesn't support license header validation
+# as a result we need to implement custom check
 
 folder_path="src"
 

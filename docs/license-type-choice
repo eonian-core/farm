@@ -20,9 +20,9 @@ The DeFi space commonly uses a few license types, which we have considered for o
 
 ## Final Choice
 
-After considering several license types, we have decided to use the GNU GPL family licenses for our project. It provide important requirement to make code of the modified version freely available. However, GNU Affero General Public License v3.0 requires code to be open even if it is used as a service.
+After considering several license types, we have decided to use the GNU GPL family licenses for our project. It provides the important requirement to make the modified version code freely available. However, the GNU Affero General Public License v3.0 requires that the code be open source, even if it is used as a service.
 
-GNU Affero General Public License v3.0:
+The GNU Affero General Public License v3.0:
 > When a modified version is used to provide a service over a network, the complete source code of the modified version must be made available.
 
 [Source](https://choosealicense.com/licenses/agpl-3.0/#)
