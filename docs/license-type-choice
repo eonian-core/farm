@@ -6,7 +6,7 @@ For our project, we want to enable the development of new protocols on top of ou
 
 ## Common Licenses
 
-The DeFi space commonly uses a few license types, which we have considered for our project:
+The DeFi space commonly uses a few license types. There part of licenses which we have considered for our project:
 
 | License Name                                | Projects Using the License                         |
 |---------------------------------------------|----------------------------------------------------|
@@ -22,9 +22,8 @@ The DeFi space commonly uses a few license types, which we have considered for o
 
 After considering several license types, we have decided to use the GNU GPL family licenses for our project. It provides the important requirement to make the modified version code freely available. However, the GNU Affero General Public License v3.0 requires that the code be open source, even if it is used as a service.
 
-The GNU Affero General Public License v3.0:
-> When a modified version is used to provide a service over a network, the complete source code of the modified version must be made available.
+The quote on the GNU Affero General Public License v3.0 from [choosealicense.com](https://choosealicense.com/licenses/agpl-3.0/#):
 
-[Source](https://choosealicense.com/licenses/agpl-3.0/#)
+> When a modified version is used to provide a service over a network, the complete source code of the modified version must be made available.
 
 So final choice is **GNU Affero General Public License v3.0**.
