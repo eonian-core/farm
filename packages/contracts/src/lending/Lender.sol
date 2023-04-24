@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-import "./ILender.sol";
+import {ILender} from "./ILender.sol";
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();
@@ -179,7 +179,7 @@ abstract contract Lender is
 
         // Make sure that the borrower's debt payment doesn't exceed his actual outstanding debt
         uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
-        debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
+        debtPayment = MathUpgradeable.min(debtPayment, borrowerOutstandingDebt);
 
         // Take into account repaid debt, if any
         if (debtPayment > 0) {
@@ -274,7 +274,7 @@ abstract contract Lender is
 
         // To decrease credibility of the borrower we should lower his "debtRatio"
         if (debtRatio > 0) {
-            uint256 debtRatioChange = Math.min(
+            uint256 debtRatioChange = MathUpgradeable.min(
                 (debtRatio * loss) / totalDebt,
                 borrowersData[borrower].debtRatio
             );
@@ -317,13 +317,13 @@ abstract contract Lender is
         uint256 borrowerIntendedCredit = borrowerDebtLimit - borrowerDebt;
 
         // Borrower may not take more funds than the lender's limit
-        uint256 borrowerAvailableCredit = Math.min(
+        uint256 borrowerAvailableCredit = MathUpgradeable.min(
             lenderAvailableFunds,
             borrowerIntendedCredit
         );
 
         // Available credit is limited by the existing number of tokens on the lender's contract
-        borrowerAvailableCredit = Math.min(
+        borrowerAvailableCredit = MathUpgradeable.min(
             borrowerAvailableCredit,
             _freeAssets()
         );

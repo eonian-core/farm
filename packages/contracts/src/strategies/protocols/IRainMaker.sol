@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.19;
 
-import "./ICToken.sol";
+import {ICToken} from "./ICToken.sol";
 
 /// @notice Interface for a compound-like controller used to control incentivized tokens received during interaction with the protocol.
 interface IRainMaker {

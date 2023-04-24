@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.19;
 
-import "./IVault.sol";
-import "./lending/Lender.sol";
-import "./tokens/SafeERC4626Upgradeable.sol";
-import "./strategies/IStrategy.sol";
-import "./structures/AddressList.sol";
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IVault} from "./IVault.sol";
+import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
+import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
+import {IStrategy} from "./strategies/IStrategy.sol";
+import {AddressList} from "./structures/AddressList.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -143,7 +145,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
             // We can only withdraw the amount that the strategy has as debt,
             // so that the strategy can work on the unreported (yet) funds it has earned
-            uint256 requiredAmount = Math.min(
+            uint256 requiredAmount = MathUpgradeable.min(
                 assets - vaultBalance,
                 borrowersData[strategy].debt
             );
