@@ -1,15 +1,17 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.12;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
-import "./IVault.sol";
-import "./lending/Lender.sol";
-import "./tokens/SafeERC4626Upgradeable.sol";
-import "./strategies/IStrategy.sol";
-import "./structures/AddressList.sol";
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IVault} from "./IVault.sol";
+import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
+import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
+import {IStrategy} from "./strategies/IStrategy.sol";
+import {AddressList} from "./structures/AddressList.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -26,7 +28,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     using AddressList for address[];
 
     /// @notice Represents the maximum value of the locked-in profit ratio scale (where 1e18 is 100%).
-    uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
+    uint256 public constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     /// @notice Rewards contract where management fees are sent to.
     address public rewards;
@@ -143,7 +145,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
             // We can only withdraw the amount that the strategy has as debt,
             // so that the strategy can work on the unreported (yet) funds it has earned
-            uint256 requiredAmount = Math.min(
+            uint256 requiredAmount = MathUpgradeable.min(
                 assets - vaultBalance,
                 borrowersData[strategy].debt
             );
@@ -287,16 +289,14 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     function _lockedProfit() internal view returns (uint256) {
         // Release rate should be small, since the timestamp can be manipulated by the node operator,
         // not expected to have much impact, since the changes will be applied to all users and cannot be abused directly.
-        uint256 ratio = (block.timestamp - lastReportTimestamp) *
-            lockedProfitReleaseRate;
+        uint256 ratio = (block.timestamp - lastReportTimestamp) * lockedProfitReleaseRate; // solhint-disable-line not-rely-on-time
 
         // In case the ratio >= scale, the calculation anyway leads to zero.
         if (ratio >= LOCKED_PROFIT_RELEASE_SCALE) {
             return 0;
         }
 
-        uint256 lockedProfitChange = (ratio * lockedProfitBaseline) /
-            LOCKED_PROFIT_RELEASE_SCALE;
+        uint256 lockedProfitChange = (ratio * lockedProfitBaseline) / LOCKED_PROFIT_RELEASE_SCALE;
 
         // Reducing locked profits over time frees up profits for users
         return lockedProfitBaseline - lockedProfitChange;

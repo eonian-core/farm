@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-import "./ILender.sol";
+import {ILender} from "./ILender.sol";
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();
@@ -31,7 +31,7 @@ abstract contract Lender is
         uint256 debtRatio;
     }
 
-    uint256 constant MAX_BPS = 10_000;
+    uint256 public constant MAX_BPS = 10_000;
 
     /// @notice Amount of tokens that all borrowers have taken
     uint256 public totalDebt;
@@ -71,8 +71,7 @@ abstract contract Lender is
     /// @notice Updates the last report timestamp for the specified borrower and this lender.
     modifier updateLastReportTime() {
         _;
-        borrowersData[msg.sender]
-            .lastReportTimestamp = lastReportTimestamp = block.timestamp;
+        borrowersData[msg.sender].lastReportTimestamp = lastReportTimestamp = block.timestamp; // solhint-disable-line not-rely-on-time
     }
 
     function __Lender_init() internal onlyInitializing {
@@ -83,7 +82,7 @@ abstract contract Lender is
     }
 
     function __Lender_init_unchained() internal onlyInitializing {
-        lastReportTimestamp = block.timestamp;
+        lastReportTimestamp = block.timestamp; // solhint-disable-line not-rely-on-time
     }
 
     /// @inheritdoc ILender
@@ -131,8 +130,8 @@ abstract contract Lender is
         // if it's the first report at this block and only if the borrower was registered some time ago
         if (
             extraFreeFunds > 0 &&
-            borrowersData[msg.sender].lastReportTimestamp < block.timestamp &&
-            borrowersData[msg.sender].activationTimestamp < block.timestamp
+            borrowersData[msg.sender].lastReportTimestamp < block.timestamp && // solhint-disable-line not-rely-on-time
+            borrowersData[msg.sender].activationTimestamp < block.timestamp    // solhint-disable-line not-rely-on-time
         ) {
             chargedFees = _chargeFees(extraFreeFunds);
         }
@@ -151,7 +150,7 @@ abstract contract Lender is
         nonReentrant
     {
         // Checking whether the borrower has available funds for debt payment
-        require(_borrowerFreeAssets(msg.sender) >= debtPayment);
+        require(_borrowerFreeAssets(msg.sender) >= debtPayment, "Not enough assets for payment");
 
         // Debt wasn't repaid, we need to decrease the ratio of this borrower
         if (loss > 0) {
@@ -179,7 +178,7 @@ abstract contract Lender is
 
         // Make sure that the borrower's debt payment doesn't exceed his actual outstanding debt
         uint256 borrowerOutstandingDebt = _outstandingDebt(msg.sender);
-        debtPayment = Math.min(debtPayment, borrowerOutstandingDebt);
+        debtPayment = MathUpgradeable.min(debtPayment, borrowerOutstandingDebt);
 
         // Take into account repaid debt, if any
         if (debtPayment > 0) {
@@ -194,8 +193,10 @@ abstract contract Lender is
         }
 
         // Now we need to compare the allocated funds to the borrower and his current free balance.
-        // If the number of unrealized tokens on the borrower's contract is less than the available credit, the lender must give that difference to the borrower.
-        // Otherwise (if the amount of the borrower's available funds is greater than he should have according to his share), the lender must take that portion of the funds for himself.
+        // If the number of unrealized tokens on the borrower's contract is less than the available credit, 
+        // the lender must give that difference to the borrower.
+        // Otherwise (if the amount of the borrower's available funds is greater than 
+        // he should have according to his share), the lender must take that portion of the funds for himself.
         uint256 freeBorrowerBalance = borrowerFreeFunds + debtPayment;
         uint256 fundsGiven = 0;
         uint256 fundsTaken = 0;
@@ -270,11 +271,11 @@ abstract contract Lender is
         uint256 debt = borrowersData[borrower].debt;
 
         // Make sure the borrower's loss is less than his entire debt
-        require(debt >= loss);
+        require(debt >= loss, "Loss is greater than the debt");
 
         // To decrease credibility of the borrower we should lower his "debtRatio"
         if (debtRatio > 0) {
-            uint256 debtRatioChange = Math.min(
+            uint256 debtRatioChange = MathUpgradeable.min(
                 (debtRatio * loss) / totalDebt,
                 borrowersData[borrower].debtRatio
             );
@@ -317,13 +318,13 @@ abstract contract Lender is
         uint256 borrowerIntendedCredit = borrowerDebtLimit - borrowerDebt;
 
         // Borrower may not take more funds than the lender's limit
-        uint256 borrowerAvailableCredit = Math.min(
+        uint256 borrowerAvailableCredit = MathUpgradeable.min(
             lenderAvailableFunds,
             borrowerIntendedCredit
         );
 
         // Available credit is limited by the existing number of tokens on the lender's contract
-        borrowerAvailableCredit = Math.min(
+        borrowerAvailableCredit = MathUpgradeable.min(
             borrowerAvailableCredit,
             _freeAssets()
         );
@@ -365,10 +366,14 @@ abstract contract Lender is
         }
 
         borrowersData[borrower] = BorrowerData(
-            block.timestamp, // Activation timestamp
-            block.timestamp, // Last report timestamp
-            0, // Initial debt
-            borrowerDebtRatio // Debt ratio
+            // Activation timestamp 
+            block.timestamp, // solhint-disable-line not-rely-on-time
+            // Last report timestamp
+            block.timestamp, // solhint-disable-line not-rely-on-time
+            // Initial debt
+            0, 
+            // Debt ratio
+            borrowerDebtRatio 
         );
 
         debtRatio += borrowerDebtRatio;
