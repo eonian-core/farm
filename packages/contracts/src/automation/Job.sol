@@ -126,12 +126,12 @@ abstract contract Job is
     /// @return seconds from last execution in a range of 900 seconds
     function timeFromLastExecution() public view returns (uint256) {
         // lastWorkTime will be zero before first execution
-        return block.timestamp - lastWorkTime;
+        return block.timestamp - lastWorkTime; // solhint-disable-line not-rely-on-time
     }
 
     /// @notice Set time of last execution to current block
     function _refreshLastWorkTime() internal {
-        lastWorkTime = block.timestamp;
+        lastWorkTime = block.timestamp; // solhint-disable-line not-rely-on-time
     }
 
     /// @notice Check if given time from last execution is passed

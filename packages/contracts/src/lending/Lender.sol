@@ -71,8 +71,7 @@ abstract contract Lender is
     /// @notice Updates the last report timestamp for the specified borrower and this lender.
     modifier updateLastReportTime() {
         _;
-        borrowersData[msg.sender]
-            .lastReportTimestamp = lastReportTimestamp = block.timestamp;
+        borrowersData[msg.sender].lastReportTimestamp = lastReportTimestamp = block.timestamp; // solhint-disable-line not-rely-on-time
     }
 
     function __Lender_init() internal onlyInitializing {
@@ -83,7 +82,7 @@ abstract contract Lender is
     }
 
     function __Lender_init_unchained() internal onlyInitializing {
-        lastReportTimestamp = block.timestamp;
+        lastReportTimestamp = block.timestamp; // solhint-disable-line not-rely-on-time
     }
 
     /// @inheritdoc ILender
@@ -131,8 +130,8 @@ abstract contract Lender is
         // if it's the first report at this block and only if the borrower was registered some time ago
         if (
             extraFreeFunds > 0 &&
-            borrowersData[msg.sender].lastReportTimestamp < block.timestamp &&
-            borrowersData[msg.sender].activationTimestamp < block.timestamp
+            borrowersData[msg.sender].lastReportTimestamp < block.timestamp && // solhint-disable-line not-rely-on-time
+            borrowersData[msg.sender].activationTimestamp < block.timestamp    // solhint-disable-line not-rely-on-time
         ) {
             chargedFees = _chargeFees(extraFreeFunds);
         }
@@ -365,10 +364,14 @@ abstract contract Lender is
         }
 
         borrowersData[borrower] = BorrowerData(
-            block.timestamp, // Activation timestamp
-            block.timestamp, // Last report timestamp
-            0, // Initial debt
-            borrowerDebtRatio // Debt ratio
+            // Activation timestamp 
+            block.timestamp, // solhint-disable-line not-rely-on-time
+            // Last report timestamp
+            block.timestamp, // solhint-disable-line not-rely-on-time
+            // Initial debt
+            0, 
+            // Debt ratio
+            borrowerDebtRatio 
         );
 
         debtRatio += borrowerDebtRatio;

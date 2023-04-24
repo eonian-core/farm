@@ -289,16 +289,14 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     function _lockedProfit() internal view returns (uint256) {
         // Release rate should be small, since the timestamp can be manipulated by the node operator,
         // not expected to have much impact, since the changes will be applied to all users and cannot be abused directly.
-        uint256 ratio = (block.timestamp - lastReportTimestamp) *
-            lockedProfitReleaseRate;
+        uint256 ratio = (block.timestamp - lastReportTimestamp) * lockedProfitReleaseRate; // solhint-disable-line not-rely-on-time
 
         // In case the ratio >= scale, the calculation anyway leads to zero.
         if (ratio >= LOCKED_PROFIT_RELEASE_SCALE) {
             return 0;
         }
 
-        uint256 lockedProfitChange = (ratio * lockedProfitBaseline) /
-            LOCKED_PROFIT_RELEASE_SCALE;
+        uint256 lockedProfitChange = (ratio * lockedProfitBaseline) / LOCKED_PROFIT_RELEASE_SCALE;
 
         // Reducing locked profits over time frees up profits for users
         return lockedProfitBaseline - lockedProfitChange;

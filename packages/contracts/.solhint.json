@@ -8,6 +8,8 @@
     "max-line-length": ["warn", 180],
     "constructor-syntax": "error",
     "no-unused-vars": "error",
-    "no-global-import": "error"
+    "no-global-import": "error",
+    "func-name-mixedcase": "off",
+    "not-rely-on-time": "error"
   }
 }

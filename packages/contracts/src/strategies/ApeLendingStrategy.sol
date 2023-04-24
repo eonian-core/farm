@@ -136,8 +136,7 @@ contract ApeLendingStrategy is BaseStrategy {
         if (bananaPerBlock == 0) {
             return 0;
         }
-        uint256 blocksSinceLastHarvest = (block.timestamp -
-            vault.lastReport()) / SECONDS_PER_BLOCK;
+        uint256 blocksSinceLastHarvest = (block.timestamp - vault.lastReport()) / SECONDS_PER_BLOCK; // solhint-disable-line not-rely-on-time
         return blocksSinceLastHarvest * bananaPerBlock;
     }
 
@@ -200,7 +199,7 @@ contract ApeLendingStrategy is BaseStrategy {
             0,
             _tokenSwapPath(BANANA, address(asset)),
             address(this),
-            block.timestamp
+            block.timestamp // solhint-disable-line not-rely-on-time
         );
     }
 
