@@ -10,6 +10,9 @@
     "no-unused-vars": "error",
     "no-global-import": "error",
     "func-name-mixedcase": "off",
-    "not-rely-on-time": "error"
+    "not-rely-on-time": "error",
+    "state-visibility": "error",
+    "no-empty-blocks": "error",
+    "reason-string": "error"
   }
 }

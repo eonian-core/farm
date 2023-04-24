@@ -433,9 +433,9 @@ abstract contract ERC4626Upgradeable is
 
     /// @notice Called before withdraw will be made the Vault.
     /// @dev allow implement additional logic for withdraw, hooks a prefered way rather then wrapping
-    function beforeWithdraw(uint256 assets, uint256 shares) internal virtual {}
+    function beforeWithdraw(uint256 assets, uint256 shares) internal virtual {} // solhint-disable-line no-empty-blocks
 
     /// @notice Called when a deposit is made to the Vault.
     /// @dev allow implement additional logic for withdraw, hooks a prefered way rather then wrapping
-    function afterDeposit(uint256 assets, uint256 shares) internal virtual {}
+    function afterDeposit(uint256 assets, uint256 shares) internal virtual {} // solhint-disable-line no-empty-blocks
 }

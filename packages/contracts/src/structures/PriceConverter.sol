@@ -7,7 +7,7 @@ import {SafeMathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/mat
 library PriceConverter {
     using SafeMathUpgradeable for uint256;
 
-    uint256 constant DEFAULT_DECIMALS = 18;
+    uint256 public constant DEFAULT_DECIMALS = 18;
 
     /// @notice Calculates the price of the specified number of tokens.
     /// @dev This function allow us to compare the price of the tokens with different decimals.

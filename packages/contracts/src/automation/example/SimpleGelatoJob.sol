@@ -9,7 +9,7 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
     bool public canWorkResult = false;
 
     // allow sending eth to the test contract
-    receive() external payable {}
+    receive() external payable {} // solhint-disable-line no-empty-blocks
 
     function initialize(
         address _ops,

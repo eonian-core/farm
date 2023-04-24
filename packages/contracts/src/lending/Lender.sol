@@ -31,7 +31,7 @@ abstract contract Lender is
         uint256 debtRatio;
     }
 
-    uint256 constant MAX_BPS = 10_000;
+    uint256 public constant MAX_BPS = 10_000;
 
     /// @notice Amount of tokens that all borrowers have taken
     uint256 public totalDebt;
@@ -150,7 +150,7 @@ abstract contract Lender is
         nonReentrant
     {
         // Checking whether the borrower has available funds for debt payment
-        require(_borrowerFreeAssets(msg.sender) >= debtPayment);
+        require(_borrowerFreeAssets(msg.sender) >= debtPayment, "Not enough assets for payment");
 
         // Debt wasn't repaid, we need to decrease the ratio of this borrower
         if (loss > 0) {
@@ -193,8 +193,10 @@ abstract contract Lender is
         }
 
         // Now we need to compare the allocated funds to the borrower and his current free balance.
-        // If the number of unrealized tokens on the borrower's contract is less than the available credit, the lender must give that difference to the borrower.
-        // Otherwise (if the amount of the borrower's available funds is greater than he should have according to his share), the lender must take that portion of the funds for himself.
+        // If the number of unrealized tokens on the borrower's contract is less than the available credit, 
+        // the lender must give that difference to the borrower.
+        // Otherwise (if the amount of the borrower's available funds is greater than 
+        // he should have according to his share), the lender must take that portion of the funds for himself.
         uint256 freeBorrowerBalance = borrowerFreeFunds + debtPayment;
         uint256 fundsGiven = 0;
         uint256 fundsTaken = 0;
@@ -269,7 +271,7 @@ abstract contract Lender is
         uint256 debt = borrowersData[borrower].debt;
 
         // Make sure the borrower's loss is less than his entire debt
-        require(debt >= loss);
+        require(debt >= loss, "Loss is greater than the debt");
 
         // To decrease credibility of the borrower we should lower his "debtRatio"
         if (debtRatio > 0) {

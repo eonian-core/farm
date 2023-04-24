@@ -28,7 +28,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     using AddressList for address[];
 
     /// @notice Represents the maximum value of the locked-in profit ratio scale (where 1e18 is 100%).
-    uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
+    uint256 public constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     /// @notice Rewards contract where management fees are sent to.
     address public rewards;
