@@ -22,8 +22,7 @@
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",
-    "lint:license": "./check-license.sh",
-    "lint:ci": "solhint 'src/**/*.sol' -w 0"
+    "lint:license": "./check-license.sh"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
