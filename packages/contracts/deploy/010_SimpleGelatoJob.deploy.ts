@@ -24,6 +24,7 @@ const func: DeployFunction = async function ({
     from: deployer,
     log: true,
     autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks,
+    gasLimit: 3e7, // without limit can fail on estimation locally, https://github.com/ethereum/solidity/issues/13159
     proxy: {
       owner: deployer,
       proxyContract: "OpenZeppelinTransparentProxy",
