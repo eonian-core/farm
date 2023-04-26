@@ -38,7 +38,7 @@ jobs:
       - name: Lint code
         run: |-
           cd packages/contracts
-          yarn lint:ci
+          yarn solhint 'src/**/*.sol' -w 0
 
       - name: Check license type
         run: |-
