@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -7,8 +7,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URISto
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-
-error UserHasAlreadyOwnToken();
 
 contract SBTERC721Upgradeable is
     Initializable,
@@ -21,15 +19,16 @@ contract SBTERC721Upgradeable is
 
     CountersUpgradeable.Counter private _tokenIdCounter;
 
+    // Token symbol
+    string private _symbol;
+
     /**
      * @dev Modifier to protect a creation a new token for a user
      * in case if this user has already have the token.
      */
     modifier newUser(address to) {
         bool hasNoToken = balanceOf(to) == 0;
-        if(!hasNoToken) {
-            revert UserHasAlreadyOwnToken();
-        }
+        require(hasNoToken, "SBTERC721Upgradeable: User already has a token");
         _;
     }
 
@@ -39,7 +38,10 @@ contract SBTERC721Upgradeable is
 //        _disableInitializers();
 //    }
 
-    function __SafeSBTERC721Upgradeable_init(string memory name_, string memory symbol_) internal onlyInitializing {
+    function __SBTERC721Upgradeable_init(
+        string memory name_,
+        string memory symbol_
+    ) internal onlyInitializing {
         __ERC721_init(name_, symbol_);
         __ERC721Enumerable_init();
         __ERC721URIStorage_init();
@@ -57,7 +59,7 @@ contract SBTERC721Upgradeable is
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
     internal
     override(ERC721Upgradeable, ERC721EnumerableUpgradeable) {
-        require(from == address(0), "Err: token is SOUL BOUND");
+        require(from == address(0), "SBTERC721Upgradeable: token is SOUL BOUND");
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
     }
 
