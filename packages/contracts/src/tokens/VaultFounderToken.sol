@@ -51,4 +51,10 @@ contract VaultFounderToken is IVaultFounderToken, SBTERC721Upgradeable {
     function _nextTokenPrice() internal view returns (uint256){
         return _priceOf(totalSupply());
     }
+
+    function setTokenURI(string memory _tokenURI) external override {
+        address tokenOwner = msg.sender;
+        uint256 tokenId = tokenOfOwnerByIndex(tokenOwner, 0);
+        _setTokenURI(tokenId, _tokenURI);
+    }
 }

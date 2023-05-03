@@ -13,4 +13,5 @@ interface IVaultFounderToken is
 {
     function priceOf(uint256 tokenId) external view returns (uint256);
     function nextTokenPrice() external view returns (uint256);
+    function setTokenURI(string memory _tokenURI) external;
 }

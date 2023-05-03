@@ -88,4 +88,18 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.safeMint(culprit, "testUrl3");
         assertEq(token.priceOf(2), 288);
     }
+
+    function testSetTokenURI() public {
+        token.safeMint(alice, "testUrl");
+        vm.prank(alice);
+        token.setTokenURI("testUrl2");
+        assertEq(token.tokenURI(0), "testUrl2");
+    }
+
+    function testSetTokenURIFail() public {
+        token.safeMint(alice, "testUrl");
+        vm.expectRevert("ERC721Enumerable: owner index out of bounds");
+        token.setTokenURI("testUrl2");
+    }
+
 }
