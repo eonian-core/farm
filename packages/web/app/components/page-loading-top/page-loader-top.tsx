@@ -48,6 +48,13 @@ const PageLoaderTop = () => {
     return () => clearTimeout(timeout);
   }, [pathname, pageLoading, animation]);
 
+  // Handle "back" navigation", previous page is loaded, we don't need to show loading animation.
+  React.useEffect(() => {
+    const handler = () => setTimeout(() => animation?.cancel(), 100);
+    window.addEventListener("popstate", handler);
+    return () => window.removeEventListener("popstate", handler);
+  }, [animation]);
+
   return <div ref={ref} className={styles.loader} />;
 };
 
