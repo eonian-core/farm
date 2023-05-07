@@ -95,6 +95,9 @@ contract ERC5484Upgradeable is
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+
+        // emit event
+        emit Issued(address(0), to, tokenId, _burnAuth);
     }
 
     /// Token is SOUL BOUND and it is not allowed to move token between users
