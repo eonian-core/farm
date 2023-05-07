@@ -29,6 +29,12 @@
     color: var(--color-text-200);
 }
 
+.header3, .header4 {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
 .iconExternal {
     margin-left: 0.25rem;
     vertical-align: middle;
