@@ -46,7 +46,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     function testMintTokenFail(string memory url) public {
         token.safeMint(alice, url);
 
-        vm.expectRevert("SBTERC721Upgradeable: User already has a token");
+        vm.expectRevert("ERC5484Upgradeable: User already has a token");
         token.safeMint(alice, url);
 
         assertEq(token.totalSupply(), 1);
@@ -56,7 +56,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.safeMint(alice, url);
 
         vm.prank(alice);
-        vm.expectRevert("SBTERC721Upgradeable: token is SOUL BOUND");
+        vm.expectRevert("ERC5484Upgradeable: token is SOUL BOUND and can't be transferred");
 
         token.transferFrom(alice, bob, 0);
     }

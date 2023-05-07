@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.0;
 
-import "./SBTERC721Upgradeable.sol";
+import "./ERC5484Upgradeable.sol";
 import "./IVaultFounderToken.sol";
 
-contract VaultFounderToken is IVaultFounderToken, SBTERC721Upgradeable {
+contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable {
 
     // Max number of tokens that can be minted
     uint256 private _maxCountTokens;
@@ -15,12 +15,13 @@ contract VaultFounderToken is IVaultFounderToken, SBTERC721Upgradeable {
     // Initial token price
     uint256 private _initialTokenPrice;
 
+    //todo discuss if those parameters should be in constructor or not
     function __VaultFounderToken_init(
         uint256 maxCountTokens_,
         uint256 nextTokenPriceMultiplier_,
         uint256 initialTokenPrice_
     ) internal onlyInitializing {
-        __SBTERC721Upgradeable_init("Eonian Soul Bound founder token", "ESBT");
+        __SBTERC721Upgradeable_init("Eonian Soul Bound founder token", "ESBT", BurnAuth.Neither, true);
         _maxCountTokens = maxCountTokens_;
         _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
         _initialTokenPrice = initialTokenPrice_;
