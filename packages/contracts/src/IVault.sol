@@ -1,8 +1,8 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
-import "./lending/ILender.sol";
-import "./tokens/IERC4626.sol";
+import {ILender} from "./lending/ILender.sol";
+import {IERC4626} from "./tokens/IERC4626.sol";
 
 interface IVault is ILender, IERC4626 {
     /// @notice Returns the current version of this vault contract

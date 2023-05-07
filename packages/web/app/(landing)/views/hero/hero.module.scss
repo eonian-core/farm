@@ -51,6 +51,8 @@
     width: 100%;
     min-height: 100vh;
 
+    position: relative;
+
     h1 {
         font-size: var(--font-size-1200);
         font-weight: var(--font-black);
@@ -94,7 +96,7 @@
         }
     }
 
-    p {
+    & > p {
         font-size: var(--font-size-700);
         line-height: var(--line-height-500);
         text-align: center;
@@ -104,6 +106,15 @@
 
         animation: appearFrom09 0.5s ease-out;
     }
+}
+
+.scrollIcon {
+    position: absolute;
+    bottom: 2rem;
+    opacity: 0;
+
+    animation: appearUp 0.2s ease-in forwards;
+    animation-delay: 1.5s;
 }
 
 @media (prefers-reduced-motion) {
@@ -200,7 +211,7 @@
             }
         }
 
-        p {
+        & > p {
             max-width: var(--width-500);
         }
     }
@@ -253,13 +264,17 @@
             }
         }
 
-        p {
+        & > p {
             font-size: var(--font-size-600);
             line-height: var(--line-height-600);
             text-align: left;
             max-width: var(--width-400);
             margin-top: var(--margin-400);
         }
+    }
+
+    .scrollIcon {
+        display: none;
     }
 }
 
@@ -307,7 +322,7 @@
             }
         }
 
-        p {
+        & > p {
             font-size: var(--font-size-500);
             line-height: var(--line-height-500);
             margin-top: var(--margin-500);
@@ -359,7 +374,7 @@
             }
         }
 
-        p {
+        & > p {
             font-size: var(--font-size-300);
             line-height: var(--line-height-400);
             margin-top: var(--margin-400);

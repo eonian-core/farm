@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity >=0.8.10;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
 import {GelatoJobAdapter} from "../GelatoJobAdapter.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -9,7 +9,7 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
     bool public canWorkResult = false;
 
     // allow sending eth to the test contract
-    receive() external payable {}
+    receive() external payable {} // solhint-disable-line no-empty-blocks
 
     function initialize(
         address _ops,

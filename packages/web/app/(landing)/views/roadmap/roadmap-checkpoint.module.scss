@@ -1,6 +1,27 @@
 $pin-thickness: 2px;
 $pin-head-size: 16px;
 
+@keyframes gradientTransition {
+  0% {
+    background-image: linear-gradient(var(--color-text-200) 10%, transparent 90%);
+  }
+  20% {
+    background-image: linear-gradient(var(--color-text-200) 50%, hsl(256, 77%, 60%) 75%, transparent 90%);
+  }
+  30% {
+    background-image: linear-gradient(var(--color-text-200) 30%, hsl(256, 77%, 60%) 50%, transparent 90%);
+  }
+  50% {
+    background-image: linear-gradient(var(--color-text-200) 10%, hsl(229, 80%, 66%) 30%, hsl(256, 77%, 60%) 50%, transparent 90%);
+  }
+  75% {
+    background-image: linear-gradient(var(--color-text-200) 0%, hsl(270, 35%, 50%) 10%, hsl(229, 80%, 66%) 30%, hsl(256, 77%, 60%) 50%, transparent 90%);
+  }
+  100% {
+    background-image: linear-gradient(hsl(341, 67%, 50%) 0%, hsl(270, 35%, 50%) 10%, hsl(229, 80%, 66%) 30%, hsl(256, 77%, 60%) 50%, transparent 90%);
+  }
+}
+
 .pin {
   position: absolute;
 
@@ -20,6 +41,8 @@ $pin-head-size: 16px;
     height: $pin-head-size;
     left: -($pin-head-size / 2 - $pin-thickness / 2);
     border: 4px solid var(--color-background-start);
+    transition: background-color 0.2s;
+    transition-delay: 0.2s;
   }
 }
 
@@ -106,6 +129,14 @@ $pin-head-size: 16px;
   &[href]:hover {
     h3 {
       text-decoration-line: underline;
+    }
+
+    .pin {
+      animation: gradientTransition 0.2s ease-in-out;
+      background-image: linear-gradient(hsl(341, 67%, 50%) 0%, hsl(270, 35%, 50%) 10%, hsl(229, 80%, 66%) 30%, hsl(256, 77%, 60%) 50%, transparent 90%);
+      &::before {
+        background-color: hsl(341, 67%, 50%);
+      }
     }
   }
 

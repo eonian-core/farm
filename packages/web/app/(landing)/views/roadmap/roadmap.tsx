@@ -72,7 +72,7 @@ export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
     );
 
     return {
-      centeredCheckpointIndex: Math.max(firstUndoneCheckpointIndex - 1, 0),
+      centeredCheckpointIndex: Math.max(firstUndoneCheckpointIndex, 0),
     };
   }
 

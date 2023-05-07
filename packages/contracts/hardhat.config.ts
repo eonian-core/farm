@@ -33,7 +33,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.15",
+    version: "0.8.19",
     settings: {
       optimizer: {
         enabled: true,
@@ -41,7 +41,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: process.env.USE_BSC_FORK ? "hardhat" : "ganache",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {
       forking: binanceSmartChainFork,

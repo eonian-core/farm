@@ -1,0 +1,21 @@
+
+.button {
+  animation: appearWithDelay 1s ease-in;
+}
+
+@keyframes appearWithDelay {
+  0% {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  50% {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  70% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

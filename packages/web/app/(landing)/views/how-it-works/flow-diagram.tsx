@@ -1,3 +1,5 @@
+"use client";
+
 import React, { PureComponent } from "react";
 import {
   Svg,
@@ -12,12 +14,14 @@ import {
   Point as SVGPoint,
   Runner,
 } from "@svgdotjs/svg.js";
-import { DESKTOP_SCREEN, TABLET_SCREEN } from "../../../components/resize-hooks/screens";
+import {
+  DESKTOP_SCREEN,
+  TABLET_SCREEN,
+} from "../../../components/resize-hooks/screens";
 import styles from "./flow-diagram.module.scss";
 import { HIW_ANIMATION_DURATION } from "./constants";
 import debounce from "lodash.debounce";
 import { DebouncedFunc } from "lodash";
-import { HIWContext } from "./context";
 
 interface Point {
   x: number;
@@ -38,7 +42,8 @@ const fontSizeOnDesktop = 1.5;
 
 export default class FlowDiagram extends PureComponent<Props, State> {
   private ref: React.RefObject<HTMLDivElement>;
-  private svg: Svg;
+  private svg!: Svg;
+  private wrapperGroup!: G;
 
   private lineWidth = 0.165;
 
@@ -111,13 +116,12 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   private activeStepPointGroup: G | null;
   private activeStepPointLinkGroup!: G;
 
-  private debouncedRedrawLink: DebouncedFunc<(point: string | null) => void>;
+  private debouncedRedrawLink!: DebouncedFunc<(point: string | null) => void>;
 
   constructor(props: Props) {
     super(props);
 
     this.ref = React.createRef();
-    this.svg = SVG();
 
     this.state = {
       isMobileDisplay: false,
@@ -126,19 +130,20 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     this.activeStepPoint = null;
     this.activeStepPointGroup = null;
+  }
+
+  componentDidMount(): void {
+    this.svg = SVG();
+    this.drawSVG();
 
     this.debouncedRedrawLink = debounce((point: string | null) => {
       point === null ? this.hideLinkToCard() : this.createLinkToCard(point);
     }, 20);
-  }
 
-  componentDidMount(): void {
     setTimeout(this.initSliderAnimationObserver, 100);
 
     window.addEventListener("resize", this.handleResize);
     this.handleResize();
-
-    this.drawSVG();
   }
 
   componentDidUpdate(): void {
@@ -189,15 +194,15 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
     const { width } = container.getBoundingClientRect();
     const { isMobileDisplay, isDesktopDisplay } = this.state;
-    
+
     const toMobile = width <= TABLET_SCREEN;
     if (toMobile !== isMobileDisplay) {
       this.setState({ isMobileDisplay: toMobile, isDesktopDisplay: false });
-      return
+      return;
     }
 
-    const toDesktop = width <= DESKTOP_SCREEN
-    if(!toMobile && toDesktop !== isDesktopDisplay) {
+    const toDesktop = width <= DESKTOP_SCREEN;
+    if (!toMobile && toDesktop !== isDesktopDisplay) {
       this.setState({ isDesktopDisplay: toDesktop });
       return;
     }
@@ -215,7 +220,8 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     this.activeStepPointLinkGroup = this.svg.group();
 
-    const diagramGroup = this.drawDiagram();
+    this.wrapperGroup = this.svg.group();
+    const diagramGroup = this.drawDiagram(this.wrapperGroup);
 
     const { isMobileDisplay } = this.state;
     if (!isMobileDisplay) {
@@ -376,7 +382,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     }
   ) {
     const { label, color, position, textOffset } = options;
-    const {isDesktopDisplay} = this.state;
+    const { isDesktopDisplay } = this.state;
     const { points } = this.params;
     const { attributes: textAttributes } = points.text;
     const { size: circleSize, attributes: circleAttributes } = points.circle;
@@ -491,7 +497,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const point = new SVGPoint(centerX, isOnBottom ? height : 0);
 
     const pointPosition = from.remember("pos");
-    const cardPosition = point.transform(this.svg.ctm().inverse());
+    const cardPosition = point.transform(this.wrapperGroup.ctm().inverse());
 
     const startX = isOnBottom ? cardPosition.x : pointPosition.x;
     const startY = isOnBottom ? cardPosition.y : pointPosition.y;

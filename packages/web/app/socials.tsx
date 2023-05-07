@@ -4,7 +4,7 @@ import IconMedium from "./components/icons/icon-medium";
 import IconTelegram from "./components/icons/icon-telegram";
 import IconTwitter from "./components/icons/icon-twitter";
 import IconYoutube from "./components/icons/icon-youtube";
-import { useLocale } from "./locale";
+import { useLocale } from "./store/locale";
 
 export interface SocialLink {
   name: string;
@@ -44,7 +44,7 @@ export const socials: LocalesSocials = {
       name: "Discord",
       icon: <IconDiscord />,
 
-      href: "https://discord.gg/5p6F5ygZWn",
+      href: "https://discord.gg/8mcUPPYJmj",
 
     },
   ],
