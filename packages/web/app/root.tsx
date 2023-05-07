@@ -5,7 +5,6 @@ import { useState } from "react";
 import clsx from "clsx";
 
 import "./globals.scss";
-import "./tailwind.css";
 
 import Navigation from "./components/navigation/navigation";
 import SlidingFooter from "./components/sliding-footer/sliding-footer";
