@@ -1,3 +1,5 @@
+@import "../../../screen.scss";
+
 $pin-thickness: 2px;
 $pin-head-size: 16px;
 
@@ -35,6 +37,7 @@ $pin-head-size: 16px;
   &::before {
     position: absolute;
     content: "";
+    box-sizing: border-box;
     border-radius: 50%;
     background-color: var(--color-text-200);
     width: $pin-head-size;
@@ -126,6 +129,11 @@ $pin-head-size: 16px;
 }
 
 .container {
+  position: relative;
+  height: 100%;
+  padding-left: var(--padding-300);
+  padding-right: var(--padding-300);
+
   &[href]:hover {
     h3 {
       text-decoration-line: underline;
@@ -154,6 +162,15 @@ $pin-head-size: 16px;
     list-style: initial;
     padding-left: var(--padding-300);
   }
+
+  @media (max-width: $screen-mobile) {
+    padding-left: var(--padding-600);
+    padding-right: var(--padding-600);
+  }
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .content {
@@ -162,4 +179,16 @@ $pin-head-size: 16px;
     list-style-type: disc;
     list-style-position: inside;
   }
+}
+
+.strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+}
+
+.hidden {
+  display: none;
 }

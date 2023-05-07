@@ -29,6 +29,12 @@
     color: var(--color-text-200);
 }
 
+.iconExternal {
+    margin-left: 0.25rem;
+    vertical-align: middle;
+    display: inline;
+}
+
 @media (max-width: $screen-mobile) {
     .header1 {
         font-size: var(--font-size-900);
