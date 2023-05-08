@@ -4,13 +4,13 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: 1.5rem;
+    margin-top: var(--margin-400);
 }
 
 .point {
     cursor: pointer;
     opacity: 0.2;
-    padding: 0.5rem;
+    padding: var(--padding-100);
 
     &:hover {
         opacity: 1;
@@ -22,27 +22,24 @@
 }
 
 .pointDot {
-    height: 0.75rem;
-    width: 0.75rem;
+    height: var(--padding-200);
+    width: var(--padding-200);
     border-radius: 9999px;
-    --tw-bg-opacity: 1;
-    background-color: hsl(0 0% 98%/var(--tw-bg-opacity));
+    background-color: hsl(0, 0%, 98%);
 }
 
 .chevron {
     cursor: pointer;
 
     &:hover {
-        --tw-text-opacity: 1;
-        color: hsl(240 6% 90%/var(--tw-text-opacity));
+        color: hsl(240 6% 90%);
     }
 }
 
 .chevronDiabled {
 
     &, &:hover {
-        --tw-text-opacity: 1;
-        color: hsl(240 5% 34%/var(--tw-text-opacity));
+        color: hsl(240 5% 34%);
     }
 }
 
