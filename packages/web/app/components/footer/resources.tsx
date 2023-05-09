@@ -1,5 +1,6 @@
 import * as features from "../../features";
 import { InternalLink } from "../links/links";
+import styles from './footer.module.scss'
 
 export interface ResourceItem {
     href: string;
@@ -22,10 +23,8 @@ export const Resources = () => {
     }
 
     return (
-        <div className="mx-12 mb-6">
-            <h5 className="text-xl font-medium leading-normal">
-                Resources
-            </h5>
+        <div className={styles.linksSection}>
+            <h5>Resources</h5>
             <ul>
                 {list.map(({ href, label }) => (
                     <li key={href}>

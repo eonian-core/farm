@@ -100,7 +100,7 @@ export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
     return (
       <div
           ref={this.containerRef}
-          className={clsx("h-96 w-full", styles.overlay)}
+          className={clsx(styles.overlay)}
         >
           <RoadmapCheckpointStrip
             ref={this.stripRef}

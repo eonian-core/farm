@@ -3,9 +3,6 @@ import Collapse from './collapse';
 import ColalapseHeader from "./collapse-header";
 import CollapseContent from "./collapse-content";
 
-// TODO: fix tailwind support for storybook
-import '../../tailwind.css'
-
 const meta: Meta<typeof Collapse> = {
     title: 'Components/Collapse',
     component: Collapse,

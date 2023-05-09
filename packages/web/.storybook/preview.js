@@ -2,7 +2,6 @@ import React from 'react';
 import { Roboto } from "next/font/google";
 
 import '../app/globals.scss';
-import '../app/tailwind.css'
 
 const roboto = Roboto({ 
   subsets: ['latin', 'cyrillic'], 

@@ -15,6 +15,10 @@
       padding-right: var(--padding-100);
     }
   }
+
+  h3 {
+    margin-bottom: var(--margin-100);
+  }
 }
 
 .avatar {
@@ -33,6 +37,13 @@
 
   & > svg {
     color: var(--color-background-start);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    vertical-align: middle;
   }
 }
 

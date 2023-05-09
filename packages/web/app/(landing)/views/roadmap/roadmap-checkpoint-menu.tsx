@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 import IconChevron from "../../../components/icons/icon-chevron";
+import styles from './roadmap-checkpoint-menu.module.scss'
 
 export interface RoadmapCheckpointMenuProps {
   activeCheckpointIndex: number;
@@ -22,7 +23,7 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
   );
 
   return (
-    <div className="mt-6 flex flex-row justify-center">
+    <div className={styles.menu}>
       <Chevron
         left={true}
         disabled={activeCheckpointIndex === 0}
@@ -32,13 +33,10 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
       {new Array(count).fill(0).map((_, index) => (
         <div
           key={index}
-          className={clsx(
-            "cursor-pointer p-2 hover:opacity-100",
-            index === activeCheckpointIndex ? "opacity-80" : "opacity-20"
-          )}
+          className={clsx(styles.point, { [styles.active]: index === activeCheckpointIndex })}
           onClick={() => handleChangeIndex(index)}
         >
-          <div className="h-3 w-3 rounded-full bg-gray-50"></div>
+          <div className={styles.pointDot}></div>
         </div>
       ))}
 
@@ -50,20 +48,24 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
   );
 };
 
-function Chevron(props: {
+export interface ChevronProps {
   onClick: VoidFunction;
   left?: boolean;
   disabled?: boolean;
-}) {
-  const { onClick, left = false, disabled = false } = props;
-  const classes = clsx({
-    "rotate-180": left,
-    "hover:text-gray-200 cursor-pointer": !disabled,
-    "text-gray-600": disabled,
-  });
-  return (
-    <IconChevron width={28} height={28} className={classes} onClick={onClick} />
-  );
 }
+
+const Chevron = ({ onClick, left = false, disabled = false }: ChevronProps) => (
+  <IconChevron 
+    width={28} 
+    height={28} 
+    onClick={onClick} 
+    className={clsx({
+      [styles.chevron]: !disabled,
+      [styles.chevronLeft]: left,      
+      [styles.chevronDiabled]: disabled,
+    })} 
+  />
+);
+
 
 export default React.memo(RoadmapCheckpointMenu);
