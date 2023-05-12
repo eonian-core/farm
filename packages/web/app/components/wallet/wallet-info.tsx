@@ -2,14 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
-import { useConnectWallet } from "@web3-onboard/react";
 
 import styles from "./wallet-info.module.scss";
 import { Dropdown } from "@nextui-org/react";
 import WalletNetworkSelector from "./wallet-network-selector";
 import { DropdownItemBaseProps } from "@nextui-org/react/types/dropdown/base/dropdown-item-base";
-import { ScreenName, ULTRA_WIDE_SCREEN, useScreenName } from "../resize-hooks/screens";
+import { ULTRA_WIDE_SCREEN } from "../resize-hooks/screens";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
+import useWallet from "./use-wallet";
 
 interface Props {
   isOnApp: boolean;
@@ -17,7 +17,7 @@ interface Props {
 }
 
 const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
-  const [{ wallet }, connect, disconnect] = useConnectWallet();
+  const { wallet, disconnect } = useWallet();
   const { width = 0 } = useWindowSize();
   
   const menuPlacement = React.useMemo(() => {
@@ -25,22 +25,11 @@ const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
     return isWideScreen ? "bottom" : "bottom-right";
   }, [width]);
 
-  const account = wallet!.accounts[0];
-  const address = React.useMemo(
-    () => shrinkAddress(account.address),
-    [account.address]
-  );
-
-  const walletIcon = React.useMemo(() => {
-    const svg = new Blob([wallet!.icon], { type: "image/svg+xml" });
-    return URL.createObjectURL(svg);
-  }, [wallet]);
-
   const handleMenuClick = React.useCallback(
     (key: string | number) => {
       switch (key) {
         case "disconnect": {
-          disconnect({ label: wallet!.label });
+          disconnect();
           break;
         }
         case "go_to_app": {
@@ -49,7 +38,7 @@ const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
         }
       }
     },
-    [wallet, goToApp, disconnect]
+    [goToApp, disconnect]
   );
 
   const menuItems = React.useMemo(() => {
@@ -74,13 +63,20 @@ const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
     return items;
   }, [isOnApp]);
 
+  const shrinkedAddress = React.useMemo(() => shrinkAddress(wallet!.address), [wallet]);
+
   return (
     <div className={styles.container}>
       <WalletNetworkSelector />
       <Dropdown placement={menuPlacement}>
         <Dropdown.Button size="sm" css={{ background: "$dark" }}>
-          <Image src={walletIcon} alt={wallet!.label} width={20} height={20} />
-          <span className={styles.address}>{address}</span>
+          <Image
+            src={wallet!.iconImageSrc}
+            alt={wallet!.label}
+            width={20}
+            height={20}
+          />
+          <span className={styles.address}>{shrinkedAddress}</span>
         </Dropdown.Button>
         <Dropdown.Menu onAction={handleMenuClick}>
           {menuItems.map(({ key, text, ...restProps }) => {

@@ -17,6 +17,9 @@ import PageLoaderTop from "./components/page-loading-top/page-loader-top";
 import { PageTransitionContextProvider } from "./store/page-transition-context";
 import { Web3OnboardProvider } from "@web3-onboard/react";
 import web3Onboard from "./web3-onboard";
+import { CssBaseline } from "@nextui-org/react";
+import { useServerInsertedHTML } from "next/navigation";
+import NextThemeProvider from "./next-theme";
 
 const roboto = Roboto({
   subsets: ["latin", "cyrillic"],
@@ -31,6 +34,10 @@ interface Props {
 export default function Root({ children }: Props) {
   const [isMenuOpen, setMenuState] = useState(false);
 
+  useServerInsertedHTML(() => {
+    return <>{CssBaseline.flush()}</>;
+  });
+
   const locale = "en";
   return (
     <html lang={locale}>
@@ -44,10 +51,11 @@ export default function Root({ children }: Props) {
                 [styles.menuOpen]: isMenuOpen,
               })}
             >
-              <PageLoaderTop />
-              <Navigation onStateChange={setMenuState} />
-
-              <SlidingFooter footer={<Footer />}>{children}</SlidingFooter>
+              <NextThemeProvider>
+                <PageLoaderTop />
+                <Navigation onStateChange={setMenuState} />
+                <SlidingFooter footer={<Footer />}>{children}</SlidingFooter>
+              </NextThemeProvider>
             </body>
           </LocaleContext.Provider>
         </Web3OnboardProvider>

@@ -1,0 +1,63 @@
+@import "../../screen.scss";
+
+.container {
+  padding: var(--padding-200);
+
+  @media (max-width: $screen-mobile) {
+    width: 100%;
+  }
+
+  @media (max-width: $screen-small-mobile) {
+    padding: var(--padding-100);
+  }
+}
+
+.fragment {
+  padding: var(--padding-400);
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.info {
+  p {
+    color: var(--color-text-300);
+    font-size: var(--font-size-300);
+  }
+
+  b {
+    color: var(--color-primary-300);
+  }
+
+  ul {
+    margin-top: var(--margin-100);
+    padding: 0 var(--padding-200);
+
+    @media (max-width: $screen-small-mobile) {
+      padding: 0;
+    }
+  }
+
+  li {
+    margin-top: var(--margin-50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-300);
+    color: var(--color-text-300);
+
+    span {
+      color: var(--color-text-200);
+    }
+  }
+}
+
+.inputBalance {
+  font-size: var(--font-size-300);
+  color: var(--color-text-300);
+  white-space: nowrap;
+  padding: 0 var(--padding-200);
+}

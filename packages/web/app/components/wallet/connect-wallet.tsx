@@ -4,19 +4,18 @@ import React from "react";
 import Button from "../button/button";
 import { usePathname, useRouter } from "next/navigation";
 import { InternalLink } from "../links/links";
-import { useConnectWallet } from "@web3-onboard/react";
 import WalletInfo from "./wallet-info";
 import useRouterPush from "../links/use-router-push";
+import useWallet, { WalletStatus } from "./use-wallet";
 
 const APP_ROUTE = "/app";
 
 const ConnectWallet = () => {
-  const [{ wallet, connecting }, connect] = useConnectWallet();
+  const { status, connect } = useWallet();
   const [push] = useRouterPush();
 
   const pathname = usePathname();
   const isOnApp = pathname === APP_ROUTE;
-  const isWalletConnected = wallet && wallet.accounts.length > 0;
 
   const goToApp = React.useCallback(() => push(APP_ROUTE), [push]);
 
@@ -28,12 +27,16 @@ const ConnectWallet = () => {
     [connect, goToApp, isOnApp]
   );
 
-  return isWalletConnected ? (
+  return status === WalletStatus.CONNECTED ? (
     <WalletInfo isOnApp={isOnApp} goToApp={goToApp} />
   ) : (
     <InternalLink href={"/app"} onClick={handleClick}>
       <Button bordered>
-        {isOnApp ? (connecting ? "Connecting..." : "Connect") : "Launch App"}
+        {isOnApp
+          ? status === WalletStatus.CONNECTING
+            ? "Connecting..."
+            : "Connect"
+          : "Launch App"}
       </Button>
     </InternalLink>
   );

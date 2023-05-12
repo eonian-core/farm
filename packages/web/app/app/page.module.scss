@@ -14,4 +14,22 @@
   padding: 0 var(--width-gap);
   padding-top: var(--navigation-height);
   padding-bottom: var(--padding-500);
+
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    width: 200vw;
+    height: 200vh;
+    transform: translate(-50vw, -100vh);
+    background: linear-gradient(var(--color-primary-1000) 0%, var(--color-dark-800) 100%);
+  }
+
+  @media (max-width: $screen-mobile) {
+    padding: 0;
+  }
 }
