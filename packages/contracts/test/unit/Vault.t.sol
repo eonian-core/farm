@@ -2,10 +2,13 @@
 pragma solidity >=0.8.10;
 
 import "forge-std/Test.sol";
+import "@openzeppelin/contracts/utils/math/Math.sol";
 
 import "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
 import "./mocks/StrategyMock.sol";
+
+import "contracts/lending/Lender.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
 

@@ -1,12 +1,16 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
-import "./BaseStrategy.sol";
-import "./protocols/ICToken.sol";
-import "./protocols/IPancakeRouter.sol";
-import "./protocols/IRainMaker.sol";
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
-import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {BaseStrategy} from "./BaseStrategy.sol";
+import {ICToken} from "./protocols/ICToken.sol";
+import {IPancakeRouter} from  "./protocols/IPancakeRouter.sol";
+import {IRainMaker} from "./protocols/IRainMaker.sol";
+import {IStrategy} from "./IStrategy.sol";
+import {IVault} from "../IVault.sol";
 
 error IncompatibleCTokenContract();
 error UnsupportedDecimals();
@@ -132,8 +136,7 @@ contract ApeLendingStrategy is BaseStrategy {
         if (bananaPerBlock == 0) {
             return 0;
         }
-        uint256 blocksSinceLastHarvest = (block.timestamp -
-            vault.lastReport()) / SECONDS_PER_BLOCK;
+        uint256 blocksSinceLastHarvest = (block.timestamp - vault.lastReport()) / SECONDS_PER_BLOCK; // solhint-disable-line not-rely-on-time
         return blocksSinceLastHarvest * bananaPerBlock;
     }
 
@@ -196,7 +199,7 @@ contract ApeLendingStrategy is BaseStrategy {
             0,
             _tokenSwapPath(BANANA, address(asset)),
             address(this),
-            block.timestamp
+            block.timestamp // solhint-disable-line not-rely-on-time
         );
     }
 

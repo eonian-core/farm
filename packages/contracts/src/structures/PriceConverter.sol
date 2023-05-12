@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {SafeMathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeMathUpgradeable.sol";
 
 library PriceConverter {
     using SafeMathUpgradeable for uint256;
 
-    uint256 constant DEFAULT_DECIMALS = 18;
+    uint256 public constant DEFAULT_DECIMALS = 18;
 
     /// @notice Calculates the price of the specified number of tokens.
     /// @dev This function allow us to compare the price of the tokens with different decimals.

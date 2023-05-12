@@ -1,17 +1,18 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
+import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
-import "./IStrategy.sol";
-import "../IVault.sol";
-import "../automation/GelatoJobAdapter.sol";
-import "../healthcheck/HealthChecker.sol";
-import "../structures/PriceConverter.sol";
+import {IStrategy} from "./IStrategy.sol";
+import {IVault} from "../IVault.sol";
+import {GelatoJobAdapter} from "../automation/GelatoJobAdapter.sol";
+import {Job} from "../automation/Job.sol";
+import {HealthChecker} from "../healthcheck/HealthChecker.sol";
+import {PriceConverter} from "../structures/PriceConverter.sol";
 
 error CallerIsNotAVault();
 error IncompatiblePriceFeeds();

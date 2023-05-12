@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: GPL-3.0-only
-pragma solidity >=0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-or-later
+pragma solidity ^0.8.19;
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
@@ -433,9 +433,9 @@ abstract contract ERC4626Upgradeable is
 
     /// @notice Called before withdraw will be made the Vault.
     /// @dev allow implement additional logic for withdraw, hooks a prefered way rather then wrapping
-    function beforeWithdraw(uint256 assets, uint256 shares) internal virtual {}
+    function beforeWithdraw(uint256 assets, uint256 shares) internal virtual {} // solhint-disable-line no-empty-blocks
 
     /// @notice Called when a deposit is made to the Vault.
     /// @dev allow implement additional logic for withdraw, hooks a prefered way rather then wrapping
-    function afterDeposit(uint256 assets, uint256 shares) internal virtual {}
+    function afterDeposit(uint256 assets, uint256 shares) internal virtual {} // solhint-disable-line no-empty-blocks
 }

@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import PageIntersectionObserver from "./page-intersection-observer";
 import WavePainter from "./wave-painter";
+import styles from './waves.module.scss'
 
 interface Props {
   peaks: number;
@@ -213,7 +214,7 @@ export default class Waves extends Component<Props> {
         ref={this.ref}
         width={width}
         height={height}
-        className="h-full w-full"
+        className={styles.canvas}
       />
     );
   }

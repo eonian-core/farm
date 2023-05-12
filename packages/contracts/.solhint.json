@@ -1,7 +1,18 @@
 {
   "extends": "solhint:recommended",
   "rules": {
-    "compiler-version": ["error", "^0.8.0"],
-    "func-visibility": ["warn", { "ignoreConstructors": true }]
+    "compiler-version": ["error", "^0.8.19"],
+    "func-visibility": ["error", { "ignoreConstructors": true }],
+    "code-complexity": ["error", 7],
+    "function-max-lines": ["error", 50],
+    "max-line-length": ["warn", 180],
+    "constructor-syntax": "error",
+    "no-unused-vars": "error",
+    "no-global-import": "error",
+    "func-name-mixedcase": "off",
+    "not-rely-on-time": "error",
+    "state-visibility": "error",
+    "no-empty-blocks": "error",
+    "reason-string": "error"
   }
 }

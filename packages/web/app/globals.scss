@@ -277,6 +277,7 @@
     --padding-500: 2rem;
     --padding-600: 2.5rem;
     --padding-700: 3rem;
+    --padding-750: 3.5rem;
     --padding-800: 6rem;
     --padding-900: 10rem;
     --padding-1000: 14rem;
@@ -305,6 +306,8 @@
   // height
     --navigation-height: 5rem;
     --indicator-height: 1.5rem;
+    
+    --header-800: 24rem;
 
   // border radius
     --border-radius-300: 3px;
@@ -342,4 +345,8 @@ a {
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+}
+
+ul {
+  list-style-type: none;
 }
