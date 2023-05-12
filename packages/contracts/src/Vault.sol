@@ -112,7 +112,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @inheritdoc IVault
     function version() external pure override returns (string memory) {
-        return "1.0.0";
+        return "0.1.0";
     }
 
     /// @dev Override to add the "whenNotPaused" modifier
