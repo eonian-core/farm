@@ -3,8 +3,9 @@ pragma solidity ^0.8.0;
 
 import "./ERC5484Upgradeable.sol";
 import "./IVaultFounderToken.sol";
+import "./IVaultHook.sol";
 
-contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable {
+contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook {
 
     // Max number of tokens that can be minted
     uint256 private _maxCountTokens;
@@ -57,5 +58,15 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable {
         address tokenOwner = msg.sender;
         uint256 tokenId = tokenOfOwnerByIndex(tokenOwner, 0);
         _setTokenURI(tokenId, _tokenURI);
+    }
+
+    function afterDepositTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares) external {
+        if(vault.maxWithdraw(msg.sender) >= _nextTokenPrice()) {
+            safeMint(msg.sender, "");
+        }
+    }
+
+    function beforeWithdrawTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares) external {
+
     }
 }

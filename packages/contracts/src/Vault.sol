@@ -12,6 +12,7 @@ import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
 import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
+import {IVaultLifecycle} from "./tokens/IVaultLifecycle.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -129,6 +130,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
     function beforeWithdraw(uint256 assets, uint256 shares) internal override {
+//    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
+//        super.beforeWithdraw(assets, shares);
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -403,4 +406,9 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     {
         asset.safeTransferFrom(borrower, address(this), amount);
     }
+
+//    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable) {
+//    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
+//        super.afterDeposit(assets, shares);
+//    }
 }

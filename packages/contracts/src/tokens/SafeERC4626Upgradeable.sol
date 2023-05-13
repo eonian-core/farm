@@ -6,6 +6,7 @@ import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ER
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
+import "./IVaultLifecycle.sol";
 
 /// @title Safier and limited implementation of ERC-4626
 /// @notice ERC-4626 standard allow deposit and withdraw not for message sender.
