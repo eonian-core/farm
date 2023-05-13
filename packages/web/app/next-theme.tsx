@@ -1,9 +1,7 @@
-"use client";
-
-import { CssBaseline, NextUIProvider, createTheme } from "@nextui-org/react";
-import { ThemeProvider } from "next-themes";
-import { useServerInsertedHTML } from "next/navigation";
 import React from "react";
+import { ThemeProvider } from "next-themes";
+import { CssBaseline, NextUIProvider, createTheme } from "@nextui-org/react";
+import { useServerInsertedHTML } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
@@ -40,9 +38,9 @@ const darkTheme = createTheme({
 });
 
 const NextThemeProvider = ({ children }: Props) => {
-  useServerInsertedHTML(() => {
-    return <>{CssBaseline.flush()}</>;
-  });
+  // useServerInsertedHTML(() => {
+  //   return <>{CssBaseline.flush()}</>;
+  // });
 
   return (
     <ThemeProvider
@@ -52,7 +50,9 @@ const NextThemeProvider = ({ children }: Props) => {
         dark: darkTheme.className,
       }}
     >
-      <NextUIProvider disableBaseline={true}>{children}</NextUIProvider>
+      <NextUIProvider disableBaseline={true}>
+        {children}
+      </NextUIProvider>
     </ThemeProvider>
   );
 };
