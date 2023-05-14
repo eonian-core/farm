@@ -11,13 +11,17 @@ import useWallet, { WalletStatus } from "./use-wallet";
 const APP_ROUTE = "/app";
 
 const ConnectWallet = () => {
-  const { status, connect } = useWallet();
+  const { status, connect, reconnect } = useWallet();
   const [push] = useRouterPush();
 
   const pathname = usePathname();
   const isOnApp = pathname === APP_ROUTE;
 
   const goToApp = React.useCallback(() => push(APP_ROUTE), [push]);
+
+  React.useEffect(() => {
+    reconnect();
+  }, [reconnect]);
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent) => {

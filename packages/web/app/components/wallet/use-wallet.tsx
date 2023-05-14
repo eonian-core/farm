@@ -25,6 +25,7 @@ interface Wallet {
 }
 
 const ICON_SIZE = 20;
+const LOCAL_STORAGE_KEY = "__connected-wallet-label";
 
 /**
  * The hook, that provides all Web3-related info and functions (wallet, active chain, connection status, etc).
@@ -89,14 +90,38 @@ export default function useWallet() {
     [setOnboardChain]
   );
 
-  const connect = React.useCallback(() => onboardConnect(), [onboardConnect]);
+  const connect = React.useCallback(async () => {
+    const [wallet] = await onboardConnect();
+    if (wallet) {
+      localStorage.setItem(LOCAL_STORAGE_KEY, wallet.label);
+    }
+  }, [onboardConnect]);
 
-  const disconnect = React.useCallback(
-    () => wallet && onboardDisconnect({ label: wallet.label }),
-    [wallet, onboardDisconnect]
-  );
+  const reconnect = React.useCallback(async () => {
+    const label = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (label && !wallet) {
+      await onboardConnect({ autoSelect: { label, disableModals: true } });
+    }
+  }, [wallet, onboardConnect]);
 
-  return { wallet, status, connect, disconnect, chain, chains, setChain };
+  const disconnect = React.useCallback(async () => {
+    const label = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (label) {
+      await onboardDisconnect({ label });
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    }
+  }, [onboardDisconnect]);
+
+  return {
+    wallet,
+    status,
+    connect,
+    reconnect,
+    disconnect,
+    chain,
+    chains,
+    setChain,
+  };
 }
 
 function getDefaultChain(id: string): Chain {
