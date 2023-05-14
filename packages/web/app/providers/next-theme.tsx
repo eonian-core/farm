@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
 import React from "react";
 import { ThemeProvider } from "next-themes";
-import { CssBaseline, NextUIProvider, createTheme } from "@nextui-org/react";
-import { useServerInsertedHTML } from "next/navigation";
+import {
+  NextUIProvider,
+  createTheme,
+} from "@nextui-org/react";
 
 interface Props {
   children: React.ReactNode;
@@ -40,21 +42,15 @@ const darkTheme = createTheme({
 });
 
 const NextThemeProvider = ({ children }: Props) => {
-  useServerInsertedHTML(() => {
-    return <>{CssBaseline.flush()}</>;
-  });
-
   return (
     <ThemeProvider
-      defaultTheme="dark"
+      forcedTheme="dark"
       attribute="class"
       value={{
         dark: darkTheme.className,
       }}
     >
-      <NextUIProvider disableBaseline={true}>
-        {children}
-      </NextUIProvider>
+      <NextUIProvider disableBaseline={true}>{children}</NextUIProvider>
     </ThemeProvider>
   );
 };
