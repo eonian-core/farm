@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { ThemeProvider } from "next-themes";
 import { CssBaseline, NextUIProvider, createTheme } from "@nextui-org/react";
@@ -38,9 +40,9 @@ const darkTheme = createTheme({
 });
 
 const NextThemeProvider = ({ children }: Props) => {
-  // useServerInsertedHTML(() => {
-  //   return <>{CssBaseline.flush()}</>;
-  // });
+  useServerInsertedHTML(() => {
+    return <>{CssBaseline.flush()}</>;
+  });
 
   return (
     <ThemeProvider
