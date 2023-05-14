@@ -45,7 +45,7 @@ const NextThemeProvider = ({ children }: Props) => {
   });
 
   // For some reason "useServerInsertedHTML" inserts NextUI styles 2 times (To <head /> and <body />),
-  // what breaks which the element styles. We can find these <style /> elements and remove one of them.
+  // what breaks the element styles. We can find these <style /> elements and remove one of them.
   React.useEffect(() => {
     const styles = document.querySelectorAll("#stitches");
     const duplicatedStyle = Array.from(styles).pop();
