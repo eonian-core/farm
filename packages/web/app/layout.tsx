@@ -11,7 +11,6 @@ import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import GoogleAnalytics from "./google-analytics";
 import { store } from "./store/store";
 import { setLocale } from "./store/slices/localeSlice";
-import NextCssBaselineWrapper from "./providers/next-css-baseline";
 
 const roboto = Roboto({
   subsets: ["latin", "cyrillic"],
@@ -31,15 +30,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang={locale}>
       <GoogleAnalytics />
-      <NextCssBaselineWrapper>
-        <body className={roboto.className}>
-          <Providers locale={locale}>
-            <PageLoaderTop />
-            <Navigation />
-            <SlidingFooter footer={<Footer />}>{children}</SlidingFooter>
-          </Providers>
-        </body>
-      </NextCssBaselineWrapper>
+      <body className={roboto.className}>
+        <Providers locale={locale}>
+          <PageLoaderTop />
+          <Navigation />
+          <SlidingFooter footer={<Footer />}>{children}</SlidingFooter>
+        </Providers>
+      </body>
     </html>
   );
 }

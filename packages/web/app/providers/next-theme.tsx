@@ -2,10 +2,8 @@
 
 import React from "react";
 import { ThemeProvider } from "next-themes";
-import {
-  NextUIProvider,
-  createTheme,
-} from "@nextui-org/react";
+import { CssBaseline, NextUIProvider, createTheme } from "@nextui-org/react";
+import { useServerInsertedHTML } from "next/navigation";
 
 interface Props {
   children: React.ReactNode;
@@ -42,6 +40,16 @@ const darkTheme = createTheme({
 });
 
 const NextThemeProvider = ({ children }: Props) => {
+  useServerInsertedHTML(() => {
+    return <>{CssBaseline.flush()}</>;
+  });
+
+  React.useEffect(() => {
+    const styles = document.querySelectorAll("#stitches");
+    const duplicatedStyle = Array.from(styles).pop();
+    duplicatedStyle?.remove();
+  }, []);
+
   return (
     <ThemeProvider
       forcedTheme="dark"
