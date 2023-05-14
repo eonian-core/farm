@@ -1,3 +1,5 @@
+"use client";
+
 import styles from "./navigation.module.scss";
 import LogoWithText from "../logo/logo-with-text";
 import { MenuItem } from "./menu-item";
@@ -7,18 +9,14 @@ import Menu from "./menu";
 import { links, mobileLinks, NavigationItem } from "./links";
 import ConnectWallet from "../wallet/connect-wallet";
 
-export interface NavigationProps {
-  onStateChange?: (isOpen: boolean) => void;
-}
-
-export default function Navigation({ onStateChange }: NavigationProps) {
+export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = useCallback(() => setIsOpen(!isOpen), [isOpen]);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
-    onStateChange && onStateChange(isOpen);
-  }, [isOpen, onStateChange]);
+    window.document.body.classList.toggle(styles.fixedBody, isOpen);
+  }, [isOpen]);
 
   return (
     <nav className={styles.navigation} id={TOP_ELELEMENT_ID}>

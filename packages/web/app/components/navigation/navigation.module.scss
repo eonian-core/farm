@@ -18,6 +18,13 @@
     }
 }
 
+
+.fixedBody {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
 .navigation {
   height: var(--navigation-height);
   position: absolute;

@@ -3,13 +3,13 @@
 import React from "react";
 import styles from "./page-loader-top.module.scss";
 import { usePathname } from "next/navigation";
-import { usePageTransitionContext } from "../../store/page-transition-context";
+import { useAppSelector } from "../../store/hooks";
 
 const PageLoaderTop = () => {
   const ref = React.useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
-  const [pageLoading] = usePageTransitionContext();
+  const pageLoading = useAppSelector((state) => state.navigation.pageLoading);
 
   const [animation, setAnimation] = React.useState<Animation | null>(null);
 
