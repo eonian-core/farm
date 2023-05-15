@@ -9,7 +9,8 @@ import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/
 
 import {IVault} from "./IVault.sol";
 import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
-import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
+import {SafeERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
+import {ERC4626Upgradeable} from "./tokens/ERC4626Upgradeable.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {IVaultLifecycle} from "./tokens/IVaultLifecycle.sol";
@@ -24,7 +25,7 @@ error WrongQueueSize(uint256 size);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error AccessDeniedForCaller(address caller);
 
-contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
+contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IVaultLifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using AddressList for address[];
 
@@ -129,9 +130,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
-    function beforeWithdraw(uint256 assets, uint256 shares) internal override {
-//    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
-//        super.beforeWithdraw(assets, shares);
+    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
+        IVaultLifecycle.beforeWithdraw(assets, shares);
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -407,8 +407,54 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         asset.safeTransferFrom(borrower, address(this), amount);
     }
 
-//    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable) {
-//    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
-//        super.afterDeposit(assets, shares);
-//    }
+    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
+        super.afterDeposit(assets, shares);
+    }
+
+    /* //////////////////// Backwards compatible methods ////////////////////////// */
+
+    /// @inheritdoc ERC4626Upgradeable
+    function deposit(uint256 assets, address /* receiver */)
+        public
+        virtual
+        override(ERC4626Upgradeable, SafeERC4626Upgradeable)
+        returns (uint256 shares)
+    {
+        // nonReentrant under the hood
+        return deposit(assets);
+    }
+
+    ///@inheritdoc SafeERC4626Upgradeable
+    function mint(uint256 shares, address receiver)
+        public
+        virtual
+        nonReentrant
+        override(SafeERC4626Upgradeable, ERC4626Upgradeable)
+        returns (uint256 assets)
+    {
+        // No need to check for rounding error, previewMint rounds up.
+        assets = previewMint(shares);
+
+        _receiveAndDeposit(assets, shares, receiver);
+    }
+
+    /// @inheritdoc SafeERC4626Upgradeable
+    function withdraw(
+        uint256 assets,
+        address, /* receiver */
+        address /* owner */
+    ) public virtual override(SafeERC4626Upgradeable, ERC4626Upgradeable) returns (uint256 shares) {
+        // nonReentrant under the hood
+        return withdraw(assets);
+    }
+
+    /// @inheritdoc SafeERC4626Upgradeable
+    function redeem(
+        uint256 shares,
+        address, /* receiver */
+        address /* owner */
+    ) public virtual override(SafeERC4626Upgradeable, ERC4626Upgradeable) returns (uint256 assets) {
+        // nonReentrant under the hood
+        return redeem(shares);
+    }
 }

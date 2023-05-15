@@ -60,13 +60,13 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         _setTokenURI(tokenId, _tokenURI);
     }
 
-    function afterDepositTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares) external {
+    function afterDepositTrigger(ERC4626Upgradeable vault, uint256 /* assets */, uint256 /* shares */) external {
         if(vault.maxWithdraw(msg.sender) >= _nextTokenPrice()) {
             safeMint(msg.sender, "");
         }
     }
 
     function beforeWithdrawTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares) external {
-
+        // empty body
     }
 }
