@@ -22,7 +22,7 @@ const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
       case WalletStatus.CONNECTING:
         return "Connecting to a wallet...";
       case WalletStatus.CONNECTED:
-        return formAction === "deposit" ? "Deposit" : "Withdraw";
+        return formAction === FormAction.DEPOSIT ? "Deposit" : "Withdraw";
     }
   }, [formAction, status]);
 

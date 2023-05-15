@@ -8,7 +8,9 @@ import FormHeader, { FormAction } from "./form-header";
 import FormButton from "./form-button";
 
 const Form = () => {
-  const [formAction, setFormAction] = React.useState<FormAction>("deposit");
+  const [formAction, setFormAction] = React.useState<FormAction>(
+    FormAction.DEPOSIT
+  );
 
   const handleSubmit = React.useCallback(() => {}, []);
 

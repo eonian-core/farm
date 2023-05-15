@@ -1,12 +1,15 @@
 "use client";
 
 import React from "react";
-import { Card, Button, Spacer, PressEvent } from "@nextui-org/react";
+import { Card, Button, PressEvent } from "@nextui-org/react";
 
 import styles from "./form-header.module.scss";
 import clsx from "clsx";
 
-export type FormAction = "deposit" | "withdraw";
+export const enum FormAction {
+  DEPOSIT = "deposit",
+  WITHDRAW = "withdraw",
+}
 
 interface Props {
   currentAction: FormAction;
@@ -27,32 +30,50 @@ const FormHeader: React.FC<Props> = ({
 
   return (
     <Card.Header className={styles.header}>
-      {renderButton("deposit", "Deposit")}
-      {renderButton("withdraw", "Withdraw")}
+      <TabButton
+        action={FormAction.DEPOSIT}
+        currentAction={currentAction}
+        text="Deposit"
+        onClick={handleClick}
+      />
+      <TabButton
+        action={FormAction.WITHDRAW}
+        currentAction={currentAction}
+        text="Withdraw"
+        onClick={handleClick}
+      />
 
       <div
         className={clsx(styles.underline, {
-          [styles.underlineMoved]: currentAction === "withdraw",
+          [styles.underlineMoved]: currentAction === FormAction.WITHDRAW,
         })}
       />
     </Card.Header>
   );
-
-  function renderButton(key: FormAction, text: string) {
-    const isActive = key === currentAction;
-    const classNames = clsx(styles.button, { [styles.buttonActive]: isActive });
-    return (
-      <Button
-        data-key={key}
-        onPress={handleClick}
-        className={classNames}
-        size="lg"
-        light
-      >
-        {text}
-      </Button>
-    );
-  }
 };
+
+interface TabButtonProps {
+  currentAction: FormAction;
+  action: FormAction;
+  text: string;
+  onClick: (event: PressEvent) => void;
+}
+
+function TabButton({ action, currentAction, text, onClick }: TabButtonProps) {
+  const classNames = clsx(styles.button, {
+    [styles.buttonActive]: currentAction === action,
+  });
+  return (
+    <Button
+      data-key={action}
+      onPress={onClick}
+      className={classNames}
+      size="lg"
+      light
+    >
+      {text}
+    </Button>
+  );
+}
 
 export default FormHeader;
