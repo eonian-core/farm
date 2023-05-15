@@ -45,7 +45,7 @@ const FormHeader: React.FC<Props> = ({
 
       <div
         className={clsx(styles.underline, {
-          [styles.underlineMoved]: currentAction === FormAction.WITHDRAW,
+          [styles.moved]: currentAction === FormAction.WITHDRAW,
         })}
       />
     </Card.Header>

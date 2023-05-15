@@ -16,7 +16,7 @@
   z-index: 2;
   transition: transform 0.2s ease;
 
-  &Moved {
+  &.moved {
     transform: translateX(100%);
   }
 }
