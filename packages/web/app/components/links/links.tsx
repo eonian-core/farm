@@ -4,7 +4,6 @@ import Link, { LinkProps as NextLinkProps } from "next/link";
 import React, { useCallback } from "react";
 import clsx from "clsx";
 import styles from "./links.module.scss";
-import useScrollToTop from "./useScrollToTop";
 import { useAppDispatch } from "../../store/hooks";
 import { setPageLoading } from "../../store/slices/navigationSlice";
 
@@ -60,17 +59,15 @@ export const InternalLink = ({
   ...props
 }: LinkWithIconProps) => {
   const dispatch = useAppDispatch();
-  const [onRouteChange] = useScrollToTop();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       onClick?.(e);
       if (!e.defaultPrevented) {
-        href && dispatch(setPageLoading(href.toString()));
-        onRouteChange();
+        dispatch(setPageLoading(href.toString()));
       }
     },
-    [onClick, onRouteChange, dispatch, href]
+    [onClick, dispatch, href]
   );
 
   return (

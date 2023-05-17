@@ -4,7 +4,6 @@ import styles from "./navigation.module.scss";
 import LogoWithText from "../logo/logo-with-text";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
-import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
 import Menu from "./menu";
 import { links, mobileLinks, NavigationItem } from "./links";
 import ConnectWallet from "../wallet/connect-wallet";
@@ -19,7 +18,7 @@ export default function Navigation() {
   }, [isOpen]);
 
   return (
-    <nav className={styles.navigation} id={TOP_ELELEMENT_ID}>
+    <nav className={styles.navigation}>
       <div className={styles.content}>
         <div className={styles.logo}>
           <LogoWithText />
