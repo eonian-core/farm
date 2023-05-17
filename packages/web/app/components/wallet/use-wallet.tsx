@@ -3,6 +3,7 @@ import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import IconWarning from "../icons/icon-warning";
 import IconBNB from "../icons/icon-bnb";
 import { defaultChain } from "../../web3-onboard";
+import isLoggedInWallet from "./helpers/wallet-login-checker";
 
 export enum WalletStatus {
   NOT_CONNECTED = "NOT_CONNECTED",
@@ -99,18 +100,26 @@ export default function useWallet() {
 
   const reconnect = React.useCallback(async () => {
     const label = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (label && !wallet) {
-      await onboardConnect({ autoSelect: { label, disableModals: true } });
+    if (!label || wallet) {
+      return;
     }
+
+    // Do not try to connect to the wallet if the user is not logged in.
+    const isLoggedIn = await isLoggedInWallet(label);
+    if (!isLoggedIn) {
+      return;
+    }
+
+    await onboardConnect({ autoSelect: { label, disableModals: true } });
   }, [wallet, onboardConnect]);
 
   const disconnect = React.useCallback(async () => {
-    const label = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const label = wallet?.label || localStorage.getItem(LOCAL_STORAGE_KEY);
     if (label) {
       await onboardDisconnect({ label });
       localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
-  }, [onboardDisconnect]);
+  }, [wallet, onboardDisconnect]);
 
   return {
     wallet,
