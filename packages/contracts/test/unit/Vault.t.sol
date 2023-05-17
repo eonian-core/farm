@@ -11,6 +11,7 @@ import "./mocks/StrategyMock.sol";
 import "contracts/lending/Lender.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 contract VaultTest is TestWithERC1820Registry {
     uint256 constant MAX_BPS = 10_000;
@@ -18,6 +19,7 @@ contract VaultTest is TestWithERC1820Registry {
 
     ERC20Mock underlying;
     VaultMock vault;
+    VaultFounderTokenMock vaultFounderToken;
 
     StrategyMock strategy;
 
@@ -38,11 +40,13 @@ contract VaultTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
+        vaultFounderToken = new VaultFounderTokenMock();
         vault = new VaultMock(
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
 
         strategy = new StrategyMock(address(underlying), address(vault));
@@ -64,7 +68,8 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             "",
             "",
-            new address[](0)
+            new address[](0),
+            address(vaultFounderToken)
         );
     }
 
@@ -100,7 +105,8 @@ contract VaultTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             0,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
         StrategyMock strategyWrongVault = new StrategyMock(
             address(underlying),
@@ -364,7 +370,8 @@ contract VaultTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             fee,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -409,7 +416,8 @@ contract VaultTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             fee,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -973,7 +981,8 @@ contract VaultTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             fees,
-            lockedProfitReleaseRate
+            lockedProfitReleaseRate,
+            address(vaultFounderToken)
         );
         strategy = new StrategyMock(address(underlying), address(vault));
 

@@ -17,6 +17,7 @@ import "./mocks/CTokenMock.sol";
 import "./mocks/RainMakerMock.sol";
 import "./mocks/PancakeRouterMock.sol";
 import "./mocks/ApeLendingStrategyMock.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
 
@@ -35,6 +36,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     VaultMock vault;
     OpsMock ops;
     CTokenMock cToken;
+    VaultFounderTokenMock vaultFounderToken;
 
     address rewards = vm.addr(1);
     address alice = vm.addr(2);
@@ -56,12 +58,14 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");
+        vaultFounderToken = new VaultFounderTokenMock();
 
         vault = new VaultMock(
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
 
         ops = new OpsMock();
@@ -136,7 +140,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
 
         vm.expectRevert(IncompatibleCTokenContract.selector);

@@ -14,6 +14,7 @@ import {ERC4626Upgradeable} from "./tokens/ERC4626Upgradeable.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {IVaultLifecycle} from "./tokens/IVaultLifecycle.sol";
+import {IVaultHook} from "./tokens/IVaultHook.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -89,7 +90,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         uint256 _lockedProfitReleaseRate,
         string memory _name,
         string memory _symbol,
-        address[] memory _defaultOperators
+        address[] memory _defaultOperators,
+        address _founderTokens
     ) public initializer {
         __Ownable_init();
         __Lender_init();
@@ -110,6 +112,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
+        addHook(IVaultHook(_founderTokens)); // todo discuss if it is the most flexible and efficient way to add tokens to the vault
     }
 
     /// @inheritdoc IVault

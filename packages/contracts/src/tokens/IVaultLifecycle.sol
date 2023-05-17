@@ -3,16 +3,17 @@ pragma solidity ^0.8.0;
 
 import "./SafeERC4626Upgradeable.sol";
 import "./IVaultHook.sol";
+import "@chainlink/contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 abstract contract IVaultLifecycle is ERC4626Upgradeable {
     // list of hooks
     IVaultHook[] public hooks;
 
-    function addHook(IVaultHook hook) external {
+    function addHook(IVaultHook hook) internal {
         hooks.push(hook);
     }
 
-    function removeHook(IVaultHook hook) external {
+    function removeHook(IVaultHook hook) internal {
         // find hook
         for (uint256 i = 0; i < hooks.length; i++)
         {

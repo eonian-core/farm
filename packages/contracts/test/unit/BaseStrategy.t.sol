@@ -10,6 +10,7 @@ import "./mocks/StrategyMock.sol";
 import "./mocks/OpsMock.sol";
 import "./mocks/BaseStrategyMock.sol";
 import "./mocks/AggregatorV3Mock.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 import "contracts/IVault.sol";
 import "contracts/structures/PriceConverter.sol";
@@ -22,6 +23,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     ERC20Mock underlying;
     VaultMock vault;
     OpsMock ops;
+    VaultFounderTokenMock vaultFounderToken;
 
     AggregatorV3Mock nativeTokenPriceFeed;
     AggregatorV3Mock assetPriceFeed;
@@ -40,12 +42,14 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");
+        vaultFounderToken = new VaultFounderTokenMock();
 
         vault = new VaultMock(
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            address(vaultFounderToken)
         );
 
         ops = new OpsMock();
