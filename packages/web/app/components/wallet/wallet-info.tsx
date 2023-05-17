@@ -10,16 +10,27 @@ import { DropdownItemBaseProps } from "@nextui-org/react/types/dropdown/base/dro
 import { ULTRA_WIDE_SCREEN } from "../resize-hooks/screens";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
 import useWallet from "./use-wallet";
+import { usePathname } from "next/navigation";
+import useRouterPush from "../links/use-router-push";
 
-interface Props {
-  isOnApp: boolean;
-  goToApp: () => void;
+const EARN_ROUTE = "/earn";
+
+const enum MenuOption {
+  GO_TO_EARN = 'go_to_earn',
+  DISCONNECT = 'disconnect'
 }
 
-const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
+const WalletInfo = () => {
   const { wallet, disconnect } = useWallet();
   const { width = 0 } = useWindowSize();
+
   
+  const [push] = useRouterPush();
+  const pathname = usePathname();
+  const isOnEarn = pathname === EARN_ROUTE;
+
+  const goToEarn = React.useCallback(() => push(EARN_ROUTE), [push]);
+
   const menuPlacement = React.useMemo(() => {
     const isWideScreen = width >= ULTRA_WIDE_SCREEN;
     return isWideScreen ? "bottom" : "bottom-right";
@@ -28,17 +39,17 @@ const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
   const handleMenuClick = React.useCallback(
     (key: string | number) => {
       switch (key) {
-        case "disconnect": {
+        case MenuOption.DISCONNECT: {
           disconnect();
           break;
         }
-        case "go_to_app": {
-          goToApp();
+        case MenuOption.GO_TO_EARN: {
+          goToEarn();
           break;
         }
       }
     },
-    [goToApp, disconnect]
+    [goToEarn, disconnect]
   );
 
   const menuItems = React.useMemo(() => {
@@ -48,22 +59,25 @@ const WalletInfo: React.FC<Props> = ({ isOnApp, goToApp }) => {
     };
     const items: ItemType[] = [
       {
-        key: "disconnect",
+        key: MenuOption.DISCONNECT,
         text: "Disconnect",
         color: "error",
-        withDivider: !isOnApp,
+        withDivider: !isOnEarn,
       },
     ];
-    if (!isOnApp) {
+    if (!isOnEarn) {
       items.unshift({
-        key: "go_to_app",
-        text: "Open App",
+        key: MenuOption.GO_TO_EARN,
+        text: "Go to Earn",
       });
     }
     return items;
-  }, [isOnApp]);
+  }, [isOnEarn]);
 
-  const shrinkedAddress = React.useMemo(() => shrinkAddress(wallet!.address), [wallet]);
+  const shrinkedAddress = React.useMemo(
+    () => shrinkAddress(wallet!.address),
+    [wallet]
+  );
 
   return (
     <div className={styles.container}>
