@@ -5,7 +5,7 @@ import "./SafeERC4626Upgradeable.sol";
 import "./IVaultHook.sol";
 import "@chainlink/contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-abstract contract IVaultLifecycle is ERC4626Upgradeable {
+abstract contract IVaultLifecycle is SafeERC4626Upgradeable {
     // list of hooks
     IVaultHook[] public hooks;
 
