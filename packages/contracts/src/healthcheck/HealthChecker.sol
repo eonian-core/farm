@@ -21,6 +21,18 @@ abstract contract HealthChecker is OwnableUpgradeable {
      */
     uint256[50] private __gap;
 
+    // ------------------------------------------ Constructors ------------------------------------------
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) {
+        // Solve the Uninitialized Proxies Vulnerability 
+        // more info https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a
+        // but can be disabled for mocks
+        if(needDisableInitializers) {
+            _disableInitializers();
+        }
+    }
+
     function __HealthChecker_init(address _healthCheck)
         internal
         onlyInitializing

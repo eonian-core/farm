@@ -14,7 +14,7 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
         address __assetPriceFeed,
         uint256 _minReportInterval,
         bool _isPrepaid
-    ) {
+    ) ApeLendingStrategy(false){
         initialize(
             _vault,
             _cToken,

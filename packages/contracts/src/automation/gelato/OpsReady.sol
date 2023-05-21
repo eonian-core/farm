@@ -22,6 +22,25 @@ abstract contract OpsReady is Initializable {
     }
 
     /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
+    // ------------------------------------------ Constructors ------------------------------------------
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) {
+        // Solve the Uninitialized Proxies Vulnerability 
+        // more info https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a
+        // but can be disabled for mocks
+        if(needDisableInitializers) {
+            _disableInitializers();
+        }
+    }
+
+    /**
      * Contructor of contract which will be able to communicate with Gelato protocol
      * @param _ops - address of the Ops contract.
      * @dev addresses can be found at https://docs.gelato.network/developer-products/gelato-ops-smart-contract-automation-hub/contract-addresses

@@ -15,7 +15,7 @@ contract SafeERC4626Mock is SafeERC4626Upgradeable {
         string memory name_,
         string memory symbol_,
         address[] memory defaultOperators_
-    ) initializer {
+    ) ERC4626Upgradeable(false) initializer {
         __SafeERC4626_init(_asset, name_, symbol_, defaultOperators_);
 
         beforeWithdrawHookCalledCounter = 0;

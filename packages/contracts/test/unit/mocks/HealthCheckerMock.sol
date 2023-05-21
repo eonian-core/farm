@@ -3,7 +3,7 @@ pragma solidity >=0.8.0;
 
 import "contracts/healthcheck/HealthChecker.sol";
 
-contract HealthCheckerMock is HealthChecker {
+contract HealthCheckerMock is HealthChecker(false) {
     event HealthCheckPerformed();
 
     constructor(IHealthCheck healthCheck) initializer {
