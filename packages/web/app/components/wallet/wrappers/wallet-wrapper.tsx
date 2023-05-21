@@ -70,6 +70,13 @@ export abstract class WalletWrapper {
   }
 
   /**
+   * Returns the object of the default (fallback) chain.
+   */
+  public get defaultChain(): Chain {
+    return this.cache(this.getDefaultChain, "defaultChain");
+  }
+
+  /**
    * Returns the array of the available networks (chains).
    */
   public get chains(): Chain[] {
@@ -91,6 +98,9 @@ export abstract class WalletWrapper {
     if (walletLabel) {
       localStorage.setItem(WALLET_LOCAL_STORAGE_KEY, walletLabel);
     }
+
+    // Connect to the last active chain or fallback to the default one.
+    await this.autoSelectProperChain();
   };
 
   /**
@@ -132,6 +142,21 @@ export abstract class WalletWrapper {
     }
   };
 
+  /**
+   * Changes the current active chain if necessary.
+   * Selects the last active network or fallbacks to the default value.
+   * @returns "True" if the chain was successfully changed.
+   */
+  protected async autoSelectProperChain() {
+    // Skip if the current active chain is supported.
+    if (this.chain?.isSupported) {
+      return;
+    }
+    const lastActiveChainId = localStorage.getItem(CHAIN_LOCAL_STORAGE_KEY);
+    const chainId = lastActiveChainId || this.defaultChain.id;
+    await this.setCurrentChain(chainId);
+  }
+
   protected getIcon(id: string) {
     switch (id) {
       case "0x61":
@@ -141,13 +166,21 @@ export abstract class WalletWrapper {
     }
   }
 
-  protected getDefaultChain(id: string): Chain {
+  protected getDummyChain(id: string): Chain {
     return {
       id,
       icon: <IconWarning width={this.iconSize} height={this.iconSize} />,
       isSupported: false,
       isDefault: false,
     };
+  }
+
+  private getDefaultChain = (): Chain => {
+    const chain = this.chains.find((chain) => chain.isDefault);
+    if (!chain) {
+      throw new Error("There must be at least one default chain");
+    }
+    return chain;
   }
 
   private cache = <T,>(fn: () => T, cacheName: string): T => {

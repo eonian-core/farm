@@ -91,7 +91,7 @@ export default class Web3OnboardWalletWrapper extends WalletWrapper {
     }
     const { id } = connectedChain;
     return (
-      this.chains.find((chain) => chain.id === id) ?? this.getDefaultChain(id)
+      this.chains.find((chain) => chain.id === id) ?? this.getDummyChain(id)
     );
   };
 
