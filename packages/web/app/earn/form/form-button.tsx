@@ -4,9 +4,9 @@ import React from "react";
 import { Button } from "@nextui-org/react";
 
 import styles from "./form-button.module.scss";
-import useWallet from "../../components/wallet/use-wallet";
 import { FormAction } from "./form-header";
-import { WalletStatus } from "../../components/wallet/wrappers/wallet-wrapper";
+import { WalletStatus } from "../../providers/wallet/wrappers/wallet-wrapper";
+import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 interface Props {
   formAction: FormAction;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
-  const { status, connect } = useWallet();
+  const { status, connect } = useWalletWrapperContext();
 
   const text = React.useMemo(() => {
     switch (status) {

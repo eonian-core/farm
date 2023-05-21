@@ -5,11 +5,11 @@ import Image from "next/image";
 
 import styles from "./wallet-info.module.scss";
 import WalletNetworkSelector from "./wallet-network-selector";
-import useWallet from "./use-wallet";
 import WalletMenu from "./wallet-menu";
+import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 const WalletInfo = () => {
-  const { wallet } = useWallet();
+  const { wallet } = useWalletWrapperContext();
 
   const shrinkedAddress = React.useMemo(
     () => shrinkAddress(wallet!.address),

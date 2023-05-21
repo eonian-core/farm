@@ -5,9 +5,9 @@ import { DropdownItemBaseProps } from "@nextui-org/react/types/dropdown/base/dro
 import { usePathname } from "next/navigation";
 import React from "react";
 import useRouterPush from "../links/use-router-push";
-import useWallet from "./use-wallet";
 import { ULTRA_WIDE_SCREEN } from "../resize-hooks/screens";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
+import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 interface ItemType extends Partial<DropdownItemBaseProps> {
   key: string;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 const WalletMenu: React.FC<Props> = ({ children }) => {
-  const { disconnect } = useWallet();
+  const { disconnect } = useWalletWrapperContext();
   const { width = 0 } = useWindowSize();
 
   const menuPlacement = React.useMemo(() => {

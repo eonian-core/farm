@@ -4,11 +4,11 @@ import React from "react";
 import Button from "../button/button";
 import { InternalLink } from "../links/links";
 import WalletInfo from "./wallet-info";
-import useWallet from "./use-wallet";
-import { WalletStatus } from "./wrappers/wallet-wrapper";
+import { WalletStatus } from "../../providers/wallet/wrappers/wallet-wrapper";
+import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 const ConnectWallet = () => {
-  const { status, connect, reconnect } = useWallet();
+  const { status, connect, reconnect } = useWalletWrapperContext();
 
   React.useEffect(() => {
     reconnect();

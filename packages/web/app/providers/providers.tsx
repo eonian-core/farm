@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { Web3OnboardProvider } from "@web3-onboard/react";
 
-import web3Onboard from "../web3-onboard";
 import NextThemeProvider from "./next-theme";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
+import { WalletWrapperProvider } from "./wallet/wallet-wrapper-provider";
 
 interface Props {
   locale: string;
@@ -16,9 +15,9 @@ interface Props {
 export default function Providers({ children }: Props) {
   return (
     <Provider store={store}>
-      <Web3OnboardProvider web3Onboard={web3Onboard}>
+      <WalletWrapperProvider>
         <NextThemeProvider>{children}</NextThemeProvider>
-      </Web3OnboardProvider>
+      </WalletWrapperProvider>
     </Provider>
   );
 }

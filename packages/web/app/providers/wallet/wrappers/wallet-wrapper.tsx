@@ -1,5 +1,5 @@
-import IconBNB from "../../icons/icon-bnb";
-import IconWarning from "../../icons/icon-warning";
+import IconBNB from "../../../components/icons/icon-bnb";
+import IconWarning from "../../../components/icons/icon-warning";
 import isLoggedInWallet from "./helpers/wallet-login-checker";
 
 export enum WalletStatus {

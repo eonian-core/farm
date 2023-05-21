@@ -8,27 +8,14 @@ type ChainArgs = ReturnType<typeof useSetChain>;
 const cachedIcons: Record<string, string> = {};
 
 export default class Web3OnboardWalletWrapper extends WalletWrapper {
-  private walletArgs!: WalletArgs;
-  private chainArgs!: ChainArgs;
-
-  constructor() {
-    super();
-  }
-
   /**
-   * (Re)initializes this wrapper. Should be called every time the "Web3Onboard" wallet is updated.
+   * (Re)initializes this wrapper. Should be invoked every time the "Web3Onboard" wallet is updated.
    * @param walletArgs Data from the "useConnectWallet" hook.
    * @param chainArgs Data from the "useSetChain" hook.
-   * @returns Initialized "Web3OnboardWalletWrapper" instance.
    */
-  public initialize = (walletArgs: WalletArgs, chainArgs: ChainArgs) => {
-    this.reset();
-
-    this.walletArgs = walletArgs;
-    this.chainArgs = chainArgs;
-
-    return this;
-  };
+  constructor(private walletArgs: WalletArgs, private chainArgs: ChainArgs) {
+    super();
+  }
 
   /**
    * Returns the mapped "Web3Onboard" wallet, by default using the first active account.

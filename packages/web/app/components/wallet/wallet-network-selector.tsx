@@ -5,18 +5,18 @@ import React from "react";
 
 import styles from "./wallet-network-selector.module.scss";
 import IconBNB from "../icons/icon-bnb";
-import useWallet from "./use-wallet";
+import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 const WalletNetworkSelector = () => {
-  const { chain, chains, setChain } = useWallet();
+  const { chain, chains, setCurrentChain } = useWalletWrapperContext();
 
   const handleSelectionChanged = React.useCallback(
     (keys: "all" | Set<string | number>) => {
       const set = keys as Set<string>;
       const [id] = Array.from(set);
-      setChain(id);
+      setCurrentChain(id);
     },
-    [setChain]
+    [setCurrentChain]
   );
 
   return (
