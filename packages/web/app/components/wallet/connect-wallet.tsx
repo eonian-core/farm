@@ -4,7 +4,8 @@ import React from "react";
 import Button from "../button/button";
 import { InternalLink } from "../links/links";
 import WalletInfo from "./wallet-info";
-import useWallet, { WalletStatus } from "./use-wallet";
+import useWallet from "./use-wallet";
+import { WalletStatus } from "./wrappers/wallet-wrapper";
 
 const ConnectWallet = () => {
   const { status, connect, reconnect } = useWallet();

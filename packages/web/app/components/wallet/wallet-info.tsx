@@ -24,7 +24,6 @@ const WalletInfo = () => {
   const { wallet, disconnect } = useWallet();
   const { width = 0 } = useWindowSize();
 
-  
   const [push] = useRouterPush();
   const pathname = usePathname();
   const isOnEarn = pathname === EARN_ROUTE;
