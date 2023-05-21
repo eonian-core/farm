@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import Web3OnboardWalletWrapper from "./wrappers/w3o-wallet-wrapper";
