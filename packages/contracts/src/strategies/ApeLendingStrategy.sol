@@ -12,7 +12,7 @@ import {IRainMaker} from "./protocols/IRainMaker.sol";
 import {IStrategy} from "./IStrategy.sol";
 import {IVault} from "../IVault.sol";
 
-import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 error IncompatibleCTokenContract();
 error UnsupportedDecimals();
@@ -45,7 +45,7 @@ contract ApeLendingStrategy is BaseStrategy {
     // ------------------------------------------ Constructors ------------------------------------------
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {}
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
 
     function initialize(
         address _vault,

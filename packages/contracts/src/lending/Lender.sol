@@ -6,7 +6,7 @@ import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import {ILender} from "./ILender.sol";
-import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();

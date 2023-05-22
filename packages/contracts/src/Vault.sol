@@ -12,7 +12,7 @@ import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
 import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
-import {SafeInitializable} from './upgradeable/SafeInitializable.sol';
+import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -84,7 +84,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     // ------------------------------------------ Constructors ------------------------------------------
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {}
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
 
     function initialize(
         address _asset,

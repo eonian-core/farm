@@ -6,7 +6,7 @@ import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeE
 import {IOps} from "./IOps.sol";
 import {BackCombatibleTransfer} from "./BackCombatibleTransfer.sol";
 
-import {SafeInitializable} from '../../upgradeable/SafeInitializable.sol';
+import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 
 /// Based on https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
 /// @notice Give basic methods to pay for Gelato operations.

@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
-import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 /// Someone tried to execute work function while `canWork` is `false`
 error CannotWorkNow();
@@ -94,7 +94,7 @@ abstract contract Job is
     /// @notice A handle that allows the `_doWork` function to be invoked externally by everyone.
     /// Perform a `canWork` check to avoid unnecessary and (maybe) malicious calls.
     /// @dev `nonReentrant` modifier might be excess there, since we have `isTimePassFromLastExecution` check
-    /// and `refreshLastWorkTime` at start (see `onlyWhenCanWork` modifier). Let's keep it, as `canWork` can be overridden.
+    /// and `refreshLastWorkTime` at start (see `onlyWhenCanWork` modifier). Let"s keep it, as `canWork` can be overridden.
     function work() public nonReentrant onlyWhenCanWork {
         _doWork();
     }

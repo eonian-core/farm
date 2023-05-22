@@ -8,7 +8,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
 import {IERC4626} from "./IERC4626.sol";
-import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
