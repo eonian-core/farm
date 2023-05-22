@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "contracts/strategies/BaseStrategy.sol";
-import {OpsReady} from "contracts/automation/gelato/OpsReady.sol";
 
 contract BaseStrategyMock is BaseStrategy {
     event HarvestCalled();
@@ -22,7 +21,7 @@ contract BaseStrategyMock is BaseStrategy {
         bool _isPrepaid,
         address __nativeTokenPriceFeed,
         address __assetPriceFeed
-    ) Job(false) OpsReady(false) HealthChecker(false) initializer {
+    ) initializer {
         __BaseStrategy_init(
             _vault,
             _ops,

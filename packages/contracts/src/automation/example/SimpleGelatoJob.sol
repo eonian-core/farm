@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 pragma solidity ^0.8.19;
 
-import {Job} from "../Job.sol";
-import {OpsReady} from "../gelato/OpsReady.sol";
 import {GelatoJobAdapter} from "../GelatoJobAdapter.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
@@ -12,10 +10,6 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
 
     // allow sending eth to the test contract
     receive() external payable {} // solhint-disable-line no-empty-blocks
-
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(bool needDisableInitializers) Job(needDisableInitializers) OpsReady(needDisableInitializers){
-    }
 
     function initialize(
         address _ops,

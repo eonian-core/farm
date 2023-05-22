@@ -67,16 +67,6 @@ abstract contract ERC4626Upgradeable is
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(bool needDisableInitializers) {
-        // Solve the Uninitialized Proxies Vulnerability 
-        // more info https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a
-        // but can be disabled for mocks
-        if(needDisableInitializers) {
-            _disableInitializers();
-        }
-    }
-
     /// @notice The underlying token managed by the Vault. Has units defined by the corresponding ERC-20 contract.
     /// Stored as address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
     IERC20Upgradeable public asset;

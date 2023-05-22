@@ -80,16 +80,6 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         _;
     }
 
-    // ------------------------------------------ Constructors ------------------------------------------
-
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(bool needDisableInitializers) 
-        ERC4626Upgradeable(needDisableInitializers) 
-        Lender(needDisableInitializers) 
-        {
-    }
-
-
     function initialize(
         address _asset,
         address _rewards,
@@ -119,8 +109,6 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
     }
-
-    // --------------------------------------------- Logic ---------------------------------------------
 
     /// @inheritdoc IVault
     function version() external pure override returns (string memory) {

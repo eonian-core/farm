@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 import "contracts/tokens/ERC4626Upgradeable.sol";
 
 /// Testing implementation of ERC4626
-contract ERC4626Mock is ERC4626Upgradeable(false) {
+contract ERC4626Mock is ERC4626Upgradeable {
 
     uint256 public beforeWithdrawHookCalledCounter;
     uint256 public afterDepositHookCalledCounter;

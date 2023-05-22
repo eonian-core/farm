@@ -13,7 +13,7 @@ async function _deployVault(
     "Vault",
     signer
   );
-  const contract = await factory.deploy(false);
+  const contract = await factory.deploy();
   await contract.deployed();
 
   const transaction = await contract.initialize.call(this, ...params);
