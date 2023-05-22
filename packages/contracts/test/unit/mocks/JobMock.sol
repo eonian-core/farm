@@ -3,7 +3,9 @@ pragma solidity >=0.8.0;
 
 import "contracts/automation/Job.sol";
 
-contract JobMock is Job {
+import "./SafeInitializableMock.sol";
+
+contract JobMock is Job, SafeInitializableMock {
 
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;

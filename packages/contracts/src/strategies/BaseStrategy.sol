@@ -14,11 +14,14 @@ import {Job} from "../automation/Job.sol";
 import {HealthChecker} from "../healthcheck/HealthChecker.sol";
 import {PriceConverter} from "../structures/PriceConverter.sol";
 
+import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
+
 error CallerIsNotAVault();
 error IncompatiblePriceFeeds();
 
 abstract contract BaseStrategy is
     IStrategy,
+    SafeInitializable,
     GelatoJobAdapter,
     HealthChecker,
     PausableUpgradeable

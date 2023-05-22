@@ -6,6 +6,7 @@ import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import {ILender} from "./ILender.sol";
+import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();
@@ -16,6 +17,7 @@ error FalsePositiveReport();
 
 abstract contract Lender is
     ILender,
+    SafeInitializable,
     PausableUpgradeable,
     ReentrancyGuardUpgradeable
 {

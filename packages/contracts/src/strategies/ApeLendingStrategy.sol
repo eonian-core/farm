@@ -12,6 +12,8 @@ import {IRainMaker} from "./protocols/IRainMaker.sol";
 import {IStrategy} from "./IStrategy.sol";
 import {IVault} from "../IVault.sol";
 
+import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
+
 error IncompatibleCTokenContract();
 error UnsupportedDecimals();
 error MintError(uint256 code);
@@ -41,6 +43,9 @@ contract ApeLendingStrategy is BaseStrategy {
     uint256[50] private __gap;
 
     // ------------------------------------------ Constructors ------------------------------------------
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {}
 
     function initialize(
         address _vault,

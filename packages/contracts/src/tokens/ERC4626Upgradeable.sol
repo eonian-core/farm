@@ -6,7 +6,9 @@ import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ER
 import {ERC777Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC777/ERC777Upgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
+
 import {IERC4626} from "./IERC4626.sol";
+import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
 
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
@@ -30,6 +32,7 @@ import {IERC4626} from "./IERC4626.sol";
 ///  These functions must not account for deposit or withdrawal limits, to ensure they are easily composable,
 ///  the max functions are provided for that purpose.
 abstract contract ERC4626Upgradeable is
+    SafeInitializable,
     ERC777Upgradeable,
     ReentrancyGuardUpgradeable,
     IERC4626

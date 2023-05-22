@@ -2,8 +2,9 @@
 pragma solidity ^0.8.19;
 
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
-import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+
+import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
 
 /// Someone tried to execute work function while `canWork` is `false`
 error CannotWorkNow();
@@ -16,7 +17,7 @@ error TimeMinimumBetweenExecutionsIncorrect(uint256 _givenTime);
 /// @notice This contract is only define interface,
 ///  for add support of specific provider need add specific mixin contract.
 abstract contract Job is
-    Initializable,
+    SafeInitializable,
     ContextUpgradeable,
     ReentrancyGuardUpgradeable
 {

@@ -4,10 +4,11 @@ pragma solidity ^0.8.19;
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 import {IHealthCheck} from "./IHealthCheck.sol";
+import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
 
 error HealthCheckFailed();
 
-abstract contract HealthChecker is OwnableUpgradeable {
+abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
     event HealthCheckChanged(address);
     event HealthCheckEnabledChanged(bool);
 
