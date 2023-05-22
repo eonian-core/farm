@@ -80,6 +80,8 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         _;
     }
 
+    // ------------------------------------------ Constructors ------------------------------------------
+
     function initialize(
         address _asset,
         address _rewards,

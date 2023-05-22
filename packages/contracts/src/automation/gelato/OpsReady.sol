@@ -16,11 +16,18 @@ abstract contract OpsReady is Initializable {
     using BackCombatibleTransfer for address payable;
     using SafeERC20 for IERC20;
 
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
     modifier onlyOps() {
         require(msg.sender == address(ops), "OpsReady: onlyOps");
         _;
     }
-
+ 
     /**
      * Contructor of contract which will be able to communicate with Gelato protocol
      * @param _ops - address of the Ops contract.

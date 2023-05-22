@@ -23,10 +23,8 @@ contract ApeLendingStrategy is BaseStrategy {
 
     address public constant BANANA = 0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95;
     address public constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
-    address public constant RAIN_MAKER =
-        0x5CB93C0AdE6B7F2760Ec4389833B0cCcb5e4efDa;
-    address public constant PANCAKE_ROUTER =
-        0x10ED43C718714eb63d5aA57B78B54704E256024E;
+    address public constant RAIN_MAKER = 0x5CB93C0AdE6B7F2760Ec4389833B0cCcb5e4efDa;
+    address public constant PANCAKE_ROUTER = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
 
     /// @notice Minimum BANANA token amount to sell.
     uint256 public minBananaToSell;
@@ -34,6 +32,15 @@ contract ApeLendingStrategy is BaseStrategy {
     ICToken public cToken;
     IPancakeRouter public pancakeRouter;
     IRainMaker public rainMaker;
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
+    // ------------------------------------------ Constructors ------------------------------------------
 
     function initialize(
         address _vault,

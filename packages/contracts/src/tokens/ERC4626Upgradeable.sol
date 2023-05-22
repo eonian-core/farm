@@ -37,6 +37,10 @@ abstract contract ERC4626Upgradeable is
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using FixedPointMathLib for uint256;
 
+    /// @notice The underlying token managed by the Vault. Has units defined by the corresponding ERC-20 contract.
+    /// Stored as address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
+    IERC20Upgradeable public asset;
+
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new
      * variables without shifting down storage in the inheritance chain.
@@ -66,10 +70,6 @@ abstract contract ERC4626Upgradeable is
     );
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
-
-    /// @notice The underlying token managed by the Vault. Has units defined by the corresponding ERC-20 contract.
-    /// Stored as address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
-    IERC20Upgradeable public asset;
 
     /**
      * Constructor for the ERC4626Upgradeable contract

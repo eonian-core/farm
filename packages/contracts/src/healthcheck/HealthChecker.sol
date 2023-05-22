@@ -21,6 +21,8 @@ abstract contract HealthChecker is OwnableUpgradeable {
      */
     uint256[50] private __gap;
 
+    // ------------------------------------------ Constructors ------------------------------------------
+
     function __HealthChecker_init(address _healthCheck)
         internal
         onlyInitializing
