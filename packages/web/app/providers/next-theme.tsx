@@ -48,8 +48,10 @@ const NextThemeProvider = ({ children }: Props) => {
   // what breaks the element styles. We can find these <style /> elements and remove one of them.
   React.useEffect(() => {
     const styles = document.querySelectorAll("#stitches");
-    const duplicatedStyle = Array.from(styles).pop();
-    duplicatedStyle?.remove();
+    if (styles.length >= 2) {
+      const duplicatedStyle = Array.from(styles).pop();
+      duplicatedStyle?.remove();
+    }
   }, []);
 
   return (
