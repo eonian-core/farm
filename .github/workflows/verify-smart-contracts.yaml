@@ -71,7 +71,7 @@ jobs:
       - name: Run tests (foundry)
         run: |-
           cd packages/contracts
-          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv
+          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv --gas-report --force
 
       - name: Run tests (hardhat)
         run: |-
@@ -101,7 +101,7 @@ jobs:
         with:
           version: nightly
 
-      - name: Run tests (foundry)
+      - name: Report gas usage in tests
         run: |-
           cd packages/contracts
           forge snapshot
