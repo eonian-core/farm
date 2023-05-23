@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
-import {JobMock} from "./mocks/JobMock.sol";
+import {JobMock, Job} from "./mocks/JobMock.sol";
 import {TimeMinimumBetweenExecutionsIncorrect, Job, CannotWorkNow} from "contracts/automation/Job.sol";
 
 contract JobTest is Test {
@@ -103,6 +103,8 @@ contract JobTest is Test {
         assertTrue(job.canWork());
     }
 
+    event Worked(address indexed worker);
+
     function testWorkCallsRefreshTheTimeout(
         uint96 _minTime,
         uint96 _secondCall,
@@ -133,7 +135,7 @@ contract JobTest is Test {
         assertEq(job.workMethodCalledCounter(), 0);
 
         vm.expectEmit(true, true, true, true);
-        job.emitWorked(alice);
+        emit Worked(alice);
 
         vm.prank(alice);
         job.work();
@@ -147,7 +149,7 @@ contract JobTest is Test {
         assertTrue(job.canWork());
 
         vm.expectEmit(true, true, true, true);
-        job.emitWorked(alice);
+        emit Worked(alice);
 
         vm.prank(alice);
         job.work();
@@ -162,7 +164,7 @@ contract JobTest is Test {
         assertTrue(job.canWork());
 
         vm.expectEmit(true, true, true, true);
-        job.emitWorked(bob);
+        emit Worked(bob);
 
         vm.prank(bob);
         job.work();
