@@ -71,7 +71,7 @@ jobs:
       - name: Run tests (foundry)
         run: |-
           cd packages/contracts
-          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv --gas-report --force
+          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv --gas-report
 
       - name: Run tests (hardhat)
         run: |-
