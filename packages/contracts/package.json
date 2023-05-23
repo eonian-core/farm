@@ -23,7 +23,9 @@
     "serve": "hardhat node",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",
     "lint:license": "./check-license.sh",
-    "deploy": "hardhat deploy --tags mainnet"
+    "deploy": "hardhat deploy --tags mainnet",
+    "gas-usage:report": "forge snapshot",
+    "gas-usage:diff": "forge snapshot --diff"
   },
   "engines": {
     "node": ">=16.0.0"
