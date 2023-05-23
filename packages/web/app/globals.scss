@@ -121,15 +121,15 @@
         to bottom right, var(--color-text-300) 35%, var(--color-text-400) 50%, var(--color-text-200) 55%);
 
     // Dark
-      --color-dark-100: #929496;
-      --color-dark-200: #6a6c6d;
-      --color-dark-300: #56595a;
-      --color-dark-400: #383a3b;
-      --color-dark-500: #181a1b;
-      --color-dark-600: #151617;
-      --color-dark-700: #111213;
-      --color-dark-800: #0c0d0e;
-      --color-dark-900: #060707;
+      --color-dark-100: hsl(210, 2%, 58%);
+      --color-dark-200: hsl(200, 1%, 42%);
+      --color-dark-300: hsl(195, 2%, 35%);
+      --color-dark-400: hsl(200, 3%, 23%);
+      --color-dark-500: hsl(200, 6%, 10%);
+      --color-dark-600: hsl(210, 5%, 9%);
+      --color-dark-700: hsl(210, 6%, 7%);
+      --color-dark-800: hsl(210, 8%, 5%);
+      --color-dark-900: hsl(180, 8%, 3%);
 
     // Primary
       --color-primary-50: hsl(226, 100%, 97%);
@@ -154,16 +154,16 @@
       );
 
     // Secondary
-      --color-secondary-50: #fdf4f7;
-      --color-secondary-100: #fae7ed;
-      --color-secondary-200: #f1b8ca;
-      --color-secondary-300: #e889a7;
-      --color-secondary-400: #de5983;
-      --color-secondary-500: #d52a60; // Default color
-      --color-secondary-600: #a6214b;
-      --color-secondary-700: #761735;
-      --color-secondary-800: #470e20;
-      --color-secondary-900: #18050b;
+      --color-secondary-50: hsl(340, 69%, 97%);
+      --color-secondary-100: hsl(341, 66%, 94%);
+      --color-secondary-200: hsl(341, 67%, 83%);
+      --color-secondary-300: hsl(341, 67%, 72%);
+      --color-secondary-400: hsl(341, 67%, 61%);
+      --color-secondary-500: hsl(341, 67%, 50%); // Default color
+      --color-secondary-600: hsl(341, 67%, 39%);
+      --color-secondary-700: hsl(341, 67%, 28%);
+      --color-secondary-800: hsl(341, 67%, 17%);
+      --color-secondary-900: hsl(341, 66%, 6%);
 
 
     // Background
