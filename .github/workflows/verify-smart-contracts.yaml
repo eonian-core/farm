@@ -66,14 +66,48 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: nightly
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
       - name: Run tests (foundry)
         run: |-
           cd packages/contracts
-          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv
+          FOUNDRY_FUZZ_RUNS=1000 forge test -vvv --gas-report
 
       - name: Run tests (hardhat)
         run: |-
           cd packages/contracts
           USE_BSC_FORK=true yarn test:hardhat
+
+  gas-usage:
+    name: Check Gas usage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      - name: Report gas usage in tests
+        run: |-
+          cd packages/contracts
+          forge snapshot
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with: 
+          default_author: github_actions
+          message: 'Save gas usage snapshot'

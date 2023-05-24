@@ -4,12 +4,17 @@ pragma solidity ^0.8.19;
 import {GelatoJobAdapter} from "../GelatoJobAdapter.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
+
 contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;
 
     // allow sending eth to the test contract
     receive() external payable {} // solhint-disable-line no-empty-blocks
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
 
     function initialize(
         address _ops,

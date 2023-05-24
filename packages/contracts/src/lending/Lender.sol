@@ -6,6 +6,7 @@ import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import {ILender} from "./ILender.sol";
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 error BorrowerAlreadyExists();
 error BorrowerDoesNotExist();
@@ -16,6 +17,7 @@ error FalsePositiveReport();
 
 abstract contract Lender is
     ILender,
+    SafeInitializable,
     PausableUpgradeable,
     ReentrancyGuardUpgradeable
 {
@@ -45,6 +47,13 @@ abstract contract Lender is
     /// @notice Records with information on each borrower using the lender's services
     mapping(address => BorrowerData) public borrowersData;
 
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
     /// @notice Event that must occur when the borrower reported the results of his debt management
     /// @param borrower Borrower's contract address
     /// @param debtPayment Amount of outstanding debt repaid by the borrower
@@ -73,6 +82,8 @@ abstract contract Lender is
         _;
         borrowersData[msg.sender].lastReportTimestamp = lastReportTimestamp = block.timestamp; // solhint-disable-line not-rely-on-time
     }
+
+    // ------------------------------------------ Constructors ------------------------------------------
 
     function __Lender_init() internal onlyInitializing {
         __Pausable_init();

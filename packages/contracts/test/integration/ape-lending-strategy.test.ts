@@ -271,7 +271,7 @@ describe("Ape Lending Strategy", function () {
         "ApeLendingStrategy",
         signer
       );
-    const contract = await factory.deploy();
+    const contract = await factory.deploy(false);
     await contract.deployed();
 
     let tx = await contract.initialize(

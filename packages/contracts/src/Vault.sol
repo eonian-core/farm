@@ -12,6 +12,7 @@ import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
 import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
+import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -80,6 +81,11 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         _;
     }
 
+    // ------------------------------------------ Constructors ------------------------------------------
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
+
     function initialize(
         address _asset,
         address _rewards,
@@ -112,7 +118,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @inheritdoc IVault
     function version() external pure override returns (string memory) {
-        return "1.0.0";
+        return "0.1.0";
     }
 
     /// @dev Override to add the "whenNotPaused" modifier

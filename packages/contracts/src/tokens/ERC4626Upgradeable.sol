@@ -6,7 +6,9 @@ import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ER
 import {ERC777Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC777/ERC777Upgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
+
 import {IERC4626} from "./IERC4626.sol";
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
@@ -30,12 +32,17 @@ import {IERC4626} from "./IERC4626.sol";
 ///  These functions must not account for deposit or withdrawal limits, to ensure they are easily composable,
 ///  the max functions are provided for that purpose.
 abstract contract ERC4626Upgradeable is
+    SafeInitializable,
     ERC777Upgradeable,
     ReentrancyGuardUpgradeable,
     IERC4626
 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using FixedPointMathLib for uint256;
+
+    /// @notice The underlying token managed by the Vault. Has units defined by the corresponding ERC-20 contract.
+    /// Stored as address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
+    IERC20Upgradeable public asset;
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new
@@ -66,10 +73,6 @@ abstract contract ERC4626Upgradeable is
     );
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
-
-    /// @notice The underlying token managed by the Vault. Has units defined by the corresponding ERC-20 contract.
-    /// Stored as address of the underlying token used for the Vault for accounting, depositing, and withdrawing.
-    IERC20Upgradeable public asset;
 
     /**
      * Constructor for the ERC4626Upgradeable contract

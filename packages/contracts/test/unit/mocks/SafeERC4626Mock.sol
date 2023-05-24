@@ -2,9 +2,10 @@
 pragma solidity ^0.8.4;
 
 import "contracts/tokens/SafeERC4626Upgradeable.sol";
+import "./SafeInitializableMock.sol";
 
 /// Testing implementation of SafeERC4626
-contract SafeERC4626Mock is SafeERC4626Upgradeable {
+contract SafeERC4626Mock is SafeERC4626Upgradeable, SafeInitializableMock {
 
     uint256 public beforeWithdrawHookCalledCounter;
     uint256 public afterDepositHookCalledCounter;

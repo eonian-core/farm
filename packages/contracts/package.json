@@ -19,10 +19,17 @@
     "postinstall": "forge install",
     "clean": "forge clean && rm -rf ./artifacts && rm -rf ./cache_hardhat && rm -rf ./out && rm -rf ./typechain-types",
     "test:fuzz": "FOUNDRY_FUZZ_RUNS=1000 forge test -vvv",
+    "test:coverage": "forge coverage",
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",
-    "lint:license": "./check-license.sh"
+    "lint:license": "./check-license.sh",
+    "deploy": "hardhat deploy --tags mainnet",
+    "gas-usage:report": "forge snapshot",
+    "gas-usage:diff": "forge snapshot --diff"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
