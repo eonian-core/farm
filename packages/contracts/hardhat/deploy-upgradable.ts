@@ -42,6 +42,7 @@ export const deployUpgradable = ({
       log: true,
       gasLimit: 4000000, // fix for local deployments
       autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks,
+      args: [true], // Disable inititializers in implementaion contract
       proxy: {
         owner: deployer,
         proxyContract: "OpenZeppelinTransparentProxy",
