@@ -9,8 +9,9 @@ contract ERC5484UpgradableMock is ERC5484Upgradeable {
         string memory name_,
         string memory symbol_,
         BurnAuth burnAuth_,
-        bool mintOnce_
+        bool mintOnce_,
+        address admin_
     ) initializer {
-        __SBTERC721Upgradeable_init(name_, symbol_, burnAuth_, mintOnce_);
+        __ERC5484Upgradeable_init(name_, symbol_, burnAuth_, mintOnce_, admin_);
     }
 }

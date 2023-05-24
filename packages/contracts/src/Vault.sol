@@ -15,6 +15,7 @@ import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {IVaultLifecycle} from "./tokens/IVaultLifecycle.sol";
 import {IVaultHook} from "./tokens/IVaultHook.sol";
+import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -91,7 +92,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         string memory _name,
         string memory _symbol,
         address[] memory _defaultOperators,
-        address _founderTokens
+        address _founders
     ) public initializer {
         __Ownable_init();
         __Lender_init();
@@ -112,7 +113,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
-        addHook(IVaultHook(_founderTokens)); // todo discuss if it is the most flexible and efficient way to add tokens to the vault
+        addHook(IVaultHook(_founders));
     }
 
     /// @inheritdoc IVault
@@ -412,52 +413,5 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
 
     function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
         super.afterDeposit(assets, shares);
-    }
-
-    /* //////////////////// Backwards compatible methods ////////////////////////// */
-
-    /// @inheritdoc ERC4626Upgradeable
-    function deposit(uint256 assets, address /* receiver */)
-        public
-        virtual
-        override(ERC4626Upgradeable, SafeERC4626Upgradeable)
-        returns (uint256 shares)
-    {
-        // nonReentrant under the hood
-        return deposit(assets);
-    }
-
-    ///@inheritdoc SafeERC4626Upgradeable
-    function mint(uint256 shares, address receiver)
-        public
-        virtual
-        nonReentrant
-        override(SafeERC4626Upgradeable, ERC4626Upgradeable)
-        returns (uint256 assets)
-    {
-        // No need to check for rounding error, previewMint rounds up.
-        assets = previewMint(shares);
-
-        _receiveAndDeposit(assets, shares, receiver);
-    }
-
-    /// @inheritdoc SafeERC4626Upgradeable
-    function withdraw(
-        uint256 assets,
-        address, /* receiver */
-        address /* owner */
-    ) public virtual override(SafeERC4626Upgradeable, ERC4626Upgradeable) returns (uint256 shares) {
-        // nonReentrant under the hood
-        return withdraw(assets);
-    }
-
-    /// @inheritdoc SafeERC4626Upgradeable
-    function redeem(
-        uint256 shares,
-        address, /* receiver */
-        address /* owner */
-    ) public virtual override(SafeERC4626Upgradeable, ERC4626Upgradeable) returns (uint256 assets) {
-        // nonReentrant under the hood
-        return redeem(shares);
     }
 }

@@ -42,7 +42,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
     function setUp() public {
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken = new VaultFounderTokenMock(address(this));
 
         vault = new VaultMock(
             address(underlying),

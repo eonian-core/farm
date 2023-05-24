@@ -4,9 +4,10 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import "@chainlink/contracts/node_modules/@openzeppelin/contracts/access/AccessControl.sol";
 import "./IERC5484.sol";
 
 contract ERC5484Upgradeable is
@@ -15,7 +16,7 @@ contract ERC5484Upgradeable is
     ERC721Upgradeable,
     ERC721EnumerableUpgradeable,
     ERC721URIStorageUpgradeable,
-    OwnableUpgradeable
+    AccessControlUpgradeable
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
@@ -27,6 +28,9 @@ contract ERC5484Upgradeable is
     // Token can me minted only once per user
     bool private _mintOnce;
 
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+
     /// @dev Modifier to protect a creation a new token for a user
     /// in case if this user has already have the token.
     modifier newUser(address to) {
@@ -36,30 +40,31 @@ contract ERC5484Upgradeable is
     }
 
     /// @dev Modifier to protect a burn a token without permission
-    //todo check how to simplify this modifier
-    modifier allowedBurn(address to, address from, uint256 tokenId) {
+    modifier allowedTransfer(address to, address from, uint256 tokenId) {
+        bool isMint = from == address(0);
+        bool isBurner = hasRole(BURNER_ROLE, msg.sender);
+        bool isBurn = !isMint && to == address(0);
         if(_burnAuth == BurnAuth.Neither) {
             // nobody can burn token
-            require(from == address(0), "ERC5484Upgradeable: token is SOUL BOUND and can't be transferred");
+            require(isMint, "ERC5484Upgradeable: token is SOUL BOUND and can't be transferred");
         } else if(_burnAuth == BurnAuth.IssuerOnly) {
             // only issuer can burn token
             // so we are checking if token is generation with condition from == address(0)
             // or we are checking that token belongs to other user and message sender is owner and it is burn operation
-            require(from == address(0) || (from != address(0) && msg.sender == address(0) && to == address(0)),
+            bool isBurnOperation = isBurner && isBurn;
+            require(isMint || isBurnOperation,
                 "ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token issuer only");
         } else if (_burnAuth == BurnAuth.OwnerOnly){
             // only owner can burn token
             // so we are checking if token is generation with condition from == ownerOf(tokenId) and it is burn operation
-            address owner = _ownerOf(tokenId);
-            require((from == owner && to == address(0)) || owner == address(0),
+            bool isOwner = _ownerOf(tokenId) == msg.sender && hasRole(BURNER_ROLE, msg.sender);
+            require(isMint || (isOwner && isBurn),
                 "ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token owner only");
         } else if (_burnAuth == BurnAuth.Both) {
             // both owner and issuer can burn token
             // so we are checking if token is minting with condition from == address(0)
             // or we are checking that token belongs to other user and message sender is owner and it is burn operation
-            address owner = _ownerOf(tokenId);
-            require(from == address(0)
-                || (from != address(0) && (msg.sender == address(0) || msg.sender == owner) && to == address(0)),
+            require(isMint || (isBurn && isBurner),
                 "ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token issuer or token owner only");
         }
         _;
@@ -71,21 +76,29 @@ contract ERC5484Upgradeable is
 //        _disableInitializers();
 //    }
 
-    function __SBTERC721Upgradeable_init(
+    function __ERC5484Upgradeable_init(
         string memory name_,
         string memory symbol_,
         BurnAuth burnAuth_,
-        bool mintOnce_
+        bool mintOnce_,
+        address admin_
     ) internal onlyInitializing {
         __ERC721_init(name_, symbol_);
         __ERC721Enumerable_init();
         __ERC721URIStorage_init();
-        __Ownable_init();
+        __AccessControl_init();
         _burnAuth = burnAuth_;
         _mintOnce = mintOnce_;
+
+        // setup roles depend on mode for SoulBound token
+        _setupRole(DEFAULT_ADMIN_ROLE, admin_);
+        _setupRole(MINTER_ROLE, admin_);
+        if(burnAuth_ == BurnAuth.IssuerOnly || burnAuth_ == BurnAuth.Both) {
+            _setupRole(BURNER_ROLE, admin_);
+        }
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
+    function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
         // allow to mint only once per user if _mintOnce is true
         bool hasNoToken = balanceOf(to) == 0;
         require(!_mintOnce || hasNoToken,"ERC5484Upgradeable: User already has a token");
@@ -96,6 +109,11 @@ contract ERC5484Upgradeable is
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
 
+        // set permission to burn token
+        if(_burnAuth == BurnAuth.OwnerOnly || _burnAuth == BurnAuth.Both) {
+            _setupRole(BURNER_ROLE, to);
+        }
+
         // emit event
         emit Issued(address(0), to, tokenId, _burnAuth);
     }
@@ -103,7 +121,7 @@ contract ERC5484Upgradeable is
     /// Token is SOUL BOUND and it is not allowed to move token between users
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
-        allowedBurn(to, from, tokenId)
+        allowedTransfer(to, from, tokenId)
         override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
     {
         super._beforeTokenTransfer(from, to, tokenId, batchSize);
@@ -111,7 +129,7 @@ contract ERC5484Upgradeable is
 
     /// @dev Burns `tokenId`. See {ERC721-_burn}.
     function burn(uint256 tokenId) external
-        allowedBurn(address(0), msg.sender, tokenId)
+        onlyRole(BURNER_ROLE)
         virtual
     {
         _burn(tokenId);
@@ -127,7 +145,10 @@ contract ERC5484Upgradeable is
         return super.tokenURI(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId) public view override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721Upgradeable, ERC721EnumerableUpgradeable, AccessControlUpgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
@@ -140,4 +161,11 @@ contract ERC5484Upgradeable is
         require(_exists(tokenId), "ERC5484Upgradeable: burnAuth query for nonexistent token");
         return _burnAuth;
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[46] private __gap;
 }

@@ -4,9 +4,9 @@ pragma solidity >=0.8.10;
 import "forge-std/Test.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
+import "./mocks/ERC5484UpgradableMock.sol";
 import "contracts/tokens/ERC5484Upgradeable.sol";
 import "contracts/tokens/IERC5484.sol";
-import "./mocks/ERC5484UpgradableMock.sol";
 
 contract ERC5484UpgradeableTest is TestWithERC1820Registry {
     ERC5484Upgradeable token;
@@ -29,7 +29,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.Neither,
-            true
+            true,
+            address(this)
         );
     }
 
@@ -63,7 +64,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.Neither,
-            false
+            false,
+            address(this)
         );
         token.safeMint(alice, url);
         token.safeMint(alice, url);
@@ -85,8 +87,11 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         token.safeMint(alice, url);
 
         vm.prank(alice);
-        vm.expectRevert("ERC5484Upgradeable: token is SOUL BOUND and can't be transferred");
-
+        vm.expectRevert(
+            abi.encodePacked(
+                getErrorMessage(address(this), token.BURNER_ROLE())
+            )
+        );
         token.burn(0);
 
         assertEq(token.totalSupply(), 1);
@@ -97,14 +102,15 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.IssuerOnly,
-            mintOnce_
+            mintOnce_,
+            address(this)
         );
 
         token.safeMint(alice, url);
         assertEq(token.totalSupply(), 1);
 
         // can be burn only by issuer
-        vm.prank(address(0));
+        vm.prank(address(this));
         token.burn(0);
 
         assertEq(token.totalSupply(), 0);
@@ -115,15 +121,17 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.IssuerOnly,
-            mintOnce_
+            mintOnce_,
+            address(this)
         );
 
         token.safeMint(alice, url);
         assertEq(token.totalSupply(), 1);
 
         // can't be burned by owner
+        string memory errorMessage = getErrorMessage(address(alice), token.BURNER_ROLE()); // error message have to be generated before the call
         vm.prank(alice);
-        vm.expectRevert("ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token issuer only");
+        vm.expectRevert(abi.encodePacked(errorMessage));
 
         token.burn(0);
         assertEq(token.totalSupply(), 1);
@@ -134,7 +142,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.OwnerOnly,
-            mintOnce_
+            mintOnce_,
+            address(this)
         );
 
         token.safeMint(alice, url);
@@ -151,7 +160,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.OwnerOnly,
-            mintOnce_
+            mintOnce_,
+            address(this)
         );
 
         token.safeMint(alice, url);
@@ -159,7 +169,11 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
         // must fail since it can be burn only by owner
         vm.prank(address(0));
-        vm.expectRevert("ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token owner only");
+        vm.expectRevert(
+            abi.encodePacked(
+                getErrorMessage(address(this), token.BURNER_ROLE())
+            )
+        );
         token.burn(0);
         assertEq(token.totalSupply(), 1);
     }
@@ -169,7 +183,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.Both,
-            mintOnce_
+            mintOnce_,
+            address(this)
         );
 
         token.safeMint(alice, url);
@@ -182,8 +197,19 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         assertEq(token.totalSupply(), 1);
 
         // must pass since it can be burn by issuer
-        vm.prank(address(0));
+        vm.prank(address(this));
         token.burn(1);
         assertEq(token.totalSupply(), 0);
+    }
+
+    function getErrorMessage(address account, bytes32 role) private pure returns (string memory) {
+        return string(
+            abi.encodePacked(
+                "AccessControl: account ",
+                StringsUpgradeable.toHexString(account),
+                " is missing role ",
+                StringsUpgradeable.toHexString(uint256(role), 32)
+            )
+        );
     }
 }

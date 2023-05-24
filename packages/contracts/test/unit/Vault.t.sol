@@ -15,6 +15,7 @@ import "./mocks/VaultFounderTokenMock.sol";
 
 contract VaultTest is TestWithERC1820Registry {
     uint256 constant MAX_BPS = 10_000;
+    uint256 constant MAX_DEPOSIT = 10*32;
     uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     ERC20Mock underlying;
@@ -40,7 +41,7 @@ contract VaultTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken = new VaultFounderTokenMock(address(this));
         vault = new VaultMock(
             address(underlying),
             rewards,
@@ -48,6 +49,8 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             address(vaultFounderToken)
         );
+
+        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
 
         strategy = new StrategyMock(address(underlying), address(vault));
     }
@@ -665,7 +668,7 @@ contract VaultTest is TestWithERC1820Registry {
     }
 
     function testDepositAndAssessShares(uint192 deposit) public {
-        vm.assume(deposit > 0);
+        vm.assume(deposit > 0 && deposit < MAX_DEPOSIT);
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);
@@ -1002,4 +1005,27 @@ contract VaultTest is TestWithERC1820Registry {
         uint256 min = Math.min(a, b);
         assertLe(max - min, 1);
     }
+
+    function testFounderTokenMint(uint192 deposit) public {
+        // deposit have to be above min first investment
+        vm.assume(deposit > 200 && deposit < MAX_DEPOSIT);
+
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Check if Alice has the initial balance
+        assertEq(underlying.balanceOf(alice), deposit);
+        assertEq(vaultFounderToken.totalSupply(), 0);
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Check if Alice has a new vault founder token generated
+        assertEq(vaultFounderToken.totalSupply(), 1);
+    }
+
 }

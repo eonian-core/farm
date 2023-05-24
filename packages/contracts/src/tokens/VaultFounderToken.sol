@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
-import "./ERC5484Upgradeable.sol";
-import "./IVaultFounderToken.sol";
-import "./IVaultHook.sol";
+import {ERC5484Upgradeable} from "./ERC5484Upgradeable.sol";
+import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
+import {IVaultFounderToken} from "./IVaultFounderToken.sol";
+import {IVaultHook} from "./IVaultHook.sol";
 
 contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook {
 
@@ -20,21 +21,22 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
     function __VaultFounderToken_init(
         uint256 maxCountTokens_,
         uint256 nextTokenPriceMultiplier_,
-        uint256 initialTokenPrice_
+        uint256 initialTokenPrice_,
+        address admin_
     ) internal onlyInitializing {
-        __SBTERC721Upgradeable_init("Eonian Soul Bound founder token", "ESBT", BurnAuth.Neither, true);
+        __ERC5484Upgradeable_init("Eonian Soul Bound founder token", "ESBT", BurnAuth.Neither, true, admin_);
         _maxCountTokens = maxCountTokens_;
         _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
         _initialTokenPrice = initialTokenPrice_;
     }
 
     function _safeMint(address to, uint256 tokenId) internal override {
-        require(totalSupply() < _maxCountTokens, "VaultFounderToken: max number of tokens reached");
+        require(totalSupply() < _maxCountTokens, "ESBT: max number of tokens");
         super._safeMint(to, tokenId);
     }
 
     function priceOf(uint256 tokenId) external view returns (uint256) {
-        require(tokenId < totalSupply(), "VaultFounderToken: Token does not exist");
+        require(tokenId < totalSupply(), "ESBT: Token does not exist");
         return _priceOf(tokenId);
     }
 
@@ -60,13 +62,25 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         _setTokenURI(tokenId, _tokenURI);
     }
 
-    function afterDepositTrigger(ERC4626Upgradeable vault, uint256 /* assets */, uint256 /* shares */) external {
-        if(vault.maxWithdraw(msg.sender) >= _nextTokenPrice()) {
-            safeMint(msg.sender, "");
+    function afterDepositTrigger(
+        ERC4626Upgradeable vault,
+        uint256 /*assets*/,
+        uint256 /*shares*/,
+        address user
+    ) external {
+        if(vault.maxWithdraw(user) >= _nextTokenPrice()) {
+            safeMint(address(user), "");
         }
     }
 
-    function beforeWithdrawTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares) external {
-        // empty body
+    /* solhint-disable no-empty-blocks */
+    function beforeWithdrawTrigger(
+        ERC4626Upgradeable vault,
+        uint256 /* assets */,
+        uint256 /* shares */,
+        address user
+    ) external {
+        // empty
     }
+    /* solhint-disable no-empty-blocks */
 }

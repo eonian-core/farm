@@ -3,9 +3,8 @@ pragma solidity ^0.8.0;
 
 import "./SafeERC4626Upgradeable.sol";
 import "./IVaultHook.sol";
-import "@chainlink/contracts/node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-abstract contract IVaultLifecycle is ERC4626Upgradeable {
+abstract contract IVaultLifecycle is SafeERC4626Upgradeable {
     // list of hooks
     IVaultHook[] public hooks;
 
@@ -35,7 +34,7 @@ abstract contract IVaultLifecycle is ERC4626Upgradeable {
         for (uint256 i = 0; i < hooks.length; i++)
         {
             IVaultHook hook = hooks[i];
-            hook.beforeWithdrawTrigger(this, assets, shares);
+            hook.beforeWithdrawTrigger(this, assets, shares, msg.sender);
         }
     }
 
@@ -47,7 +46,7 @@ abstract contract IVaultLifecycle is ERC4626Upgradeable {
         for (uint256 i = 0; i < hooks.length; i++)
         {
             IVaultHook hook = hooks[i];
-            hook.afterDepositTrigger(this, assets, shares);
+            hook.afterDepositTrigger(this, assets, shares, msg.sender);
         }
     }
 }

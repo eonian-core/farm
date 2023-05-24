@@ -24,4 +24,8 @@ contract IVaultLifecycleMock is IVaultLifecycle {
     function unregisterHook(IVaultHook hook) public {
         removeHook(hook);
     }
+
+    function mint(address to, uint256 amount) external {
+        _mint(to, amount, "", "", false);
+    }
 }

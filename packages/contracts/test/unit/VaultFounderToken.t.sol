@@ -8,13 +8,13 @@ import "contracts/tokens/VaultFounderToken.sol";
 import "./mocks/VaultFounderTokenMock.sol";
 
 contract VaultFounderTokenTest is TestWithERC1820Registry {
-    VaultFounderToken token;
+    VaultFounderToken private token;
 
-    address rewards = vm.addr(1);
-    address culprit = vm.addr(2);
+    address private rewards = vm.addr(1);
+    address private culprit = vm.addr(2);
 
-    address alice = vm.addr(10);
-    address bob = vm.addr(11);
+    address private alice = vm.addr(10);
+    address private bob = vm.addr(11);
 
     function setUp() public {
         vm.label(rewards, "rewards");
@@ -24,7 +24,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         //create a new instance of Founder token contact before each test run
-        token = new VaultFounderTokenMock();
+        token = new VaultFounderTokenMock(address(this));
     }
 
     function testVaultMetadata() public {
@@ -66,7 +66,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.safeMint(bob, "testUrl");
         token.safeMint(culprit, "testUrl");
 
-        vm.expectRevert("VaultFounderToken: max number of tokens reached");
+        vm.expectRevert("ESBT: max number of tokens");
         token.safeMint(rewards, "testUrl");
     }
 
