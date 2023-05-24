@@ -3,7 +3,7 @@ import {
   useConnectWallet,
   useSetChain,
 } from "@web3-onboard/react";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import web3Onboard from "../../web3-onboard";
 import DummyWalletWrapper from "./wrappers/dummy-wallet-wrapper";
 import { WalletWrapper } from "./wrappers/wallet-wrapper";
@@ -35,6 +35,11 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallet, connecting, chains, connectedChain]);
+
+  useEffect(() => {
+    wrapper.reconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <WalletWrapperContext.Provider value={wrapper}>

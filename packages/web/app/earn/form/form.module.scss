@@ -1,6 +1,7 @@
 @import "../../screen.scss";
 
 .container {
+  width: 470px;
   padding: var(--padding-200);
 
   @media (max-width: $screen-mobile) {

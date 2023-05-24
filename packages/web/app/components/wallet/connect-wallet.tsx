@@ -8,11 +8,7 @@ import { WalletStatus } from "../../providers/wallet/wrappers/wallet-wrapper";
 import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 const ConnectWallet = () => {
-  const { status, connect, reconnect } = useWalletWrapperContext();
-
-  React.useEffect(() => {
-    reconnect();
-  }, [reconnect]);
+  const { status, connect } = useWalletWrapperContext();
 
   const handleClick = React.useCallback(
     (event: React.MouseEvent) => {
