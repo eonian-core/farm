@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 import "forge-std/Test.sol";
-import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
 import {IVaultLifecycleMock} from "./mocks/IVaultLifecycleMock.sol";
 import {IVaultHookMock} from"./mocks/IVaultHookMock.sol";
+import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 
-import "./helpers/TestWithERC1820Registry.sol";
-import "contracts/tokens/IVaultLifecycle.sol";
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {IVaultLifecycle} from "contracts/tokens/IVaultLifecycle.sol";
 
 contract IVaultLifecycleTest is TestWithERC1820Registry {
     ERC20Mock underlying;

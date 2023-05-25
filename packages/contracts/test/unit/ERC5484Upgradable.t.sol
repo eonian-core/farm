@@ -2,6 +2,7 @@
 pragma solidity >=0.8.10;
 
 import "forge-std/Test.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
 import "./mocks/ERC5484UpgradableMock.sol";
@@ -53,7 +54,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
     function testMintTokenOnceFail(string memory url) public {
         token.safeMint(alice, url);
 
-        vm.expectRevert("ERC5484Upgradeable: User already has a token");
+        vm.expectRevert("ERC5484: User already has token");
         token.safeMint(alice, url);
 
         assertEq(token.totalSupply(), 1);
@@ -78,7 +79,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         token.safeMint(alice, url);
 
         vm.prank(alice);
-        vm.expectRevert("ERC5484Upgradeable: token is SOUL BOUND and can't be transferred");
+        vm.expectRevert("ERC5484: can't be transferred");
 
         token.transferFrom(alice, bob, 0);
     }

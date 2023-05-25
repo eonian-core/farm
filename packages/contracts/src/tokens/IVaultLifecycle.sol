@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
-import "./SafeERC4626Upgradeable.sol";
-import "./IVaultHook.sol";
+import {SafeERC4626Upgradeable} from "./SafeERC4626Upgradeable.sol";
+import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
+import {IVaultHook} from "./IVaultHook.sol";
 
 abstract contract IVaultLifecycle is SafeERC4626Upgradeable {
     // list of hooks

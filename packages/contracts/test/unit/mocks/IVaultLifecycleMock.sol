@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
-import "contracts/tokens/IVaultLifecycle.sol";
+import {IVaultLifecycle} from "contracts/tokens/IVaultLifecycle.sol";
+import {IVaultHook} from "contracts/tokens/IVaultHook.sol";
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
 contract IVaultLifecycleMock is IVaultLifecycle {
     constructor(

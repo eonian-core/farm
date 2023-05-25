@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
-import "@chainlink/contracts/node_modules/@openzeppelin/contracts/access/AccessControl.sol";
-import "./IERC5484.sol";
+import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
+import {ERC721EnumerableUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
+import {ERC721URIStorageUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
+import {IERC5484} from "./IERC5484.sol";
 
 contract ERC5484Upgradeable is
     IERC5484,
@@ -31,14 +30,6 @@ contract ERC5484Upgradeable is
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
-    /// @dev Modifier to protect a creation a new token for a user
-    /// in case if this user has already have the token.
-    modifier newUser(address to) {
-        bool hasNoToken = balanceOf(to) == 0;
-        require(hasNoToken, "ERC5484Upgradeable: User already has a token");
-        _;
-    }
-
     /// @dev Modifier to protect a burn a token without permission
     modifier allowedTransfer(address to, address from, uint256 tokenId) {
         bool isMint = from == address(0);
@@ -46,26 +37,23 @@ contract ERC5484Upgradeable is
         bool isBurn = !isMint && to == address(0);
         if(_burnAuth == BurnAuth.Neither) {
             // nobody can burn token
-            require(isMint, "ERC5484Upgradeable: token is SOUL BOUND and can't be transferred");
+            require(isMint, "ERC5484: can't be transferred");
         } else if(_burnAuth == BurnAuth.IssuerOnly) {
             // only issuer can burn token
             // so we are checking if token is generation with condition from == address(0)
             // or we are checking that token belongs to other user and message sender is owner and it is burn operation
             bool isBurnOperation = isBurner && isBurn;
-            require(isMint || isBurnOperation,
-                "ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token issuer only");
+            require(isMint || isBurnOperation, "ERC5484: can't be transferred");
         } else if (_burnAuth == BurnAuth.OwnerOnly){
             // only owner can burn token
             // so we are checking if token is generation with condition from == ownerOf(tokenId) and it is burn operation
             bool isOwner = _ownerOf(tokenId) == msg.sender && hasRole(BURNER_ROLE, msg.sender);
-            require(isMint || (isOwner && isBurn),
-                "ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token owner only");
+            require(isMint || (isOwner && isBurn), "ERC5484: can't be transferred");
         } else if (_burnAuth == BurnAuth.Both) {
             // both owner and issuer can burn token
             // so we are checking if token is minting with condition from == address(0)
             // or we are checking that token belongs to other user and message sender is owner and it is burn operation
-            require(isMint || (isBurn && isBurner),
-                "ERC5484Upgradeable: token is SOUL BOUND and can be transferred by token issuer or token owner only");
+            require(isMint || (isBurn && isBurner), "ERC5484: can't be transferred");
         }
         _;
     }
@@ -101,7 +89,7 @@ contract ERC5484Upgradeable is
     function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
         // allow to mint only once per user if _mintOnce is true
         bool hasNoToken = balanceOf(to) == 0;
-        require(!_mintOnce || hasNoToken,"ERC5484Upgradeable: User already has a token");
+        require(!_mintOnce || hasNoToken,"ERC5484: User already has token");
 
         // mint token
         uint256 tokenId = _tokenIdCounter.current();
@@ -158,7 +146,7 @@ contract ERC5484Upgradeable is
     /// @dev unassigned tokenIds are invalid, and queries do throw
     /// @param tokenId The identifier for a token.
     function burnAuth(uint256 tokenId) external view returns (BurnAuth){
-        require(_exists(tokenId), "ERC5484Upgradeable: burnAuth query for nonexistent token");
+        require(_exists(tokenId), "ERC5484: token doesn't exists");
         return _burnAuth;
     }
 
