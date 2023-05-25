@@ -3,12 +3,13 @@ pragma solidity ^0.8.19;
 
 import {UUPSUpgradeable} from "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {SafeInitializable} from "./SafeInitializable.sol";
 
 /** 
  * Implement basic safety mechanism for UUPS proxy
- * based on owner authorisation for upgrades
+ * based on owner authorization for upgrades
  * */
-abstract contract SafeUUPSUpgradeable is UUPSUpgradeable, OwnableUpgradeable {
+abstract contract SafeUUPSUpgradeable is UUPSUpgradeable, SafeInitializable, OwnableUpgradeable {
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

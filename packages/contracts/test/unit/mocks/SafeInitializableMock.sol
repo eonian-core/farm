@@ -7,3 +7,16 @@ import "contracts/upgradeable/SafeInitializable.sol";
 contract SafeInitializableMock is SafeInitializable(false) {
 
 }
+
+/** Version of SafeInitializable for testing */
+contract SafeInitializableImpl is SafeInitializable {
+
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {
+
+    }
+
+    function __SafeInitializableImpl_init() external initializer returns (bool)  {
+        return true;
+    }
+
+}
