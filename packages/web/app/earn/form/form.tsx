@@ -71,9 +71,9 @@ const Form = () => {
             onValueChange={setValue}
           />
           <Input
+            className={styles.input}
             type="number"
             value={value}
-            css={{ width: "auto" }}
             bordered
             color="primary"
             placeholder="Loading..."

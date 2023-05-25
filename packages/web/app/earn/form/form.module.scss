@@ -13,6 +13,20 @@
   }
 }
 
+.input {
+  width: auto;
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
 .fragment {
   padding: var(--padding-400);
 
@@ -61,4 +75,7 @@
   color: var(--color-text-300);
   white-space: nowrap;
   padding: 0 var(--padding-200);
+
+  display: flex;
+  align-items: center;
 }
