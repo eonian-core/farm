@@ -2,11 +2,11 @@
 pragma solidity ^0.8.19;
 
 import {GelatoJobAdapter} from "../GelatoJobAdapter.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+import {SafeUUPSUpgradeable} from "../../upgradeable/SafeUUPSUpgradeable.sol";
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 
-contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
+contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;
 
@@ -23,7 +23,7 @@ contract SimpleGelatoJob is GelatoJobAdapter, OwnableUpgradeable {
     ) public initializer {
         __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepaid);
 
-        __Ownable_init();
+        __SafeUUPSUpgradeable_init(); // ownable under the hood
     }
 
     function _work() internal override {

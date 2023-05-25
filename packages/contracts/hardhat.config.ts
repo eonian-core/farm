@@ -48,6 +48,12 @@ export interface NamedAccounts {
   USDT: Address;
   /** Address of Eonian treasury */
   treasury: Address;
+  /** Address of ApeSwap cUSDT token / USDT lending market / Ola Tether USD (oUSDT) */
+  apeSwap__cUSDT: Address;
+  /** Address of Chainlink BNB/USD price feed */
+  chainlink__BNB_USD_feed: Address;
+  /** Address of Chainlink USDT/USD price feed */
+  chainlink__USDT_USD_feed: Address;
 }
 
 const bscMainnet: NetworkUserConfig = {
@@ -153,6 +159,27 @@ const config: HardhatUserConfig = {
       bsc_mainnet_staging: 0,
       bsc_mainnet_prod: 0,
       default: 0,
+    },
+    // https://bscscan.com/address/0xdbfd516d42743ca3f1c555311f7846095d85f6fd#code
+    apeSwap__cUSDT: {
+      bsc_mainnet_dev: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd",
+      bsc_mainnet_staging: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd",
+      bsc_mainnet_prod: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd",
+      default: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd", // will use bsc address as default for hardhat network
+    },
+    // https://data.chain.link/bsc/mainnet/crypto-usd/bnb-usd
+    chainlink__BNB_USD_feed: {
+      bsc_mainnet_dev: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+      bsc_mainnet_staging: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+      bsc_mainnet_prod: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
+      default: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee", // will use bsc address as default for hardhat network
+    },
+    // https://data.chain.link/bsc/mainnet/crypto-usd/usdt-usd
+    chainlink__USDT_USD_feed: {
+      bsc_mainnet_dev: "0xb97ad0e74fa7d920791e90258a6e2085088b4320",
+      bsc_mainnet_staging: "0xb97ad0e74fa7d920791e90258a6e2085088b4320",
+      bsc_mainnet_prod: "0xb97ad0e74fa7d920791e90258a6e2085088b4320",
+      default: "0xb97ad0e74fa7d920791e90258a6e2085088b4320", // will use bsc address as default for hardhat network
     },
   },
   paths: {

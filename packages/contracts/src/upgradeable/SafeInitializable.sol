@@ -7,6 +7,13 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 contract SafeInitializable is Initializable {
 
     /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
+    /**
      * This constructor prevents UUPS Uninitialized Proxies Vulnerability in all contracts which inherit from it.
      * More info about vulnerability: https://medium.com/immunefi/wormhole-uninitialized-proxy-bugfix-review-90250c41a43a
      * 

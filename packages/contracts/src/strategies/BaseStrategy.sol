@@ -88,7 +88,7 @@ abstract contract BaseStrategy is
         address __assetPriceFeed,
         address _healthCheck
     ) internal onlyInitializing {
-        __HealthChecker_init(_healthCheck);
+        __HealthChecker_init(_healthCheck); // ownable under the hood
         __Pausable_init();
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 

@@ -1,7 +1,7 @@
 import { deployUpgradable } from "../hardhat/deploy-upgradable";
 
 /**
- * Testing deploy of simple Gelato Job, only to test gelator or local fork
+ * Testing deploy of simple Gelato Job, only to test gelato or local fork
  */
 const func = deployUpgradable({
   contract: "SimpleGelatoJob",
