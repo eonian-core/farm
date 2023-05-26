@@ -62,7 +62,15 @@ const bscMainnet: NetworkUserConfig = {
   accounts: [process.env.BSC_MAINNET_PRIVATE_KEY].filter(
     Boolean
   ) as Array<string>,
-}
+  verify: {
+    etherscan: {
+      apiUrl: "https://api.bscscan.com/",
+      apiKey: process.env.BSCSCAN_API_KEY,
+    },
+  },
+};
+
+console.log("Current network: ", process.env.HARDHAT_NETWORK, process.env.BSCSCAN_API_KEY);
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -128,9 +136,6 @@ const config: HardhatUserConfig = {
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: "USD",
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
   },
   namedAccounts: {
     deployer: {
