@@ -14,7 +14,7 @@ As the hardhat-deploy team developed it for their own plugin, it is not consider
 
 ### Transparent Proxy
 
-[OpenZepplin Transparent [Proxy](https://docs.openzeppelin.com/contracts/4.x/api/proxy#TransparentUpgradeableProxy) is a good and widely used proxy. It is based on the EIP-1967 standard. It is well-tested, audited, and has great support from the OpenZeppelin team.
+[OpenZepplin Transparent Proxy](https://docs.openzeppelin.com/contracts/4.x/api/proxy#TransparentUpgradeableProxy) is a good and widely used proxy. It is based on the EIP-1967 standard. It is well-tested, audited, and has great support from the OpenZeppelin team.
 
 However, it never was accepted as a standard through the ERC track. And have gas overhead for every call. Additionally, proxy logic, which makes upgrades, is not upgradeable, which breaks the point of the proxy pattern. There weren't known critical issues with this proxy, but fixing them will be hard or even impossible if they arise.
 
