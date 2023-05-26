@@ -30,10 +30,11 @@ const func = deployUpgradable({
     true, // Job is prepaid
   ],
 
-  afterDeploy: async ({ ethers }, Strategy, [vault]) => {
+  afterDeploy: async ({ ethers, deployments: { log } }, Strategy, [vault]) => {
+    log("Adding strategy to vault");
     const Vault = await ethers.getContractAt("Vault", vault.address);
 
-    Vault.addStrategy(Strategy.address, 10000); // 100% allocation
+    await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
   },
 });
 

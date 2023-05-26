@@ -1119,7 +1119,7 @@ export default {
       "chainId": "56",
       "contracts": {
         "ApeLendingStrategy": {
-          "address": "0xbaFc65cb26950709d4BC6Fc44BC290F2df0C3683",
+          "address": "0x6F33C55aa837Faf12B57cf1f5509B9e05B938d4A",
           "abi": [
             {
               "anonymous": false,
@@ -2035,7 +2035,7 @@ export default {
           ]
         },
         "ApeLendingStrategy_Implementation": {
-          "address": "0x54a87D647E9707271df6C5F65A5efFb5208CEB5f",
+          "address": "0xDbeB604767DcF15FfEda477c37446C12A6f7E593",
           "abi": [
             {
               "inputs": [
@@ -2938,7 +2938,7 @@ export default {
           ]
         },
         "ApeLendingStrategy_Proxy": {
-          "address": "0xbaFc65cb26950709d4BC6Fc44BC290F2df0C3683",
+          "address": "0x6F33C55aa837Faf12B57cf1f5509B9e05B938d4A",
           "abi": [
             {
               "inputs": [
@@ -3012,7 +3012,7 @@ export default {
           ]
         },
         "Vault": {
-          "address": "0x7189eF7707d449c895c475a42937926eb793d47B",
+          "address": "0x23397d37321fD8A5f591646c4A571f89c009D3Fb",
           "abi": [
             {
               "anonymous": false,
@@ -5067,7 +5067,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xFa0F4920e76d674864d8e37C6cd98c2F1275cF7F",
+          "address": "0xfBB842fA5841262Fd0d87F90d4d2aa99EDEcB8b0",
           "abi": [
             {
               "inputs": [
@@ -7109,7 +7109,7 @@ export default {
           ]
         },
         "Vault_Proxy": {
-          "address": "0x7189eF7707d449c895c475a42937926eb793d47B",
+          "address": "0x23397d37321fD8A5f591646c4A571f89c009D3Fb",
           "abi": [
             {
               "inputs": [
