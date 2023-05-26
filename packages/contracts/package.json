@@ -25,7 +25,7 @@
     "lint:license": "./check-license.sh",
     "deploy": "export HARDHAT_NETWORK=bsc_mainnet_prod yarn clean && yarn deploy:mainnet && yarn deploy:etherscan && yarn deploy:sourcify && yarn deploy:export",
     "deploy:mainnet": "hardhat deploy --tags mainnet",
-    "deploy:etherscan": "hardhat etherscan-verify --solc-input",
+    "deploy:etherscan": "hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input",
     "deploy:sourcify": "hardhat sourcify",
     "deploy:export": "yarn deploy:export:json && yarn deploy:export:ts",
     "deploy:export:json": "hardhat export --export-all './deployments/deployed.json'",
