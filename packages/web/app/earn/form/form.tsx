@@ -8,6 +8,7 @@ import FormHeader, { FormAction } from "./form-header";
 import FormButton from "./form-button";
 import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 import PercentButtonGroup from "./percent-button-group";
+import IconBoxArrow from "../../components/icons/icon-box-arrow";
 
 const Form = () => {
   const { wallet } = useWalletWrapperContext();
@@ -37,31 +38,29 @@ const Form = () => {
         />
         <Card.Divider />
         <Card.Body className={styles.fragment}>
-          <div className={styles.info}>
-            <p>
-              With the current <b>15.34% APY</b>, projected:
-            </p>
-            <ul>
-              <li>
-                Deposit Balance
-                <span>
-                  <b>1000 BTC</b> (+300 BTC)
-                </span>
-              </li>
-              <li>
-                Weekly reward
-                <span>
-                  <b>0.01 BTC</b> (+0.005 BTC)
-                </span>
-              </li>
-              <li>
-                Balance in year
-                <span>
-                  <b>280.3 BTC</b> (+98 BTC)
-                </span>
-              </li>
-            </ul>
-          </div>
+          <header className={styles.apyInfo}>
+            With the current <b>15.34% APY</b>, projected
+          </header>
+          <Card variant="bordered" className={styles.info}>
+            <Card.Body>
+              <ul>
+                <li>
+                  <h5>Yearly reward</h5>
+                  <div>
+                    <span>0.0131 BTC</span>
+                    <IconBoxArrow />
+                  </div>
+                </li>
+                <li>
+                  <h5>Deposit in a year</h5>
+                  <div>
+                    <span>0.8 BTC</span>
+                    <IconBoxArrow />
+                  </div>
+                </li>
+              </ul>
+            </Card.Body>
+          </Card>
         </Card.Body>
         <Card.Divider />
         <Card.Body className={styles.fragment}>

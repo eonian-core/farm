@@ -37,35 +37,37 @@
   }
 }
 
-.info {
-  p {
-    color: var(--color-text-300);
-    font-size: var(--font-size-400);
-  }
+.apyInfo {
+  margin-bottom: var(--margin-100);
 
   b {
     color: var(--color-primary-300);
   }
+}
+
+.info {
 
   ul {
-    margin-top: var(--margin-100);
-    padding: 0 var(--padding-200);
-
-    @media (max-width: $screen-small-mobile) {
-      padding: 0;
-    }
+    color: var(--color-text-300);
+    display: flex;
+    justify-content: space-around;
   }
 
   li {
-    margin-top: var(--margin-50);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: var(--font-size-300);
-    color: var(--color-text-300);
+    text-align: center;
+
+    h5 {
+      font-weight: normal;
+      margin-bottom: var(--margin-100);
+    }
 
     span {
-      color: var(--color-text-200);
+      font-weight: var(--font-bold);
+      margin-right: var(--margin-50);
+    }
+
+    svg {
+      color: var(--color-success-500);
     }
   }
 }
