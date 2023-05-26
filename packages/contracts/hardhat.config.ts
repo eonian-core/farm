@@ -70,7 +70,7 @@ const bscMainnet: NetworkUserConfig = {
   },
 };
 
-console.log("Current network: ", process.env.HARDHAT_NETWORK, process.env.BSCSCAN_API_KEY);
+console.log("Current network: ", process.env.HARDHAT_NETWORK);
 
 const config: HardhatUserConfig = {
   solidity: {
