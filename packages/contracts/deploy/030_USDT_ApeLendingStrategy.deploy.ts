@@ -34,7 +34,9 @@ const func = deployUpgradable({
     log("Adding strategy to vault");
     const Vault = await ethers.getContractAt("Vault", vault.address);
 
-    await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
+    const tx = await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
+    const result = await tx.wait();
+    log("Strategy added to vault", result);
   },
 });
 
