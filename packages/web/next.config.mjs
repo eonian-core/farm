@@ -3,10 +3,6 @@ import createMDX from "@next/mdx";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
-
   // Adds mdx support
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
 };

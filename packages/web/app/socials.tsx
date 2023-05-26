@@ -4,7 +4,7 @@ import IconMedium from "./components/icons/icon-medium";
 import IconTelegram from "./components/icons/icon-telegram";
 import IconTwitter from "./components/icons/icon-twitter";
 import IconYoutube from "./components/icons/icon-youtube";
-import { useLocale } from "./store/locale";
+import { store } from "./store/store";
 
 export interface SocialLink {
   name: string;
@@ -13,7 +13,7 @@ export interface SocialLink {
 }
 
 export interface LocalesSocials {
-  [locale: string]: Array<SocialLink>
+  [locale: string]: Array<SocialLink>;
 }
 
 export const socials: LocalesSocials = {
@@ -32,49 +32,43 @@ export const socials: LocalesSocials = {
       name: "GitHub",
       icon: <IconGithub />,
       href: "https://github.com/eonian-core",
-
     },
     {
       name: "Twitter",
       icon: <IconTwitter />,
       href: "https://twitter.com/EonianFinance",
-
     },
     {
       name: "Discord",
       icon: <IconDiscord />,
 
       href: "https://discord.gg/8mcUPPYJmj",
-
     },
   ],
-  
+
   ru: [
     {
       name: "Telegram",
       icon: <IconTelegram />,
       href: "https://t.me/firstblockrus",
-
     },
     {
       name: "YouTube",
       icon: <IconYoutube />,
-      href: "https://www.youtube.com/@eonian3304"
-    }
-  ]
-}
+      href: "https://www.youtube.com/@eonian3304",
+    },
+  ],
+};
 
 export default socials;
 
 export const useLocalSocials = (): Array<SocialLink> => {
-  const { current } = useLocale();
-
+  const { current } = store.getState().locale;
   return socials[current];
-}
+};
 
 export const useOtherLanguageslSocials = (): LocalesSocials => {
-  const { current } = useLocale();
-  const {[current]: localLinks, ...otherLocales} = socials
-
+  const { current } = store.getState().locale;
+  const { [current]: localLinks, ...otherLocales } = socials;
   return otherLocales;
-}
+};
