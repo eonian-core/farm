@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction, Deployment, DeployResult } from "hardhat-deploy/types";
-import { NamedAccounts, Stage } from "../hardhat.config";
+import { BlockchainType, NamedAccounts, Stage } from "../hardhat.config";
 
 export interface ArgsFactoryOptions {
   accounts: NamedAccounts;
@@ -11,8 +11,8 @@ export interface ArgsFactoryOptions {
 export interface DeployUpgradableConfig {
   /** Name of contract */
   contract: string;
-  /** Deploy only locally, default false */
-  isLocal?: boolean;
+  /** Define on which blockchains this contract can be deploed */
+  chains: Array<BlockchainType>;
   /** Additional tags */
   tags?: string[];
 
@@ -33,7 +33,7 @@ export interface DeployUpgradableConfig {
 /** Deploy UUPS Proxy and implementation contract */
 export const deployUpgradable = ({
   contract,
-  isLocal = false,
+  chains,
   tags = [],
   dependencies = [],
   getArgs,
@@ -91,13 +91,24 @@ export const deployUpgradable = ({
     await afterDeploy?.(hre, result, deployedContracts);
   };
 
-  func.tags = [contract, isLocal ? "local" : "mainnet", ...tags];
-  if (isLocal) {
-    // Skip this deploy if network is live (mainnet)
-    func.skip = async ({ network }) => network.live;
-  }
+  func.tags = [contract, ...chains, ...tags];
+
+  func.skip = skipFactory(chains);
 
   func.dependencies = dependencies;
 
   return func;
 };
+
+export const skipFactory =
+  (contractChains: Array<BlockchainType>) =>
+  async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
+    for (const chain of network.config.tags) {
+      // Dont skip if contract expected to be deployed in this chain
+      if (contractChains.includes(chain as BlockchainType)) {
+        return false;
+      }
+    }
+
+    return true;
+  };

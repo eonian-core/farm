@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 
 import { deployUpgradable } from "../hardhat/deploy-upgradable";
+import { BlockchainType } from "../hardhat.config";
 
 const HOUR = 60 * 60; // hour in seconds
 
@@ -10,6 +11,8 @@ const HOUR = 60 * 60; // hour in seconds
 const func = deployUpgradable({
   contract: "ApeLendingStrategy",
   dependencies: ["Vault"],
+  // Not possible to deploy on testnet, have wide range of thrid party protocols-dependencies
+  chains: [BlockchainType.Mainnet, BlockchainType.Local],
   tags: ["asset:USDT"],
   getArgs: ({
     accounts: {
@@ -18,7 +21,6 @@ const func = deployUpgradable({
       chainlink__BNB_USD_feed,
       chainlink__USDT_USD_feed,
     },
-    stage,
     dependencies: [vault],
   }) => [
     vault.address,

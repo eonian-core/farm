@@ -37,6 +37,13 @@ export enum Stage {
   Production = "production",
 }
 
+/** Blockchain to deploy */
+export enum BlockchainType {
+  Local = "local",
+  Testnet = "testnet",
+  Mainnet = "mainnet",
+}
+
 export interface NamedAccounts {
   /** Deploy of contracts */
   deployer: Address;
@@ -91,12 +98,13 @@ const config: HardhatUserConfig = {
           order: "fifo",
         },
       },
-      tags: [Stage.Development],
+      // Important to keep first tag as Stage
+      tags: [Stage.Development, BlockchainType.Local],
     },
     ganache: {
       url: "http://127.0.0.1:8545",
       forking: ethereumFork,
-      tags: [Stage.Development],
+      tags: [Stage.Development, BlockchainType.Local],
     },
     bsc_testnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
@@ -104,19 +112,19 @@ const config: HardhatUserConfig = {
       accounts: [process.env.BSC_TESTNET_PRIVATE_KEY].filter(
         Boolean
       ) as Array<string>,
-      tags: [Stage.Development],
+      tags: [Stage.Development, BlockchainType.Testnet],
     },
     bsc_mainnet_dev: {
       ...bscMainnet,
-      tags: [Stage.Development],
+      tags: [Stage.Development, BlockchainType.Mainnet],
     },
     bsc_mainnet_staging: {
       ...bscMainnet,
-      tags: [Stage.Staging],
+      tags: [Stage.Staging, BlockchainType.Mainnet],
     },
     bsc_mainnet_prod: {
       ...bscMainnet,
-      tags: [Stage.Production],
+      tags: [Stage.Production, BlockchainType.Mainnet],
     },
     ropsten: {
       url: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
@@ -129,6 +137,7 @@ const config: HardhatUserConfig = {
           apiKey: process.env.ROPSTEN_ETHERSCAN_API_KEY,
         },
       },
+      tags: [Stage.Development, BlockchainType.Testnet],
     },
   },
   gasReporter: {

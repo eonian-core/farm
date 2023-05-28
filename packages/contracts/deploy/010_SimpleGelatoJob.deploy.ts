@@ -1,3 +1,4 @@
+import { BlockchainType } from "../hardhat.config";
 import { deployUpgradable } from "../hardhat/deploy-upgradable";
 
 /**
@@ -5,7 +6,7 @@ import { deployUpgradable } from "../hardhat/deploy-upgradable";
  */
 const func = deployUpgradable({
   contract: "SimpleGelatoJob",
-  isLocal: true,
+  chains: [BlockchainType.Local],
   getArgs: ({ accounts: { gelatoOps } }) => [
     gelatoOps,
     1001, // minimum time between executions in seconds
