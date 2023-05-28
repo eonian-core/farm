@@ -126,15 +126,18 @@ const config: HardhatUserConfig = {
       ...bscMainnet,
       tags: [Stage.Production, BlockchainType.Mainnet],
     },
-    ropsten: {
-      url: "https://ropsten.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-      accounts: [process.env.ROPSTEN_PRIVATE_KEY].filter(
+    // https://chainlist.org/chain/5
+    // https://www.alchemy.com/overviews/sepolia-testnet
+    sepolia: {
+      chainId: 11155111,
+      url: process.env.SEPOLIA_RPC_URL,
+      accounts: [process.env.SEPOLIA_PRIVATE_KEY].filter(
         Boolean
       ) as Array<string>,
       verify: {
         etherscan: {
-          apiUrl: "https://api-ropsten.etherscan.io/",
-          apiKey: process.env.ROPSTEN_ETHERSCAN_API_KEY,
+          apiUrl: "https://api-sepolia.etherscan.io/",
+          apiKey: process.env.SEPOLIA_ETHERSCAN_API_KEY,
         },
       },
       tags: [Stage.Development, BlockchainType.Testnet],
