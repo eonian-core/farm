@@ -16,7 +16,7 @@ As the hardhat-deploy team developed it for their own plugin, it is not consider
 
 [OpenZepplin Transparent Proxy](https://docs.openzeppelin.com/contracts/4.x/api/proxy#TransparentUpgradeableProxy) is a good and widely used proxy. It is based on the EIP-1967 standard. It is well-tested, audited, and has great support from the OpenZeppelin team.
 
-However, it never was accepted as a standard through the ERC track. And have gas overhead for every call. Additionally, proxy logic, which makes upgrades, is not upgradeable, which breaks the point of the proxy pattern. There weren't known critical issues with this proxy, but fixing them will be hard or even impossible if they arise.
+However, it has gas overhead for every call. Additionally, proxy logic, which makes upgrades, is not upgradeable, which breaks the point of the proxy pattern. There weren't known critical issues with this proxy, but fixing them will be hard or even impossible if they arise.
 
 The Transparent proxy in the current situation can be used in hardhat-deploy only as a fork of official implementation, which makes the setup of this proxy is more simple but less secure.
 
@@ -26,7 +26,7 @@ The Transparent proxy in the current situation can be used in hardhat-deploy onl
 
 This type of proxy has a known "uninitialized implementation" vulnerability fixed by the OpenZepplin team and has best practices to avoid it. This proxy standard has the most efficient gas usage, as they basically redirect every call to the implementation contract directly.
 
-The UUPS proxy deployment process is simpler, which makes them possible to use in hardhat-deploy directly from OpenZeppelin, but implementation requires additional development of proxy rights management.
+The UUPS proxy deployment process is simpler, which makes them possible to use in hardhat-deploy directly from OpenZeppelin, but implementation does not have the same level of support from OpenZeppling and from hardhat-deploy, which requires additional development of proxy rights management and proper usage.
 
 ### Beacon Proxy
 
