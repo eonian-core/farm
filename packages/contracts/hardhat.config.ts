@@ -13,9 +13,7 @@ import "hardhat-tracer";
 import "hardhat-deploy";
 import "hardhat-docgen";
 import "@nomicfoundation/hardhat-chai-matchers";
-
-import constLinePreprocessingHook from "./hardhat/const-line-preprocessing-hook";
-import "hardhat-preprocessor";
+import "@nomicfoundation/hardhat-foundry";
 
 import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 
@@ -193,41 +191,6 @@ const config: HardhatUserConfig = {
     cache: "./cache_hardhat",
     artifacts: "./artifacts",
   },
-  preprocess: {
-    eachLine: (hre) => ({
-      transform: (line: string, sourceInfo) => {
-        // Import preprocessing to add support forge libraries for hardhat
-        if (line.match(/^\s*import /i)) {
-          const remappings = getRemappings();
-          const importPartsRegExp = /(.+)"(.+)"/g;
-          const [, prefix, path] = importPartsRegExp.exec(line) ?? [];
-          for (const [find, replace] of remappings) {
-            if (!path || !path.startsWith(find)) {
-              continue;
-            }
-            line = `${prefix} "${replace + path.slice(find.length)}";`;
-            break;
-          }
-        }
-
-        const { absolutePath } = sourceInfo;
-        const linePreprocessor = constLinePreprocessingHook(hre, absolutePath);
-        if (linePreprocessor) {
-          return linePreprocessor(line, sourceInfo);
-        }
-
-        return line;
-      },
-    }),
-  },
 };
-
-function getRemappings() {
-  return fs
-    .readFileSync("remappings.txt", "utf8")
-    .split("\n")
-    .filter(Boolean) // remove empty lines
-    .map((line) => line.trim().split("="));
-}
 
 export default config;
