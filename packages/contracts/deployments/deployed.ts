@@ -8132,7 +8132,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0x575f4bdC4579C521c59254B05D80c04d8E4F6476",
+          "address": "0x5e7B837ACA749bf2A06947E4a411701EC0d00196",
           "abi": [
             {
               "inputs": [

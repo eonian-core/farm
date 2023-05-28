@@ -13,6 +13,7 @@ import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "./upgradeable/SafeUUPSUpgradeable.sol";
+import {IVersionable} from "./upgradeable/IVersionable.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -74,6 +75,11 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender {
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[50] private __gap;
 
+    /// @inheritdoc IVersionable
+    function version() external pure override returns (string memory) {
+        return "0.1.3";
+    }
+
     modifier onlyOwnerOrStrategy(address strategy) {
         if (msg.sender != owner() && msg.sender != strategy) {
             revert AccessDeniedForCaller(msg.sender);
@@ -114,11 +120,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender {
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
-    }
-
-    /// @inheritdoc IVault
-    function version() external pure override returns (string memory) {
-        return "0.1.0";
     }
 
     /// @dev Override to add the "whenNotPaused" modifier

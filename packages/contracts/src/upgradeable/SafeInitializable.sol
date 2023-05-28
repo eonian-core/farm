@@ -2,9 +2,10 @@
 pragma solidity ^0.8.19;
 
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {IVersionable} from './IVersionable.sol';
 
 /** Implement best practices for initializable contracts */
-contract SafeInitializable is Initializable {
+abstract contract SafeInitializable is IVersionable, Initializable {
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

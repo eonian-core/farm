@@ -75,15 +75,21 @@ export const deployUpgradable = ({
       args: [true], // Disable inititializers in implementaion contract
       proxy: {
         owner: deployer,
-        proxyContract: "ERC1967Proxy", // Base for UUPS proxy
-        proxyArgs: ["{implementation}", "{data}"], // specific for ERC1967Proxy
+        proxyContract: "UUPS",
+        proxyArgs: ["{implementation}", "{data}"], // specific for UUPS
         execute: {
-          methodName: "initialize",
-          args: getArgs({
-            accounts,
-            stage: (network.config.tags?.[0] as Stage) || Stage.Development,
-            dependencies: deployedContracts,
-          }),
+          init: {
+            methodName: "initialize",
+            args: getArgs({
+              accounts,
+              stage: (network.config.tags?.[0] as Stage) || Stage.Development,
+              dependencies: deployedContracts,
+            }),
+          },
+          onUpgrade: {
+            methodName: "upgradeTo", // make upgrade without calling initialize
+            args: ["{implementation}"],
+          },
         },
       },
     });

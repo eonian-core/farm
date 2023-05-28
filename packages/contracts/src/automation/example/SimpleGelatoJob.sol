@@ -5,10 +5,16 @@ import {GelatoJobAdapter} from "../GelatoJobAdapter.sol";
 
 import {SafeUUPSUpgradeable} from "../../upgradeable/SafeUUPSUpgradeable.sol";
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
+import {IVersionable} from "../../upgradeable/IVersionable.sol";
 
 contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;
+
+    /// @inheritdoc IVersionable
+    function version() external pure override returns (string memory) {
+        return "0.1.1";
+    }
 
     // allow sending eth to the test contract
     receive() external payable {} // solhint-disable-line no-empty-blocks

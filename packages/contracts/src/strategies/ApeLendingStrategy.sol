@@ -12,6 +12,7 @@ import {IRainMaker} from "./protocols/IRainMaker.sol";
 import {IStrategy} from "./IStrategy.sol";
 import {IVault} from "../IVault.sol";
 
+import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
 
@@ -42,6 +43,11 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
     uint256[50] private __gap;
+
+    /// @inheritdoc IVersionable
+    function version() external pure override returns (string memory) {
+        return "0.1.1";
+    }
 
     // ------------------------------------------ Constructors ------------------------------------------
 
