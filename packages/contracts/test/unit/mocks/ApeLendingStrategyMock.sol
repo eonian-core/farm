@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import "contracts/strategies/ApeLendingStrategy.sol";
 
+
 contract ApeLendingStrategyMock is ApeLendingStrategy {
     event LiquidatePositionCalled(uint256 assets);
 
@@ -14,7 +15,7 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
         address __assetPriceFeed,
         uint256 _minReportInterval,
         bool _isPrepaid
-    ) {
+    ) ApeLendingStrategy(false) {
         initialize(
             _vault,
             _cToken,

@@ -25,6 +25,8 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
      */
     uint256[50] private __gap;
 
+    // ------------------------------------------ Constructors ------------------------------------------
+
     /**
      * Constructor for the SafeERC4626Upgradeable contract
      * @param _asset which will be stored in this Vault

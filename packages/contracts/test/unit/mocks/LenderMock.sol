@@ -4,7 +4,9 @@ pragma solidity ^0.8.0;
 import "contracts/lending/Lender.sol";
 import {console as cnsl} from "hardhat/console.sol";
 
-contract LenderMock is Lender {
+import "./SafeInitializableMock.sol";
+
+contract LenderMock is Lender, SafeInitializableMock {
     uint256 public balance;
 
     mapping(address => uint256) public borrowersBalances;

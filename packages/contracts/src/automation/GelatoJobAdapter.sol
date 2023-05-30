@@ -20,6 +20,8 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
      */
     uint256[50] private __gap;
 
+    // ------------------------------------------ Constructors ------------------------------------------
+
     /**
      * @notice Constructor of Job adapter contract.
      * @param _ops - address of the Ops contract.
