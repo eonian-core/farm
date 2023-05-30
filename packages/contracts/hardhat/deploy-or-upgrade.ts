@@ -78,7 +78,7 @@ export const deployOrUpgrade = ({
       args: [true], // Disable inititializers in implementaion contract
       proxy: {
         owner: deployer,
-        proxyContract: "UUPS",
+        proxyContract: "ERC1967Proxy", // base for UUPS, directly from OpenZeppelin
         proxyArgs: ["{implementation}", "{data}"], // specific for UUPS
         execute: {
           init: {
