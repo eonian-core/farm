@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "./page.module.scss";
 import Form from "./form/form";
 
