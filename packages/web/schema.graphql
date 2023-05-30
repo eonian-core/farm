@@ -13,6 +13,11 @@ type Query {
   Fetches an array of Vault objects.
   """
   vaults: [Vault!]!
+
+  """
+  Fetches a Vault by a specific symbol (token's name).
+  """
+  vaultBySymbol(symbol: String!): Vault
 }
 
 """

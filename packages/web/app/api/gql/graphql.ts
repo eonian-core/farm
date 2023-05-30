@@ -18,8 +18,15 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Fetches a Vault by a specific symbol (token's name). */
+  vaultBySymbol?: Maybe<Vault>;
   /** Fetches an array of Vault objects. */
   vaults: Array<Vault>;
+};
+
+
+export type QueryVaultBySymbolArgs = {
+  symbol: Scalars['String'];
 };
 
 /** Represents the underlying asset stored in a vault. */
