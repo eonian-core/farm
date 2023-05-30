@@ -113,7 +113,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
-        addHook(IVaultHook(_founders));
+        addDepositHook(IVaultHook(_founders));
     }
 
     /// @inheritdoc IVault
@@ -135,7 +135,6 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
     function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
-        IVaultLifecycle.beforeWithdraw(assets, shares);
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -175,6 +174,9 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         if (_freeAssets() < assets) {
             revert InsufficientVaultBalance(assets, shares);
         }
+
+        // apply the hook
+        IVaultLifecycle.beforeWithdraw(assets, shares);
     }
 
     /// @notice Adds a new strategy to the vault.
@@ -412,6 +414,6 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
     }
 
     function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
-        super.afterDeposit(assets, shares);
+        IVaultLifecycle.afterDeposit(assets, shares);
     }
 }

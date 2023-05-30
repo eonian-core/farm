@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import {ERC5484Upgradeable} from "./ERC5484Upgradeable.sol";
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultFounderToken} from "./IVaultFounderToken.sol";
-import {IVaultHook} from "./IVaultHook.sol";
+import {IVaultHook, ERC4626UpgradeableRequest} from "./IVaultHook.sol";
 
 contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook {
 
@@ -16,6 +16,11 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
 
     // Initial token price
     uint256 private _initialTokenPrice;
+
+    /// @dev This empty reserved space is put in place to allow future versions to add new
+    /// variables without shifting down storage in the inheritance chain.
+    /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+    uint256[46] __gap;
 
     //todo discuss if those parameters should be in constructor or not
     function __VaultFounderToken_init(
@@ -48,6 +53,10 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         return price;
     }
 
+    function setNextTokenMultiplier(uint256 nextTokenPriceMultiplier_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
+    }
+
     function nextTokenPrice() external view returns (uint256){
         return _nextTokenPrice();
     }
@@ -62,25 +71,18 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         _setTokenURI(tokenId, _tokenURI);
     }
 
-    function afterDepositTrigger(
-        ERC4626Upgradeable vault,
-        uint256 /*assets*/,
-        uint256 /*shares*/,
-        address user
-    ) external {
-        if(vault.maxWithdraw(user) >= _nextTokenPrice()) {
-            safeMint(address(user), "");
+    function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
+            external override
+    {
+        if(request.senderMaxWithdraw >= _nextTokenPrice()) {
+            safeMint(request.requestSender, "");
         }
     }
 
     /* solhint-disable no-empty-blocks */
-    function beforeWithdrawTrigger(
-        ERC4626Upgradeable vault,
-        uint256 /* assets */,
-        uint256 /* shares */,
-        address user
-    ) external {
-        // empty
+    function beforeWithdrawTrigger(ERC4626UpgradeableRequest memory request) external override
+    {
+        //empty code
     }
     /* solhint-disable no-empty-blocks */
 }

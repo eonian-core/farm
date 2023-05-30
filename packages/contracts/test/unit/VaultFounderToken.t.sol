@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
-import "forge-std/Test.sol";
+import  "forge-std/Test.sol";
 
-import "./helpers/TestWithERC1820Registry.sol";
-import "contracts/tokens/VaultFounderToken.sol";
-import "./mocks/VaultFounderTokenMock.sol";
+import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
+import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
+import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
+import {VaultFounderTokenMock} from "./mocks/VaultFounderTokenMock.sol";
 
 contract VaultFounderTokenTest is TestWithERC1820Registry {
     VaultFounderToken private token;
@@ -100,6 +101,22 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.safeMint(alice, "testUrl");
         vm.expectRevert("ERC721Enumerable: owner index out of bounds");
         token.setTokenURI("testUrl2");
+    }
+
+    function testSetTokenMultiplier() public {
+        assertEq(token.nextTokenPrice(), 200);
+        token.safeMint(alice, "testUrl");
+        token.setNextTokenMultiplier(200);
+        assertEq(token.nextTokenPrice(), 400);
+    }
+
+    function testSetTokenMultiplierFail() public {
+        assertEq(token.nextTokenPrice(), 200);
+        vm.expectRevert(abi.encodePacked(
+            AccessTestHelper.getErrorMessage(address(alice), token.DEFAULT_ADMIN_ROLE())
+        ));
+        vm.prank(alice);
+        token.setNextTokenMultiplier(200);
     }
 
 }

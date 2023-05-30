@@ -1,8 +1,8 @@
 /// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "contracts/Vault.sol";
-import "../../../src/tokens/ERC5484Upgradeable.sol";
+import {Vault} from "contracts/Vault.sol";
+import {ERC5484Upgradeable} from "contracts/tokens/ERC5484Upgradeable.sol";
 
 contract ERC5484UpgradableMock is ERC5484Upgradeable {
     constructor(

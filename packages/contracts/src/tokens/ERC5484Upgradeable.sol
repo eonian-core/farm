@@ -88,8 +88,7 @@ contract ERC5484Upgradeable is
 
     function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
         // allow to mint only once per user if _mintOnce is true
-        bool hasNoToken = balanceOf(to) == 0;
-        require(!_mintOnce || hasNoToken,"ERC5484: User already has token");
+        require(!_mintOnce || balanceOf(to) == 0,"ERC5484: User already has token");
 
         // mint token
         uint256 tokenId = _tokenIdCounter.current();

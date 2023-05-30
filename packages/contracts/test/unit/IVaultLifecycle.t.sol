@@ -10,6 +10,7 @@ import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {IVaultLifecycle} from "contracts/tokens/IVaultLifecycle.sol";
+import {IVaultHook, ERC4626UpgradeableRequest} from "contracts/tokens/IVaultHook.sol";
 
 contract IVaultLifecycleTest is TestWithERC1820Registry {
     ERC20Mock underlying;
@@ -45,10 +46,10 @@ contract IVaultLifecycleTest is TestWithERC1820Registry {
         //create a hook mock to be able check if the hook was called
         IVaultHookMock hook1 = new IVaultHookMock();
         IVaultHookMock hook2 = new IVaultHookMock();
-        vault.registerHook(hook1);
-        vault.registerHook(hook2);
-        assertEq(hook1.beforeWithdrawHookCalledCounter(), 0);
-        assertEq(hook2.beforeWithdrawHookCalledCounter(), 0);
+        vault.registerWithdrawHook(hook1);
+        vault.registerWithdrawHook(hook2);
+        assertEq(IVaultHookMock(hook1).beforeWithdrawHookCalledCounter(), 0);
+        assertEq(IVaultHookMock(hook2).beforeWithdrawHookCalledCounter(), 0);
 
         // Mint some initial funds for the vault
         underlying.mint(address(vault), withdrawAmount);
@@ -65,7 +66,7 @@ contract IVaultLifecycleTest is TestWithERC1820Registry {
         assertEq(hook2.beforeWithdrawHookCalledCounter(), 1);
 
         // unregister hook2 to check if it wasn't called second time
-        vault.unregisterHook(hook2);
+        vault.unregisterWithdrawHook(hook2);
 
         // Alice withdraws the second half of her shares
         vm.prank(alice);
@@ -81,8 +82,8 @@ contract IVaultLifecycleTest is TestWithERC1820Registry {
         //create a hook mock to be able check if the hook was called
         IVaultHookMock hook1 = new IVaultHookMock();
         IVaultHookMock hook2 = new IVaultHookMock();
-        vault.registerHook(hook1);
-        vault.registerHook(hook2);
+        vault.registerDepositHook(hook1);
+        vault.registerDepositHook(hook2);
         assertEq(hook1.afterDepositHookCalledCounter(), 0);
         assertEq(hook2.afterDepositHookCalledCounter(), 0);
 
@@ -104,7 +105,7 @@ contract IVaultLifecycleTest is TestWithERC1820Registry {
         assertEq(hook2.afterDepositHookCalledCounter(), 1);
 
         // unregister hook2 to check if it wasn't called second time
-        vault.unregisterHook(hook2);
+        vault.unregisterDepositHook(hook2);
 
         // deposit to the vault the second half of the funds
         vm.prank(alice);

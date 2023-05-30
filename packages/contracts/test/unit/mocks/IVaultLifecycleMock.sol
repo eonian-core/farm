@@ -19,12 +19,20 @@ contract IVaultLifecycleMock is IVaultLifecycle {
         return asset.balanceOf(address(this));
     }
 
-    function registerHook(IVaultHook hook) public {
-        addHook(hook);
+    function registerDepositHook(IVaultHook hook) public {
+        addDepositHook(hook);
     }
 
-    function unregisterHook(IVaultHook hook) public {
-        removeHook(hook);
+    function registerWithdrawHook(IVaultHook hook) public {
+        addWithdrawHook(hook);
+    }
+
+    function unregisterDepositHook(IVaultHook hook) public {
+        removeDepositHook(hook);
+    }
+
+    function unregisterWithdrawHook(IVaultHook hook) public {
+        removeWithdrawHook(hook);
     }
 
     function mint(address to, uint256 amount) external {

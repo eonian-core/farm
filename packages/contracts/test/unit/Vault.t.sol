@@ -759,7 +759,7 @@ contract VaultTest is TestWithERC1820Registry {
         uint128 strategyBalance,
         uint128 withdrawAmount
     ) public {
-        vm.assume(withdrawAmount > 0);
+        vm.assume(withdrawAmount > 0 && withdrawAmount < MAX_DEPOSIT);
         vm.assume(vaultBalance > 0);
         vm.assume(withdrawAmount > vaultBalance);
         vm.assume(strategyBalance >= withdrawAmount - vaultBalance);

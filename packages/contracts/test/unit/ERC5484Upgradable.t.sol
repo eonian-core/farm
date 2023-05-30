@@ -1,22 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity >=0.8.10;
+pragma solidity >=0.8.19;
 
 import "forge-std/Test.sol";
-import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 
-import "./helpers/TestWithERC1820Registry.sol";
-import "./mocks/ERC5484UpgradableMock.sol";
-import "contracts/tokens/ERC5484Upgradeable.sol";
-import "contracts/tokens/IERC5484.sol";
+import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
+import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
+import {ERC5484UpgradableMock} from "./mocks/ERC5484UpgradableMock.sol";
+import {ERC5484Upgradeable} from "contracts/tokens/ERC5484Upgradeable.sol";
+import {IERC5484} from "contracts/tokens/IERC5484.sol";
 
 contract ERC5484UpgradeableTest is TestWithERC1820Registry {
-    ERC5484Upgradeable token;
+    ERC5484Upgradeable private token;
 
-    address rewards = vm.addr(1);
-    address culprit = vm.addr(2);
+    address private rewards = vm.addr(1);
+    address private culprit = vm.addr(2);
 
-    address alice = vm.addr(10);
-    address bob = vm.addr(11);
+    address private alice = vm.addr(10);
+    address private bob = vm.addr(11);
 
     function setUp() public {
         vm.label(rewards, "rewards");
@@ -90,7 +90,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.prank(alice);
         vm.expectRevert(
             abi.encodePacked(
-                getErrorMessage(address(this), token.BURNER_ROLE())
+                AccessTestHelper.getErrorMessage(address(this), token.BURNER_ROLE())
             )
         );
         token.burn(0);
@@ -130,7 +130,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         assertEq(token.totalSupply(), 1);
 
         // can't be burned by owner
-        string memory errorMessage = getErrorMessage(address(alice), token.BURNER_ROLE()); // error message have to be generated before the call
+        string memory errorMessage = AccessTestHelper.getErrorMessage(address(alice), token.BURNER_ROLE()); // error message have to be generated before the call
         vm.prank(alice);
         vm.expectRevert(abi.encodePacked(errorMessage));
 
@@ -172,7 +172,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.prank(address(0));
         vm.expectRevert(
             abi.encodePacked(
-                getErrorMessage(address(this), token.BURNER_ROLE())
+                AccessTestHelper.getErrorMessage(address(this), token.BURNER_ROLE())
             )
         );
         token.burn(0);
@@ -201,16 +201,5 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.prank(address(this));
         token.burn(1);
         assertEq(token.totalSupply(), 0);
-    }
-
-    function getErrorMessage(address account, bytes32 role) private pure returns (string memory) {
-        return string(
-            abi.encodePacked(
-                "AccessControl: account ",
-                StringsUpgradeable.toHexString(account),
-                " is missing role ",
-                StringsUpgradeable.toHexString(uint256(role), 32)
-            )
-        );
     }
 }

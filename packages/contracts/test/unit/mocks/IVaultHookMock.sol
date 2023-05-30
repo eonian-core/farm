@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
-import "contracts/tokens/IVaultLifecycle.sol";
-
+import {ERC4626Upgradeable} from "contracts/tokens/ERC4626Upgradeable.sol";
+import {IVaultHook, ERC4626UpgradeableRequest} from "contracts/tokens/IVaultHook.sol";
 
 contract IVaultHookMock is IVaultHook {
     uint256 public beforeWithdrawHookCalledCounter;
@@ -13,13 +13,13 @@ contract IVaultHookMock is IVaultHook {
         afterDepositHookCalledCounter = 0;
     }
 
-    function afterDepositTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares, address user)
-        external override
+    function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
+            external override
     {
         afterDepositHookCalledCounter++;
     }
 
-    function beforeWithdrawTrigger(ERC4626Upgradeable vault, uint256 assets, uint256 shares, address user)
+    function beforeWithdrawTrigger(ERC4626UpgradeableRequest memory request)
         external override
     {
         beforeWithdrawHookCalledCounter++;
