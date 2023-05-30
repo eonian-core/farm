@@ -30,8 +30,11 @@ export interface DeployUpgradableConfig {
   ) => Promise<void>;
 }
 
-/** Deploy UUPS Proxy and implementation contract */
-export const deployUpgradable = ({
+/**
+ * Deploy UUPS Proxy and implementation contract
+ * or upgrade existing if already deployed
+ * */
+export const deployOrUpgrade = ({
   contract,
   chains,
   tags = [],
@@ -85,10 +88,6 @@ export const deployUpgradable = ({
               stage: (network.config.tags?.[0] as Stage) || Stage.Development,
               dependencies: deployedContracts,
             }),
-          },
-          onUpgrade: {
-            methodName: "upgradeTo", // make upgrade without calling initialize
-            args: ["{implementation}"],
           },
         },
       },

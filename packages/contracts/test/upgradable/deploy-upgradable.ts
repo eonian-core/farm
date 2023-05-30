@@ -2,7 +2,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { expect } from "chai";
 
 import { BlockchainType } from "../../hardhat.config";
-import { skipFactory } from "../../hardhat/deploy-upgradable";
+import { skipFactory } from "../../hardhat/deploy-or-upgrade";
 
 describe("skipFactory", () => {
   it("should return true if none of the expected blockchains is present in network tags", async () => {

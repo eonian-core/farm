@@ -1,10 +1,10 @@
 import { BlockchainType } from "../hardhat.config";
-import { deployUpgradable } from "../hardhat/deploy-upgradable";
+import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
 
 /**
  * Testing deploy of simple Gelato Job, only to test gelato or local fork
  */
-const func = deployUpgradable({
+const func = deployOrUpgrade({
   contract: "SimpleGelatoJob",
   chains: [BlockchainType.Local],
   getArgs: ({ accounts: { gelatoOps } }) => [

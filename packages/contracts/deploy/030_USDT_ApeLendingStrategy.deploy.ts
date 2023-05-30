@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 
-import { deployUpgradable } from "../hardhat/deploy-upgradable";
+import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
 import { BlockchainType } from "../hardhat.config";
 
 const HOUR = 60 * 60; // hour in seconds
@@ -8,7 +8,7 @@ const HOUR = 60 * 60; // hour in seconds
 /**
  * Deploy USDT ApeSwap Lending strategy contract
  */
-const func = deployUpgradable({
+const func = deployOrUpgrade({
   contract: "ApeLendingStrategy",
   dependencies: ["Vault"],
   // Not possible to deploy on testnet, have wide range of thrid party protocols-dependencies
