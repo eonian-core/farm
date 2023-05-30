@@ -6,9 +6,9 @@ import styles from "./form.module.scss";
 import { Card, FormElement, Input, Loading } from "@nextui-org/react";
 import FormHeader, { FormAction } from "./form-header";
 import FormButton from "./form-button";
-import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
+import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import PercentButtonGroup from "./percent-button-group";
-import IconBoxArrow from "../../components/icons/icon-box-arrow";
+import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 
 const Form = () => {
   const { wallet } = useWalletWrapperContext();
