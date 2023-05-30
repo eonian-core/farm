@@ -80,6 +80,7 @@ export const deployOrUpgrade = ({
         owner: deployer,
         proxyContract: "ERC1967Proxy", // base for UUPS, directly from OpenZeppelin
         proxyArgs: ["{implementation}", "{data}"], // specific for UUPS
+        checkProxyAdmin: false,
         execute: {
           init: {
             methodName: "initialize",
