@@ -20,7 +20,7 @@ export default async function Earn({ params }: PageParams) {
   const { symbol } = params;
   if (!symbol) {
     const [[{ symbol }]] = await generateStaticParams();
-    return redirect("/earn/" + symbol);
+    redirect("/earn/" + symbol);
   }
 
   return (
