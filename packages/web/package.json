@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\" \"yarn:mock\" ",
+    "dev:next-mock": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:mock\" ",
     "dev:next": "next dev",
     "build": "next build",
     "start": "next start",

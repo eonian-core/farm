@@ -24,7 +24,6 @@ export type Query = {
   vaults: Array<Vault>;
 };
 
-
 export type QueryVaultBySymbolArgs = {
   symbol: Scalars['String'];
 };

@@ -10,7 +10,11 @@ import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrappe
 import PercentButtonGroup from "./percent-button-group";
 import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 
-const Form = () => {
+interface Props {
+  vaultSymbol: string;
+}
+
+const Form: React.FC<Props> = ({ vaultSymbol }) => {
   const { wallet } = useWalletWrapperContext();
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT

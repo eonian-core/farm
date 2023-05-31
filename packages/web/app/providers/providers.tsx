@@ -6,6 +6,7 @@ import NextThemeProvider from "./next-theme";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { WalletWrapperProvider } from "./wallet/wallet-wrapper-provider";
+import { ApolloWrapperProvider } from "../api/apollo-wrapper-provider";
 
 interface Props {
   locale: string;
@@ -15,9 +16,11 @@ interface Props {
 export default function Providers({ children }: Props) {
   return (
     <Provider store={store}>
-      <WalletWrapperProvider>
-        <NextThemeProvider>{children}</NextThemeProvider>
-      </WalletWrapperProvider>
+      <ApolloWrapperProvider>
+        <WalletWrapperProvider>
+          <NextThemeProvider>{children}</NextThemeProvider>
+        </WalletWrapperProvider>
+      </ApolloWrapperProvider>
     </Provider>
   );
 }
