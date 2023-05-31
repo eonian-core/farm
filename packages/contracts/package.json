@@ -83,7 +83,9 @@
     "@nomicfoundation/hardhat-foundry": "^1.0.1",
     "@openzeppelin/contracts": "^4.8.2",
     "@openzeppelin/contracts-upgradeable": "^4.8.2",
+    "@types/sinon": "^10.0.15",
     "lodash": "^4.17.21",
+    "sinon": "^15.1.0",
     "tree-kill": "^1.2.2"
   }
 }
