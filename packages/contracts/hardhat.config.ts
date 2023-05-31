@@ -10,7 +10,7 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-tracer";
-import "hardhat-deploy";
+import "@eonian/hardhat-deploy";
 import "hardhat-docgen";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-foundry";
@@ -18,7 +18,7 @@ import "@nomicfoundation/hardhat-foundry";
 import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 
 import "./hardhat/tasks/start-hardhat-node.ts";
-import { Address } from "hardhat-deploy/types";
+import { Address } from "@eonian/hardhat-deploy/types";
 
 dotenv.config();
 
