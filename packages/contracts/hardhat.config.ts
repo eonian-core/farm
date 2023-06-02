@@ -128,6 +128,7 @@ const config: HardhatUserConfig = {
     },
     // https://chainlist.org/chain/5
     // https://www.alchemy.com/overviews/sepolia-testnet
+    // https://sepolia.etherscan.io/
     sepolia: {
       chainId: 11155111,
       url: process.env.SEPOLIA_RPC_URL,
