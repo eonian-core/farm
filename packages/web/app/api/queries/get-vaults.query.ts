@@ -28,7 +28,7 @@ const GetVaults = gql`
 `;
 
 const GetVaultsSymbols = gql`
-  query GetVaults {
+  query GetVaultsSymbols {
     vaults {
       symbol
     }

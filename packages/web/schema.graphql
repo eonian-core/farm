@@ -2,9 +2,6 @@ schema {
   query: Query
 }
 
-# Custom scalar type to represent large decimal numbers with precision
-scalar BigDecimal
-
 # Custom scalar type to represent large integers
 scalar BigInt
 
@@ -32,12 +29,12 @@ type Vault {
   """
   The total balance of the vault.
   """
-  totalBalance: BigDecimal!
+  totalBalance: BigInt!
   
   """
   The interest rate applied to the assets in the vault.
   """
-  interestRate: BigDecimal!
+  interestRate: BigInt!
   
   """
   The timestamp of the last harvest event (in seconds since Unix epoch).

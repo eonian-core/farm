@@ -1,4 +1,4 @@
 export * from "./apollo.client";
-export * from "./queries/get-vaults.query";
+export * from "./queries";
 
-
+export type { Vault, UnderlyingAsset } from "./gql/graphql";

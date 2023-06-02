@@ -2,55 +2,27 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import {
-  MockList,
-  addMocksToSchema,
-  createMockStore,
-} from "@graphql-tools/mock";
+import { addMocksToSchema, createMockStore } from "@graphql-tools/mock";
 import { loadSchema } from "@graphql-tools/load";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import {
   mocks as scalarsMocks,
   resolvers as scalarResolvers,
 } from "graphql-scalars";
-import { Vault } from "./app/api/gql/graphql";
+
+import vaults from "./data/vaults.json" assert { type: "json" };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 async function main() {
   // Load schema from the file
-  const schema = await loadSchema(join(__dirname, "./schema.graphql"), {
+  const schema = await loadSchema(join(__dirname, "../schema.graphql"), {
     loaders: [new GraphQLFileLoader()],
   });
 
-  const store = createMockStore({ schema });
-  store.set("Query", "ROOT", "vaults", [
-    {
-      name: "Ethereum Vault",
-      symbol: "eonETH",
-      underlyingAsset: {
-        name: "Ethereum",
-        symbol: "ETH",
-      },
-    },
-    {
-      name: "Bitcoin Vault",
-      symbol: "eonBTC",
-      underlyingAsset: {
-        name: "Bitcoin",
-        symbol: "BTC",
-      },
-    },
-    {
-      name: "USDT Vault",
-      symbol: "eonUSDT",
-      underlyingAsset: {
-        name: "Tether USD",
-        symbol: "USDT",
-      },
-    },
-  ] as Partial<Vault>);
+  const store = createMockStore({ schema, mocks });
+  store.set("Query", "ROOT", "vaults", vaults);
 
   const server = new ApolloServer({
     schema: addMocksToSchema({ schema, store, mocks, resolvers }),
@@ -78,17 +50,21 @@ async function main() {
 main();
 
 const mocks = {
-  ...scalarsMocks,
-  BigDecimal: scalarsMocks.BigInt,
+  BigInt: scalarsMocks.BigInt,
 };
 
-const resolvers = {
+const resolvers = () => ({
+  Query: {
+    vaultBySymbol(parent: unknown, args: Record<string, any>) {
+      const { symbol } = args;
+      return vaults.find((vault) => vault.symbol === symbol);
+    },
+  },
   BigInt: scalarResolvers.BigInt,
-  BigDecimal: scalarResolvers.BigInt,
   Vault: {
     address: () => "0x0000000000000000000000000000000000000000",
   },
   UnderlyingAsset: {
     address: () => "0x0000000000000000000000000000000000000000",
   },
-};
+});
