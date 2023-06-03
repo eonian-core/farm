@@ -26,15 +26,26 @@ const Form: React.FC<Props> = ({ vault }) => {
   const balance = 300;
 
   const [value, setValue] = React.useState(balance);
+  const [displayValue, setDisplayValue] = React.useState(value + "");
 
   const handleSubmit = React.useCallback(() => {}, []);
 
   const handleValueChange = React.useCallback(
     (event: React.ChangeEvent<FormElement>) => {
       const { target } = event;
-      setValue(+target.value);
+      const value = target.value.replaceAll(",", ".");
+      const valid = value.match(/^[0-9]*\.?[0-9]*$/);
+      if (!valid) {
+        return;
+      }
+
+      // Perhaps later we can consider to use some big decimal library for this.
+      const numberValue = parseFloat(value);
+      const safeValue = isNaN(numberValue) ? 0 : Math.min(numberValue, balance);
+      setDisplayValue(safeValue === balance ? String(safeValue) : value);
+      setValue(safeValue);
     },
-    [setValue]
+    [setValue, setDisplayValue, balance]
   );
 
   const apy = React.useMemo(() => calculateVaultAPY(vault), [vault]);
@@ -94,8 +105,7 @@ const Form: React.FC<Props> = ({ vault }) => {
           />
           <Input
             className={styles.input}
-            type="number"
-            value={value}
+            value={displayValue}
             bordered
             color="primary"
             placeholder="Loading..."
