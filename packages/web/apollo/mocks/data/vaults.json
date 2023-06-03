@@ -4,23 +4,29 @@
     "symbol": "eonETH",
     "underlyingAsset": {
       "name": "Ethereum",
-      "symbol": "ETH"
-    }
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "decimals": 18
   },
   {
     "name": "Bitcoin Vault",
     "symbol": "eonBTC",
     "underlyingAsset": {
       "name": "Bitcoin",
-      "symbol": "BTC"
-    }
+      "symbol": "BTC",
+      "decimals": 9
+    },
+    "decimals": 9
   },
   {
     "name": "USDT Vault",
     "symbol": "eonUSDT",
     "underlyingAsset": {
       "name": "Tether USD",
-      "symbol": "USDT"
-    }
+      "symbol": "USDT",
+      "decimals": 18
+    },
+    "decimals": 18
   }
 ]

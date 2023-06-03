@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
+import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -12,7 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  BigInt: any;
+  BigInt: BigInt;
 };
 
 export type Query = {
@@ -67,12 +67,12 @@ export type VaultBySymbolQueryVariables = Exact<{
 }>;
 
 
-export type VaultBySymbolQuery = { __typename?: 'Query', vaultBySymbol?: { __typename?: 'Vault', totalBalance: any, interestRate: any, lastHarvestTime: any, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } } | null };
+export type VaultBySymbolQuery = { __typename?: 'Query', vaultBySymbol?: { __typename?: 'Vault', totalBalance: BigInt, interestRate: BigInt, lastHarvestTime: BigInt, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } } | null };
 
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', totalBalance: any, interestRate: any, lastHarvestTime: any, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', totalBalance: BigInt, interestRate: BigInt, lastHarvestTime: BigInt, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } }> };
 
 export type GetVaultsSymbolsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -83,3 +83,8 @@ export type GetVaultsSymbolsQuery = { __typename?: 'Query', vaults: Array<{ __ty
 export const VaultBySymbolDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"VaultBySymbol"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaultBySymbol"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"symbol"},"value":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"underlyingAsset"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalBalance"}},{"kind":"Field","name":{"kind":"Name","value":"interestRate"}},{"kind":"Field","name":{"kind":"Name","value":"lastHarvestTime"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}}]}}]} as unknown as DocumentNode<VaultBySymbolQuery, VaultBySymbolQueryVariables>;
 export const GetVaultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetVaults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"underlyingAsset"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalBalance"}},{"kind":"Field","name":{"kind":"Name","value":"interestRate"}},{"kind":"Field","name":{"kind":"Name","value":"lastHarvestTime"}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}}]}}]} as unknown as DocumentNode<GetVaultsQuery, GetVaultsQueryVariables>;
 export const GetVaultsSymbolsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetVaultsSymbols"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"symbol"}}]}}]}}]} as unknown as DocumentNode<GetVaultsSymbolsQuery, GetVaultsSymbolsQueryVariables>;
+import { bigIntPolicy } from "../../../apollo/policies/bigIntPolicy";
+
+export const scalarTypePolicies = {
+  Vault: { fields: { interestRate: bigIntPolicy, lastHarvestTime: bigIntPolicy, totalBalance: bigIntPolicy } },
+};

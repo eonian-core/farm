@@ -18,8 +18,8 @@
     "test": "yarn jest --watchAll",
     "test:ci": "yarn jest --ci",
     "jest": "node --experimental-vm-modules --experimental-specifier-resolution=node ./node_modules/.bin/jest",
-    "mock": "ts-node --esm ./mocks/apollo-mock.ts",
-    "gen:gql-types": "graphql-codegen --config codegen.ts"
+    "mock": "ts-node --esm ./apollo/mocks/apollo-mock.ts",
+    "gen:gql-types": "graphql-codegen --config ./apollo/codegen.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.8.0-alpha.15",
@@ -60,6 +60,7 @@
   },
   "devDependencies": {
     "@apollo/server": "^4.6.0",
+    "@eonian/graphql-typescript-scalar-type-policies": "^1.0.6",
     "@graphql-codegen/cli": "3.3.0",
     "@graphql-codegen/client-preset": "3.0.0",
     "@graphql-codegen/typescript": "^3.0.3",
