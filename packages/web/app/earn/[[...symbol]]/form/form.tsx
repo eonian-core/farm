@@ -10,6 +10,7 @@ import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrappe
 import PercentButtonGroup from "./percent-button-group";
 import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 import { Vault } from "../../../api";
+import { calculateVaultAPY } from "../../../components/helpers/calculate-apy";
 
 interface Props {
   vault: Vault;
@@ -21,7 +22,9 @@ const Form: React.FC<Props> = ({ vault }) => {
     FormAction.DEPOSIT
   );
 
+  const currentDeposit = 500;
   const balance = 300;
+
   const [value, setValue] = React.useState(balance);
 
   const handleSubmit = React.useCallback(() => {}, []);
@@ -34,6 +37,20 @@ const Form: React.FC<Props> = ({ vault }) => {
     [setValue]
   );
 
+  const apy = React.useMemo(() => calculateVaultAPY(vault), [vault]);
+
+  const total = React.useMemo(() => {
+    return currentDeposit + value;
+  }, [currentDeposit, value]);
+
+  const yearlyReward = React.useMemo(() => {
+    return total * (apy / 100);
+  }, [total, apy]);
+
+  const depositInAYear = React.useMemo(() => {
+    return total + yearlyReward;
+  }, [total, yearlyReward]);
+
   return (
     <div className={styles.container}>
       Vault: {vault.name}
@@ -45,7 +62,7 @@ const Form: React.FC<Props> = ({ vault }) => {
         <Card.Divider />
         <Card.Body className={styles.fragment}>
           <header className={styles.apyInfo}>
-            With the current <b>15.34% APY</b>, projected
+            With the current <b>{apy.toFixed(2)}% APY</b>, projected
           </header>
           <Card variant="bordered" className={styles.info}>
             <Card.Body>
@@ -53,14 +70,14 @@ const Form: React.FC<Props> = ({ vault }) => {
                 <li>
                   <h5>Yearly reward</h5>
                   <div>
-                    <span>0.0131 BTC</span>
+                    <span>{yearlyReward.toFixed(2)} BTC</span>
                     <IconBoxArrow />
                   </div>
                 </li>
                 <li>
                   <h5>Deposit in a year</h5>
                   <div>
-                    <span>0.8 BTC</span>
+                    <span>{depositInAYear.toFixed(2)} BTC</span>
                     <IconBoxArrow />
                   </div>
                 </li>

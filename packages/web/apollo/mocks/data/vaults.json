@@ -7,7 +7,8 @@
       "symbol": "ETH",
       "decimals": 18
     },
-    "decimals": 18
+    "decimals": 18,
+    "interestRate": "3789356699"
   },
   {
     "name": "Bitcoin Vault",

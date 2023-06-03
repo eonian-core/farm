@@ -10,7 +10,7 @@ const config: CodegenConfig = {
       config: {
         useTypeImports: true,
         strictScalars: true,
-        scalars: { BigInt: "BigInt" },
+        scalars: { BigInt: "bigint" },
       },
       plugins: [
         {

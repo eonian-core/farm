@@ -12,7 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  BigInt: BigInt;
+  BigInt: bigint;
 };
 
 export type Query = {
@@ -67,12 +67,12 @@ export type VaultBySymbolQueryVariables = Exact<{
 }>;
 
 
-export type VaultBySymbolQuery = { __typename?: 'Query', vaultBySymbol?: { __typename?: 'Vault', totalBalance: BigInt, interestRate: BigInt, lastHarvestTime: BigInt, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } } | null };
+export type VaultBySymbolQuery = { __typename?: 'Query', vaultBySymbol?: { __typename?: 'Vault', totalBalance: bigint, interestRate: bigint, lastHarvestTime: bigint, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } } | null };
 
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', totalBalance: BigInt, interestRate: BigInt, lastHarvestTime: BigInt, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', totalBalance: bigint, interestRate: bigint, lastHarvestTime: bigint, address: string, name: string, symbol: string, decimals: number, underlyingAsset: { __typename?: 'UnderlyingAsset', address: string, name: string, symbol: string, decimals: number } }> };
 
 export type GetVaultsSymbolsQueryVariables = Exact<{ [key: string]: never; }>;
 
