@@ -18,7 +18,7 @@ Changes tested locally on forked mainnet blockchain. Changes tested through the 
 
 This stage is used to test changes on testnet. It is the fastest and cheapest way to test changes on the blockchain, but testnet does not have the same protocols on which Strategies usually depend. This limitation allows us to test only part of the changes, Vaults related mainly.
 
-Changes deployed from Github by attaching badge "preview" to the PR. Current testnet is [Sepolia](https://sepolia.etherscan.io/).
+Changes deployed from GitHub PRs, which include changes related to contracts. Current testnet is [Sepolia](https://sepolia.etherscan.io/).
 
 ### Mainnet / Development
 
