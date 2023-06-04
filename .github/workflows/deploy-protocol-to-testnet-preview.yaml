@@ -25,6 +25,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
       
       - name: Setup NodeJS
         uses: actions/setup-node@v3
@@ -80,9 +83,5 @@ jobs:
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with: 
-          fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
           default_author: github_actions
           message: 'Deployed contracts to Sepolia'
-          add: "*"
-          push: origin HEAD:${{ github.head_ref }} # Solve issue https://github.com/EndBug/add-and-commit/issues/389
-          pull: true
