@@ -16,9 +16,6 @@ on:
     paths:
       - "packages/contracts/**"
 
-env:
-  SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
-
 jobs:
   lint: 
     name: Lint contracts
@@ -77,6 +74,8 @@ jobs:
           FOUNDRY_FUZZ_RUNS=1000 forge test -vvv --gas-report
 
       - name: Run tests (hardhat)
+        env:
+          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
         run: |-
           cd packages/contracts
           USE_BSC_FORK=true yarn test:hardhat
@@ -112,5 +111,6 @@ jobs:
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with: 
+          fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
           default_author: github_actions
           message: 'Save gas usage snapshot'

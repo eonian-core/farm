@@ -31,6 +31,5 @@ abstract contract SafeUUPSUpgradeable is UUPSUpgradeable, SafeInitializable, Own
     }
 
     /** Authorise that upgrades can do only owner */
-    function _authorizeUpgrade(address newImplementation) internal onlyOwner override {
-    }
+    function _authorizeUpgrade(address newImplementation) internal onlyOwner override {} // solhint-disable-line no-empty-blocks
 }
