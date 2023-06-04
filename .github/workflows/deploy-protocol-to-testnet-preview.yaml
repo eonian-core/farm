@@ -14,13 +14,19 @@ on:
 
 jobs:
   deploy: 
-    name: Lint contracts
+    name: Deploy Protocol
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
+
+      # Prevent unnecessary runs
+      - name: Resolve preview label 
+        uses: zwaldowski/match-label-action@v1
+        with:
+          allowed: deploy-protocol-preview
 
       - name: Setup NodeJS
         uses: actions/setup-node@v3
@@ -30,12 +36,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn --ignore-scripts
-
-      # Prevent unnecessary runs
-      - name: Resolve preview label 
-        uses: zwaldowski/match-label-action@v1
-        with:
-          allowed: deploy-protocol-preview
 
       # TODO: Switch to Github environments
       - name: Set deploy enviroment to Sepolia
