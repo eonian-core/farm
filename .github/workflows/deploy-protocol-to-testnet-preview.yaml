@@ -85,4 +85,4 @@ jobs:
           message: 'Deployed contracts to Sepolia'
           add: "*"
           push: origin HEAD:${{ github.head_ref }} # Solve issue https://github.com/EndBug/add-and-commit/issues/389
-  
+          pull: true
