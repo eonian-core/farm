@@ -11,12 +11,16 @@ import PercentButtonGroup from "./percent-button-group";
 import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 import { Vault } from "../../../api";
 import { calculateVaultAPY } from "../../../components/helpers/calculate-apy";
+import FormInput from "./form-input";
+import CompactNumber from "../../../components/compact-number/compact-number";
 
 interface Props {
   vault: Vault;
 }
 
 const Form: React.FC<Props> = ({ vault }) => {
+  const { symbol: assetSymbol } = vault.underlyingAsset;
+
   const { wallet } = useWalletWrapperContext();
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT
@@ -31,21 +35,20 @@ const Form: React.FC<Props> = ({ vault }) => {
   const handleSubmit = React.useCallback(() => {}, []);
 
   const handleValueChange = React.useCallback(
-    (event: React.ChangeEvent<FormElement>) => {
-      const { target } = event;
-      const value = target.value.replaceAll(",", ".");
-      const valid = value.match(/^[0-9]*\.?[0-9]*$/);
+    (value: string | number) => {
+      const newValue = String(value).replaceAll(",", ".");
+      const valid = newValue.match(/^[0-9]*\.?[0-9]*$/);
       if (!valid) {
         return;
       }
 
       // Perhaps later we can consider to use some big decimal library for this.
-      const numberValue = parseFloat(value);
-      const safeValue = isNaN(numberValue) ? 0 : Math.min(numberValue, balance);
-      setDisplayValue(safeValue === balance ? String(safeValue) : value);
+      const numberValue = parseFloat(newValue);
+      const safeValue = isNaN(numberValue) ? 0 : numberValue;
+      setDisplayValue(newValue);
       setValue(safeValue);
     },
-    [setValue, setDisplayValue, balance]
+    [setValue, setDisplayValue]
   );
 
   const apy = React.useMemo(() => calculateVaultAPY(vault), [vault]);
@@ -64,7 +67,9 @@ const Form: React.FC<Props> = ({ vault }) => {
 
   return (
     <div className={styles.container}>
-      Vault: {vault.name}
+      <h4>
+        {vault.name} ({vault.symbol})
+      </h4>
       <Card variant="bordered">
         <FormHeader
           currentAction={formAction}
@@ -81,14 +86,28 @@ const Form: React.FC<Props> = ({ vault }) => {
                 <li>
                   <h5>Yearly reward</h5>
                   <div>
-                    <span>{yearlyReward.toFixed(2)} BTC</span>
+                    <span>
+                      <CompactNumber
+                        value={yearlyReward}
+                        threshold={1e6}
+                        fractionDigits={2}
+                      />
+                      {assetSymbol}
+                    </span>
                     <IconBoxArrow />
                   </div>
                 </li>
                 <li>
                   <h5>Deposit in a year</h5>
                   <div>
-                    <span>{depositInAYear.toFixed(2)} BTC</span>
+                    <span>
+                      <CompactNumber
+                        value={depositInAYear}
+                        threshold={1e6}
+                        fractionDigits={2}
+                      />
+                      {assetSymbol}
+                    </span>
                     <IconBoxArrow />
                   </div>
                 </li>
@@ -101,24 +120,11 @@ const Form: React.FC<Props> = ({ vault }) => {
           <PercentButtonGroup
             inputValue={value}
             maxValue={balance}
-            onValueChange={setValue}
+            onValueChange={handleValueChange}
           />
-          <Input
-            className={styles.input}
+          <FormInput
             value={displayValue}
-            bordered
-            color="primary"
-            placeholder="Loading..."
-            size="xl"
-            contentLeft={<Loading size="xs" />}
-            contentRightStyling={false}
-            contentRight={
-              wallet ? (
-                <span className={styles.inputBalance}>
-                  Balance: {balance.toFixed(1)}
-                </span>
-              ) : null
-            }
+            balance={balance}
             onChange={handleValueChange}
           />
           <FormButton formAction={formAction} onSubmit={handleSubmit} />
