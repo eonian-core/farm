@@ -16,6 +16,9 @@ on:
     paths:
       - "packages/contracts/**"
 
+env:
+  SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+
 jobs:
   lint: 
     name: Lint contracts
