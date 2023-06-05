@@ -5,16 +5,25 @@ import {
   MutationOptions,
   OperationVariables,
   QueryOptions,
+  from,
 } from "@apollo/client";
+import { ErrorResponse, onError } from "@apollo/client/link/error";
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 import { scalarTypePolicies } from "./gql/graphql";
+
+function errorHandler(error: ErrorResponse) {
+  // We need this empty error handler to be able to catch errors via try/catch
+}
 
 export const { getClient } = registerApolloClient(() => {
   return new ApolloClient({
     cache: new InMemoryCache({ typePolicies: scalarTypePolicies }),
-    link: new HttpLink({
-      uri: process.env.GRAPH_URL || "http://localhost:4000/",
-    }),
+    link: from([
+      onError(errorHandler),
+      new HttpLink({
+        uri: process.env.GRAPH_URL || "http://localhost:4000/",
+      }),
+    ]),
   });
 });
 

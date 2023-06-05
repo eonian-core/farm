@@ -9,15 +9,23 @@ interface PageParams {
   };
 }
 
-export async function generateStaticParams() {
+async function getSymbols() {
   const { data } = await getVaults({ symbols: true, revalidate: 600 });
   return data.vaults.map(({ symbol }) => [{ symbol }]);
+}
+
+export async function generateStaticParams() {
+  try {
+    return await getSymbols();
+  } catch (e: unknown) {
+    return [];
+  }
 }
 
 export default async function Earn({ params }: PageParams) {
   const { symbol: symbols } = params;
   if (!symbols) {
-    const [[{ symbol }]] = await generateStaticParams();
+    const [[{ symbol }]] = await getSymbols();
     return redirect("/earn/" + symbol);
   }
 
