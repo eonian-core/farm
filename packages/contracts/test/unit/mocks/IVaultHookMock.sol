@@ -13,13 +13,13 @@ contract IVaultHookMock is IVaultHook {
         afterDepositHookCalledCounter = 0;
     }
 
-    function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
+    function afterDepositTrigger(ERC4626UpgradeableRequest memory /*request*/)
             external override
     {
         afterDepositHookCalledCounter++;
     }
 
-    function beforeWithdrawTrigger(ERC4626UpgradeableRequest memory request)
+    function beforeWithdrawTrigger(ERC4626UpgradeableRequest memory /*request*/)
         external override
     {
         beforeWithdrawHookCalledCounter++;

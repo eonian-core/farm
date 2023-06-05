@@ -29,8 +29,8 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     }
 
     function testVaultMetadata() public {
-        assertEq(token.symbol(), "ESBT");
-        assertEq(token.name(), "Eonian Soul Bound founder token");
+        assertEq(token.symbol(), "EVFT");
+        assertEq(token.name(), "Eonian Vault Founder Token");
     }
 
     function testMintToken() public {
@@ -67,7 +67,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.safeMint(bob, "testUrl");
         token.safeMint(culprit, "testUrl");
 
-        vm.expectRevert("ESBT: max number of tokens");
+        vm.expectRevert("EVFT: max number of tokens");
         token.safeMint(rewards, "testUrl");
     }
 
@@ -88,6 +88,11 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         assertEq(token.priceOf(1), 240);
         token.safeMint(culprit, "testUrl3");
         assertEq(token.priceOf(2), 288);
+    }
+
+    function testPriceOfFail() public {
+        vm.expectRevert("EVFT: Token does not exist");
+        token.priceOf(0);
     }
 
     function testSetTokenURI() public {

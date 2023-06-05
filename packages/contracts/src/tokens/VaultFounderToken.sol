@@ -20,28 +20,27 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
     /// @dev This empty reserved space is put in place to allow future versions to add new
     /// variables without shifting down storage in the inheritance chain.
     /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-    uint256[46] __gap;
+    uint256[46] private __gap;
 
-    //todo discuss if those parameters should be in constructor or not
     function __VaultFounderToken_init(
         uint256 maxCountTokens_,
         uint256 nextTokenPriceMultiplier_,
         uint256 initialTokenPrice_,
         address admin_
     ) internal onlyInitializing {
-        __ERC5484Upgradeable_init("Eonian Soul Bound founder token", "ESBT", BurnAuth.Neither, true, admin_);
+        __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true, admin_);
         _maxCountTokens = maxCountTokens_;
         _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
         _initialTokenPrice = initialTokenPrice_;
     }
 
     function _safeMint(address to, uint256 tokenId) internal override {
-        require(totalSupply() < _maxCountTokens, "ESBT: max number of tokens");
+        require(totalSupply() < _maxCountTokens, "EVFT: max number of tokens");
         super._safeMint(to, tokenId);
     }
 
     function priceOf(uint256 tokenId) external view returns (uint256) {
-        require(tokenId < totalSupply(), "ESBT: Token does not exist");
+        require(tokenId < totalSupply(), "EVFT: Token does not exist");
         return _priceOf(tokenId);
     }
 

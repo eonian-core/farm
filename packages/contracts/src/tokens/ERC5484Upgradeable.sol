@@ -138,7 +138,7 @@ contract ERC5484Upgradeable is
         override(ERC721Upgradeable, ERC721EnumerableUpgradeable, AccessControlUpgradeable)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return interfaceId == type(IERC5484).interfaceId || super.supportsInterface(interfaceId);
     }
 
     /// @notice provides burn authorization of the token id.
@@ -154,5 +154,5 @@ contract ERC5484Upgradeable is
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[46] private __gap;
+    uint256[48] private __gap;
 }

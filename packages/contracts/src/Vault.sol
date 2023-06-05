@@ -14,7 +14,7 @@ import {ERC4626Upgradeable} from "./tokens/ERC4626Upgradeable.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
-import {IVaultLifecycle} from "./tokens/IVaultLifecycle.sol";
+import {SafeERC4626Lifecycle} from "./tokens/SafeERC4626Lifecycle.sol";
 import {IVaultHook} from "./tokens/IVaultHook.sol";
 import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
 
@@ -29,7 +29,7 @@ error WrongQueueSize(uint256 size);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error AccessDeniedForCaller(address caller);
 
-contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IVaultLifecycle {
+contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, SafeERC4626Lifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using AddressList for address[];
 
@@ -141,7 +141,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
 
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
-    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
+    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, SafeERC4626Lifecycle) {
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -183,7 +183,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         }
 
         // apply the hook
-        IVaultLifecycle.beforeWithdraw(assets, shares);
+        SafeERC4626Lifecycle.beforeWithdraw(assets, shares);
     }
 
     /// @notice Adds a new strategy to the vault.
@@ -420,7 +420,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender, IV
         asset.safeTransferFrom(borrower, address(this), amount);
     }
 
-    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, IVaultLifecycle) {
-        IVaultLifecycle.afterDeposit(assets, shares);
+    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, SafeERC4626Lifecycle) {
+        SafeERC4626Lifecycle.afterDeposit(assets, shares);
     }
 }
