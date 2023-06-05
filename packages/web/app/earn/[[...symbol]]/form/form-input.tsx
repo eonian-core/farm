@@ -5,14 +5,21 @@ import React from "react";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 
 import styles from "./form-input.module.scss";
+import IconCoin from "../../../components/icons/icon-coin";
 
 interface Props {
   value: string;
   balance: number;
+  assetSymbol: string;
   onChange: (value: string) => void;
 }
 
-const FormInput: React.FC<Props> = ({ balance, value, onChange }) => {
+const FormInput: React.FC<Props> = ({
+  assetSymbol,
+  balance,
+  value,
+  onChange,
+}) => {
   const { wallet } = useWalletWrapperContext();
 
   const handleInputValueChange = React.useCallback(
@@ -28,7 +35,9 @@ const FormInput: React.FC<Props> = ({ balance, value, onChange }) => {
       color="primary"
       placeholder="0"
       size="xl"
-      contentLeft={<Loading size="xs" />}
+      contentLeft={
+        <IconCoin symbol={assetSymbol} width="1.5em" height="1.5em" />
+      }
       contentRightStyling={false}
       contentRight={
         wallet ? (

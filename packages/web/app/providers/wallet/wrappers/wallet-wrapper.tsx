@@ -1,4 +1,5 @@
 import IconBNB from "../../../components/icons/icon-bnb";
+import IconCoin, { CoinIcon } from "../../../components/icons/icon-coin";
 import IconWarning from "../../../components/icons/icon-warning";
 import isLoggedInWallet from "./helpers/wallet-login-checker";
 
@@ -160,7 +161,13 @@ export abstract class WalletWrapper {
   protected getIcon(id: string) {
     switch (id) {
       case "0x61":
-        return <IconBNB width={this.iconSize} height={this.iconSize} />;
+        return (
+          <IconCoin
+            symbol={CoinIcon.BNB}
+            width={this.iconSize}
+            height={this.iconSize}
+          />
+        );
       default:
         return null;
     }
@@ -181,7 +188,7 @@ export abstract class WalletWrapper {
       throw new Error("There must be at least one default chain");
     }
     return chain;
-  }
+  };
 
   private cache = <T,>(fn: () => T, cacheName: string): T => {
     return this._cache[cacheName] ?? (this._cache[cacheName] = fn());

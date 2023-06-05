@@ -3,16 +3,13 @@
 import React from "react";
 
 import styles from "./form.module.scss";
-import { Card, FormElement, Input, Loading } from "@nextui-org/react";
+import { Card } from "@nextui-org/react";
 import FormHeader, { FormAction } from "./form-header";
 import FormButton from "./form-button";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import PercentButtonGroup from "./percent-button-group";
-import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 import { Vault } from "../../../api";
-import { calculateVaultAPY } from "../../../components/helpers/calculate-apy";
 import FormInput from "./form-input";
-import CompactNumber from "../../../components/compact-number/compact-number";
 import VaultInfoCard from "./vault-info-card";
 
 interface Props {
@@ -80,6 +77,7 @@ const Form: React.FC<Props> = ({ vault }) => {
             onValueChange={handleValueChange}
           />
           <FormInput
+            assetSymbol={vault.underlyingAsset.symbol}
             value={displayValue}
             balance={balance}
             onChange={handleValueChange}

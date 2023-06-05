@@ -17,7 +17,7 @@ const config: CodegenConfig = {
           "@eonian/graphql-typescript-scalar-type-policies": {
             scalarTypePolicies: {
               // File path should be relative to the generated "graphql.ts"
-              BigInt: "../../../apollo/policies/bigIntPolicy#bigIntPolicy",
+              BigInt: "../policies/bigIntPolicy#bigIntPolicy",
             },
           },
         },
