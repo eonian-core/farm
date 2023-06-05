@@ -27,38 +27,3 @@
     padding: 0;
   }
 }
-
-.apyInfo {
-  margin-bottom: var(--margin-100);
-
-  b {
-    color: var(--color-primary-300);
-  }
-}
-
-.info {
-
-  ul {
-    color: var(--color-text-300);
-    display: flex;
-    justify-content: space-around;
-  }
-
-  li {
-    text-align: center;
-
-    h5 {
-      font-weight: normal;
-      margin-bottom: var(--margin-100);
-    }
-
-    span {
-      font-weight: var(--font-bold);
-      margin-right: var(--margin-50);
-    }
-
-    svg {
-      color: var(--color-success-500);
-    }
-  }
-}

@@ -1,3 +1,5 @@
+"use client";
+
 import { FormElement, Input, Loading } from "@nextui-org/react";
 import React from "react";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
