@@ -11,8 +11,14 @@ import { ErrorResponse, onError } from "@apollo/client/link/error";
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 import { scalarTypePolicies } from "./gql/graphql";
 
-function errorHandler(error: ErrorResponse) {
-  // We need this empty error handler to be able to catch errors via try/catch
+function errorHandler({ graphQLErrors, networkError }: ErrorResponse) {
+if (graphQLErrors)
+  graphQLErrors.forEach(({ message, locations, path }) =>
+    console.log(
+      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+    )
+  );
+if (networkError) console.log(`[Network error]: ${networkError}`);
 }
 
 export const { getClient } = registerApolloClient(() => {
