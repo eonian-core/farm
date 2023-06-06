@@ -1,7 +1,10 @@
+"use client";
+
 import styles from "./page.module.scss";
 import Form from "./form/form";
 import { Vault, getVaultBySymbol, getVaults } from "../../api";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
+import { use } from "react";
 
 interface PageParams {
   params: {
@@ -14,29 +17,15 @@ async function getSymbols() {
   return data.vaults.map(({ symbol }) => [{ symbol }]);
 }
 
-export async function generateStaticParams() {
-  try {
-    return await getSymbols();
-  } catch (e: unknown) {
-    return [];
-  }
+export default async function Earn() {
+  return <FormWrapper />;
 }
 
-export default async function Earn({ params }: PageParams) {
-  const { symbol: symbols } = params;
-  if (!symbols) {
-    const [[{ symbol }]] = await getSymbols();
-    return redirect("/earn/" + symbol);
-  }
-
-  const [symbol] = symbols;
-  const {
-    data: { vaultBySymbol: vault },
-  } = await getVaultBySymbol({ symbol });
-
+function FormWrapper() {
+  const { symbol: symbols } = useParams();
+  const data = use(getSymbols());
+  console.log(data);
   return (
-    <main className={styles.main}>
-      <Form vault={vault as Vault} />
-    </main>
+    <main className={styles.main}>{/* <Form vault={vault as Vault} /> */}</main>
   );
 }
