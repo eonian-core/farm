@@ -46,7 +46,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.1.2";
+        return "0.1.3";
     }
 
     // ------------------------------------------ Constructors ------------------------------------------

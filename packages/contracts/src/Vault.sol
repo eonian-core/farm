@@ -77,7 +77,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender {
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.1.8";
+        return "0.1.9";
     }
 
     modifier onlyOwnerOrStrategy(address strategy) {
