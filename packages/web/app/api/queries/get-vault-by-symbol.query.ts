@@ -1,10 +1,9 @@
 import { gql } from "@apollo/client";
-import { query } from "../apollo.client";
 import { VaultBySymbolQuery } from "../gql/graphql";
+import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
 
 interface Params {
   symbol: string;
-  revalidate?: number;
 }
 
 const GetVaultBySymbol = gql`
@@ -29,19 +28,16 @@ const GetVaultBySymbol = gql`
 
 /**
  * Get vault by its symbol
- * @example getVaultBySymbol().then(console.log)
  * */
-export const getVaultBySymbol = (params: Params) => {
-  const { symbol, revalidate = 60 } = params;
-  return query<VaultBySymbolQuery>({
-    query: GetVaultBySymbol,
-    variables: {
-      symbol,
-    },
-    context: {
-      fetchOptions: {
-        next: { revalidate },
+export const useGetVaultBySymbol = (params: Params) => {
+  const { symbol } = params;
+  const { data, error } = useSuspenseQuery<VaultBySymbolQuery>(
+    GetVaultBySymbol,
+    {
+      variables: {
+        symbol,
       },
-    },
-  });
+    }
+  );
+  return { data, error };
 };

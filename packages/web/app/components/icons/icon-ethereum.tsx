@@ -4,9 +4,9 @@ import * as React from "react";
 function IconEthereum(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {...props}>
-      <g fill="none" fill-rule="evenodd">
+      <g fill="none" fillRule="evenodd">
         <circle cx="16" cy="16" r="16" fill="#627EEA" />
-        <g fill="#FFF" fill-rule="nonzero">
+        <g fill="#FFF" fillRule="nonzero">
           <path fillOpacity=".602" d="M16.498 4v8.87l7.497 3.35z" />
           <path d="M16.498 4L9 16.22l7.498-3.35z" />
           <path fillOpacity=".602" d="M16.498 21.968v6.027L24 17.616z" />
