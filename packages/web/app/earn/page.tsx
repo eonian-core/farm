@@ -1,7 +1,9 @@
 "use client";
 
-import ClientOnly from "../components/client-only/client-only";
-import Redirect from "./redirect";
+import { redirect } from "next/navigation";
+import { useGetVaults } from "../api";
+import React from "react";
+import { ClientOnly } from "../components/client-only/client-only";
 
 export default async function Page() {
   return (
@@ -10,3 +12,13 @@ export default async function Page() {
     </ClientOnly>
   );
 }
+
+function Redirect() {
+  const { data } = useGetVaults({ symbols: true });
+
+  const [{ symbol }] = data.vaults;
+  redirect("/earn/" + symbol);
+  
+  return <></>;
+}
+
