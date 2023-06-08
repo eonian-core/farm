@@ -81,5 +81,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with: 
           default_author: github_actions
-          message: 'Deployed contracts to Sepolia'
+          message: 'Deployed contracts to Development environment in BSC Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
