@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
@@ -12,14 +12,16 @@ import {IRainMaker} from "./protocols/IRainMaker.sol";
 import {IStrategy} from "./IStrategy.sol";
 import {IVault} from "../IVault.sol";
 
+import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
+import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
 
 error IncompatibleCTokenContract();
 error UnsupportedDecimals();
 error MintError(uint256 code);
 error RedeemError(uint256 code);
 
-contract ApeLendingStrategy is BaseStrategy {
+contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
     uint256 private constant SECONDS_PER_BLOCK = 3;
     uint256 private constant REWARD_ESTIMATION_ACCURACY = 90;
 
@@ -42,6 +44,11 @@ contract ApeLendingStrategy is BaseStrategy {
      */
     uint256[50] private __gap;
 
+    /// @inheritdoc IVersionable
+    function version() external pure override returns (string memory) {
+        return "0.1.3";
+    }
+
     // ------------------------------------------ Constructors ------------------------------------------
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -56,6 +63,7 @@ contract ApeLendingStrategy is BaseStrategy {
         uint256 _minReportInterval,
         bool _isPrepaid
     ) public initializer {
+        __SafeUUPSUpgradeable_init_direct();
         __BaseStrategy_init(
             IVault(_vault),
             _ops,
@@ -64,8 +72,12 @@ contract ApeLendingStrategy is BaseStrategy {
             _nativeTokenPriceFeed,
             _assetPriceFeed,
             address(0)
-        );
+        ); // ownable under the hood
 
+        __ApeLendingStrategy_init_unchained(_cToken);
+    }
+
+    function __ApeLendingStrategy_init_unchained(address _cToken) internal onlyInitializing {
         cToken = ICToken(_cToken);
         pancakeRouter = IPancakeRouter(PANCAKE_ROUTER);
         rainMaker = IRainMaker(RAIN_MAKER);

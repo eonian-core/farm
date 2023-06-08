@@ -16,6 +16,11 @@ Go to the root directory and run `yarn workspace [package-name] add ...` to add 
 
 In some cases, this also will not work. You can try to install dependency by using Lerna. The command is `yarn lerna add [package-name] --scope=...`
 
+Examples:
+
+* `yarn lerna add [package-name] --scope=@eonian/contracts` - add to contracts package
+* `yarn lerna add [package-name] --scope=@eonian/web` - add to web package
+
 ## Graphql types code generation
 
 Fail during code generation of graphql types.

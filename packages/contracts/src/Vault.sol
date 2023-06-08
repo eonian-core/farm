@@ -1,9 +1,8 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
@@ -13,6 +12,8 @@ import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Up
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
+import {SafeUUPSUpgradeable} from "./upgradeable/SafeUUPSUpgradeable.sol";
+import {IVersionable} from "./upgradeable/IVersionable.sol";
 
 error ExceededMaximumFeeValue();
 error UnexpectedZeroAddress();
@@ -24,7 +25,7 @@ error WrongQueueSize(uint256 size);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error AccessDeniedForCaller(address caller);
 
-contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
+contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using AddressList for address[];
 
@@ -74,6 +75,11 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[50] private __gap;
 
+    /// @inheritdoc IVersionable
+    function version() external pure override returns (string memory) {
+        return "0.1.9";
+    }
+
     modifier onlyOwnerOrStrategy(address strategy) {
         if (msg.sender != owner() && msg.sender != strategy) {
             revert AccessDeniedForCaller(msg.sender);
@@ -95,7 +101,7 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         string memory _symbol,
         address[] memory _defaultOperators
     ) public initializer {
-        __Ownable_init();
+        __SafeUUPSUpgradeable_init(); // Ownable under the hood
         __Lender_init();
         __SafeERC4626_init(
             IERC20Upgradeable(_asset),
@@ -114,11 +120,6 @@ contract Vault is IVault, OwnableUpgradeable, SafeERC4626Upgradeable, Lender {
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
-    }
-
-    /// @inheritdoc IVault
-    function version() external pure override returns (string memory) {
-        return "0.1.0";
     }
 
     /// @dev Override to add the "whenNotPaused" modifier
