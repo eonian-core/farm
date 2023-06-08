@@ -29,6 +29,18 @@
     color: var(--color-text-200);
 }
 
+.header3, .header4 {
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+.iconExternal {
+    margin-left: var(--margin-50);
+    vertical-align: middle;
+    display: inline;
+}
+
 @media (max-width: $screen-mobile) {
     .header1 {
         font-size: var(--font-size-900);

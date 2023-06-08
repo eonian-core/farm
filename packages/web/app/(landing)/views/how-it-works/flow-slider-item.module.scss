@@ -104,6 +104,10 @@
       border: 2px solid var(--card-number-color);
     }
   }
+
+  p {
+    line-height: var(--font-size-750);
+  }
 }
 
 .wrapper {

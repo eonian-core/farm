@@ -4,8 +4,8 @@ import Link, { LinkProps as NextLinkProps } from "next/link";
 import React, { useCallback } from "react";
 import clsx from "clsx";
 import styles from "./links.module.scss";
-import useScrollToTop from "./useScrollToTop";
-import { usePageTransitionContext } from "../../store/page-transition-context";
+import { useAppDispatch } from "../../store/hooks";
+import { setPageLoading } from "../../store/slices/navigationSlice";
 
 export type BaseLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -58,18 +58,16 @@ export const InternalLink = ({
   onClick,
   ...props
 }: LinkWithIconProps) => {
-  const [onRouteChange] = useScrollToTop();
-  const [pageLoading, setPageLoading] = usePageTransitionContext();
+  const dispatch = useAppDispatch();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (onClick) {
-        onClick(e);
+      onClick?.(e);
+      if (!e.defaultPrevented) {
+        dispatch(setPageLoading(href.toString()));
       }
-      href && setPageLoading(href.toString());
-      onRouteChange();
     },
-    [onClick, onRouteChange, href, setPageLoading]
+    [onClick, dispatch, href]
   );
 
   return (

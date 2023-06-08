@@ -1,0 +1,83 @@
+@import "../../screen.scss";
+
+.container {
+  width: 470px;
+  padding: var(--padding-200);
+
+  @media (max-width: $screen-mobile) {
+    width: 100%;
+  }
+
+  @media (max-width: $screen-small-mobile) {
+    padding: var(--padding-100);
+  }
+}
+
+.input {
+  width: auto;
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}
+
+.fragment {
+  padding: var(--padding-400);
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.apyInfo {
+  margin-bottom: var(--margin-100);
+
+  b {
+    color: var(--color-primary-300);
+  }
+}
+
+.info {
+
+  ul {
+    color: var(--color-text-300);
+    display: flex;
+    justify-content: space-around;
+  }
+
+  li {
+    text-align: center;
+
+    h5 {
+      font-weight: normal;
+      margin-bottom: var(--margin-100);
+    }
+
+    span {
+      font-weight: var(--font-bold);
+      margin-right: var(--margin-50);
+    }
+
+    svg {
+      color: var(--color-success-500);
+    }
+  }
+}
+
+.inputBalance {
+  font-size: var(--font-size-300);
+  color: var(--color-text-300);
+  white-space: nowrap;
+  padding: 0 var(--padding-200);
+
+  display: flex;
+  align-items: center;
+}
