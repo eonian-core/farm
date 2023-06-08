@@ -36,7 +36,7 @@ const WalletMenu: React.FC<Props> = ({ children }) => {
 
   const [push] = useRouterPush();
   const pathname = usePathname();
-  const isOnEarn = pathname === EARN_ROUTE;
+  const isOnEarn = pathname.includes(EARN_ROUTE);
 
   const menuItems = React.useMemo(() => {
     const items: ItemType[] = [
