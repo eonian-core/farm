@@ -3,8 +3,10 @@ pragma solidity ^0.8.4;
 
 import "contracts/automation/gelato/OpsReady.sol";
 
+import "./SafeInitializableMock.sol";
+
 /// Testing implementation of OpsReady
-contract OpsReadyMock is OpsReady {
+contract OpsReadyMock is OpsReady, SafeInitializableMock {
 
     uint256 public onlyOpsProtectedCalledTimes;
 

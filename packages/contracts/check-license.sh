@@ -5,7 +5,9 @@
 
 folder_path="src"
 
-required_first_line="// SPDX-License-Identifier: AGPL-3.0-or-later"
+# AGPL-3.0 is deprecated in flawor of AGPL-3.0-or-later, but etherscan support only it
+# more info https://etherscan.io/contract-license-types
+required_first_line="// SPDX-License-Identifier: AGPL-3.0"
 
 all_files_start_same_line=true
 
