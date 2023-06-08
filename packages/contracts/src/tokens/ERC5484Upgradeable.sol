@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -21,10 +21,10 @@ contract ERC5484Upgradeable is
 
     CountersUpgradeable.Counter private _tokenIdCounter;
 
-    // Token is burnable
+    /// @dev burn mode with different behavior
     BurnAuth private _burnAuth;
 
-    // Token can me minted only once per user
+    /// @dev Token can me minted only once per user
     bool private _mintOnce;
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -61,7 +61,7 @@ contract ERC5484Upgradeable is
     /// @custom:oz-upgrades-unsafe-allow constructor
 //    constructor()
 //    {
-//        _disableInitializers();
+//        _disableInitializers(); //todo discuss what proper way to initialize in scope uip proxy migation
 //    }
 
     function __ERC5484Upgradeable_init(
@@ -86,6 +86,7 @@ contract ERC5484Upgradeable is
         }
     }
 
+    /// @dev function for mint new SBT token
     function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
         // allow to mint only once per user if _mintOnce is true
         require(!_mintOnce || balanceOf(to) == 0,"ERC5484: User already has token");
@@ -105,7 +106,7 @@ contract ERC5484Upgradeable is
         emit Issued(address(0), to, tokenId, _burnAuth);
     }
 
-    /// Token is SOUL BOUND and it is not allowed to move token between users
+    /// @dev Token is SOUL BOUND and it is not allowed to move token between users
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
         allowedTransfer(to, from, tokenId)
@@ -122,16 +123,19 @@ contract ERC5484Upgradeable is
         _burn(tokenId);
     }
 
+    /// @dev See {ERC721-_burn}
     function _burn(uint256 tokenId) internal override(ERC721Upgradeable, ERC721URIStorageUpgradeable){
         super._burn(tokenId);
     }
 
+    /// @dev See {IERC721Metadata-tokenURI}.
     function tokenURI(uint256 tokenId) public view override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
         returns (string memory)
     {
         return super.tokenURI(tokenId);
     }
 
+    /// @dev See {IERC165-supportsInterface}.
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -149,10 +153,8 @@ contract ERC5484Upgradeable is
         return _burnAuth;
     }
 
-    /**
-     * @dev This empty reserved space is put in place to allow future versions to add new
-     * variables without shifting down storage in the inheritance chain.
-     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-     */
+    /// @dev This empty reserved space is put in place to allow future versions to add new
+    /// variables without shifting down storage in the inheritance chain.
+    /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[48] private __gap;
 }
