@@ -5,8 +5,8 @@ import { Button } from "@nextui-org/react";
 
 import styles from "./form-button.module.scss";
 import { FormAction } from "./form-header";
-import { WalletStatus } from "../../providers/wallet/wrappers/wallet-wrapper";
-import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
+import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
+import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 
 interface Props {
   formAction: FormAction;

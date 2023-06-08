@@ -4,7 +4,6 @@ import { Dropdown } from "@nextui-org/react";
 import React from "react";
 
 import styles from "./wallet-network-selector.module.scss";
-import IconBNB from "../icons/icon-bnb";
 import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
 
 const WalletNetworkSelector = () => {

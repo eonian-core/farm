@@ -1,12 +1,24 @@
 "use client";
 
-import styles from "./page.module.scss";
-import Form from "./form/form";
+import { redirect } from "next/navigation";
+import { useGetVaultsSymbols } from "../api";
+import React from "react";
+import { ClientOnly } from "../components/client-only/client-only";
 
-export default function Earn() {
+export default async function Page() {
   return (
-    <main className={styles.main}>
-      <Form />
-    </main>
+    <ClientOnly>
+      <Redirect />
+    </ClientOnly>
   );
 }
+
+function Redirect() {
+  const { data } = useGetVaultsSymbols();
+
+  const [{ symbol }] = data.vaults;
+  redirect("/earn/" + symbol);
+  
+  return <></>;
+}
+

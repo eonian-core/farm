@@ -11,9 +11,7 @@
   height: 100%;
 
   max-width: var(--max-width);
-  padding: 0 var(--width-gap);
-  padding-top: var(--navigation-height);
-  padding-bottom: var(--padding-500);
+  padding: var(--navigation-height) var(--width-gap);
 
   &::after {
     content: '';
@@ -32,4 +30,8 @@
   @media (max-width: $screen-mobile) {
     padding: 0;
   }
+}
+
+.error {
+  margin-top: var(--margin-200);
 }

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:storybook\" \"yarn:open:next\" \"yarn:mock\" ",
+    "dev:next-mock": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:mock\" ",
     "dev:next": "next dev",
     "build": "next build",
     "start": "next start",
@@ -17,11 +18,12 @@
     "test": "yarn jest --watchAll",
     "test:ci": "yarn jest --ci",
     "jest": "node --experimental-vm-modules --experimental-specifier-resolution=node ./node_modules/.bin/jest",
-    "mock": "ts-node --esm ./mock.ts",
-    "gen:gql-types": "graphql-codegen --config codegen.ts"
+    "mock": "ts-node --esm ./apollo/mocks/apollo-mock.ts",
+    "gen:gql-types": "graphql-codegen --config ./apollo/codegen.ts"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.11",
+    "@apollo/client": "^3.8.0-alpha.15",
+    "@apollo/experimental-nextjs-app-support": "^0.1.0",
     "@mdx-js/loader": "2.3.0",
     "@mdx-js/react": "2.3.0",
     "@next/mdx": "13.4.4",
@@ -58,6 +60,7 @@
   },
   "devDependencies": {
     "@apollo/server": "^4.6.0",
+    "@eonian/graphql-typescript-scalar-type-policies": "^1.0.6",
     "@graphql-codegen/cli": "3.3.0",
     "@graphql-codegen/client-preset": "3.0.0",
     "@graphql-codegen/typescript": "^3.0.3",

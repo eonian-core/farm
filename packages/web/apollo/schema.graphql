@@ -2,9 +2,6 @@ schema {
   query: Query
 }
 
-# Custom scalar type to represent large decimal numbers with precision
-scalar BigDecimal
-
 # Custom scalar type to represent large integers
 scalar BigInt
 
@@ -13,6 +10,11 @@ type Query {
   Fetches an array of Vault objects.
   """
   vaults: [Vault!]!
+
+  """
+  Fetches a Vault by a specific symbol (token's name).
+  """
+  vaultBySymbol(symbol: String!): Vault
 }
 
 """
@@ -27,12 +29,12 @@ type Vault {
   """
   The total balance of the vault.
   """
-  totalBalance: BigDecimal!
+  totalBalance: BigInt!
   
   """
   The interest rate applied to the assets in the vault.
   """
-  interestRate: BigDecimal!
+  interestRate: BigInt!
   
   """
   The timestamp of the last harvest event (in seconds since Unix epoch).
