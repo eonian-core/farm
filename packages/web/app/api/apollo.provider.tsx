@@ -14,7 +14,7 @@ import {
 
 function makeClient() {
   const httpLink = new HttpLink({
-    uri: process.env.GRAPH_URL || "http://localhost:4000/",
+    uri: process.env.NEXT_PUBLIC_GRAPH_URL || "http://localhost:4000/",
   });
 
   return new ApolloClient({

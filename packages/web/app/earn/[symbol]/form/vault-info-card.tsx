@@ -7,7 +7,7 @@ import CompactNumber from "../../../components/compact-number/compact-number";
 import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 
 import styles from "./vault-info-card.module.scss";
-import { calculateVaultAPY } from "../../../components/helpers/calculate-apy";
+import { calculateVaultAPY } from "../../../shared/projections/calculate-apy";
 import { FormAction } from "./form-header";
 import { Vault } from "../../../api";
 import clsx from "clsx";

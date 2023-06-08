@@ -1,11 +1,6 @@
 import { gql } from "@apollo/client";
-import { GetVaultsQuery } from "../gql/graphql";
+import { GetVaultsQuery, GetVaultsSymbolsQuery } from "../gql/graphql";
 import { useSuspenseQuery } from "@apollo/experimental-nextjs-app-support/ssr";
-
-interface Params {
-  symbols?: boolean;
-  revalidate?: number;
-}
 
 const GetVaults = gql`
   query GetVaults {
@@ -38,10 +33,17 @@ const GetVaultsSymbols = gql`
 /**
  * Get list of Vaults
  * */
-export const useGetVaults = (params: Params = {}) => {
-  const { symbols } = params;
-  const { data, error } = useSuspenseQuery<GetVaultsQuery>(
-    symbols ? GetVaultsSymbols : GetVaults
-  );
+export const useGetVaults = () => {
+  const { data, error } = useSuspenseQuery<GetVaultsQuery>(GetVaults);
+  return { data, error };
+};
+
+
+/**
+ * Get list of symbols of the Vaults
+ * */
+export const useGetVaultsSymbols = () => {
+  const { data, error } =
+    useSuspenseQuery<GetVaultsSymbolsQuery>(GetVaultsSymbols);
   return { data, error };
 };

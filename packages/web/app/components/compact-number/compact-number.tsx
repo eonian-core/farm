@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../store/hooks";
-import { formatNumberCompactWithThreshold } from "../helpers/format-number";
+import { formatNumberCompactWithThreshold } from "../../shared/humanize/format-number";
 
 interface Props extends React.HTMLProps<HTMLSpanElement> {
   value: number;

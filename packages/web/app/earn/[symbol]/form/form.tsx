@@ -11,6 +11,7 @@ import PercentButtonGroup from "./percent-button-group";
 import { Vault } from "../../../api";
 import FormInput from "./form-input";
 import VaultInfoCard from "./vault-info-card";
+import { useNumberInputValue } from "./use-number-input-value";
 
 interface Props {
   vault: Vault;
@@ -25,27 +26,9 @@ const Form: React.FC<Props> = ({ vault }) => {
   const currentDeposit = 500;
   const balance = 300;
 
-  const [value, setValue] = React.useState(balance);
-  const [displayValue, setDisplayValue] = React.useState(value + "");
+  const [value, displayValue, handleValueChange] = useNumberInputValue(balance);
 
   const handleSubmit = React.useCallback(() => {}, []);
-
-  const handleValueChange = React.useCallback(
-    (value: string | number) => {
-      const newValue = String(value).replaceAll(",", ".");
-      const valid = newValue.match(/^[0-9]*\.?[0-9]*$/);
-      if (!valid) {
-        return;
-      }
-
-      // Perhaps later we can consider to use some big decimal library for this.
-      const numberValue = parseFloat(newValue);
-      const safeValue = isNaN(numberValue) ? 0 : numberValue;
-      setDisplayValue(newValue);
-      setValue(safeValue);
-    },
-    [setValue, setDisplayValue]
-  );
 
   return (
     <div className={styles.container}>
