@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {Job} from "./Job.sol";
@@ -19,6 +19,8 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
     uint256[50] private __gap;
+
+    // ------------------------------------------ Constructors ------------------------------------------
 
     /**
      * @notice Constructor of Job adapter contract.

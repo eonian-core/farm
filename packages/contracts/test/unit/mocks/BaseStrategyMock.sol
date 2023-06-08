@@ -2,8 +2,9 @@
 pragma solidity >=0.8.0;
 
 import "contracts/strategies/BaseStrategy.sol";
+import "./SafeInitializableMock.sol";
 
-contract BaseStrategyMock is BaseStrategy {
+contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     event HarvestCalled();
     event HarvestAfterShutdownCalled();
     event AdjustPositionCalled(uint256 outstandingDebt);

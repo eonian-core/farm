@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 /// @notice Interface for Compound-like market (or vault in common terms), that allows to deposit and borrow tokens.

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
@@ -24,6 +24,8 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
     uint256[50] private __gap;
+
+    // ------------------------------------------ Constructors ------------------------------------------
 
     /**
      * Constructor for the SafeERC4626Upgradeable contract

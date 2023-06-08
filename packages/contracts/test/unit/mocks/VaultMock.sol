@@ -9,7 +9,7 @@ contract VaultMock is Vault {
         address rewards,
         uint256 fee,
         uint256 lockedProfitReleaseDuration
-    ) {
+    ) Vault(false) {
         initialize(
             underlying,
             rewards,
