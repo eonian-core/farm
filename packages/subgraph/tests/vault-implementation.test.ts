@@ -8,9 +8,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { AdminChanged } from "../generated/schema"
-import { AdminChanged as AdminChangedEvent } from "../generated/Contract/Contract"
-import { handleAdminChanged } from "../src/contract"
-import { createAdminChangedEvent } from "./contract-utils"
+import { AdminChanged as AdminChangedEvent } from "../generated/VaultImplementation/VaultImplementation"
+import { handleAdminChanged } from "../src/vault-implementation"
+import { createAdminChangedEvent } from "./vault-implementation-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0

@@ -21,7 +21,7 @@ import {
   Unpaused as UnpausedEvent,
   Upgraded as UpgradedEvent,
   Withdraw as WithdrawEvent
-} from "../generated/Contract/Contract"
+} from "../generated/VaultImplementation/VaultImplementation"
 import {
   AdminChanged,
   Approval,

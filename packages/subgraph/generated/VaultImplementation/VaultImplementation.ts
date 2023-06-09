@@ -546,7 +546,7 @@ export class Withdraw__Params {
   }
 }
 
-export class Contract__borrowersDataResult {
+export class VaultImplementation__borrowersDataResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
@@ -585,9 +585,9 @@ export class Contract__borrowersDataResult {
   }
 }
 
-export class Contract extends ethereum.SmartContract {
-  static bind(address: Address): Contract {
-    return new Contract("Contract", address);
+export class VaultImplementation extends ethereum.SmartContract {
+  static bind(address: Address): VaultImplementation {
+    return new VaultImplementation("VaultImplementation", address);
   }
 
   LOCKED_PROFIT_RELEASE_SCALE(): BigInt {
@@ -732,14 +732,14 @@ export class Contract extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  borrowersData(param0: Address): Contract__borrowersDataResult {
+  borrowersData(param0: Address): VaultImplementation__borrowersDataResult {
     let result = super.call(
       "borrowersData",
       "borrowersData(address):(uint256,uint256,uint256,uint256)",
       [ethereum.Value.fromAddress(param0)]
     );
 
-    return new Contract__borrowersDataResult(
+    return new VaultImplementation__borrowersDataResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
       result[2].toBigInt(),
@@ -749,7 +749,7 @@ export class Contract extends ethereum.SmartContract {
 
   try_borrowersData(
     param0: Address
-  ): ethereum.CallResult<Contract__borrowersDataResult> {
+  ): ethereum.CallResult<VaultImplementation__borrowersDataResult> {
     let result = super.tryCall(
       "borrowersData",
       "borrowersData(address):(uint256,uint256,uint256,uint256)",
@@ -760,7 +760,7 @@ export class Contract extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Contract__borrowersDataResult(
+      new VaultImplementation__borrowersDataResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
         value[2].toBigInt(),

@@ -23,7 +23,7 @@ import {
   Unpaused,
   Upgraded,
   Withdraw
-} from "../generated/Contract/Contract"
+} from "../generated/VaultImplementation/VaultImplementation"
 
 export function createAdminChangedEvent(
   previousAdmin: Address,
