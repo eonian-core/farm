@@ -8158,7 +8158,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xe3564AbdDaEfEdF9EDFfB5056c2C3d451eD9f6Ea",
+          "address": "0x718b3c3b29A802fb406044dB3c710DB9eDDf4552",
           "abi": [
             {
               "inputs": [

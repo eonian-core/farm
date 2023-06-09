@@ -129,9 +129,11 @@ const config: HardhatUserConfig = {
     // https://chainlist.org/chain/5
     // https://www.alchemy.com/overviews/sepolia-testnet
     // https://sepolia.etherscan.io/
+    // https://sepoliafaucet.com/
     sepolia: {
       chainId: 11155111,
       url: process.env.SEPOLIA_RPC_URL,
+      gasPrice: 1500000000, // default gas price sometimes is too low
       accounts: [process.env.SEPOLIA_PRIVATE_KEY].filter(
         Boolean
       ) as Array<string>,
