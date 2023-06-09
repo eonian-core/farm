@@ -3,6 +3,9 @@
     "Vault": {
       "address": "0x035dfF040fF12a727f95D7059Eaf41204D2330d5",
       "startBlock": 3624372
+    },
+    "Contract": {
+      "address": "0x718b3c3b29A802fb406044dB3c710DB9eDDf4552"
     }
   }
 }
