@@ -1,4 +1,6 @@
 specVersion: 0.0.5
+description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+repository: https://github.com/eonian-core/farm
 schema:
   file: ./schema.graphql
 dataSources:
