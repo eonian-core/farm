@@ -11,7 +11,12 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
-export class AdminChanged extends Entity {
+export interface SavebleEntity {
+  save(): void
+}
+
+
+export class AdminChanged extends Entity implements SavebleEntity{
   constructor(id: Bytes) {
     super();
     this.set("id", Value.fromBytes(id));
