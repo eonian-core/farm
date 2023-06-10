@@ -2,6 +2,11 @@
 
 This is Subgraph package for Eonian yield aggregator.
 
+## Requiremetns
+
+* Docker - required for local testing
+
+
 ## First Start guide
 
 1. Install dependencies
@@ -10,7 +15,7 @@ This is Subgraph package for Eonian yield aggregator.
 yarn
 ```
 
-2. Install PostgreSQL. [Why it need?](https://thegraph.com/docs/en/developing/unit-testing-framework/).
+2. Install PostgreSQL if not have it. [Why it need?](https://thegraph.com/docs/en/developing/unit-testing-framework/).
 
 ```bash
 sudo apt install postgresql

@@ -33,7 +33,11 @@
       "**/hardhat",
       "**/hardhat/**",
       "**/hardhat-*",
-      "**/hardhat-*/**"
+      "**/hardhat-*/**",
+      "**/matchstick-as/**",
+      "**/matchstick-as",
+      "**/@graphprotocol/**",
+      "**/@graphprotocol"
     ]
   },
   "devDependencies": {
