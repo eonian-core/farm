@@ -6,6 +6,7 @@ import {
   beforeAll,
   afterAll,
   createMockedFunction,
+  afterEach,
 } from "matchstick-as/assembly/index"
 import { Address, ethereum, BigInt} from "@graphprotocol/graph-ts"
 import { AdminChanged } from "../generated/schema"
@@ -19,6 +20,7 @@ import { createAdminChangedEvent, createUpgradedEvent } from "./vault-utils"
 // Hardcoded in matchstic but not exported :(
 // can cause failed tests if will be changed in library
 const defaultAddress = Address.fromString("0xA16081F360e3847006dB660bae1c6d1b2e17eC2A");
+const vaultAddress = defaultAddress.toHexString()
 
 function mockVault(): void {
     // Mock the contract call for getting the name
@@ -33,6 +35,27 @@ function mockVault(): void {
     createMockedFunction(defaultAddress, "version", "version():(string)")
       .withArgs([])
       .returns([ethereum.Value.fromString("0.1.0")])
+}
+
+function testVault(): void {
+  assert.fieldEquals(
+    "Vault",
+    vaultAddress,
+    "name",
+    "USDT Vault"
+  )
+  assert.fieldEquals(
+    "Vault",
+    vaultAddress,
+    "symbol",
+    "eonUSDT"
+  )
+  assert.fieldEquals(
+    "Vault",
+    vaultAddress,
+    "version",
+    "0.1.0"
+  )
 }
 
 describe("AdminChanged", () => {
@@ -74,6 +97,9 @@ describe("AdminChanged", () => {
       "0x0000000000000000000000000000000000000001"
     )
 
+    // must be inside test block
+    testVault();
+
     // More assert options:
     // https://thegraph.com/docs/en/developer/matchstick/#asserts
   })
@@ -95,7 +121,6 @@ describe("Upgraded", () => {
 
     let newUpgradedEvent = createUpgradedEvent(implementationAddress)
 
-
     handleUpgraded(newUpgradedEvent)
 
     assert.entityCount("Upgraded", 1)
@@ -114,5 +139,8 @@ describe("Upgraded", () => {
       "version",
       "0.1.0"
     )
+
+    // must be inside test block
+    testVault();
   })
 })
