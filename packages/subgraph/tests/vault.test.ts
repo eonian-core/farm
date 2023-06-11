@@ -37,6 +37,7 @@ function mockVault(): void {
       .returns([ethereum.Value.fromString("0.1.0")])
 }
 
+// TODO: try to use test invariant
 function testVault(): void {
   assert.fieldEquals(
     "Vault",
