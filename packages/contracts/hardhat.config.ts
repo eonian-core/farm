@@ -1,6 +1,5 @@
 import * as dotenv from "dotenv";
 
-import fs from "fs";
 import { task } from "hardhat/config";
 import { HardhatUserConfig, NetworkUserConfig } from "hardhat/types/config";
 import "@nomiclabs/hardhat-ethers";

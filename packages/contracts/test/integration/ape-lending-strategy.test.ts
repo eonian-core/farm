@@ -3,7 +3,6 @@ import { expect } from "chai";
 import {
   ApeLendingStrategy,
   ApeLendingStrategy__factory,
-  ICToken,
   IERC20,
   Vault,
 } from "../../typechain-types";
@@ -61,7 +60,6 @@ describe("Ape Lending Strategy", function () {
 
     strategy = await deployStrategy({ signer: owner, vault });
     hre.tracer.nameTags[strategy.address] = "Strategy";
-
 
     assetToken = await getToken(asset, owner);
   }
@@ -291,13 +289,5 @@ describe("Ape Lending Strategy", function () {
     await tx.wait();
 
     return contract;
-  }
-
-  async function getCToken(token: string): Promise<ICToken & Contract> {
-    return await ethers.getContractAt<ICToken & Contract>(
-      "ICToken",
-      token,
-      owner
-    );
   }
 });
