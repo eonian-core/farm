@@ -5,9 +5,9 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ eonian-sepolia-testnet",
-    "create-local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
-    "remove-local": "graph remove --node http://localhost:8020/ eonian-sepolia-testnet",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eonian-sepolia-testnet",
+    "create:local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
+    "remove:local": "graph remove --node http://localhost:8020/ eonian-sepolia-testnet",
+    "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eonian-sepolia-testnet",
     "test": "graph test -d"
   },
   "dependencies": {

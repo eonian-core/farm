@@ -5,6 +5,7 @@ This is Subgraph package for Eonian yield aggregator.
 ## Requiremetns
 
 * Docker - required for local testing
+* JQ - <https://howtoinstall.co/en/jq> 
 
 
 ## First Start guide
@@ -28,3 +29,7 @@ In case of error `binary-install-raw/bin/0.5.4/binary-linux-20: error while load
 ```bash
 sudo apt install postgresql
 ```
+
+## Local Development
+
+[More info](https://thegraph.academy/developers/local-development/)
