@@ -9,7 +9,7 @@ error NegativePrice();
 library PriceConverter {
     using SafeMathUpgradeable for uint256;
 
-    uint256 private constant UP_TO_DECIMALS = 18;
+    uint256 public constant UP_TO_DECIMALS = 18;
 
     /// @notice Calculates the price of the specified number of tokens.
     /// @dev This function converts the specified number of tokens to their price (scaled to 18 decimal places).

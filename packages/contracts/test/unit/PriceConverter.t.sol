@@ -40,6 +40,31 @@ contract PriceConverterTest is Test {
         assertEq(result, 5 * 10 ** 17); // 0.5 USD, decimals were scaled up (from 8 to 18)
     }
 
+    function testShouldConvertPriceIfPriceDecimalsBiggerThan18(
+        uint8 priceDecimals
+    ) public {
+        vm.assume(priceDecimals >= PriceConverter.UP_TO_DECIMALS);
+        vm.assume(priceDecimals <= PriceConverter.UP_TO_DECIMALS * 2);
+
+        priceFeed.setDecimals(priceDecimals);
+        priceFeed.setPrice(int256(5 * 10 ** (priceDecimals - 1))); // 0.5 USD
+
+        uint256 decimals = 18;
+        uint256 amount = 1;
+        uint256 result = priceFeed.convertAmount(amount, decimals);
+        assertEq(
+            result,
+            priceDecimals <= decimals
+                ? 0
+                : 5 * 10 ** (priceDecimals - decimals - 1)
+        );
+
+        decimals = 18;
+        amount = 10 ** decimals;
+        result = priceFeed.convertAmount(amount, decimals);
+        assertEq(result, 5 * 10 ** (priceDecimals - 1)); // 0.5 USD, decimals were scaled up (from 8 to 18)
+    }
+
     function testAcceptOnlyPositivePriceNumber(
         uint256 amount,
         uint8 decimals
@@ -52,10 +77,14 @@ contract PriceConverterTest is Test {
 
         // We need this try/catch hack, since "expectRevert" does not work with library calls
         bool failed = false;
-        try this.externalWrapperForConvert(amount, decimals) returns (uint256) { // solhint-disable-line no-empty-blocks
-        } catch (bytes memory reason) {
+        // solhint-disable-next-line no-empty-blocks
+        try this.externalWrapperForConvert(amount, decimals) returns (
+            uint256
+        ) {} catch (bytes memory reason) {
             failed = true;
-            bytes4 desiredSelector = bytes4(keccak256(bytes("NegativePrice()")));
+            bytes4 desiredSelector = bytes4(
+                keccak256(bytes("NegativePrice()"))
+            );
             bytes4 receivedSelector = bytes4(reason);
             assertEq(desiredSelector, receivedSelector);
         }
