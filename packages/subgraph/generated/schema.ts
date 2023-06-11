@@ -11,6 +11,100 @@ import {
   BigDecimal
 } from "@graphprotocol/graph-ts";
 
+export class Vault extends Entity {
+  constructor(id: Bytes) {
+    super();
+    this.set("id", Value.fromBytes(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Vault entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.BYTES,
+        `Entities of type Vault must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Vault", id.toBytes().toHexString(), this);
+    }
+  }
+
+  static loadInBlock(id: Bytes): Vault | null {
+    return changetype<Vault | null>(
+      store.get_in_block("Vault", id.toHexString())
+    );
+  }
+
+  static load(id: Bytes): Vault | null {
+    return changetype<Vault | null>(store.get("Vault", id.toHexString()));
+  }
+
+  get id(): Bytes {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set id(value: Bytes) {
+    this.set("id", Value.fromBytes(value));
+  }
+
+  get address(): string {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set address(value: string) {
+    this.set("address", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get symbol(): string {
+    let value = this.get("symbol");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
+  }
+
+  get version(): string {
+    let value = this.get("version");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set version(value: string) {
+    this.set("version", Value.fromString(value));
+  }
+}
+
 export class AdminChanged extends Entity {
   constructor(id: Bytes) {
     super();

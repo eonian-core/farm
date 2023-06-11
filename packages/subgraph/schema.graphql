@@ -1,3 +1,11 @@
+type Vault @entity(immutable: false) {
+  id: Bytes!
+  address: String!
+  name: String!
+  symbol: String!
+  version: String!
+}
+
 type AdminChanged @entity(immutable: true) {
   id: Bytes!
   previousAdmin: Bytes! # address

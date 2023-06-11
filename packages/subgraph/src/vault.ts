@@ -45,8 +45,10 @@ import {
   Transfer,
   Unpaused,
   Upgraded,
-  Withdraw
+  Withdraw,
+  Vault as VaultEntity
  } from "../generated/schema"
+import { updateVaultState } from "./vault-state"
 
  export function handleAdminChanged(event: AdminChangedEvent): void {
   let entity = new AdminChanged(
@@ -60,6 +62,8 @@ import {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -75,6 +79,8 @@ export function handleApproval(event: ApprovalEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
@@ -89,6 +95,8 @@ export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
@@ -102,6 +110,8 @@ export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleBorrowerDebtManagementReported(
@@ -122,6 +132,8 @@ export function handleBorrowerDebtManagementReported(
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleBurned(event: BurnedEvent): void {
@@ -139,6 +151,8 @@ export function handleBurned(event: BurnedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleDeposit(event: DepositEvent): void {
@@ -155,6 +169,8 @@ export function handleDeposit(event: DepositEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleInitialized(event: InitializedEvent): void {
@@ -168,6 +184,8 @@ export function handleInitialized(event: InitializedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleLockedProfitReleaseRateChanged(
@@ -183,6 +201,8 @@ export function handleLockedProfitReleaseRateChanged(
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleMinted(event: MintedEvent): void {
@@ -200,6 +220,8 @@ export function handleMinted(event: MintedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleOwnershipTransferred(
@@ -216,6 +238,8 @@ export function handleOwnershipTransferred(
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handlePaused(event: PausedEvent): void {
@@ -229,6 +253,8 @@ export function handlePaused(event: PausedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleRevokedOperator(event: RevokedOperatorEvent): void {
@@ -243,6 +269,8 @@ export function handleRevokedOperator(event: RevokedOperatorEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleSent(event: SentEvent): void {
@@ -261,6 +289,8 @@ export function handleSent(event: SentEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleStrategyAdded(event: StrategyAddedEvent): void {
@@ -275,6 +305,8 @@ export function handleStrategyAdded(event: StrategyAddedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
@@ -289,6 +321,8 @@ export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleStrategyReturnedToQueue(
@@ -317,6 +351,8 @@ export function handleStrategyRevoked(event: StrategyRevokedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -332,6 +368,8 @@ export function handleTransfer(event: TransferEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleUnpaused(event: UnpausedEvent): void {
@@ -345,6 +383,8 @@ export function handleUnpaused(event: UnpausedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleUpgraded(event: UpgradedEvent): void {
@@ -362,6 +402,8 @@ export function handleUpgraded(event: UpgradedEvent): void {
   entity.version = vault.version();
 
   entity.save()
+
+  updateVaultState(event.address)
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -379,4 +421,6 @@ export function handleWithdraw(event: WithdrawEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateVaultState(event.address)
 }

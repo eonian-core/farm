@@ -16,9 +16,28 @@ import { createAdminChangedEvent, createUpgradedEvent } from "./vault-utils"
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
+// Hardcoded in matchstic but not exported :(
+// can cause failed tests if will be changed in library
+const defaultAddress = Address.fromString("0xA16081F360e3847006dB660bae1c6d1b2e17eC2A");
+
+function mockVault(): void {
+    // Mock the contract call for getting the name
+    createMockedFunction(defaultAddress, "name", "name():(string)")
+      .withArgs([])
+      .returns([ethereum.Value.fromString("USDT Vault")])
+    // Mock the contract call for getting the symbol
+    createMockedFunction(defaultAddress, "symbol", "symbol():(string)")
+      .withArgs([])
+      .returns([ethereum.Value.fromString("eonUSDT")])
+    // Mock the contract call for getting the version
+    createMockedFunction(defaultAddress, "version", "version():(string)")
+      .withArgs([])
+      .returns([ethereum.Value.fromString("0.1.0")])
+}
+
 describe("AdminChanged", () => {
   beforeAll(() => {
-
+    mockVault()
   })
 
   afterAll(() => {
@@ -62,7 +81,7 @@ describe("AdminChanged", () => {
 
 describe("Upgraded", () => {
   beforeAll(() => {
-
+    mockVault()
   })
 
   afterAll(() => {
@@ -75,10 +94,7 @@ describe("Upgraded", () => {
     )
 
     let newUpgradedEvent = createUpgradedEvent(implementationAddress)
-    // Mock the contract call for getting the version
-    createMockedFunction(newUpgradedEvent.address, "version", "version():(string)")
-      .withArgs([])
-      .returns([ethereum.Value.fromString("0.1.0")])
+
 
     handleUpgraded(newUpgradedEvent)
 
