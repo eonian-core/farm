@@ -1,10 +1,10 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy:studio": "graph deploy --studio eonian-sepolia-testnet",
+    "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet --version-label=$VERSION",
     "deploy": "yarn build && yarn deploy:studio",
     "deploy:node": "graph deploy --node https://api.studio.thegraph.com/deploy/ eonian-sepolia-testnet",
     "create:local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
@@ -18,5 +18,8 @@
   },
   "devDependencies": {
     "matchstick-as": "0.5.0"
+  },
+  "resolutions": {
+    "**/matchstick-as/@graphprotocol/graph-ts": "0.30.0"
   }
 }

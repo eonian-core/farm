@@ -42,10 +42,12 @@ sudo apt install postgresql
 
 [More info](https://thegraph.com/docs/en/cookbook/quick-start/#5-deploy-to-the-subgraph-studio)
 
-1. Run command
+1. Update version in `package.json`
+
+2. Run command
 ```bash
 yarn deploy
 ```
 
-2. Test subgraph in the deployed playground.
-3. Click deploy in the subgraph studio.
+3. Test subgraph in the deployed playground.
+4. Click deploy in the subgraph studio.

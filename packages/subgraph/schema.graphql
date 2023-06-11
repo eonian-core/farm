@@ -21,6 +21,7 @@ type Upgraded @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  version: String!
 }
 type ContractAdminChanged @entity(immutable: true) {
   id: Bytes!
