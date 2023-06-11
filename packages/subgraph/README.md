@@ -33,3 +33,19 @@ sudo apt install postgresql
 ## Local Development
 
 [More info](https://thegraph.academy/developers/local-development/)
+
+## Subgraphs
+
+* [Sepolia Testnet](https://thegraph.com/studio/subgraph/eonian-sepolia-testnet/)
+
+## Deploy
+
+[More info](https://thegraph.com/docs/en/cookbook/quick-start/#5-deploy-to-the-subgraph-studio)
+
+1. Run command
+```bash
+yarn deploy
+```
+
+2. Test subgraph in the deployed playground.
+3. Click deploy in the subgraph studio.
