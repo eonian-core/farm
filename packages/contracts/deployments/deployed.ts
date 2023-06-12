@@ -6103,7 +6103,7 @@ export default {
       "chainId": "11155111",
       "contracts": {
         "Vault": {
-          "address": "0x035dfF040fF12a727f95D7059Eaf41204D2330d5",
+          "address": "0x82f281189DE440dc6204B15e7c1BE6e9121EB809",
           "abi": [
             {
               "anonymous": false,
@@ -8158,7 +8158,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0x718b3c3b29A802fb406044dB3c710DB9eDDf4552",
+          "address": "0xc98c8cb21B4C2d8e85155dC9De44e6378F4AEFD4",
           "abi": [
             {
               "inputs": [
@@ -10200,7 +10200,7 @@ export default {
           ]
         },
         "Vault_Proxy": {
-          "address": "0x035dfF040fF12a727f95D7059Eaf41204D2330d5",
+          "address": "0x82f281189DE440dc6204B15e7c1BE6e9121EB809",
           "abi": [
             {
               "inputs": [
