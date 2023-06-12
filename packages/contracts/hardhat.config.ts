@@ -169,6 +169,7 @@ const config: HardhatUserConfig = {
       bsc_mainnet_dev: "0x55d398326f99059fF775485246999027B3197955",
       bsc_mainnet_staging: "0x55d398326f99059fF775485246999027B3197955",
       bsc_mainnet_prod: "0x55d398326f99059fF775485246999027B3197955",
+      sepolia: "0x6175a8471C2122f778445e7E07A164250a19E661",
       default: "0x55d398326f99059fF775485246999027B3197955", // will use bsc address as default for hardhat network
     },
     treasury: {
