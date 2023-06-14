@@ -12,21 +12,27 @@ import { Vault } from "../../../api";
 import FormInput from "./form-input";
 import VaultInfoCard from "./vault-info-card";
 import { useNumberInputValue } from "./use-number-input-value";
+import useVaultUserInfo from "./use-vault-user-info";
+import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
 
 interface Props {
   vault: Vault;
 }
 
 const Form: React.FC<Props> = ({ vault }) => {
-  const { wallet } = useWalletWrapperContext();
+  const { status } = useWalletWrapperContext();
+
+  const [{ walletBalance, vaultBalance }, hasVaultUserData] =
+    useVaultUserInfo(vault);
+
+  const isFormReady = status !== WalletStatus.CONNECTED || hasVaultUserData;
+
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT
   );
 
-  const currentDeposit = 500;
-  const balance = 300;
-
-  const [value, displayValue, handleValueChange] = useNumberInputValue(balance);
+  const [value, displayValue, handleValueChange] =
+    useNumberInputValue(walletBalance);
 
   const handleSubmit = React.useCallback(() => {}, []);
 
@@ -46,7 +52,7 @@ const Form: React.FC<Props> = ({ vault }) => {
         <VaultInfoCard
           className={styles.fragment}
           value={value}
-          currentDeposit={currentDeposit}
+          currentDeposit={vaultBalance}
           vault={vault}
           formAction={formAction}
         />
@@ -56,16 +62,21 @@ const Form: React.FC<Props> = ({ vault }) => {
         <Card.Body className={styles.fragment}>
           <PercentButtonGroup
             inputValue={value}
-            maxValue={balance}
+            maxValue={walletBalance}
             onValueChange={handleValueChange}
           />
           <FormInput
             assetSymbol={vault.underlyingAsset.symbol}
             value={displayValue}
-            balance={balance}
+            balance={walletBalance}
             onChange={handleValueChange}
+            isLoading={!isFormReady}
           />
-          <FormButton formAction={formAction} onSubmit={handleSubmit} />
+          <FormButton
+            disabled={!isFormReady}
+            formAction={formAction}
+            onSubmit={handleSubmit}
+          />
         </Card.Body>
       </Card>
     </div>

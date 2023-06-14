@@ -61,10 +61,4 @@ const resolvers = () => ({
     },
   },
   BigInt: scalarResolvers.BigInt,
-  Vault: {
-    address: () => "0x0000000000000000000000000000000000000000",
-  },
-  UnderlyingAsset: {
-    address: () => "0x0000000000000000000000000000000000000000",
-  },
 });

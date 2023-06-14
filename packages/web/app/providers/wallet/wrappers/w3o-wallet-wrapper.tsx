@@ -1,7 +1,8 @@
+import * as ethers from 'ethers';
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { Chain, Wallet, WalletStatus, WalletWrapper } from "./wallet-wrapper";
 import { defaultChain } from "../../../web3-onboard";
-
+import { ChainId } from "./helpers";
 type WalletArgs = ReturnType<typeof useConnectWallet>;
 type ChainArgs = ReturnType<typeof useSetChain>;
 
@@ -31,6 +32,7 @@ export default class Web3OnboardWalletWrapper extends WalletWrapper {
     return {
       label: onboardWallet.label,
       address: account.address,
+      provider: new ethers.BrowserProvider(onboardWallet.provider, "any"),
       iconImageSrc: this.getWalletIconSrc(onboardWallet.icon),
     };
   };
@@ -57,12 +59,14 @@ export default class Web3OnboardWalletWrapper extends WalletWrapper {
   protected override getAvailableChains = (): Chain[] => {
     const [{ chains: onboardChains }] = this.chainArgs;
     return onboardChains.map((chain) => {
+      const id = ChainId.parse(chain.id);
       return {
-        id: chain.id,
-        icon: this.getIcon(chain.id),
+        id,
+        icon: this.getIcon(id),
         name: chain.label,
         isSupported: true,
         isDefault: chain.id === defaultChain.id,
+        multicallAddress: this.getMulticallAddress(id),
       };
     });
   };
@@ -76,7 +80,7 @@ export default class Web3OnboardWalletWrapper extends WalletWrapper {
     if (!connectedChain) {
       return null;
     }
-    const { id } = connectedChain;
+    const id = ChainId.parse(connectedChain.id);
     return (
       this.chains.find((chain) => chain.id === id) ?? this.getDummyChain(id)
     );
@@ -120,10 +124,10 @@ export default class Web3OnboardWalletWrapper extends WalletWrapper {
    * @param chainId Identifier of the chain to which you need to connect.
    */
   protected override setCurrentChainInternal = async (
-    chainId: string
+    chainId: ChainId
   ): Promise<boolean> => {
     const [, setOnboardChain] = this.chainArgs;
-    return await setOnboardChain({ chainId });
+    return await setOnboardChain({ chainId: ChainId.toHex(chainId) });
   };
 
   private getWalletIconSrc(iconContent: string) {

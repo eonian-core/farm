@@ -12,6 +12,7 @@ interface Props {
   balance: number;
   assetSymbol: string;
   onChange: (value: string) => void;
+  isLoading: boolean;
 }
 
 const FormInput: React.FC<Props> = ({
@@ -19,9 +20,8 @@ const FormInput: React.FC<Props> = ({
   balance,
   value,
   onChange,
+  isLoading,
 }) => {
-  const { wallet } = useWalletWrapperContext();
-
   const handleInputValueChange = React.useCallback(
     (event: React.ChangeEvent<FormElement>) => onChange(event.target.value),
     [onChange]
@@ -39,14 +39,22 @@ const FormInput: React.FC<Props> = ({
         <IconCoin symbol={assetSymbol} width="1.5em" height="1.5em" />
       }
       contentRightStyling={false}
-      contentRight={
-        wallet ? (
-          <span className={styles.balance}>Balance: {balance.toFixed(1)}</span>
-        ) : null
-      }
+      contentRight={<InputRightContent balance={balance} isLoading={isLoading} />}
       onChange={handleInputValueChange}
+      disabled={isLoading}
     />
   );
 };
+
+function InputRightContent({
+  balance,
+  isLoading,
+}: Pick<Props, "balance" | "isLoading">) {
+  const { wallet } = useWalletWrapperContext();
+  if (isLoading) {
+    return <Loading className={styles.loading} size="sm" />;
+  }
+  return <span className={styles.balance}>Balance: {balance.toFixed(1)}</span>;
+}
 
 export default FormInput;

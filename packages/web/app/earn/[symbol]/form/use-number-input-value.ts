@@ -8,7 +8,9 @@ export const useNumberInputValue = (
 
   const handleValueChange = React.useCallback(
     (value: string | number) => {
-      const newValue = String(value).replaceAll(",", ".");
+      const newValue = String(value)
+        .replaceAll(",", ".") // Transforms a comma to a dot.
+        .replace(/^(0+)([0-9]+.*)/g, "$2"); // Removes extra leading zeros from the input.
       const valid = newValue.match(/^[0-9]*\.?[0-9]*$/);
       if (!valid) {
         return;

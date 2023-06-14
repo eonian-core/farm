@@ -1,19 +1,19 @@
 "use client";
 
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { Button, ButtonProps } from "@nextui-org/react";
 
 import styles from "./form-button.module.scss";
 import { FormAction } from "./form-header";
 import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 
-interface Props {
+interface Props extends Omit<ButtonProps, 'onSubmit'> {
   formAction: FormAction;
   onSubmit: (formAction: FormAction) => void;
 }
 
-const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
+const FormButton: React.FC<Props> = ({ formAction, onSubmit, ...restProps }) => {
   const { status, connect } = useWalletWrapperContext();
 
   const text = React.useMemo(() => {
@@ -43,6 +43,7 @@ const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
       size="lg"
       className={styles.button}
       onPress={handlePress}
+      {...restProps}
     >
       {text}
     </Button>
