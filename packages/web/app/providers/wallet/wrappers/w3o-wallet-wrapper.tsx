@@ -1,4 +1,4 @@
-import * as ethers from 'ethers';
+import * as ethers from "ethers";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { Chain, Wallet, WalletStatus, WalletWrapper } from "./wallet-wrapper";
 import { defaultChain } from "../../../web3-onboard";
@@ -90,10 +90,14 @@ export default class Web3OnboardWalletWrapper extends WalletWrapper {
    * Opens the model with wallet options.
    * @returns Label of the selected wallet.
    */
-  protected override connectInternal = async (): Promise<string> => {
-    const [, onboardConnect] = this.walletArgs;
-    const [wallet] = await onboardConnect();
-    return wallet.label;
+  protected override connectInternal = async (): Promise<string | null> => {
+    try {
+      const [, onboardConnect] = this.walletArgs;
+      const [wallet] = await onboardConnect();
+      return wallet.label;
+    } catch (e) {
+      return null;
+    }
   };
 
   /**

@@ -6,26 +6,36 @@ import styles from "./form.module.scss";
 import { Card } from "@nextui-org/react";
 import FormHeader, { FormAction } from "./form-header";
 import FormButton from "./form-button";
-import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import PercentButtonGroup from "./percent-button-group";
 import { Vault } from "../../../api";
 import FormInput from "./form-input";
 import VaultInfoCard from "./vault-info-card";
 import { useNumberInputValue } from "./use-number-input-value";
 import useVaultUserInfo from "./use-vault-user-info";
+import { useAppSelector } from "../../../store/hooks";
+import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
 
 interface Props {
   vault: Vault;
 }
 
+/**
+ * TODO:
+ * 1) Provider should be persistent to avoid extra rerenders and hooks triggers
+ */
 const Form: React.FC<Props> = ({ vault }) => {
-  const { status } = useWalletWrapperContext();
+  const { wallet, status } = useWalletWrapperContext();
 
-  const [{ walletBalance, vaultBalance }, hasVaultUserData] =
-    useVaultUserInfo(vault);
+  useVaultUserInfo(vault, { autoUpdateInterval: 5000 });
 
-  const isFormReady = status !== WalletStatus.CONNECTED || hasVaultUserData;
+  const { walletBalance, vaultBalance, isLoading, lastRequestForWallet } = useAppSelector(
+    (state) => state.vaultUser
+  );
+
+  const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
+  const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
+  const isFormReady = !isLoading || isFirstRequestFinished || isWalletNotConnected;
 
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT
