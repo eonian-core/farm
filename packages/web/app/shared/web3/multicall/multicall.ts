@@ -1,6 +1,5 @@
 import { Contract, Interface, Provider } from "ethers";
 import { MULTICALL_ABI } from "./multicall-abi";
-import { Chain } from "../../../providers/wallet/wrappers/wallet-wrapper";
 
 export interface MulticallRequest {
   address: string;
@@ -28,7 +27,7 @@ interface Aggregate3Response {
 
 type Aggregate3ReturnDataDecoder = (returnData: string) => any;
 
-export default class Multicall {
+export class Multicall {
   private interfaces: Interface[];
   private requestData: Aggregate3Request[];
   private responseDecoders: Aggregate3ReturnDataDecoder[];
