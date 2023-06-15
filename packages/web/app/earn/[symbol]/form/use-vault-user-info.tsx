@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { Vault } from "../../../api";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
+import { WalletStatus } from "../../../providers/wallet/wrappers/types";
 import { executeAfter } from "../../../shared/async/execute-after";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   fetchVaultUserData,
   reset,
 } from "../../../store/slices/vaultUserSlice";
-import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
 
 interface Params {
   autoUpdateInterval?: number;
@@ -24,7 +24,6 @@ export default function useVaultUserInfo(vault: Vault, params: Params = {}) {
   const { address: walletAddress } = wallet ?? {};
   const { address: vaultAddress, underlyingAsset } = vault;
   const { address: assetAddress } = underlyingAsset;
-  const hasProvider = !!provider;
 
   const refetch = React.useMemo(() => {
     if (!walletAddress || !multicallAddress || !provider) {
@@ -40,14 +39,13 @@ export default function useVaultUserInfo(vault: Vault, params: Params = {}) {
       };
       dispatch(fetchVaultUserData(params));
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dispatch,
     walletAddress,
     vaultAddress,
     assetAddress,
     multicallAddress,
-    hasProvider
+    provider,
   ]);
 
   /**

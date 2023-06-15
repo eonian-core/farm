@@ -14,7 +14,7 @@ import { useNumberInputValue } from "./use-number-input-value";
 import useVaultUserInfo from "./use-vault-user-info";
 import { useAppSelector } from "../../../store/hooks";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
-import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
+import { WalletStatus } from "../../../providers/wallet/wrappers/types";
 
 interface Props {
   vault: Vault;

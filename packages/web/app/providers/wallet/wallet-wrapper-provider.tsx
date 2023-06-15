@@ -1,23 +1,43 @@
-'use client';
+"use client";
 
 import {
   Web3OnboardProvider,
   useConnectWallet,
   useSetChain,
 } from "@web3-onboard/react";
-import React, { useContext, useEffect, useMemo } from "react";
+import { ethers } from "ethers";
+import React, { useContext, useEffect } from "react";
 import web3Onboard from "../../web3-onboard";
-import DummyWalletWrapper from "./wrappers/dummy-wallet-wrapper";
-import { WalletWrapper } from "./wrappers/wallet-wrapper";
-import Web3OnboardWalletWrapper from "./wrappers/w3o-wallet-wrapper";
+import { ChainId } from "./wrappers/helpers";
+import { Chain, Wallet, WalletStatus } from "./wrappers/types";
+import * as W3O from "./wrappers/w3o-wallet-wrapper";
 
 interface Props {
   children: React.ReactNode;
 }
 
-export const WalletWrapperContext = React.createContext<WalletWrapper>(
-  new DummyWalletWrapper()
-);
+interface WalletWrapperContextValue {
+  wallet: Wallet | null;
+  status: WalletStatus;
+  chain: Chain | null;
+  chains: Chain[];
+  provider: ethers.Provider | null;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+  setCurrentChain: (chainId: ChainId) => Promise<void>;
+}
+
+export const WalletWrapperContext =
+  React.createContext<WalletWrapperContextValue>({
+    wallet: null,
+    status: WalletStatus.NOT_CONNECTED,
+    chain: null,
+    chains: [],
+    provider: null,
+    connect: () => Promise.resolve(),
+    disconnect: () => Promise.resolve(),
+    setCurrentChain: () => Promise.resolve(),
+  });
 
 /**
  * Provides all Web3-related info and functions (wallet, active chain, connection status, etc).
@@ -25,26 +45,78 @@ export const WalletWrapperContext = React.createContext<WalletWrapper>(
  */
 const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
   const useConnectWalletOptions = useConnectWallet();
-  const [{ wallet, connecting }] = useConnectWalletOptions;
+  const [
+    { wallet: onboardWallet, connecting },
+    onboardConnect,
+    onboardDisconnect,
+  ] = useConnectWalletOptions;
 
   const useSetChainOptions = useSetChain();
-  const [{ chains, connectedChain }] = useSetChainOptions;
+  const [{ chains: onboardChains, connectedChain }, setOnboardChain] =
+    useSetChainOptions;
 
-  const wrapper = React.useMemo(() => {
-    return new Web3OnboardWalletWrapper(
-      useConnectWalletOptions,
-      useSetChainOptions
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wallet, connecting, chains, connectedChain]);
+  const wallet = React.useMemo(() => {
+    return W3O.getWallet(onboardWallet);
+  }, [onboardWallet]);
+
+  const isWalletConnected = !!wallet;
+
+  const status = React.useMemo(() => {
+    return W3O.getStatus(isWalletConnected, connecting);
+  }, [isWalletConnected, connecting]);
+
+  const chains = React.useMemo(() => {
+    return W3O.getAvailableChains(onboardChains);
+  }, [onboardChains]);
+
+  const chain = React.useMemo(() => {
+    return W3O.getCurrentChain(chains, connectedChain?.id);
+  }, [connectedChain?.id, chains]);
+
+  const provider = React.useMemo(() => {
+    return onboardWallet?.provider
+      ? W3O.getProvider(onboardWallet?.provider)
+      : null;
+  }, [onboardWallet?.provider]);
+
+  const connect = React.useCallback(async () => {
+    const success = await W3O.connect(onboardConnect);
+    if (success) {
+      await W3O.autoSelectProperChain(chain, chains, setOnboardChain);
+    }
+  }, [chain, chains, onboardConnect, setOnboardChain]);
+
+  const disconnect = React.useCallback(async () => {
+    if (wallet) {
+      await W3O.disconnect(wallet.label, onboardDisconnect);
+    }
+  }, [onboardDisconnect, wallet]);
+
+  const setCurrentChain = React.useCallback(
+    async (chainId: ChainId) => {
+      await W3O.setCurrentChain(chainId, setOnboardChain);
+    },
+    [setOnboardChain]
+  );
 
   useEffect(() => {
-    wrapper.reconnect();
+    W3O.reconnect(onboardConnect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const value: WalletWrapperContextValue = {
+    wallet,
+    status,
+    chain,
+    chains,
+    provider,
+    connect,
+    disconnect,
+    setCurrentChain,
+  };
+
   return (
-    <WalletWrapperContext.Provider value={wrapper}>
+    <WalletWrapperContext.Provider value={value}>
       {children}
     </WalletWrapperContext.Provider>
   );
