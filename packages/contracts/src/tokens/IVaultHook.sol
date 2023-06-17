@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";

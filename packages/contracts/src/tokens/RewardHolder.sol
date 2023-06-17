@@ -64,11 +64,10 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
         // calculate reward for token owner
         uint256 tokenOwnerReward = deltaIndex.mulDivDown(1, numberCoins);
+        rewardOwnerIndex[msg.sender] = rewardIndex;
 
         // transfer reward to token owner
         vault.transfer(msg.sender, tokenOwnerReward);
-
-        rewardOwnerIndex[msg.sender] = rewardIndex;
         emit RewardClaimed(tokenOwnerReward, address(msg.sender));
     }
 
