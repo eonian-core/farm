@@ -1,0 +1,85 @@
+name: Deploy Protocol to Staging Environment
+
+on:
+  push:
+    branches:
+      - staging
+    paths:
+      - "packages/contracts/**"
+
+# TODO: Switch to Github environments
+env:
+  SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+  BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
+  HARDHAT_NETWORK: bsc_mainnet_dev
+
+jobs:
+  deploy: 
+    name: Deploy Protocol
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      - name: Deploy Protocol
+        env:
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_STAGE_PRIVATE_KEY }}
+        run: |-
+          cd packages/contracts
+          yarn hardhat deploy
+
+      # Allow etherscan to index the contracts and prevent failures
+      - name: Wait for 10 seconds
+        run: sleep 10s
+        shell: bash
+
+      - name: Publish code on Etherscan
+        env:
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_STAGE_PRIVATE_KEY }}
+        run: |-
+          cd packages/contracts
+          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
+      
+      # Working not on all blockchains, BSC for example
+      - name: Publish code on Sourcify
+        run: |-
+          cd packages/contracts
+          yarn hardhat sourcify
+
+      # Usefull for automated scripts
+      - name: Export deployments to JSON config
+        run: |-
+          cd packages/contracts
+          yarn hardhat export --export-all './deployments/deployed.json'
+
+      # Prefered to import in TypeScript
+      - name: Export deployments to TypeScript config
+        run: |-
+          cd packages/contracts
+          yarn hardhat export --export-all './deployments/deployed.ts'
+
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with: 
+          default_author: github_actions
+          message: 'Deployed contracts to Staging environment in BSC Mainnet'
+          fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules

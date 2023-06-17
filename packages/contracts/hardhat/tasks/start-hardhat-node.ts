@@ -95,7 +95,7 @@ async function startNode(
   }
 
   // Don't spawn the node if the fork is not needed ("undefined" is considered "true").
-  if (forking.enabled == false) {
+  if (forking.enabled === false) {
     logError("Fork is disabled");
     return null;
   }
@@ -112,6 +112,7 @@ async function startNode(
 
   // Sometimes the process is still running after the main process has been closed with "CTRL + C".
   const cleanExit = function () {
+    // eslint-disable-next-line no-process-exit
     process.exit();
   };
   process.on("SIGINT", cleanExit);
@@ -162,6 +163,7 @@ async function startNode(
           return;
         }
 
+        // eslint-disable-next-line prefer-promise-reject-errors
         reject(<CustomError>{
           reason: errorReason ?? ErrorReason.OTHER,
           code: resolveErrorCode(errorReason) ?? code,

@@ -1,13 +1,18 @@
 import { BigNumber } from "ethers";
 
-import { deployUpgradable } from "../hardhat/deploy-upgradable";
-import { Stage } from "../hardhat.config";
+import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
+import { BlockchainType, Stage } from "../hardhat.config";
 
 /**
  * Deploy USDT Vault contract
  */
-const func = deployUpgradable({
+const func = deployOrUpgrade({
   contract: "Vault",
+  chains: [
+    BlockchainType.Mainnet,
+    BlockchainType.Testnet,
+    BlockchainType.Local,
+  ],
   tags: ["asset:USDT"],
   getArgs: ({ accounts: { USDT, treasury }, stage }) => [
     USDT, // asset

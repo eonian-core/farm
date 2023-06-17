@@ -20,5 +20,16 @@ module.exports = {
       "error",
       { ignores: ["modules"] },
     ],
+    "node/no-missing-import": [
+      "error",
+      {
+        resolvePaths: [__dirname],
+        tryExtensions: [".js", ".json", ".node", ".ts"],
+      },
+    ],
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "no-unused-vars": "off",
+    "dot-notation": "off",
+    camelcase: "off",
   },
 };

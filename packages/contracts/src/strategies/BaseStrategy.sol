@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
@@ -88,7 +88,7 @@ abstract contract BaseStrategy is
         address __assetPriceFeed,
         address _healthCheck
     ) internal onlyInitializing {
-        __HealthChecker_init(_healthCheck);
+        __HealthChecker_init(_healthCheck); // ownable under the hood
         __Pausable_init();
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 
@@ -200,23 +200,14 @@ abstract contract BaseStrategy is
     /// @notice Calculates the gas price of this transaction and compares it againts the specified profit.
     /// @param profit Profit to be compared to the cost of gas.
     /// @return "true" if the gas price (mult. to "profitFactor" is lower than the strategy profit, in USD).
-    function _checkGasPriceAgainstProfit(uint256 profit)
-        internal
-        view
-        returns (bool)
-    {
+    function _checkGasPriceAgainstProfit(uint256 profit) internal view returns (bool) {
         uint256 credit = vault.availableCredit();
         uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
         return profitFactor * gasCost < _convertAmountToUSD(credit + profit);
     }
 
     /// @inheritdoc IStrategy
-    function withdraw(uint256 assets)
-        external
-        override
-        onlyVault
-        returns (uint256 loss)
-    {
+    function withdraw(uint256 assets) external override onlyVault returns (uint256 loss) { // Vault already have nonReentrant modifier check
         // Liquidate the requested amount of tokens
         uint256 amountFreed;
         (amountFreed, loss) = _liquidatePosition(assets);
@@ -226,7 +217,7 @@ abstract contract BaseStrategy is
     }
 
     /// @notice Shutdown the strategy and revoke it form the vault.
-    function shutdown() external onlyOwner {
+    function shutdown() external nonReentrant onlyOwner { // need check nonReentrant to avoid cyclic call
         _pause();
         IVault(vault).revokeStrategy(address(this));
     }

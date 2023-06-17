@@ -1,10 +1,18 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {IVersionable} from "./IVersionable.sol";
 
 /** Implement best practices for initializable contracts */
-contract SafeInitializable is Initializable {
+abstract contract SafeInitializable is IVersionable, Initializable {
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
 
     /**
      * This constructor prevents UUPS Uninitialized Proxies Vulnerability in all contracts which inherit from it.
