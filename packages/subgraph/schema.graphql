@@ -1,9 +1,38 @@
 type Vault @entity(immutable: false) {
+  """
+  The ID of the vault. Mainly used for subgraph internal indexing.
+  """
   id: Bytes!
+
+  """
+  The blockchain address of the vault.
+  """
   address: String!
+  
+  """
+  The name of the vault.
+  """
   name: String!
+  
+  """
+  The symbol of the vault.
+  """
   symbol: String!
+
+  """
+  Current version of protocol in semver notation.
+  """
   version: String!
+  
+  """
+  The number of decimal places for the vault's assets.
+  """
+  decimals: Int!
+
+  """
+  The total amount of shares in vault.
+  """
+  totalSupply: BigInt!
 }
 
 type AdminChanged @entity(immutable: true) {

@@ -13,12 +13,17 @@ export function updateVaultState(contractAddress: Address): void {
     let entity = VaultEntity.load(id)
     if (entity == null) {
         entity = new VaultEntity(id)
+
+        // unchangable data need setup only once
+        entity.decimals = vault.decimals()
     }
 
     entity.address = contractAddress.toHexString()
     entity.name = vault.name()
     entity.symbol = vault.symbol()
     entity.version = vault.version();
+
+    entity.totalSupply = vault.totalSupply()
 
     entity.save()
 }

@@ -22,19 +22,24 @@ import { createAdminChangedEvent, createUpgradedEvent } from "./vault-utils"
 const defaultAddress = Address.fromString("0xA16081F360e3847006dB660bae1c6d1b2e17eC2A");
 const vaultAddress = defaultAddress.toHexString()
 
+function mockViewFunction(contractAddress: Address, name: string, resultType: string, resultValue: ethereum.Value[]): void {
+  createMockedFunction(contractAddress, name, name + "():(" + resultType + ")")
+    .withArgs([])
+    .returns(resultValue)
+}
+
 function mockVault(): void {
     // Mock the contract call for getting the name
-    createMockedFunction(defaultAddress, "name", "name():(string)")
-      .withArgs([])
-      .returns([ethereum.Value.fromString("USDT Vault")])
+    mockViewFunction(defaultAddress, "name", "string", [ethereum.Value.fromString("USDT Vault")])
     // Mock the contract call for getting the symbol
-    createMockedFunction(defaultAddress, "symbol", "symbol():(string)")
-      .withArgs([])
-      .returns([ethereum.Value.fromString("eonUSDT")])
+    mockViewFunction(defaultAddress, "symbol", "string", [ethereum.Value.fromString("eonUSDT")])
     // Mock the contract call for getting the version
-    createMockedFunction(defaultAddress, "version", "version():(string)")
-      .withArgs([])
-      .returns([ethereum.Value.fromString("0.1.0")])
+    mockViewFunction(defaultAddress, "version", "string", [ethereum.Value.fromString("0.1.0")])
+    // Mock the contract call for getting the decimals
+    mockViewFunction(defaultAddress, "decimals", "uint8", [ethereum.Value.fromI32(18)])
+    // Mock the contract call for getting the totalSupply
+    mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(100))])
+    
 }
 
 // TODO: try to use test invariant
@@ -56,6 +61,18 @@ function testVault(): void {
     vaultAddress,
     "version",
     "0.1.0"
+  )
+  assert.fieldEquals(
+    "Vault",
+    vaultAddress,
+    "decimals",
+    "18"
+  )
+  assert.fieldEquals(
+    "Vault",
+    vaultAddress,
+    "totalSupply",
+    "100"
   )
 }
 
