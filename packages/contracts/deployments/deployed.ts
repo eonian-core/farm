@@ -996,6 +996,25 @@ export default {
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "depositHooks",
+              "outputs": [
+                {
+                  "internalType": "contract IVaultHook",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "getQueueSize",
               "outputs": [
@@ -1057,6 +1076,11 @@ export default {
                   "internalType": "address[]",
                   "name": "_defaultOperators",
                   "type": "address[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_founders",
+                  "type": "address"
                 }
               ],
               "name": "initialize",
@@ -2030,6 +2054,25 @@ export default {
                   "type": "uint256"
                 }
               ],
+              "name": "withdrawHooks",
+              "outputs": [
+                {
+                  "internalType": "contract IVaultHook",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
               "name": "withdrawalQueue",
               "outputs": [
                 {
@@ -2060,7 +2103,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xECb3cCc4f72E0691Afd0f40fE62B3141c265a7Cc",
+          "address": "0x5B5e3b6985b78d4a1320df91783b6C7b2E9c527d",
           "abi": [
             {
               "inputs": [
@@ -3054,6 +3097,25 @@ export default {
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "depositHooks",
+              "outputs": [
+                {
+                  "internalType": "contract IVaultHook",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "getQueueSize",
               "outputs": [
@@ -3115,6 +3177,11 @@ export default {
                   "internalType": "address[]",
                   "name": "_defaultOperators",
                   "type": "address[]"
+                },
+                {
+                  "internalType": "address",
+                  "name": "_founders",
+                  "type": "address"
                 }
               ],
               "name": "initialize",
@@ -4078,6 +4145,25 @@ export default {
                 }
               ],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "name": "withdrawHooks",
+              "outputs": [
+                {
+                  "internalType": "contract IVaultHook",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
