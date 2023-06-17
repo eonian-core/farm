@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.19;
 
 import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
@@ -140,6 +140,7 @@ contract ERC5484Upgradeable is
         public
         view
         override(ERC721Upgradeable, ERC721EnumerableUpgradeable, AccessControlUpgradeable)
+        virtual
         returns (bool)
     {
         return interfaceId == type(IERC5484).interfaceId || super.supportsInterface(interfaceId);

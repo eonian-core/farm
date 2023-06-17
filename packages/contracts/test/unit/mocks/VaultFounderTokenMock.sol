@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
-pragma solidity ^0.8.0;
+// SPDX-License-Identifier: AGPL-3.0-only
+pragma solidity ^0.8.19;
 
-import "../../../src/tokens/VaultFounderToken.sol";
+import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
 
 contract VaultFounderTokenMock is VaultFounderToken {
     constructor(

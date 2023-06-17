@@ -3,10 +3,12 @@ pragma solidity ^0.8.19;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
+import {Vault} from "../Vault.sol";
 
-contract RewardHolder is Initializable, AccessControlUpgradeable {
+contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     using FixedPointMathLib for uint256;
 
     /// @notice Emitted reward is claimed by a token owner
@@ -15,16 +17,15 @@ contract RewardHolder is Initializable, AccessControlUpgradeable {
     event RewardDeposited(address sender, uint value);
 
     /// @notice Accumulator of the total earned interest rate since the opening of the token
-    uint private rewardIndex;
+    uint public rewardIndex = 1e8;
 
     /// @notice The owners' reward indexes for eachas of the last time they accrued
-    mapping(address => uint) private rewardOwnerIndex;
+    mapping(address => uint) public rewardOwnerIndex;
 
     /// @notice
-    uint private numberCoins;
+    uint public numberCoins;
 
-    /// @notice The initial reward index for this token
-    uint224 public constant initialRewardIndex = 1e36;
+    Vault public vault;
 
     bytes32 public constant BALANCE_UPDATER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
     bytes32 public constant REWARD_CLAIMER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
@@ -35,32 +36,46 @@ contract RewardHolder is Initializable, AccessControlUpgradeable {
 //        _disableInitializers(); //todo discuss what proper way to initialize in scope uip proxy migation
 //    }
 
-    function __RewardHolder_init(address admin_) internal onlyInitializing {
+    function __RewardHolder_init(
+        address admin_,
+        Vault vault_
+    ) internal onlyInitializing {
         __AccessControl_init();
         _setupRole(BALANCE_UPDATER_ROLE, admin_);
+        __ReentrancyGuard_init();
+        vault = vault_;
     }
 
-    /// @dev have to be called
-    function depositReward() public payable onlyRole(BALANCE_UPDATER_ROLE) {
+    /// @dev deposit reward to the contract to be claimed by token owners
+    /// @notice only role with BALANCE_UPDATER_ROLE can call this function
+    /// @param plusReward amount of reward to be deposited
+    function depositReward(uint256 plusReward) public onlyRole(BALANCE_UPDATER_ROLE) nonReentrant {
         // update reward index for claim reward logic
-        rewardIndex += msg.value;
-        emit RewardDeposited(msg.sender, msg.value);
+        rewardIndex += plusReward;
+        emit RewardDeposited(_msgSender(), plusReward);
     }
 
-    function claimReward() external onlyRole(REWARD_CLAIMER_ROLE) {
+    /// @dev claim reward for token owner
+    /// @notice only role with REWARD_CLAIMER_ROLE can call this function
+    function claimReward() external onlyRole(REWARD_CLAIMER_ROLE) nonReentrant {
         require(rewardOwnerIndex[msg.sender] != 0, "Caller doesn't have reward.");
 
         uint deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
-//        uint256 tokenOwnerReward = deltaIndex.mulDivDown(numberCoins, 10);
-        uint tokenOwnerReward = 0;
+
+        // calculate reward for token owner
+        uint256 tokenOwnerReward = deltaIndex.mulDivDown(1, numberCoins);
+
+        // transfer reward to token owner
+        vault.transfer(msg.sender, tokenOwnerReward);
 
         rewardOwnerIndex[msg.sender] = rewardIndex;
-
         emit RewardClaimed(tokenOwnerReward, address(msg.sender));
     }
 
-    function setupNewOwner(address rewardOwner) internal {
+    /// @dev setup new owner for reward usually called when minting new token
+    function setupNewOwner(address rewardOwner) external onlyRole(BALANCE_UPDATER_ROLE) {
         rewardOwnerIndex[rewardOwner] = rewardIndex;
+        _setupRole(REWARD_CLAIMER_ROLE, rewardOwner);
         numberCoins++;
     }
 }
