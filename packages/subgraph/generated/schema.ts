@@ -117,8 +117,21 @@ export class Vault extends Entity {
     this.set("decimals", Value.fromI32(value));
   }
 
-  get totalSupply(): BigInt {
+  get totalSupply(): BigDecimal {
     let value = this.get("totalSupply");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set totalSupply(value: BigDecimal) {
+    this.set("totalSupply", Value.fromBigDecimal(value));
+  }
+
+  get totalDebt(): BigInt {
+    let value = this.get("totalDebt");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -126,8 +139,47 @@ export class Vault extends Entity {
     }
   }
 
-  set totalSupply(value: BigInt) {
-    this.set("totalSupply", Value.fromBigInt(value));
+  set totalDebt(value: BigInt) {
+    this.set("totalDebt", Value.fromBigInt(value));
+  }
+
+  get maxBps(): BigInt {
+    let value = this.get("maxBps");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxBps(value: BigInt) {
+    this.set("maxBps", Value.fromBigInt(value));
+  }
+
+  get debtRatio(): BigDecimal {
+    let value = this.get("debtRatio");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set debtRatio(value: BigDecimal) {
+    this.set("debtRatio", Value.fromBigDecimal(value));
+  }
+
+  get lastReportTimestamp(): BigInt {
+    let value = this.get("lastReportTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set lastReportTimestamp(value: BigInt) {
+    this.set("lastReportTimestamp", Value.fromBigInt(value));
   }
 }
 

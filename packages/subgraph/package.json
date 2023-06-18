@@ -1,6 +1,6 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "scripts": {
     "codegen": "graph codegen",
     "dev": "graph codegen --watch",
@@ -11,14 +11,17 @@
     "create:local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
     "remove:local": "graph remove --node http://localhost:8020/ eonian-sepolia-testnet",
     "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eonian-sepolia-testnet",
-    "test": "graph test -d"
+    "test": "graph test",
+    "test:docker": "graph test -d",
+    "test:watch": "nodemon"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.51.0",
     "@graphprotocol/graph-ts": "0.30.0"
   },
   "devDependencies": {
-    "matchstick-as": "0.5.0"
+    "matchstick-as": "0.5.0",
+    "nodemon": "^2.0.22"
   },
   "resolutions": {
     "**/matchstick-as/@graphprotocol/graph-ts": "0.30.0"

@@ -8,7 +8,7 @@ import {
   createMockedFunction,
   afterEach,
 } from "matchstick-as/assembly/index"
-import { Address, ethereum, BigInt} from "@graphprotocol/graph-ts"
+import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { AdminChanged } from "../generated/schema"
 import { AdminChanged as AdminChangedEvent } from "../generated/Vault/Vault"
 import { handleAdminChanged, handleUpgraded } from "../src/vault"
@@ -29,51 +29,39 @@ function mockViewFunction(contractAddress: Address, name: string, resultType: st
 }
 
 function mockVault(): void {
-    // Mock the contract call for getting the name
-    mockViewFunction(defaultAddress, "name", "string", [ethereum.Value.fromString("USDT Vault")])
-    // Mock the contract call for getting the symbol
-    mockViewFunction(defaultAddress, "symbol", "string", [ethereum.Value.fromString("eonUSDT")])
-    // Mock the contract call for getting the version
-    mockViewFunction(defaultAddress, "version", "string", [ethereum.Value.fromString("0.1.0")])
-    // Mock the contract call for getting the decimals
-    mockViewFunction(defaultAddress, "decimals", "uint8", [ethereum.Value.fromI32(18)])
-    // Mock the contract call for getting the totalSupply
-    mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(100))])
-    
+  // Mock the contract call for getting the name
+  mockViewFunction(defaultAddress, "name", "string", [ethereum.Value.fromString("USDT Vault")])
+  // Mock the contract call for getting the symbol
+  mockViewFunction(defaultAddress, "symbol", "string", [ethereum.Value.fromString("eonUSDT")])
+  // Mock the contract call for getting the version
+  mockViewFunction(defaultAddress, "version", "string", [ethereum.Value.fromString("0.1.0")])
+  // Mock the contract call for getting the decimals
+  mockViewFunction(defaultAddress, "decimals", "uint8", [ethereum.Value.fromI32(18)])
+  // Mock the contract call for getting the totalSupply
+  mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('100000000000000000000'))])
+  // Mock the contract call for getting the totalDebt
+  mockViewFunction(defaultAddress, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('50000000000000000000'))])
+  // Mock the contract call for getting the MAX_BPS
+  mockViewFunction(defaultAddress, "MAX_BPS", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(10000))])
+  // Mock the contract call for getting the debtRatio
+  mockViewFunction(defaultAddress, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(5000))])
+  // Mock the contract call for getting the lastReportTimestamp
+  mockViewFunction(defaultAddress, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(123))])
+
 }
 
 // TODO: try to use test invariant
 function testVault(): void {
-  assert.fieldEquals(
-    "Vault",
-    vaultAddress,
-    "name",
-    "USDT Vault"
-  )
-  assert.fieldEquals(
-    "Vault",
-    vaultAddress,
-    "symbol",
-    "eonUSDT"
-  )
-  assert.fieldEquals(
-    "Vault",
-    vaultAddress,
-    "version",
-    "0.1.0"
-  )
-  assert.fieldEquals(
-    "Vault",
-    vaultAddress,
-    "decimals",
-    "18"
-  )
-  assert.fieldEquals(
-    "Vault",
-    vaultAddress,
-    "totalSupply",
-    "100"
-  )
+  assert.fieldEquals("Vault", vaultAddress, "name", "USDT Vault")
+  assert.fieldEquals("Vault", vaultAddress, "symbol", "eonUSDT")
+  assert.fieldEquals("Vault", vaultAddress, "version", "0.1.0")
+  assert.fieldEquals("Vault", vaultAddress, "decimals", "18")
+  assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100")
+  assert.fieldEquals("Vault", vaultAddress, "totalDebt", "50000000000000000000")
+  assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
+  assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.5")
+  assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
+
 }
 
 describe("AdminChanged", () => {

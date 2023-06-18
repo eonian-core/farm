@@ -30,9 +30,30 @@ type Vault @entity(immutable: false) {
   decimals: Int!
 
   """
-  The total amount of shares in vault.
+  The total amount of shares in vault. Adjusted for decimals.
   """
-  totalSupply: BigInt!
+  totalSupply: BigDecimal!
+
+  """
+  Amount of tokens that all borrowers have taken
+  """
+  totalDebt: BigInt!
+  
+  """
+  BPS points used to make adjustments from BigInt to BigDecimals for Vault and Lender
+  """
+  maxBps: BigInt!
+
+  """
+  Debt ratio for the Lender across all borrowers
+  """
+  debtRatio: BigDecimal!
+
+  """
+  Last time a report occurred by any borrower
+  """
+  lastReportTimestamp: BigInt!
+
 }
 
 type AdminChanged @entity(immutable: true) {
