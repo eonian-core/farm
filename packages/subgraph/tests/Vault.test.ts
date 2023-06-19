@@ -11,20 +11,14 @@ import {
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { createUpgradedEvent } from "./vault-utils";
 import { createOrUpdateVault } from "../src/Vault";
+import { defaultAddress, mockViewFunction } from "./mocking";
+import { mockTokenContract } from "./Token.test";
 
-// Hardcoded in matchstic but not exported :(
-// can cause failed tests if will be changed in library
-export const defaultAddress = Address.fromString("0xA16081F360e3847006dB660bae1c6d1b2e17eC2A");
+
 const vaultAddress = defaultAddress.toHexString()
 
 const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 const tokenAddressStr = tokenAddress.toHexString()
-
-function mockViewFunction(contractAddress: Address, name: string, resultType: string, resultValue: ethereum.Value[]): void {
-  createMockedFunction(contractAddress, name, name + "():(" + resultType + ")")
-    .withArgs([])
-    .returns(resultValue)
-}
 
 export function mockVaultContract(vault: Address): void {
   // Mock the contract call for getting the name
@@ -47,17 +41,8 @@ export function mockVaultContract(vault: Address): void {
   mockViewFunction(vault, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(123))])
   // Mock the contract call for getting the asset
   mockViewFunction(vault, "asset", "address", [ethereum.Value.fromAddress(tokenAddress)])
+  
   mockTokenContract(tokenAddress)
-}
-
-export function mockTokenContract(token: Address): void {
-  // Mock the contract call for getting the name
-  mockViewFunction(token, "name", "string", [ethereum.Value.fromString("USD Tether")])
-  // Mock the contract call for getting the symbol
-  mockViewFunction(token, "symbol", "string", [ethereum.Value.fromString("USDT")])
-  // Mock the contract call for getting the decimals
-  mockViewFunction(token, "decimals", "uint8", [ethereum.Value.fromI32(18)])
-
 }
 
 
