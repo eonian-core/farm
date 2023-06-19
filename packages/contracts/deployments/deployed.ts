@@ -5,7 +5,7 @@ export default {
       "chainId": "11155111",
       "contracts": {
         "Vault": {
-          "address": "0xd4C84Eb6dD0f8c6d20430474EA77C84112c6cb89",
+          "address": "0x894E996d3a7D4160c6321dF8f15BF7cD9CF8ce9b",
           "abi": [
             {
               "anonymous": false,
@@ -2060,7 +2060,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xECb3cCc4f72E0691Afd0f40fE62B3141c265a7Cc",
+          "address": "0x741B00BbBB5905Dd7Bd1F6Db4E699d59D576f1Fd",
           "abi": [
             {
               "inputs": [
@@ -4102,7 +4102,7 @@ export default {
           ]
         },
         "Vault_Proxy": {
-          "address": "0xd4C84Eb6dD0f8c6d20430474EA77C84112c6cb89",
+          "address": "0x894E996d3a7D4160c6321dF8f15BF7cD9CF8ce9b",
           "abi": [
             {
               "inputs": [
