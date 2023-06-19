@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers";
-
 import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
 import { BlockchainType } from "../hardhat.config";
 

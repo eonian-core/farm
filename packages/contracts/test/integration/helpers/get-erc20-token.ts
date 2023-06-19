@@ -2,7 +2,6 @@ import { Contract, Signer } from "ethers";
 import { ethers } from "hardhat";
 import { IERC20 } from "../../../typechain-types";
 
-
 export default async function getToken(
   token: string,
   signer?: Signer | string

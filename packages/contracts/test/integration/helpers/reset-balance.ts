@@ -1,4 +1,3 @@
-import { Signer } from "ethers";
 import hre from "hardhat";
 import getToken from "./get-erc20-token";
 import * as helpers from "@nomicfoundation/hardhat-network-helpers";
