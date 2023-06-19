@@ -309,27 +309,15 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender {
         return lockedProfitBaseline - lockedProfitChange;
     }
 
-    // 5 user = 100 USDT = 100 shares / each user have 20 shares. 1 share = 1 USDT
-    // harvest finished + 50 USD = 150 USDT 
-    // 50 USDT = extraFreeFunds. 100 shares = 150 USDT. 1 share = 1.5 USDT. 20 * 1.5 = 30 USDT = 1 user have
-    // 20% of 50 USDT = 10 USDT. 
-
     /// @inheritdoc Lender
     function _chargeFees(uint256 extraFreeFunds)
         internal
         override
         returns (uint256)
     {
-        uint256 managmentFee = (extraFreeFunds * managementFee) / MAX_BPS; // 50 * 20% = 10 USDT
+        uint256 fee = (extraFreeFunds * managementFee) / MAX_BPS;
         if (fee > 0) {
-            _mint(rewards, convertToShares(fee), "", "", false); // convertToShares(10 USTD) = 9 shares
-            // rewards = 9 shares = 10 USDT. Each user 20 share = 25 USDT
-        }
-
-        uint256 foundersFee = (extraFreeFunds * vaultFoundersFee) / MAX_BPS; // 50 * 1% = 0.5 USDT
-        if (foundersFee > 0) {
-            _mint(founders, convertToShares(foundersFee), "", "", false); // convertToShares(10 USTD) = 1.1 shares
-            // founders = 1.1 shares = 0.5 USDT. Each user 20 share = 25 USDT
+            _mint(rewards, convertToShares(fee), "", "", false);
         }
 
         return fee;
