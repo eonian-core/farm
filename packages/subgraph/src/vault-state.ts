@@ -21,6 +21,7 @@ export function updateVaultState(contractAddress: Address, event: ethereum.Event
 
     let entity = VaultEntity.load(id)
     if (entity == null) {
+        log.info("Creating new Vault entity for {}", [contractAddress.toHexString()])
         entity = new VaultEntity(id)
 
         // unchangable data need setup only once
@@ -30,14 +31,17 @@ export function updateVaultState(contractAddress: Address, event: ethereum.Event
         getOrCreateToken(contractAddress);
     }
 
-    // create underliyng token
+    log.info("Creating new underling asset token for {}", [contractAddress.toHexString()])
     let asset = vault.try_asset();
     if (asset.reverted) {
         // Asset can not exists before first initialization
         warn("[updateVaultState] vault.asset() call reverted", contractAddress, event)
+        entity.asset = Bytes.empty();
     } else {
         entity.asset = getOrCreateToken(asset.value).id;
     }
+
+    log.info("Filling vault entity for {}", [contractAddress.toHexString()])
 
     entity.address = contractAddress.toHexString()
     entity.name = vault.name()
@@ -76,10 +80,11 @@ export function getOrCreateToken(contractAddress: Address): Token {
         return token;
     }
 
-    // not exsits, need create
+    log.info("Creating new token entity for {}", [contractAddress.toHexString()])
     token = new Token(id);
     const contract = ERC20.bind(contractAddress)
 
+    log.info("Filling token entity for {}", [contractAddress.toHexString()])
     token.address = contractAddress.toHexString();
     token.name = contract.name();
     token.symbol = contract.symbol();
