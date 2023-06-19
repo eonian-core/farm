@@ -8,9 +8,9 @@ dataSources:
     name: Vault
     network: sepolia
     source:
-      address: "0xd4C84Eb6dD0f8c6d20430474EA77C84112c6cb89"
+      address: "0x894E996d3a7D4160c6321dF8f15BF7cD9CF8ce9b"
       abi: Vault
-      startBlock: 3624372
+      startBlock: 3726610
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
