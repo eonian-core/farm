@@ -1,6 +1,6 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.7.6",
+  "version": "0.7.10",
   "scripts": {
     "codegen": "graph codegen",
     "dev": "graph codegen --watch",

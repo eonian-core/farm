@@ -14,6 +14,28 @@ export function warn(message: string, contractAddress: Address, event: ethereum.
     )
 }
 
+export function info(message: string, args: Array<string>, contractAddress: Address, event: ethereum.Event): void {
+    log.info(
+        message + " for contract {} tx {}-{}",
+        args.concat([
+            contractAddress.toHexString(),
+            event.transaction.hash.toHexString(),
+            event.transactionLogIndex.toString(),
+        ])
+    )
+}
+
+export function debug(message: string, args: Array<string>, contractAddress: Address, event: ethereum.Event): void {
+    log.debug(
+        message + " for contract {} tx {}-{}",
+        args.concat([
+            contractAddress.toHexString(),
+            event.transaction.hash.toHexString(),
+            event.transactionLogIndex.toString(),
+        ])
+    )
+}
+
 /** Creates or updates Vault entity */
 export function updateVaultState(contractAddress: Address, event: ethereum.Event ): void {
     const vault = Vault.bind(contractAddress)
@@ -21,32 +43,35 @@ export function updateVaultState(contractAddress: Address, event: ethereum.Event
 
     let entity = VaultEntity.load(id)
     if (entity == null) {
-        log.info("Creating new Vault entity for {}", [contractAddress.toHexString()])
+        info("[updateVaultState] Creating new Vault entity for {}", [contractAddress.toHexString()], contractAddress, event)
         entity = new VaultEntity(id)
 
         // unchangable data need setup only once
         entity.decimals = vault.decimals()
 
         // create vault token as ERC20 standard
-        getOrCreateToken(contractAddress);
+        getOrCreateToken(contractAddress, event);
     }
 
-    log.info("Creating new underling asset token for {}", [contractAddress.toHexString()])
+    info("Creating new underling asset token for {}", [contractAddress.toHexString()], contractAddress, event)
     let asset = vault.try_asset();
     if (asset.reverted) {
         // Asset can not exists before first initialization
         warn("[updateVaultState] vault.asset() call reverted", contractAddress, event)
         entity.asset = Bytes.empty();
     } else {
-        entity.asset = getOrCreateToken(asset.value).id;
+        entity.asset = getOrCreateToken(asset.value, event).id;
     }
 
-    log.info("Filling vault entity for {}", [contractAddress.toHexString()])
+    info("[updateVaultState] Filling vault entity for {}", [contractAddress.toHexString()], contractAddress, event)
 
     entity.address = contractAddress.toHexString()
     entity.name = vault.name()
     entity.symbol = vault.symbol()
     entity.version = vault.version();
+
+    debug('[updateVaultState] vault cotnract state {} {} {} {}', [contractAddress.toHexString(), vault.name(), vault.symbol(), vault.version()], contractAddress, event)
+    debug('[updateVaultState] vault entity state {} {} {} {}', [entity.address, entity.name, entity.symbol, entity.version], contractAddress, event)
 
     // totalSupply / decimals = convert int to float
     entity.totalSupply = toDecimalWithBasei32(vault.totalSupply(), entity.decimals)
@@ -73,22 +98,25 @@ export function toDecimalWithBaseBigInt(n: BigInt, decimals: BigInt): BigDecimal
 }
 
 /** Creates and saves the new token */
-export function getOrCreateToken(contractAddress: Address): Token {
+export function getOrCreateToken(contractAddress: Address, event: ethereum.Event): Token {
     const id = Bytes.fromHexString(contractAddress.toHexString())
     let token = Token.load(id);
     if(token) {
         return token;
     }
 
-    log.info("Creating new token entity for {}", [contractAddress.toHexString()])
+    info("[getOrCreateToken] Creating new token entity for {}", [contractAddress.toHexString()], contractAddress, event)
     token = new Token(id);
     const contract = ERC20.bind(contractAddress)
 
-    log.info("Filling token entity for {}", [contractAddress.toHexString()])
+    info("[getOrCreateToken] Filling token entity for {}", [contractAddress.toHexString()], contractAddress, event)
     token.address = contractAddress.toHexString();
     token.name = contract.name();
     token.symbol = contract.symbol();
     token.decimals = contract.decimals();
+
+    debug('[getOrCreateToken] token contract state {} {} {}', [contractAddress.toHexString(), contract.name(), contract.symbol()], contractAddress, event)
+    debug('[getOrCreateToken] token entity state {} {} {}', [token.address, token.name, token.symbol], contractAddress, event)
 
     token.save()
  
