@@ -54,7 +54,47 @@ type Vault @entity(immutable: false) {
   """
   lastReportTimestamp: BigInt!
 
+  # TODO: add interest rate
+
+  """
+  The underlying asset stored in the vault.
+  """
+  asset: Token!
+
 }
+
+"""
+Token of standart ERC20, can be stored in vault.
+"""
+type Token @entity(immutable: true) { # when will have price metric which require regular updates need use @entity(immutable: false) @regularPolling
+  """
+  The ID of the token. Mainly used for subgraph internal indexing.
+  """
+  id: Bytes!
+
+  """
+  The blockchain address of the asset.
+  """
+  address: String!
+  
+  """
+  The name of the asset.
+  """
+  name: String!
+  
+  """
+  The symbol of the asset.
+  """
+  symbol: String!
+  
+  """
+  The number of decimal places for the asset.
+  """
+  decimals: Int!
+
+  # TODO: add token price, base https://github.com/messari/subgraphs/blob/master/subgraphs/arrakis-finance/src/prices/README.md
+}
+
 
 type AdminChanged @entity(immutable: true) {
   id: Bytes!

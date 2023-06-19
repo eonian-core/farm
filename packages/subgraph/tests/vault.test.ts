@@ -22,51 +22,78 @@ import { createAdminChangedEvent, createUpgradedEvent } from "./vault-utils"
 const defaultAddress = Address.fromString("0xA16081F360e3847006dB660bae1c6d1b2e17eC2A");
 const vaultAddress = defaultAddress.toHexString()
 
+const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+const tokenAddressStr = tokenAddress.toHexString()
+
 function mockViewFunction(contractAddress: Address, name: string, resultType: string, resultValue: ethereum.Value[]): void {
   createMockedFunction(contractAddress, name, name + "():(" + resultType + ")")
     .withArgs([])
     .returns(resultValue)
 }
 
-function mockVault(): void {
+function mockVault(vault: Address): void {
   // Mock the contract call for getting the name
-  mockViewFunction(defaultAddress, "name", "string", [ethereum.Value.fromString("USDT Vault")])
+  mockViewFunction(vault, "name", "string", [ethereum.Value.fromString("USDT Vault")])
   // Mock the contract call for getting the symbol
-  mockViewFunction(defaultAddress, "symbol", "string", [ethereum.Value.fromString("eonUSDT")])
+  mockViewFunction(vault, "symbol", "string", [ethereum.Value.fromString("eonUSDT")])
   // Mock the contract call for getting the version
-  mockViewFunction(defaultAddress, "version", "string", [ethereum.Value.fromString("0.1.0")])
+  mockViewFunction(vault, "version", "string", [ethereum.Value.fromString("0.1.0")])
   // Mock the contract call for getting the decimals
-  mockViewFunction(defaultAddress, "decimals", "uint8", [ethereum.Value.fromI32(18)])
+  mockViewFunction(vault, "decimals", "uint8", [ethereum.Value.fromI32(18)])
   // Mock the contract call for getting the totalSupply
-  mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('100000000000000000000'))])
+  mockViewFunction(vault, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('100000000000000000000'))])
   // Mock the contract call for getting the totalDebt
-  mockViewFunction(defaultAddress, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('50000000000000000000'))])
+  mockViewFunction(vault, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('50000000000000000000'))])
   // Mock the contract call for getting the MAX_BPS
-  mockViewFunction(defaultAddress, "MAX_BPS", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(10000))])
+  mockViewFunction(vault, "MAX_BPS", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(10000))])
   // Mock the contract call for getting the debtRatio
-  mockViewFunction(defaultAddress, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(5000))])
+  mockViewFunction(vault, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(5000))])
   // Mock the contract call for getting the lastReportTimestamp
-  mockViewFunction(defaultAddress, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(123))])
+  mockViewFunction(vault, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(123))])
+  // Mock the contract call for getting the asset
+  mockViewFunction(vault, "asset", "address", [ethereum.Value.fromAddress(tokenAddress)])
+  mockToken(tokenAddress)
+}
+
+function mockToken(token: Address): void {
+  // Mock the contract call for getting the name
+  mockViewFunction(token, "name", "string", [ethereum.Value.fromString("USD Tether")])
+  // Mock the contract call for getting the symbol
+  mockViewFunction(token, "symbol", "string", [ethereum.Value.fromString("USDT")])
+  // Mock the contract call for getting the decimals
+  mockViewFunction(token, "decimals", "uint8", [ethereum.Value.fromI32(18)])
 
 }
 
 // TODO: try to use test invariant
-function testVault(): void {
-  assert.fieldEquals("Vault", vaultAddress, "name", "USDT Vault")
-  assert.fieldEquals("Vault", vaultAddress, "symbol", "eonUSDT")
-  assert.fieldEquals("Vault", vaultAddress, "version", "0.1.0")
-  assert.fieldEquals("Vault", vaultAddress, "decimals", "18")
-  assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100")
-  assert.fieldEquals("Vault", vaultAddress, "totalDebt", "50000000000000000000")
-  assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
-  assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.5")
-  assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
+function testVault(vault: string, token: string): void {
+  assert.fieldEquals("Vault", vault, "name", "USDT Vault")
+  assert.fieldEquals("Vault", vault, "symbol", "eonUSDT")
+  assert.fieldEquals("Vault", vault, "version", "0.1.0")
+  assert.fieldEquals("Vault", vault, "decimals", "18")
+  assert.fieldEquals("Vault", vault, "totalSupply", "100")
+  assert.fieldEquals("Vault", vault, "totalDebt", "50000000000000000000")
+  assert.fieldEquals("Vault", vault, "maxBps", "10000")
+  assert.fieldEquals("Vault", vault, "debtRatio", "0.5")
+  assert.fieldEquals("Vault", vault, "lastReportTimestamp", "123");
+  assert.fieldEquals("Vault", vault, "asset", token);
 
+  assert.fieldEquals("Token", vault, "name", "USDT Vault")
+  assert.fieldEquals("Token", vault, "symbol", "eonUSDT")
+  assert.fieldEquals("Token", vault, "decimals", "18")
+
+  testToken(token)
+}
+
+function testToken(token: string): void {
+  assert.fieldEquals("Token", token, "name", "USD Tether")
+  assert.fieldEquals("Token", token, "symbol", "USDT")
+  assert.fieldEquals("Token", token, "decimals", "18")
 }
 
 describe("AdminChanged", () => {
   beforeAll(() => {
-    mockVault()
+    mockVault(defaultAddress)
   })
 
   afterAll(() => {
@@ -104,7 +131,7 @@ describe("AdminChanged", () => {
     )
 
     // must be inside test block
-    testVault();
+    testVault(vaultAddress, tokenAddressStr);
 
     // More assert options:
     // https://thegraph.com/docs/en/developer/matchstick/#asserts
@@ -113,7 +140,7 @@ describe("AdminChanged", () => {
 
 describe("Upgraded", () => {
   beforeAll(() => {
-    mockVault()
+    mockVault(defaultAddress)
   })
 
   afterAll(() => {
@@ -147,6 +174,6 @@ describe("Upgraded", () => {
     )
 
     // must be inside test block
-    testVault();
+    testVault(vaultAddress, tokenAddressStr);
   })
 })

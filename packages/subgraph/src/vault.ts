@@ -63,7 +63,7 @@ import { updateVaultState } from "./vault-state"
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -80,7 +80,7 @@ export function handleApproval(event: ApprovalEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
@@ -96,7 +96,7 @@ export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
@@ -111,7 +111,7 @@ export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleBorrowerDebtManagementReported(
@@ -133,7 +133,7 @@ export function handleBorrowerDebtManagementReported(
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleBurned(event: BurnedEvent): void {
@@ -152,7 +152,7 @@ export function handleBurned(event: BurnedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleDeposit(event: DepositEvent): void {
@@ -170,7 +170,7 @@ export function handleDeposit(event: DepositEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleInitialized(event: InitializedEvent): void {
@@ -185,7 +185,7 @@ export function handleInitialized(event: InitializedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleLockedProfitReleaseRateChanged(
@@ -202,7 +202,7 @@ export function handleLockedProfitReleaseRateChanged(
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleMinted(event: MintedEvent): void {
@@ -221,7 +221,7 @@ export function handleMinted(event: MintedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleOwnershipTransferred(
@@ -239,7 +239,7 @@ export function handleOwnershipTransferred(
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handlePaused(event: PausedEvent): void {
@@ -254,7 +254,7 @@ export function handlePaused(event: PausedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleRevokedOperator(event: RevokedOperatorEvent): void {
@@ -270,7 +270,7 @@ export function handleRevokedOperator(event: RevokedOperatorEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleSent(event: SentEvent): void {
@@ -290,7 +290,7 @@ export function handleSent(event: SentEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleStrategyAdded(event: StrategyAddedEvent): void {
@@ -306,7 +306,7 @@ export function handleStrategyAdded(event: StrategyAddedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
@@ -322,7 +322,7 @@ export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleStrategyReturnedToQueue(
@@ -352,7 +352,7 @@ export function handleStrategyRevoked(event: StrategyRevokedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -369,7 +369,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleUnpaused(event: UnpausedEvent): void {
@@ -384,7 +384,7 @@ export function handleUnpaused(event: UnpausedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleUpgraded(event: UpgradedEvent): void {
@@ -403,7 +403,7 @@ export function handleUpgraded(event: UpgradedEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -422,5 +422,5 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
   entity.save()
 
-  updateVaultState(event.address)
+  updateVaultState(event.address, event)
 }
