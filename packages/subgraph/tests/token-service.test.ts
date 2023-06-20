@@ -11,7 +11,7 @@ import {
 import { Address, ethereum } from "@graphprotocol/graph-ts"
 import { MockLogger, mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
-import { TokenService } from "../src/Token";
+import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
 
 const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");

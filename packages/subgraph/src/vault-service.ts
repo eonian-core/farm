@@ -2,7 +2,7 @@ import { Address, Bytes, BigInt, log, BigDecimal, ethereum } from "@graphprotoco
 import { Vault } from "../generated/Vault/Vault"
 import { Vault as VaultEntity, Token } from "../generated/schema"
 import {Logger} from './logger'
-import { TokenService } from "./Token";
+import { TokenService } from "./token-service";
 import { Context } from "./Context";
 
 /** Creates or updates Vault entity */

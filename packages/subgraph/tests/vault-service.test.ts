@@ -10,9 +10,9 @@ import {
 } from "matchstick-as/assembly/index"
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { createUpgradedEvent } from "./vault-utils";
-import { createOrUpdateVault } from "../src/Vault";
+import { createOrUpdateVault } from "../src/vault-service";
 import { defaultAddress, mockViewFunction } from "./mocking";
-import { mockTokenContract } from "./Token.test";
+import { mockTokenContract } from "./token-service.test";
 
 
 const vaultAddress = defaultAddress.toHexString()

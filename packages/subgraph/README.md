@@ -51,3 +51,7 @@ yarn deploy
 
 3. Test subgraph in the deployed playground.
 4. Click deploy in the subgraph studio.
+
+## Development Notes
+
+* For naming files, use only lowercase letters and dashes. For example, `vault-service.ts` instead of `VaultService.ts`. AssemblyScripts transpile files to lowercase, so using uppercase letters can get different names in error messages or even name conflicts.

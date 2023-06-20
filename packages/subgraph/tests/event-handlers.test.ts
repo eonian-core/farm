@@ -11,7 +11,7 @@ import {
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { handleAdminChanged, handleUpgraded } from "../src/event-handlers"
 import { createAdminChangedEvent, createUpgradedEvent } from "./vault-utils"
-import { mockVaultContract } from "./Vault.test"
+import { mockVaultContract } from "./vault-service.test"
 import { defaultAddress } from "./mocking"
 
 // Tests structure (matchstick-as >=0.5.0)

@@ -48,7 +48,7 @@ import {
   Withdraw,
   Vault as VaultEntity
  } from "../generated/schema"
-import { createOrUpdateVault } from "./Vault"
+import { createOrUpdateVault } from "./vault-service"
 
  export function handleAdminChanged(event: AdminChangedEvent): void {
   let entity = new AdminChanged(
