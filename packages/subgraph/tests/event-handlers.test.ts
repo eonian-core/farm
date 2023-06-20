@@ -9,7 +9,7 @@ import {
   afterEach,
 } from "matchstick-as/assembly/index"
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
-import { handleAdminChanged, handleUpgraded } from "../src/handlers"
+import { handleAdminChanged, handleUpgraded } from "../src/event-handlers"
 import { createAdminChangedEvent, createUpgradedEvent } from "./vault-utils"
 import { mockVaultContract } from "./Vault.test"
 import { defaultAddress } from "./mocking"

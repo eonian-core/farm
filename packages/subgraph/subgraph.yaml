@@ -90,4 +90,4 @@ dataSources:
           handler: handleUpgraded
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/vault.ts
+      file: ./src/event-handlers.ts
