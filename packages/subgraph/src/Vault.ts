@@ -1,18 +1,22 @@
 import { Address, Bytes, BigInt, log, BigDecimal, ethereum } from "@graphprotocol/graph-ts";
 import { Vault } from "../generated/Vault/Vault"
 import { Vault as VaultEntity, Token } from "../generated/schema"
-import * as logger from './logger'
+import {Logger} from './logger'
 import { TokenService } from "./Token";
+import { Context } from "./Context";
 
 /** Creates or updates Vault entity */
 export function createOrUpdateVault(contractAddress: Address, event: ethereum.Event ): void {
-    const tokenService = new TokenService(event)
+    const ctx = new Context(event, "createOrUpdateVault")
+    const logger = new Logger(ctx)
+    const tokenService = new TokenService(ctx, logger)
+
     const vault = Vault.bind(contractAddress)
     const id = Bytes.fromHexString(contractAddress.toHexString())
 
     let entity = VaultEntity.load(id)
     if (entity == null) {
-        logger.info("[updateVaultState] Creating new Vault entity for {}", [contractAddress.toHexString()], contractAddress, event)
+        logger.info("Creating new Vault entity for {}", [contractAddress.toHexString()])
         entity = new VaultEntity(id)
 
         // unchangable data need setup only once
@@ -22,25 +26,25 @@ export function createOrUpdateVault(contractAddress: Address, event: ethereum.Ev
         tokenService.getOrCreateToken(contractAddress);
     }
 
-    logger.info("Creating new underling asset token for {}", [contractAddress.toHexString()], contractAddress, event)
+    logger.info("Creating new underling asset token for {}", [contractAddress.toHexString()])
     let asset = vault.try_asset();
     if (asset.reverted) {
         // Asset can not exists before first initialization
-        logger.warn("[updateVaultState] vault.asset() call reverted", contractAddress, event)
+        logger.warn("vault.asset() call reverted", [])
         entity.asset = Bytes.empty();
     } else {
         entity.asset = tokenService.getOrCreateToken(asset.value).id;
     }
 
-    logger.info("[updateVaultState] Filling vault entity for {}", [contractAddress.toHexString()], contractAddress, event)
+    logger.info("Filling vault entity for {}", [contractAddress.toHexString()])
 
     entity.address = contractAddress.toHexString()
     entity.name = vault.name()
     entity.symbol = vault.symbol()
     entity.version = vault.version();
 
-    logger.debug('[updateVaultState] vault cotnract state {} {} {} {}', [contractAddress.toHexString(), vault.name(), vault.symbol(), vault.version()], contractAddress, event)
-    logger.debug('[updateVaultState] vault entity state {} {} {} {}', [entity.address, entity.name, entity.symbol, entity.version], contractAddress, event)
+    logger.debug('vault cotnract state {} {} {} {}', [contractAddress.toHexString(), vault.name(), vault.symbol(), vault.version()])
+    logger.debug('vault entity state {} {} {} {}', [entity.address, entity.name, entity.symbol, entity.version])
 
     // totalSupply / decimals = convert int to float
     entity.totalSupply = toDecimalWithBasei32(vault.totalSupply(), entity.decimals)

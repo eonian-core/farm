@@ -12,6 +12,8 @@ import { Address, ethereum } from "@graphprotocol/graph-ts"
 import { mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
 import { TokenService } from "../src/Token";
+import { Context } from "../src/Context";
+import { Logger } from "../src/logger";
 
 const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 const tokenAddressStr = tokenAddress.toHexString()
@@ -40,7 +42,9 @@ describe("TokenService", () => {
             "0x0000000000000000000000000000000000000001"
         )
         event = createUpgradedEvent(implementationAddress)
-        service = new TokenService(event)
+        const ctx = new Context(event, 'test')
+        const logger = new Logger(ctx)
+        service = new TokenService(ctx, logger)
     })
 
     afterAll(() => {

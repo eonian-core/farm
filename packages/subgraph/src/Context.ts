@@ -6,18 +6,20 @@ import {
 
 
 export class Context {
-    public event: ethereum.Event
-
-    constructor(event: ethereum.Event) {
-        this.event = event;
+    
+    constructor(
+        public event: ethereum.Event,
+        public eventName: string
+    ) {
     }
 }
 
 export class WithContext {
-    public ctx: Context;
+    constructor(public ctx: Context) {
+    }
 
-    constructor(public event: ethereum.Event) {
-        this.ctx = new Context(event);
+    get event(): ethereum.Event {
+        return this.ctx.event;
     }
 
     get contractAddress(): Address {
@@ -25,6 +27,6 @@ export class WithContext {
     }
 
     get contractAddressHex(): string {
-        return this.event.address.toHexString();
+        return this.contractAddress.toHexString();
     }
 }

@@ -1,10 +1,10 @@
 import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import {ERC20} from "../generated/Vault/ERC20"
 import { Token } from "../generated/schema"
-import * as logger from './logger'
+import {WithLogger} from './logger'
 import { WithContext } from "./Context";
 
-export class TokenService extends WithContext {
+export class TokenService extends WithLogger {
 
     /** 
      * Creates new token if it not exsits 
@@ -17,18 +17,18 @@ export class TokenService extends WithContext {
             return token;
         }
 
-        logger.info("[getOrCreateToken] Creating new token entity for {}", [contractAddress.toHexString()], this.contractAddress, this.event)
+        this.logger.info("Creating new token entity for {}", [contractAddress.toHexString()])
         token = new Token(id);
         const contract = ERC20.bind(contractAddress)
 
-        logger.info("[getOrCreateToken] Filling token entity for {}", [contractAddress.toHexString()], this.contractAddress, this.event)
+        this.logger.info("Filling token entity for {}", [contractAddress.toHexString()])
         token.address = contractAddress.toHexString();
         token.name = contract.name();
         token.symbol = contract.symbol();
         token.decimals = contract.decimals();
 
-        logger.debug('[getOrCreateToken] token contract state {} {} {}', [contractAddress.toHexString(), contract.name(), contract.symbol()], this.contractAddress, this.event)
-        logger.debug('[getOrCreateToken] token entity state {} {} {}', [token.address, token.name, token.symbol], this.contractAddress, this.event)
+        this.logger.debug('Token contract state {} {} {}', [contractAddress.toHexString(), contract.name(), contract.symbol()])
+        this.logger.debug('Token entity state {} {} {}', [token.address, token.name, token.symbol])
 
         token.save()
 
