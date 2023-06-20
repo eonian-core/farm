@@ -2,10 +2,11 @@ import { Address, Bytes, BigInt, log, BigDecimal, ethereum } from "@graphprotoco
 import { Vault } from "../generated/Vault/Vault"
 import { Vault as VaultEntity, Token } from "../generated/schema"
 import * as logger from './logger'
-import { getOrCreateToken } from "./Token";
+import { TokenService } from "./Token";
 
 /** Creates or updates Vault entity */
 export function createOrUpdateVault(contractAddress: Address, event: ethereum.Event ): void {
+    const tokenService = new TokenService(event)
     const vault = Vault.bind(contractAddress)
     const id = Bytes.fromHexString(contractAddress.toHexString())
 
@@ -18,7 +19,7 @@ export function createOrUpdateVault(contractAddress: Address, event: ethereum.Ev
         entity.decimals = vault.decimals()
 
         // create vault token as ERC20 standard
-        getOrCreateToken(contractAddress, event);
+        tokenService.getOrCreateToken(contractAddress);
     }
 
     logger.info("Creating new underling asset token for {}", [contractAddress.toHexString()], contractAddress, event)
@@ -28,7 +29,7 @@ export function createOrUpdateVault(contractAddress: Address, event: ethereum.Ev
         logger.warn("[updateVaultState] vault.asset() call reverted", contractAddress, event)
         entity.asset = Bytes.empty();
     } else {
-        entity.asset = getOrCreateToken(asset.value, event).id;
+        entity.asset = tokenService.getOrCreateToken(asset.value).id;
     }
 
     logger.info("[updateVaultState] Filling vault entity for {}", [contractAddress.toHexString()], contractAddress, event)
