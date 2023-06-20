@@ -1,5 +1,6 @@
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { createMockedFunction } from "matchstick-as";
+import { ILogger } from "../src/logger";
 
 // Hardcoded in matchstic but not exported :(
 // can cause failed tests if will be changed in library
@@ -9,4 +10,20 @@ export function mockViewFunction(contractAddress: Address, name: string, resultT
     createMockedFunction(contractAddress, name, name + "():(" + resultType + ")")
         .withArgs([])
         .returns(resultValue)
+}
+
+export class MockLogger implements ILogger {
+
+    info(message: string, args: Array<string>): void {
+    }
+
+    warn(message: string, args: Array<string>): void {
+    }
+
+    error(message: string, args: Array<string>): void {
+    }
+
+    debug(message: string, args: Array<string>): void {
+    }
+
 }

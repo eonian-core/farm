@@ -1,7 +1,15 @@
 import { Address, log, ethereum } from "@graphprotocol/graph-ts";
 import { Context, WithContext } from "./Context";
 
-export class Logger extends WithContext {
+export interface ILogger {
+
+    warn(message: string, args: Array<string>): void 
+    info(message: string, args: Array<string>): void 
+    debug(message: string, args: Array<string>): void
+    error(message: string, args: Array<string>): void
+}
+
+export class Logger extends WithContext implements ILogger {
 
     get loggingContext(): Array<string> {
         return [
@@ -34,7 +42,7 @@ export class Logger extends WithContext {
 
 export class WithLogger extends WithContext {
 
-    constructor(ctx: Context, public logger: Logger) {
+    constructor(ctx: Context, public logger: ILogger) {
         super(ctx);
     }
 }

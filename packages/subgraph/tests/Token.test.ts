@@ -9,11 +9,10 @@ import {
     afterEach,
 } from "matchstick-as/assembly/index"
 import { Address, ethereum } from "@graphprotocol/graph-ts"
-import { mockViewFunction } from "./mocking"
+import { MockLogger, mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
 import { TokenService } from "../src/Token";
 import { Context } from "../src/Context";
-import { Logger } from "../src/logger";
 
 const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 const tokenAddressStr = tokenAddress.toHexString()
@@ -43,7 +42,7 @@ describe("TokenService", () => {
         )
         event = createUpgradedEvent(implementationAddress)
         const ctx = new Context(event, 'test')
-        const logger = new Logger(ctx)
+        const logger = new MockLogger()
         service = new TokenService(ctx, logger)
     })
 
