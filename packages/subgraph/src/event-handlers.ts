@@ -1,4 +1,3 @@
-import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import {
   AdminChanged as AdminChangedEvent,
   Approval as ApprovalEvent,
@@ -49,14 +48,9 @@ import {
   Withdraw,
   Vault as VaultEntity
  } from "../generated/schema"
-import { DependencyContainer } from "./dependency-container"
+import { runApp } from "./app"
 
-/** Build dependencies and run hooks */
-export function runApp(eventName: string, event: ethereum.Event): void {
-  const container = new DependencyContainer(eventName, event)
 
-  container.vaultService.createOrUpdateVault(event.address)
-}
 
 export function handleAdminChanged(event: AdminChangedEvent): void {
   let entity = new AdminChanged(
