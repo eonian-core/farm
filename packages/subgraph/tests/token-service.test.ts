@@ -13,19 +13,11 @@ import { MockLogger, mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
 import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
+import { mockTokenContract } from "./mock-token";
 
 const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 const tokenAddressStr = tokenAddress.toHexString()
 
-export function mockTokenContract(token: Address): void {
-    // Mock the contract call for getting the name
-    mockViewFunction(token, "name", "string", [ethereum.Value.fromString("USD Tether")])
-    // Mock the contract call for getting the symbol
-    mockViewFunction(token, "symbol", "string", [ethereum.Value.fromString("USDT")])
-    // Mock the contract call for getting the decimals
-    mockViewFunction(token, "decimals", "uint8", [ethereum.Value.fromI32(18)])
-
-}
 
 let implementationAddress: Address
 let event: ethereum.Event

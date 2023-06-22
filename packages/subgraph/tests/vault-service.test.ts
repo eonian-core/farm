@@ -7,145 +7,134 @@ import {
     afterAll,
     createMockedFunction,
     afterEach,
+    beforeEach,
 } from "matchstick-as/assembly/index"
 import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
 import { createUpgradedEvent } from "./vault-utils";
-import { createOrUpdateVault } from "../src/vault-service";
-import { defaultAddress, mockViewFunction } from "./mocking";
-import { mockTokenContract } from "./token-service.test";
+import { VaultService } from "../src/vault-service";
+import { MockLogger, defaultAddress, mockViewFunction } from "./mocking";
+import { TokenService } from "../src/token-service";
+import { Context } from "../src/Context";
+import { mockTokenContract } from "./mock-token";
+import { tokenAddress, mockVaultContract, vaultAddress, tokenAddressStr } from "./mock-vault";
 
+let implementationAddress: Address
+let event: ethereum.Event
+let tokenService: TokenService
+let service: VaultService
 
-const vaultAddress = defaultAddress.toHexString()
-
-const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-const tokenAddressStr = tokenAddress.toHexString()
-
-export function mockVaultContract(vault: Address): void {
-  // Mock the contract call for getting the name
-  mockViewFunction(vault, "name", "string", [ethereum.Value.fromString("USDT Vault")])
-  // Mock the contract call for getting the symbol
-  mockViewFunction(vault, "symbol", "string", [ethereum.Value.fromString("eonUSDT")])
-  // Mock the contract call for getting the version
-  mockViewFunction(vault, "version", "string", [ethereum.Value.fromString("0.1.0")])
-  // Mock the contract call for getting the decimals
-  mockViewFunction(vault, "decimals", "uint8", [ethereum.Value.fromI32(18)])
-  // Mock the contract call for getting the totalSupply
-  mockViewFunction(vault, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('100000000000000000000'))])
-  // Mock the contract call for getting the totalDebt
-  mockViewFunction(vault, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('50000000000000000000'))])
-  // Mock the contract call for getting the MAX_BPS
-  mockViewFunction(vault, "MAX_BPS", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(10000))])
-  // Mock the contract call for getting the debtRatio
-  mockViewFunction(vault, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(5000))])
-  // Mock the contract call for getting the lastReportTimestamp
-  mockViewFunction(vault, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(123))])
-  // Mock the contract call for getting the asset
-  mockViewFunction(vault, "asset", "address", [ethereum.Value.fromAddress(tokenAddress)])
-  
-  mockTokenContract(tokenAddress)
-}
-
-
-describe("createOrUpdateVault", () => {
+describe("VaultService", () => {
     beforeAll(() => {
-        mockVaultContract(defaultAddress)
+        mockTokenContract(tokenAddress)
+    })
+
+    beforeEach(() => {
+        implementationAddress = Address.fromString(
+            "0x0000000000000000000000000000000000000001"
+        )
+        event = createUpgradedEvent(implementationAddress)
+        const ctx = new Context(event, 'test')
+        const logger = new MockLogger()
+        tokenService = new TokenService(ctx, logger)
+        service = new VaultService(ctx, logger, tokenService)
     })
 
     afterAll(() => {
         clearStore()
     })
 
-    test("should create Vault", () => {
-        let implementationAddress = Address.fromString(
-            "0x0000000000000000000000000000000000000001"
-        )
+    describe("createOrUpdateVault", () => {
+        beforeAll(() => {
+            mockVaultContract(defaultAddress)
+        })
 
-        let newUpgradedEvent = createUpgradedEvent(implementationAddress)
+        afterAll(() => {
+            clearStore()
+        })
 
-        createOrUpdateVault(defaultAddress, newUpgradedEvent)
+        test("should create Vault", () => {
 
-        assert.entityCount("Vault", 1)
+            service.createOrUpdateVault(defaultAddress)
 
-        assert.fieldEquals("Vault", vaultAddress, "name", "USDT Vault")
-        assert.fieldEquals("Vault", vaultAddress, "symbol", "eonUSDT")
-        assert.fieldEquals("Vault", vaultAddress, "version", "0.1.0")
-        assert.fieldEquals("Vault", vaultAddress, "decimals", "18")
-        assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100")
-        assert.fieldEquals("Vault", vaultAddress, "totalDebt", "50000000000000000000")
-        assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
-        assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.5")
-        assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
-        assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
-      
-        assert.entityCount("Token", 2)
+            assert.entityCount("Vault", 1)
 
-        assert.fieldEquals("Token", vaultAddress, "name", "USDT Vault")
-        assert.fieldEquals("Token", vaultAddress, "symbol", "eonUSDT")
-        assert.fieldEquals("Token", vaultAddress, "decimals", "18")
+            assert.fieldEquals("Vault", vaultAddress, "name", "USDT Vault")
+            assert.fieldEquals("Vault", vaultAddress, "symbol", "eonUSDT")
+            assert.fieldEquals("Vault", vaultAddress, "version", "0.1.0")
+            assert.fieldEquals("Vault", vaultAddress, "decimals", "18")
+            assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100")
+            assert.fieldEquals("Vault", vaultAddress, "totalDebt", "50000000000000000000")
+            assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
+            assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.5")
+            assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
+            assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
+        
+            assert.entityCount("Token", 2)
 
-        assert.fieldEquals("Token", tokenAddressStr, "name", "USD Tether")
-        assert.fieldEquals("Token", tokenAddressStr, "symbol", "USDT")
-        assert.fieldEquals("Token", tokenAddressStr, "decimals", "18")
-    })
+            assert.fieldEquals("Token", vaultAddress, "name", "USDT Vault")
+            assert.fieldEquals("Token", vaultAddress, "symbol", "eonUSDT")
+            assert.fieldEquals("Token", vaultAddress, "decimals", "18")
 
-    test("should update Vault", () => {
-        let implementationAddress = Address.fromString(
-            "0x0000000000000000000000000000000000000001"
-        )
+            assert.fieldEquals("Token", tokenAddressStr, "name", "USD Tether")
+            assert.fieldEquals("Token", tokenAddressStr, "symbol", "USDT")
+            assert.fieldEquals("Token", tokenAddressStr, "decimals", "18")
+        })
 
-        let newUpgradedEvent = createUpgradedEvent(implementationAddress)
+        test("should update Vault", () => {
 
-        // Mock the contract call for getting the name
-        mockViewFunction(defaultAddress, "name", "string", [ethereum.Value.fromString("aaa")])
-        // Mock the contract call for getting the symbol
-        mockViewFunction(defaultAddress, "symbol", "string", [ethereum.Value.fromString("bbb")])
-        // Mock the contract call for getting the version
-        mockViewFunction(defaultAddress, "version", "string", [ethereum.Value.fromString("0.2.0")])
-        // Mock the contract call for getting the decimals
-        mockViewFunction(defaultAddress, "decimals", "uint8", [ethereum.Value.fromI32(36)])
-        // Mock the contract call for getting the totalSupply
-        mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('200000000000000000000'))])
-        // Mock the contract call for getting the totalDebt
-        mockViewFunction(defaultAddress, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('80000000000000000000'))])
-        // Mock the contract call for getting the debtRatio
-        mockViewFunction(defaultAddress, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(9000))])
-        // Mock the contract call for getting the lastReportTimestamp
-        mockViewFunction(defaultAddress, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(234))])
+            // Mock the contract call for getting the name
+            mockViewFunction(defaultAddress, "name", "string", [ethereum.Value.fromString("aaa")])
+            // Mock the contract call for getting the symbol
+            mockViewFunction(defaultAddress, "symbol", "string", [ethereum.Value.fromString("bbb")])
+            // Mock the contract call for getting the version
+            mockViewFunction(defaultAddress, "version", "string", [ethereum.Value.fromString("0.2.0")])
+            // Mock the contract call for getting the decimals
+            mockViewFunction(defaultAddress, "decimals", "uint8", [ethereum.Value.fromI32(36)])
+            // Mock the contract call for getting the totalSupply
+            mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('200000000000000000000'))])
+            // Mock the contract call for getting the totalDebt
+            mockViewFunction(defaultAddress, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('80000000000000000000'))])
+            // Mock the contract call for getting the debtRatio
+            mockViewFunction(defaultAddress, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(9000))])
+            // Mock the contract call for getting the lastReportTimestamp
+            mockViewFunction(defaultAddress, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(234))])
 
-        // Mock the contract call for getting the name
-        mockViewFunction(tokenAddress, "name", "string", [ethereum.Value.fromString("qqq")])
-        // Mock the contract call for getting the symbol
-        mockViewFunction(tokenAddress, "symbol", "string", [ethereum.Value.fromString("eee")])
-        // Mock the contract call for getting the decimals
-        mockViewFunction(tokenAddress, "decimals", "uint8", [ethereum.Value.fromI32(28)])
+            // Mock the contract call for getting the name
+            mockViewFunction(tokenAddress, "name", "string", [ethereum.Value.fromString("qqq")])
+            // Mock the contract call for getting the symbol
+            mockViewFunction(tokenAddress, "symbol", "string", [ethereum.Value.fromString("eee")])
+            // Mock the contract call for getting the decimals
+            mockViewFunction(tokenAddress, "decimals", "uint8", [ethereum.Value.fromI32(28)])
 
 
-        createOrUpdateVault(defaultAddress, newUpgradedEvent)
+            service.createOrUpdateVault(defaultAddress)
 
-        assert.entityCount("Vault", 1)
+            assert.entityCount("Vault", 1)
 
-        assert.fieldEquals("Vault", vaultAddress, "name", "aaa")
-        assert.fieldEquals("Vault", vaultAddress, "symbol", "bbb")
-        assert.fieldEquals("Vault", vaultAddress, "version", "0.2.0")
-        assert.fieldEquals("Vault", vaultAddress, "decimals", "18") // shuldnt be updated
-        assert.fieldEquals("Vault", vaultAddress, "totalSupply", "200")
-        assert.fieldEquals("Vault", vaultAddress, "totalDebt", "80000000000000000000")
-        assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
-        assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.9")
-        assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "234");
-        assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
-      
-        assert.entityCount("Token", 2)
+            assert.fieldEquals("Vault", vaultAddress, "name", "aaa")
+            assert.fieldEquals("Vault", vaultAddress, "symbol", "bbb")
+            assert.fieldEquals("Vault", vaultAddress, "version", "0.2.0")
+            assert.fieldEquals("Vault", vaultAddress, "decimals", "18") // shuldnt be updated
+            assert.fieldEquals("Vault", vaultAddress, "totalSupply", "200")
+            assert.fieldEquals("Vault", vaultAddress, "totalDebt", "80000000000000000000")
+            assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
+            assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.9")
+            assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "234");
+            assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
+        
+            assert.entityCount("Token", 2)
 
-        // shuldnt be updated
-        assert.fieldEquals("Token", vaultAddress, "name", "USDT Vault")
-        assert.fieldEquals("Token", vaultAddress, "symbol", "eonUSDT")
-        assert.fieldEquals("Token", vaultAddress, "decimals", "18")
+            // shuldnt be updated
+            assert.fieldEquals("Token", vaultAddress, "name", "USDT Vault")
+            assert.fieldEquals("Token", vaultAddress, "symbol", "eonUSDT")
+            assert.fieldEquals("Token", vaultAddress, "decimals", "18")
 
-        // shuldnt be updated
-        assert.fieldEquals("Token", tokenAddressStr, "name", "USD Tether") 
-        assert.fieldEquals("Token", tokenAddressStr, "symbol", "USDT")
-        assert.fieldEquals("Token", tokenAddressStr, "decimals", "18")
+            // shuldnt be updated
+            assert.fieldEquals("Token", tokenAddressStr, "name", "USD Tether") 
+            assert.fieldEquals("Token", tokenAddressStr, "symbol", "USDT")
+            assert.fieldEquals("Token", tokenAddressStr, "decimals", "18")
+        })
+
     })
 
 })

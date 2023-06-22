@@ -2,7 +2,6 @@ import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import {ERC20} from "../generated/Vault/ERC20"
 import { Token } from "../generated/schema"
 import {WithLogger} from './logger'
-import { WithContext } from "./Context";
 
 export class TokenService extends WithLogger {
 

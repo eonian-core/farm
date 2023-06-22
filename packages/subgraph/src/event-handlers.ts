@@ -1,3 +1,4 @@
+import { Address, Bytes, ethereum } from "@graphprotocol/graph-ts";
 import {
   AdminChanged as AdminChangedEvent,
   Approval as ApprovalEvent,
@@ -48,9 +49,16 @@ import {
   Withdraw,
   Vault as VaultEntity
  } from "../generated/schema"
-import { createOrUpdateVault } from "./vault-service"
+import { DependencyContainer } from "./dependency-container"
 
- export function handleAdminChanged(event: AdminChangedEvent): void {
+/** Build dependencies and run hooks */
+export function runApp(eventName: string, event: ethereum.Event): void {
+  const container = new DependencyContainer(eventName, event)
+
+  container.vaultService.createOrUpdateVault(event.address)
+}
+
+export function handleAdminChanged(event: AdminChangedEvent): void {
   let entity = new AdminChanged(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
@@ -63,7 +71,7 @@ import { createOrUpdateVault } from "./vault-service"
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('AdminChangedEvent', event)
 }
 
 export function handleApproval(event: ApprovalEvent): void {
@@ -80,7 +88,7 @@ export function handleApproval(event: ApprovalEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('ApprovalEvent', event)
 }
 
 export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
@@ -96,7 +104,7 @@ export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('AuthorizedOperatorEvent', event)
 }
 
 export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
@@ -111,7 +119,7 @@ export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('BeaconUpgradedEvent', event)
 }
 
 export function handleBorrowerDebtManagementReported(
@@ -133,7 +141,7 @@ export function handleBorrowerDebtManagementReported(
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('BorrowerDebtManagementReportedEvent', event)
 }
 
 export function handleBurned(event: BurnedEvent): void {
@@ -152,7 +160,7 @@ export function handleBurned(event: BurnedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('BurnedEvent', event)
 }
 
 export function handleDeposit(event: DepositEvent): void {
@@ -170,7 +178,7 @@ export function handleDeposit(event: DepositEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('DepositEvent', event)
 }
 
 export function handleInitialized(event: InitializedEvent): void {
@@ -185,7 +193,7 @@ export function handleInitialized(event: InitializedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('InitializedEvent', event)
 }
 
 export function handleLockedProfitReleaseRateChanged(
@@ -202,7 +210,7 @@ export function handleLockedProfitReleaseRateChanged(
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('LockedProfitReleaseRateChangedEvent', event)
 }
 
 export function handleMinted(event: MintedEvent): void {
@@ -221,7 +229,7 @@ export function handleMinted(event: MintedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('MintedEvent', event)
 }
 
 export function handleOwnershipTransferred(
@@ -239,7 +247,7 @@ export function handleOwnershipTransferred(
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('OwnershipTransferredEvent', event)
 }
 
 export function handlePaused(event: PausedEvent): void {
@@ -254,7 +262,7 @@ export function handlePaused(event: PausedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('PausedEvent', event)
 }
 
 export function handleRevokedOperator(event: RevokedOperatorEvent): void {
@@ -270,7 +278,7 @@ export function handleRevokedOperator(event: RevokedOperatorEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('RevokedOperatorEvent', event)
 }
 
 export function handleSent(event: SentEvent): void {
@@ -290,7 +298,7 @@ export function handleSent(event: SentEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('SentEvent', event)
 }
 
 export function handleStrategyAdded(event: StrategyAddedEvent): void {
@@ -306,7 +314,7 @@ export function handleStrategyAdded(event: StrategyAddedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyAddedEvent', event)
 }
 
 export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
@@ -322,7 +330,7 @@ export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyRemovedEvent', event)
 }
 
 export function handleStrategyReturnedToQueue(
@@ -338,6 +346,8 @@ export function handleStrategyReturnedToQueue(
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  runApp('StrategyReturnedToQueueEvent', event)
 }
 
 export function handleStrategyRevoked(event: StrategyRevokedEvent): void {
@@ -352,7 +362,7 @@ export function handleStrategyRevoked(event: StrategyRevokedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyRevokedEvent', event)
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -369,7 +379,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyRevokedEvent', event)
 }
 
 export function handleUnpaused(event: UnpausedEvent): void {
@@ -384,7 +394,7 @@ export function handleUnpaused(event: UnpausedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyRevokedEvent', event)
 }
 
 export function handleUpgraded(event: UpgradedEvent): void {
@@ -403,7 +413,7 @@ export function handleUpgraded(event: UpgradedEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyRevokedEvent', event)
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -422,5 +432,5 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
   entity.save()
 
-  createOrUpdateVault(event.address, event)
+  runApp('StrategyRevokedEvent', event)
 }
