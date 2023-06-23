@@ -148,10 +148,9 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         }
     }
 
-    /// @inheritdoc StrategiesLender
+    /// Check that all new strategies refer to this vault and has the same underlying asset
     function _beforeStrategyRegistered(IStrategy strategy) internal view override {
-        // Strategy should refer to this vault and has the same underlying asset
-        if (this != IStrategy(strategy).lender() || asset != IStrategy(strategy).asset()) {
+        if (this != strategy.lender() || asset != strategy.asset()) {
             revert InappropriateStrategy();
         }
     }
