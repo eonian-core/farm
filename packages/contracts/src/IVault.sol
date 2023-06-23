@@ -1,16 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+
 import {ILender} from "./lending/ILender.sol";
+import {IStrategiesLender} from "./lending/IStrategiesLender.sol";
 import {IERC4626} from "./tokens/IERC4626.sol";
 
-interface IVault is ILender, IERC4626 {
-    /// @notice Revokes a strategy from the vault.
-    ///         Sets strategy's dept ratio to zero, so that the strategy cannot take funds from the vault.
-    /// @param strategy a strategy to revoke.
-    function revokeStrategy(address strategy) external;
+interface IVault is IStrategiesLender, IERC4626 { // solhint-disable-line no-empty-blocks
 
-    /// @notice Indicates if the vault was shutted down or not.
-    /// @return "true" if the contract is paused, and "false" otherwise.
-    function paused() external view returns (bool);
 }

@@ -34,8 +34,8 @@ abstract contract OpsReady is SafeInitializable {
      * @param _ops - address of the Ops contract.
      * @dev addresses can be found at https://docs.gelato.network/developer-products/gelato-ops-smart-contract-automation-hub/contract-addresses
      */
-    function __OpsReady_init(address _ops) internal onlyInitializing {
-        ops = IOps(_ops);
+    function __OpsReady_init(IOps _ops) internal onlyInitializing {
+        ops = _ops;
         gelato = ops.gelato();
     }
 

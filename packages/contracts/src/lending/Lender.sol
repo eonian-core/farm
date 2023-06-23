@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
@@ -439,4 +440,16 @@ abstract contract Lender is
     /// @notice Callback that is called at the end of the negative report function.
     /// @param loss the number of tokens by which the borrower's balance has decreased since the last report.
     function _afterNegativeDebtManagementReport(uint256 loss) internal virtual;
+
+    /// @inheritdoc ILender
+    /// @dev Explicitly overridden here to keep this function exposed via "ILender" interface.
+    function paused()
+        public
+        view
+        override(ILender, PausableUpgradeable)
+        virtual
+        returns (bool)
+    {
+        return super.paused();
+    }
 }

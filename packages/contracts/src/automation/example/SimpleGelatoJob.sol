@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-import {GelatoJobAdapter} from "../GelatoJobAdapter.sol";
+import {GelatoJobAdapter, IOps} from "../GelatoJobAdapter.sol";
 
 import {SafeUUPSUpgradeable} from "../../upgradeable/SafeUUPSUpgradeable.sol";
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
@@ -27,7 +27,7 @@ contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
         uint256 _minimumBetweenExecutions,
         bool _isPrepaid
     ) public initializer {
-        __GelatoJobAdapter_init(_ops, _minimumBetweenExecutions, _isPrepaid);
+        __GelatoJobAdapter_init(IOps(_ops), _minimumBetweenExecutions, _isPrepaid);
 
         __SafeUUPSUpgradeable_init(); // ownable under the hood
     }

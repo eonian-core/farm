@@ -182,6 +182,19 @@ export class Vault extends Entity {
     this.set("lastReportTimestamp", Value.fromBigInt(value));
   }
 
+  get rates(): Array<string> {
+    let value = this.get("rates");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set rates(value: Array<string>) {
+    this.set("rates", Value.fromStringArray(value));
+  }
+
   get asset(): Bytes {
     let value = this.get("asset");
     if (!value || value.kind == ValueKind.NULL) {
@@ -287,6 +300,117 @@ export class Token extends Entity {
 
   set decimals(value: i32) {
     this.set("decimals", Value.fromI32(value));
+  }
+}
+
+export class InterestRate extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save InterestRate entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type InterestRate must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("InterestRate", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): InterestRate | null {
+    return changetype<InterestRate | null>(
+      store.get_in_block("InterestRate", id)
+    );
+  }
+
+  static load(id: string): InterestRate | null {
+    return changetype<InterestRate | null>(store.get("InterestRate", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get rate(): BigDecimal {
+    let value = this.get("rate");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set rate(value: BigDecimal) {
+    this.set("rate", Value.fromBigDecimal(value));
+  }
+
+  get duration(): i32 {
+    let value = this.get("duration");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set duration(value: i32) {
+    this.set("duration", Value.fromI32(value));
+  }
+
+  get maturityBlock(): BigInt | null {
+    let value = this.get("maturityBlock");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maturityBlock(value: BigInt | null) {
+    if (!value) {
+      this.unset("maturityBlock");
+    } else {
+      this.set("maturityBlock", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get side(): string {
+    let value = this.get("side");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set side(value: string) {
+    this.set("side", Value.fromString(value));
+  }
+
+  get type(): string {
+    let value = this.get("type");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set type(value: string) {
+    this.set("type", Value.fromString(value));
   }
 }
 

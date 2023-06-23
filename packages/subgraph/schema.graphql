@@ -1,4 +1,4 @@
-type Vault @entity(immutable: false) {
+type Vault @entity(immutable: false) @regularPolling {
   """
   The ID of the vault. Mainly used for subgraph internal indexing.
   """
@@ -54,7 +54,10 @@ type Vault @entity(immutable: false) {
   """
   lastReportTimestamp: BigInt!
 
-  # TODO: add interest rate
+  """ 
+  All interest rates / fees allowed in the market. Interest rate should be in APY percentage 
+  """
+  rates: [InterestRate!]!
 
   """
   The underlying asset stored in the vault.
@@ -93,6 +96,53 @@ type Token @entity(immutable: true) { # when will have price metric which requir
   decimals: Int!
 
   # TODO: add token price, base https://github.com/messari/subgraphs/blob/master/subgraphs/arrakis-finance/src/prices/README.md
+}
+
+enum InterestRateType {
+  " Stable interest rate (e.g. Aave) "
+  STABLE
+
+  " Variable interest rate (e.g. Compound) "
+  VARIABLE
+
+  " Fixed interest rate (e.g. Notional) "
+  FIXED
+}
+
+enum InterestRateSide {
+  " Interest rate accrued by lenders "
+  LENDER
+
+  " Interest rate paid by borrowers "
+  BORROWER
+}
+
+
+# Based on https://github.com/messari/subgraphs/tree/master/subgraphs/aave-forks and https://thegraph.com/explorer/subgraphs/84CvqQHYhydZzr2KSth8s1AFYpBRzUbVJXq6PWuZm9U9?view=Playground&chain=mainnet
+"""
+  Most markets only have a single interest rate given a specific type.
+  However, fixed term lending protocols can have multiple rates with
+  different duration/maturity per market. You can append a counter
+  to the IDs to differentiate.
+"""
+type InterestRate @entity(immutable: false) @regularPolling {
+  " { Interest rate side }-{ Interest rate type }-{ Market ID } "
+  id: ID!
+
+  " Interest rate in percentage APY. E.g. 5.21% should be stored as 5.21 "
+  rate: BigDecimal!
+
+  " Duration of the loan in days. Only applies to fixed term lending (e.g. Notional) "
+  duration: Int
+
+  " Maturity of the loan in block height. Only applies to fixed term lending (e.g. Notional) "
+  maturityBlock: BigInt
+
+  " The party the interest is paid to / received from "
+  side: InterestRateSide!
+
+  " The type of interest rate (e.g. stable, fixed, variable, etc) "
+  type: InterestRateType!
 }
 
 

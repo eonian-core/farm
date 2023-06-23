@@ -8,15 +8,15 @@ import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/tok
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 
 import {IStrategy} from "./IStrategy.sol";
-import {IVault} from "../IVault.sol";
-import {GelatoJobAdapter} from "../automation/GelatoJobAdapter.sol";
+import {IStrategiesLender} from "../lending/IStrategiesLender.sol";
+import {GelatoJobAdapter, IOps} from "../automation/GelatoJobAdapter.sol";
 import {Job} from "../automation/Job.sol";
 import {HealthChecker} from "../healthcheck/HealthChecker.sol";
 import {PriceConverter} from "../structures/PriceConverter.sol";
 
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
-error CallerIsNotAVault();
+error CallerIsNotALender();
 error IncompatiblePriceFeeds();
 
 abstract contract BaseStrategy is
@@ -29,7 +29,7 @@ abstract contract BaseStrategy is
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using PriceConverter for AggregatorV3Interface;
 
-    IVault public vault;
+    IStrategiesLender public lender;
     IERC20Upgradeable public asset;
 
     /// @notice Use this to adjust the threshold at which running a debt causes a work trigger.
@@ -70,9 +70,9 @@ abstract contract BaseStrategy is
 
     event UpdatedProfitFactor(uint256 profitFactor);
 
-    modifier onlyVault() {
-        if (msg.sender != address(vault)) {
-            revert CallerIsNotAVault();
+    modifier onlyLender() {
+        if (msg.sender != address(lender)) {
+            revert CallerIsNotALender();
         }
         _;
     }
@@ -80,8 +80,9 @@ abstract contract BaseStrategy is
     // ------------------------------------------ Constructors ------------------------------------------
 
     function __BaseStrategy_init(
-        IVault _vault,
-        address _ops,
+        IStrategiesLender _lender,
+        IERC20Upgradeable _asset,
+        IOps _ops,
         uint256 _minReportInterval,
         bool _isPrepaid,
         address __nativeTokenPriceFeed,
@@ -93,19 +94,21 @@ abstract contract BaseStrategy is
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 
         __BaseStrategy_init_unchained(
-            _vault,
+            _lender,
+            _asset,
             __nativeTokenPriceFeed,
             __assetPriceFeed
         );
     }
 
     function __BaseStrategy_init_unchained(
-        IVault _vault,
+        IStrategiesLender _lender,
+        IERC20Upgradeable _asset,
         address __nativeTokenPriceFeed,
         address __assetPriceFeed
     ) internal onlyInitializing {
-        vault = _vault;
-        asset = IVault(vault).asset();
+        lender = _lender;
+        asset = _asset;
 
         debtThreshold = 0;
         estimatedWorkGas = 0;
@@ -119,7 +122,7 @@ abstract contract BaseStrategy is
 
         _assetDecimals = IERC20MetadataUpgradeable(address(asset)).decimals();
 
-        approveTokenMax(address(asset), address(_vault));
+        approveTokenMax(address(asset), address(_lender));
     }
 
     /// @notice Harvests the strategy, recognizing any profits or losses and adjusting the strategy's investments.
@@ -129,7 +132,7 @@ abstract contract BaseStrategy is
         uint256 loss = 0;
         uint256 debtPayment = 0;
 
-        uint256 outstandingDebt = vault.outstandingDebt();
+        uint256 outstandingDebt = lender.outstandingDebt();
         if (paused()) {
             (profit, loss, debtPayment) = _harvestAfterShutdown(
                 outstandingDebt
@@ -139,22 +142,22 @@ abstract contract BaseStrategy is
         }
 
         if (profit > 0) {
-            vault.reportPositiveDebtManagement(profit, debtPayment);
+            lender.reportPositiveDebtManagement(profit, debtPayment);
         } else {
-            vault.reportNegativeDebtManagement(loss, debtPayment);
+            lender.reportNegativeDebtManagement(loss, debtPayment);
         }
 
         // If the strategy needs to repay the entire debt, we need to take all available funds.
         // We will take the current debt in the report above, but we still need to free up whatever is left.
         // This can happen, if the ratio is reduced to 0 or if the vault has been shutted down.
-        outstandingDebt = vault.outstandingDebt();
-        outstandingDebt = vault.currentDebtRatio() == 0 || vault.paused()
+        outstandingDebt = lender.outstandingDebt();
+        outstandingDebt = lender.currentDebtRatio() == 0 || lender.paused()
             ? estimatedTotalAssets()
             : outstandingDebt;
 
         _adjustPosition(outstandingDebt);
 
-        uint256 totalDebt = vault.currentDebt();
+        uint256 totalDebt = lender.currentDebt();
         performHealthCheck(
             address(this),
             profit,
@@ -169,19 +172,19 @@ abstract contract BaseStrategy is
 
     /// @inheritdoc Job
     function _canWork() internal view override returns (bool) {
-        if (!vault.isActivated()) {
+        if (!lender.isActivated()) {
             return false;
         }
 
         // Trigger this job if the strategy has the outstanding debt to repay
-        uint256 outstanding = vault.outstandingDebt();
+        uint256 outstanding = lender.outstandingDebt();
         if (outstanding > debtThreshold) {
             return true;
         }
 
         // Trigger this job if the strategy has some loss to report
         uint256 total = estimatedTotalAssets();
-        uint256 debt = vault.currentDebt();
+        uint256 debt = lender.currentDebt();
         if (total + debtThreshold < debt) {
             return true;
         }
@@ -201,13 +204,13 @@ abstract contract BaseStrategy is
     /// @param profit Profit to be compared to the cost of gas.
     /// @return "true" if the gas price (mult. to "profitFactor" is lower than the strategy profit, in USD).
     function _checkGasPriceAgainstProfit(uint256 profit) internal view returns (bool) {
-        uint256 credit = vault.availableCredit();
+        uint256 credit = lender.availableCredit();
         uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
         return profitFactor * gasCost < _convertAmountToUSD(credit + profit);
     }
 
     /// @inheritdoc IStrategy
-    function withdraw(uint256 assets) external override onlyVault returns (uint256 loss) { // Vault already have nonReentrant modifier check
+    function withdraw(uint256 assets) external override onlyLender returns (uint256 loss) { // Vault already have nonReentrant modifier check
         // Liquidate the requested amount of tokens
         uint256 amountFreed;
         (amountFreed, loss) = _liquidatePosition(assets);
@@ -216,10 +219,10 @@ abstract contract BaseStrategy is
         IERC20Upgradeable(asset).safeTransfer(msg.sender, amountFreed);
     }
 
-    /// @notice Shutdown the strategy and revoke it form the vault.
+    /// @notice Shutdown the strategy and revoke it form the lender.
     function shutdown() external nonReentrant onlyOwner { // need check nonReentrant to avoid cyclic call
         _pause();
-        IVault(vault).revokeStrategy(address(this));
+        lender.revokeStrategy(address(this));
     }
 
     /// @notice Sets the debt threshold.
