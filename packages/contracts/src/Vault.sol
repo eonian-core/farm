@@ -273,7 +273,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
 
     /// @inheritdoc ERC4626Upgradeable
     function totalAssets() public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
-        return super.lendingAssets() - _lockedProfit();
+        return super.fundAssets() - _lockedProfit();
     }
 
     /// @inheritdoc ILender

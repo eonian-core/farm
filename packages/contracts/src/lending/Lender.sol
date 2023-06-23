@@ -251,7 +251,7 @@ abstract contract Lender is
         virtual;
 
     /// @notice Returns the total amount of all tokens (including those on the contract balance and taken by borrowers)
-    function lendingAssets() public view virtual returns (uint256) {
+    function fundAssets() public view virtual returns (uint256) {
         return _freeAssets() + totalDebt;
     }
 
@@ -272,7 +272,7 @@ abstract contract Lender is
 
     /// @notice Returns the total number of tokens borrowers can take.
     function _debtLimit() private view returns (uint256) {
-        return (debtRatio * lendingAssets()) / MAX_BPS;
+        return (debtRatio * fundAssets()) / MAX_BPS;
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility.
@@ -316,7 +316,7 @@ abstract contract Lender is
         uint256 lenderDebtLimit = _debtLimit();
         uint256 lenderDebt = totalDebt;
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            lendingAssets()) / MAX_BPS;
+            fundAssets()) / MAX_BPS;
         uint256 borrowerDebt = borrowersData[borrower].debt;
 
         // There're no more funds for the borrower because he has outstanding debt or the lender's available funds have been exhausted
@@ -356,7 +356,7 @@ abstract contract Lender is
         }
 
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            lendingAssets()) / MAX_BPS;
+            fundAssets()) / MAX_BPS;
         if (borrowerDebt <= borrowerDebtLimit) {
             return 0;
         }
@@ -419,6 +419,23 @@ abstract contract Lender is
             revert BorrowerHasDebt();
         }
         delete borrowersData[borrower];
+    }
+
+    /// Calculate utilisation rate for specific borrower
+    /// @notice Based on last report data, can be outdated, but close to latest state of fund
+    /// @return percent of total assets taken by strategy in BPS
+    function getUtilisationRate(address borrower) public view returns (uint256) {
+        // assets in vault + lended to strategies
+        uint256 _fundAssets = fundAssets(); 
+        // to decrease amount of calls to borrower contract,
+        // assume that borrower have same amount like in last update
+        uint256 borrowerAssets = borrowersData[borrower].debt; 
+
+        if (_fundAssets == 0) {
+            return 0;
+        }
+
+        return borrowerAssets * MAX_BPS / _fundAssets;
     }
 
     /// @notice Charges a fee on the borrower's income.

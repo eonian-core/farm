@@ -150,6 +150,34 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
     function getQueueSize() external view returns (uint256) {
         return withdrawalQueue.length;
     }
+    
+    /// @inheritdoc IStrategiesLender
+    function interestRatePerBlock() public view returns (uint256, uint256) {
+        uint256 totalUtilisationRate;
+        uint256 totalInterestRate;
+
+        if(totalDebt == 0) {
+            return (0, 0);
+        }
+
+        for (uint256 i = 0; i < withdrawalQueue.length; i++) {
+            IStrategy strategy = IStrategy(withdrawalQueue[i]);
+
+            uint256 utilisationRate = getUtilisationRate(address(strategy)); // in BPS
+            totalUtilisationRate += utilisationRate;
+            
+            // interest rate scaled by 1e18
+            // utilisation rate in BPS * interest rate scaled by 1e18 / BPS = total interest rate scaled by 1e18
+            totalInterestRate += utilisationRate * strategy.interestRatePerBlock() / MAX_BPS; 
+        }
+
+        // sanity check
+        if (totalUtilisationRate == 0) {
+            return (0, 0);
+        }
+
+        return (totalInterestRate / totalUtilisationRate, totalUtilisationRate);
+    }
 
     /// @inheritdoc Lender
     /// @dev Explicitly overridden here to keep this function exposed via "ILender" interface.
