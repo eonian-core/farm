@@ -68,9 +68,9 @@
     "@apollo/utils.logger" "^2.0.0"
 
 "@apollo/server@^4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@apollo/server/-/server-4.6.0.tgz#4e04294aeccd00797b8cec6ee0b7dde51dc8e9d1"
-  integrity sha512-02dgZ5ywBZP7xVZ+Xf62uEtA0jCYcpD5gEluCADudUSwbGuQTnJ9F056SxOVLpJRM69sWDrOMKF5kncYYH5wSA==
+  version "4.7.4"
+  resolved "https://registry.yarnpkg.com/@apollo/server/-/server-4.7.4.tgz#b2a999b5a1f6bb909ec1749106b0c6704296a622"
+  integrity sha512-7MwEsBR+4JRfjAzrFIOP0m/NdzNCyVOlRWCO/86zs73CC+trr08FklTD7JD0yx5BJDfyzjdhF2BZ1sEYvp/Waw==
   dependencies:
     "@apollo/cache-control-types" "^1.0.2"
     "@apollo/server-gateway-interface" "^1.1.0"
@@ -80,7 +80,7 @@
     "@apollo/utils.isnodelike" "^2.0.0"
     "@apollo/utils.keyvaluecache" "^2.1.0"
     "@apollo/utils.logger" "^2.0.0"
-    "@apollo/utils.usagereporting" "^2.0.0"
+    "@apollo/utils.usagereporting" "^2.1.0"
     "@apollo/utils.withrequired" "^2.0.0"
     "@graphql-tools/schema" "^9.0.0"
     "@josephg/resolvable" "^1.0.0"
@@ -164,12 +164,12 @@
   resolved "https://registry.yarnpkg.com/@apollo/utils.stripsensitiveliterals/-/utils.stripsensitiveliterals-2.0.1.tgz#2f3350483be376a98229f90185eaf19888323132"
   integrity sha512-QJs7HtzXS/JIPMKWimFnUMK7VjkGQTzqD9bKD1h3iuPAqLsxd0mUNVbkYOPTsDhUKgcvUOfOqOJWYohAKMvcSA==
 
-"@apollo/utils.usagereporting@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@apollo/utils.usagereporting/-/utils.usagereporting-2.0.1.tgz#6926231ad1f5837beb3cac06afcd22944ac0f644"
-  integrity sha512-18smkNfiSfu5yj2mpCIfSzmpDNh90a4PQ6t8kSwGKcPRD3KD83TfK7fF37fSRdnvO93dBkGreWisLXnCpqfWXg==
+"@apollo/utils.usagereporting@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@apollo/utils.usagereporting/-/utils.usagereporting-2.1.0.tgz#11bca6a61fcbc6e6d812004503b38916e74313f4"
+  integrity sha512-LPSlBrn+S17oBy5eWkrRSGb98sWmnEzo3DPTZgp8IQc8sJe0prDgDuppGq4NeQlpoqEHz0hQeYHAOA0Z3aQsxQ==
   dependencies:
-    "@apollo/usage-reporting-protobuf" "^4.0.0"
+    "@apollo/usage-reporting-protobuf" "^4.1.0"
     "@apollo/utils.dropunuseddefinitions" "^2.0.1"
     "@apollo/utils.printwithreducedwhitespace" "^2.0.1"
     "@apollo/utils.removealiases" "2.0.1"
@@ -4277,9 +4277,9 @@
     "@octokit/openapi-types" "^16.0.0"
 
 "@openzeppelin/contracts-upgradeable@^4.7.3", "@openzeppelin/contracts-upgradeable@^4.9.1":
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.9.1.tgz#03e33b8059ce43884995e69e4479f5a7f084b404"
-  integrity sha512-UZf5/VdaBA/0kxF7/gg+2UrC8k+fbgiUM0Qw1apAhwpBWBxULbsHw0ZRMgT53nd6N8hr53XFjhcWNeTRGIiCVw==
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.9.2.tgz#a817c75688f8daede420052fbcb34e52482e769e"
+  integrity sha512-siviV3PZV/fHfPaoIC51rf1Jb6iElkYWnNYZ0leO23/ukXuvOyoC/ahy8jqiV7g+++9Nuo3n/rk5ajSN/+d/Sg==
 
 "@openzeppelin/contracts-v0.7@npm:@openzeppelin/contracts@v3.4.2":
   version "3.4.2"
@@ -4287,9 +4287,9 @@
   integrity sha512-z0zMCjyhhp4y7XKAcDAi3Vgms4T2PstwBdahiO0+9NaGICQKjynK3wduSRplTgk4LXmoO1yfDGO5RbjKYxtuxA==
 
 "@openzeppelin/contracts@^4.9.1":
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.9.1.tgz#afa804d2c68398704b0175acc94d91a54f203645"
-  integrity sha512-aLDTLu/If1qYIFW5g4ZibuQaUsFGWQPBq1mZKp/txaebUnGHDmmiBhRLY1tDNedN0m+fJtKZ1zAODS9Yk+V6uA==
+  version "4.9.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-4.9.2.tgz#1cb2d5e4d3360141a17dbc45094a8cad6aac16c1"
+  integrity sha512-mO+y6JaqXjWeMh9glYVzVu8HYPGknAAnWyxTRhGeckOruyXQMNnlcW6w/Dx9ftLeIQk6N+ZJFuVmTwF7lEIFrg==
 
 "@openzeppelin/contracts@~4.3.3":
   version "4.3.3"
