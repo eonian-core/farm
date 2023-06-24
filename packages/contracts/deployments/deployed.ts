@@ -1016,6 +1016,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "founders",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "getQueueSize",
               "outputs": [
                 {
@@ -1081,6 +1094,11 @@ export default {
                   "internalType": "address",
                   "name": "_founders",
                   "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_foundersRewardRate",
+                  "type": "uint256"
                 }
               ],
               "name": "initialize",
@@ -1762,6 +1780,32 @@ export default {
             {
               "inputs": [
                 {
+                  "internalType": "address",
+                  "name": "_founders",
+                  "type": "address"
+                }
+              ],
+              "name": "setFounders",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_foundersRewardFee",
+                  "type": "uint256"
+                }
+              ],
+              "name": "setFoundersRewardFee",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "uint256",
                   "name": "rate",
                   "type": "uint256"
@@ -1987,6 +2031,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "vaultFoundersRewardFee",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "version",
               "outputs": [
                 {
@@ -2103,7 +2160,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0x5B5e3b6985b78d4a1320df91783b6C7b2E9c527d",
+          "address": "0xb693ae5F2CF753463fb02aa07806649AB5eFa0cA",
           "abi": [
             {
               "inputs": [
@@ -3117,6 +3174,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "founders",
+              "outputs": [
+                {
+                  "internalType": "address",
+                  "name": "",
+                  "type": "address"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "getQueueSize",
               "outputs": [
                 {
@@ -3182,6 +3252,11 @@ export default {
                   "internalType": "address",
                   "name": "_founders",
                   "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "_foundersRewardRate",
+                  "type": "uint256"
                 }
               ],
               "name": "initialize",
@@ -3863,6 +3938,32 @@ export default {
             {
               "inputs": [
                 {
+                  "internalType": "address",
+                  "name": "_founders",
+                  "type": "address"
+                }
+              ],
+              "name": "setFounders",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_foundersRewardFee",
+                  "type": "uint256"
+                }
+              ],
+              "name": "setFoundersRewardFee",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "uint256",
                   "name": "rate",
                   "type": "uint256"
@@ -4084,6 +4185,19 @@ export default {
               "name": "upgradeToAndCall",
               "outputs": [],
               "stateMutability": "payable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "vaultFoundersRewardFee",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
