@@ -40,8 +40,14 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
     /// @notice Rewards contract where management fees are sent to.
     address public rewards;
 
+    /// @notice Vault Founders Token contract where rewards for founders are sent to.
+    address public founders;
+
     /// @notice Vault management fee (in BPS).
     uint256 public managementFee;
+
+    /// @notice Vault founders reward (in BPS).
+    uint256 public vaultFoundersRewardFee;
 
     /// @notice Arranged list of addresses of strategies, which defines the order for withdrawal.
     address[] public withdrawalQueue;
@@ -105,7 +111,8 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         string memory _name,
         string memory _symbol,
         address[] memory _defaultOperators,
-        address _founders
+        address _founders,
+        uint256 _foundersRewardRate
     ) public initializer {
         __SafeUUPSUpgradeable_init(); // Ownable under the hood
         __Lender_init();
@@ -126,7 +133,8 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
-        addDepositHook(IVaultHook(_founders));
+        setFounders(_founders);
+        setFoundersRewardFee(_foundersRewardRate);
     }
 
     /// @dev Override to add the "whenNotPaused" modifier
@@ -274,14 +282,30 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         rewards = _rewards;
     }
 
-    /// @notice Sets the vault management fee.
+    /// @notice Sets the vault management fee. Both management and foundersReward fee can't exceed 100%
     /// @param _managementFee a new management fee value (in BPS).
     function setManagementFee(uint256 _managementFee) public onlyOwner {
-        if (_managementFee > MAX_BPS) {
+        if (_managementFee + vaultFoundersRewardFee > MAX_BPS) {
             revert ExceededMaximumFeeValue();
         }
 
         managementFee = _managementFee;
+    }
+
+    /// @notice Sets the vault founder token contract;
+    /// @param _founders a new founder token contract address.
+    function setFounders(address _founders) public onlyOwner {
+        founders = _founders;
+        addDepositHook(IVaultHook(founders));
+    }
+
+    /// @notice Sets the vault founder token reward rate. Both management and foundersReward fee can't exceed 100%
+    /// @param _foundersRewardFee a new founder token reward fee (in BPS).
+    function setFoundersRewardFee(uint256 _foundersRewardFee) public onlyOwner {
+        if (_foundersRewardFee + managementFee > MAX_BPS) {
+            revert ExceededMaximumFeeValue();
+        }
+        vaultFoundersRewardFee = _foundersRewardFee;
     }
 
     /// @notice Switches the vault pause state.
@@ -329,8 +353,11 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         if (fee > 0) {
             _mint(rewards, convertToShares(fee), "", "", false);
         }
-
-        return fee;
+        uint256 vaultFoundersReward = (extraFreeFunds * vaultFoundersRewardFee) / MAX_BPS;
+        if (vaultFoundersReward > 0) {
+            _mint(founders, convertToShares(vaultFoundersReward), "", "", false);
+        }
+        return fee + vaultFoundersReward;
     }
 
     /// @notice Updates the locked-in profit value according to the positive debt management report of the strategy

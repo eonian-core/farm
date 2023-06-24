@@ -37,12 +37,17 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 //    }
 
     function __RewardHolder_init(
-        address admin_,
-        Vault vault_
+        address admin_
     ) internal onlyInitializing {
         __AccessControl_init();
         _setupRole(BALANCE_UPDATER_ROLE, admin_);
+        _setupRole(DEFAULT_ADMIN_ROLE, admin_);
         __ReentrancyGuard_init();
+    }
+
+    /// @dev set vault
+    /// @notice that is mandatory to be set before reward can be claimed
+    function setVault(Vault vault_) external onlyRole(DEFAULT_ADMIN_ROLE) {
         vault = vault_;
     }
 
@@ -58,11 +63,14 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     /// @dev claim reward for token owner
     /// @notice only role with REWARD_CLAIMER_ROLE can call this function
     function claimReward() external onlyRole(REWARD_CLAIMER_ROLE) nonReentrant {
+        require(vault != Vault(address(0)), "Vault not set.");
+
         require(rewardOwnerIndex[msg.sender] != 0, "Caller doesn't have reward.");
 
         uint deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
 
         // calculate reward for token owner
+        //todo discuss the proper calculation mechanism
         uint256 tokenOwnerReward = deltaIndex.mulDivDown(1, numberCoins);
         rewardOwnerIndex[msg.sender] = rewardIndex;
 

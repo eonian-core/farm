@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import {IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
+
 import {ERC5484Upgradeable} from "./ERC5484Upgradeable.sol";
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultFounderToken} from "./IVaultFounderToken.sol";
 import {IVaultHook, ERC4626UpgradeableRequest} from "./IVaultHook.sol";
+import {RewardHolder} from "./RewardHolder.sol";
 
-contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook {
+contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook, RewardHolder {
 
     // Max number of tokens that can be minted
     uint256 private _maxCountTokens;
@@ -29,6 +33,7 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         address admin_
     ) internal onlyInitializing {
         __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true, admin_);
+        __RewardHolder_init(admin_);
         _maxCountTokens = maxCountTokens_;
         _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
         _initialTokenPrice = initialTokenPrice_;
@@ -84,4 +89,15 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         //empty code
     }
     /* solhint-disable no-empty-blocks */
+
+    /// @dev See {IERC165-supportsInterface}.
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC5484Upgradeable, AccessControlUpgradeable, IERC165Upgradeable)
+        virtual
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
 }

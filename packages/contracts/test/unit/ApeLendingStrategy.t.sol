@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "forge-std/console.sol";
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -44,6 +43,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderFee = 100;
 
     uint256 minReportInterval = 3600;
     bool isPrepaid = false;
@@ -65,7 +65,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken)
+            address(vaultFounderToken),
+            defaultFounderFee
         );
 
         ops = new OpsMock();
@@ -141,7 +142,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken)
+            address(vaultFounderToken),
+            defaultFounderFee
         );
 
         vm.expectRevert(IncompatibleCTokenContract.selector);

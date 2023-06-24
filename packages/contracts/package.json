@@ -13,6 +13,7 @@
     "start": "hardhat node --export-all './deployments/data.json'",
     "test:hardhat": "hardhat test",
     "test:forge": "forge test -vvv",
+    "test:forge-single-test": "forge test -vvv --watch --match-test testTotalAssetsAmountAfterPositiveReport",
     "test": "yarn clean && yarn build && yarn test:hardhat && yarn test:forge",
     "docgen": "hardhat docgen",
     "postinstall": "forge install",

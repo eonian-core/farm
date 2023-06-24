@@ -6,10 +6,9 @@ import {Vault} from "contracts/Vault.sol";
 
 contract RewardHolderMock is RewardHolder {
     constructor(
-        address admin_,
-        Vault vault
+        address admin_
     ) initializer {
-        __RewardHolder_init(admin_, vault);
+        __RewardHolder_init(admin_);
     }
 
     function emitRewardDeposited(uint256 plusReward) external {

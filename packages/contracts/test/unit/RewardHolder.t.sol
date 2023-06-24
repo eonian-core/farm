@@ -19,6 +19,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderRate = 100;
 
     ERC20Mock underlying;
     VaultMock vault;
@@ -44,10 +45,12 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken)
+            address(vaultFounderToken),
+            defaultFounderRate
         );
 
-        rewardHolder = new RewardHolderMock(address(this), vault);
+        rewardHolder = new RewardHolderMock(address(this));
+        rewardHolder.setVault(vault);
 
         vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
     }
@@ -91,7 +94,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.assume(amount > 10**11 && amount < address(this).balance);
 
         // Allow the vault to take funds from Alice but not from test to check roles
-        rewardHolder = new RewardHolderMock(address(alice), vault);
+        rewardHolder = new RewardHolderMock(address(alice));
+        vm.prank(alice);
+        rewardHolder.setVault(vault);
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);
@@ -126,8 +131,10 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         assertEq(rewardHolder.numberCoins(), 1);
     }
 
-    function testClaimReward() public {
-        rewardHolder = new RewardHolderMock(address(alice), vault);
+    function testSetupNewOwnerFail() public {
+        rewardHolder = new RewardHolderMock(address(alice));
+        vm.prank(alice);
+        rewardHolder.setVault(vault);
 
         vm.expectRevert(
             abi.encodePacked(

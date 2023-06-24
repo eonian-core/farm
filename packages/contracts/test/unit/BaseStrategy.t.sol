@@ -36,6 +36,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderFee = 100;
 
     uint256 minReportInterval = 3600;
     bool isPrepaid = false;
@@ -49,7 +50,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken)
+            address(vaultFounderToken),
+            defaultFounderFee
         );
 
         ops = new OpsMock();
