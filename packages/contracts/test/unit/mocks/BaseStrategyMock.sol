@@ -16,15 +16,17 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     uint256 private _estimatedTotalAssets = 0;
 
     constructor(
-        IVault _vault,
-        address _ops,
+        IStrategiesLender _lender,
+        IERC20Upgradeable _asset,
+        IOps _ops,
         uint256 _minReportInterval,
         bool _isPrepaid,
         address __nativeTokenPriceFeed,
         address __assetPriceFeed
     ) initializer {
         __BaseStrategy_init(
-            _vault,
+            _lender,
+            _asset,
             _ops,
             _minReportInterval,
             _isPrepaid,
