@@ -59,11 +59,7 @@ contract ERC5484Upgradeable is
         _;
     }
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-//    constructor()
-//    {
-//        _disableInitializers(); //todo discuss what proper way to initialize in scope uip proxy migation
-//    }
+    /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
     function __ERC5484Upgradeable_init(
         string memory name_,
@@ -88,9 +84,13 @@ contract ERC5484Upgradeable is
     }
 
     /// @dev function for mint new SBT token
-    function safeMint(address to, string memory uri) public onlyRole(MINTER_ROLE) {
+    /// @param to address of user who will receive token
+    /// @param uri token metadata uri
+    function safeMint(address to, string memory uri) public virtual onlyRole(MINTER_ROLE) {
         // allow to mint only once per user if _mintOnce is true
-        require(!_mintOnce || balanceOf(to) == 0,"ERC5484: User already has token");
+        if(_mintOnce && balanceOf(to) != 0) {
+            return;
+        }
 
         // mint token
         uint256 tokenId = _tokenIdCounter.current();
@@ -110,6 +110,7 @@ contract ERC5484Upgradeable is
     /// @dev Token is SOUL BOUND and it is not allowed to move token between users
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
+        virtual
         allowedTransfer(to, from, tokenId)
         override(ERC721Upgradeable, ERC721EnumerableUpgradeable)
     {
@@ -125,12 +126,12 @@ contract ERC5484Upgradeable is
     }
 
     /// @dev See {ERC721-_burn}
-    function _burn(uint256 tokenId) internal override(ERC721Upgradeable, ERC721URIStorageUpgradeable){
+    function _burn(uint256 tokenId) internal virtual override(ERC721Upgradeable, ERC721URIStorageUpgradeable){
         super._burn(tokenId);
     }
 
     /// @dev See {IERC721Metadata-tokenURI}.
-    function tokenURI(uint256 tokenId) public view override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
+    function tokenURI(uint256 tokenId) public view virtual override(ERC721Upgradeable, ERC721URIStorageUpgradeable)
         returns (string memory)
     {
         return super.tokenURI(tokenId);
@@ -152,7 +153,7 @@ contract ERC5484Upgradeable is
     /// @notice provides burn authorization of the token id.
     /// @dev unassigned tokenIds are invalid, and queries do throw
     /// @param tokenId The identifier for a token.
-    function burnAuth(uint256 tokenId) external view returns (BurnAuth){
+    function burnAuth(uint256 tokenId) external view virtual returns (BurnAuth){
         require(_exists(tokenId), "ERC5484: token doesn't exists");
         return _burnAuth;
     }

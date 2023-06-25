@@ -3,11 +3,15 @@ import { BigNumber } from "ethers";
 import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
 import { BlockchainType, Stage } from "../hardhat.config";
 
+
+
 /**
  * Deploy USDT Vault contract
  */
-const func = deployOrUpgrade({
-  contract: "Vault",
+const func = () => {};
+
+/* const func = deployOrUpgrade({
+  contract: "VaultFounderToken",
   chains: [
     BlockchainType.Mainnet,
     BlockchainType.Testnet,
@@ -24,8 +28,7 @@ const func = deployOrUpgrade({
     "Eonian USDT Vault Shares", // name
     "eonUSDT", // symbol
     [], // defaultOperators
-    100, // vault founder tokens fee 1%
   ],
-});
+}); */
 
 export default func;

@@ -45,9 +45,10 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken),
             defaultFounderRate
         );
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
 
         rewardHolder = new RewardHolderMock(address(this));
         rewardHolder.setVault(vault);

@@ -65,9 +65,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken),
             defaultFounderFee
         );
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
@@ -142,9 +143,9 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken),
             defaultFounderFee
         );
+        vault.setFounders((address(vaultFounderToken)));
 
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new ApeLendingStrategyMock(

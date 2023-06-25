@@ -3,16 +3,16 @@ pragma solidity >=0.8.19;
 
 import "forge-std/Test.sol";
 
+import {IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
+import {IERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import {IERC721EnumerableUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol";
+
 import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
 import {ERC5484UpgradableMock} from "./mocks/ERC5484UpgradableMock.sol";
 import {ERC5484Upgradeable} from "contracts/tokens/ERC5484Upgradeable.sol";
 import {IERC5484} from "contracts/tokens/IERC5484.sol";
 import {IERC4626} from "contracts/tokens/IERC4626.sol";
-
-import {IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
-import {IERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
-import {IERC721EnumerableUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721EnumerableUpgradeable.sol";
 
 contract ERC5484UpgradeableTest is TestWithERC1820Registry {
     ERC5484Upgradeable private token;
@@ -59,7 +59,6 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
     function testMintTokenOnceFail(string memory url) public {
         token.safeMint(alice, url);
 
-        vm.expectRevert("ERC5484: User already has token");
         token.safeMint(alice, url);
 
         assertEq(token.totalSupply(), 1);

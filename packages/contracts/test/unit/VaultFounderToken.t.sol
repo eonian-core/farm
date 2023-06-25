@@ -46,8 +46,6 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
 
     function testMintTokenFail(string memory url) public {
         token.safeMint(alice, url);
-
-        vm.expectRevert("ERC5484: User already has token");
         token.safeMint(alice, url);
 
         assertEq(token.totalSupply(), 1);
@@ -66,9 +64,9 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.safeMint(alice, "testUrl");
         token.safeMint(bob, "testUrl");
         token.safeMint(culprit, "testUrl");
-
-        vm.expectRevert("EVFT: max number of tokens");
         token.safeMint(rewards, "testUrl");
+
+        assertEq(token.totalSupply(), 3);
     }
 
     function testNextTokenPrice() public {
@@ -111,7 +109,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     function testSetTokenMultiplier() public {
         assertEq(token.nextTokenPrice(), 200);
         token.safeMint(alice, "testUrl");
-        token.setNextTokenMultiplier(200);
+        token.setNextTokenMultiplier(20_000);
         assertEq(token.nextTokenPrice(), 400);
     }
 

@@ -3,14 +3,18 @@ pragma solidity ^0.8.19;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
+import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
+import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
+import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {ERC5484Upgradeable} from "./ERC5484Upgradeable.sol";
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultFounderToken} from "./IVaultFounderToken.sol";
 import {IVaultHook, ERC4626UpgradeableRequest} from "./IVaultHook.sol";
 import {RewardHolder} from "./RewardHolder.sol";
 
-contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook, RewardHolder {
+contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Upgradeable, IVaultHook, RewardHolder {
 
     // Max number of tokens that can be minted
     uint256 private _maxCountTokens;
@@ -26,12 +30,18 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
     /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[46] private __gap;
 
-    function __VaultFounderToken_init(
+    /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
+
+    function initialize(
         uint256 maxCountTokens_,
         uint256 nextTokenPriceMultiplier_,
         uint256 initialTokenPrice_,
         address admin_
-    ) internal onlyInitializing {
+    ) public initializer {
+        __SafeUUPSUpgradeable_init_direct();
         __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true, admin_);
         __RewardHolder_init(admin_);
         _maxCountTokens = maxCountTokens_;
@@ -39,6 +49,21 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
         _initialTokenPrice = initialTokenPrice_;
     }
 
+    /// @inheritdoc IVersionable
+    function version() external pure returns (string memory) {
+        return "0.1.0";
+    }
+
+    /// @dev function for mint new SBT token
+    /// @param to address of user who will receive token
+    /// @param uri token metadata uri
+    function safeMint(address to, string memory uri) public virtual override(ERC5484Upgradeable) {
+        if(totalSupply() < _maxCountTokens) {
+            super.safeMint(to, uri);
+        }
+    }
+
+    /// @inheritdoc ERC721Upgradeable
     function _safeMint(address to, uint256 tokenId) internal override {
         require(totalSupply() < _maxCountTokens, "EVFT: max number of tokens");
         super._safeMint(to, tokenId);
@@ -52,7 +77,7 @@ contract VaultFounderToken is IVaultFounderToken, ERC5484Upgradeable, IVaultHook
     function _priceOf(uint256 tokenId) internal view returns (uint256) {
         uint256 price = _initialTokenPrice;
         for (uint256 i = 0; i < tokenId; i++) {
-            price = (price * _nextTokenPriceMultiplier) / 100;
+            price = (price * _nextTokenPriceMultiplier) / 10_000;
         }
         return price;
     }

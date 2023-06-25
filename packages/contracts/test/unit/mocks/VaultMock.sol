@@ -9,7 +9,6 @@ contract VaultMock is Vault {
         address rewards,
         uint256 fee,
         uint256 lockedProfitReleaseDuration,
-        address founderToken,
         uint256 _foundersRewardFee
     ) Vault(false) {
         initialize(
@@ -20,7 +19,6 @@ contract VaultMock is Vault {
             "",
             "",
             new address[](0),
-            founderToken,
             _foundersRewardFee
         );
     }

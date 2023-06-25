@@ -6,7 +6,12 @@ import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
 contract VaultFounderTokenMock is VaultFounderToken {
     constructor(
         address admin_
-    ) initializer {
-        __VaultFounderToken_init(3, 120, 200, admin_);
+    ) VaultFounderToken(false) {
+        initialize(
+            3,
+            12_000,
+            200,
+            admin_
+        );
     }
 }

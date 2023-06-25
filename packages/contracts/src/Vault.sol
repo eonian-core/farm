@@ -111,7 +111,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         string memory _name,
         string memory _symbol,
         address[] memory _defaultOperators,
-        address _founders,
         uint256 _foundersRewardRate
     ) public initializer {
         __SafeUUPSUpgradeable_init(); // Ownable under the hood
@@ -133,7 +132,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
-        setFounders(_founders);
         setFoundersRewardFee(_foundersRewardRate);
     }
 
@@ -294,7 +292,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
 
     /// @notice Sets the vault founder token contract;
     /// @param _founders a new founder token contract address.
-    function setFounders(address _founders) public onlyOwner {
+    function setFounders(address _founders) external onlyOwner {
         founders = _founders;
         addDepositHook(IVaultHook(founders));
     }
@@ -352,6 +350,9 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         uint256 fee = (extraFreeFunds * managementFee) / MAX_BPS;
         if (fee > 0) {
             _mint(rewards, convertToShares(fee), "", "", false);
+        }
+        if(founders == address(0)) {
+            return fee;
         }
         uint256 vaultFoundersReward = (extraFreeFunds * vaultFoundersRewardFee) / MAX_BPS;
         if (vaultFoundersReward > 0) {

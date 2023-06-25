@@ -15,7 +15,7 @@ import "./mocks/VaultFounderTokenMock.sol";
 
 contract VaultTest is TestWithERC1820Registry {
     uint256 constant MAX_BPS = 10_000;
-    uint256 constant MAX_DEPOSIT = 10*32;
+    uint256 constant MAX_DEPOSIT = 10**38;
     uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     ERC20Mock underlying;
@@ -48,11 +48,13 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             defaultFee,
             defaultLPRRate,
-            address(vaultFounderToken),
             defaultFounderFee
         );
+        vault.setFounders(address(vaultFounderToken));
 
         vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
+        vaultFounderToken.setVault(vault);
+        //todo add test for setVault
 
         strategy = new StrategyMock(address(underlying), address(vault));
     }
@@ -74,7 +76,6 @@ contract VaultTest is TestWithERC1820Registry {
             "",
             "",
             new address[](0),
-            address(vaultFounderToken),
             defaultFounderFee
         );
     }
@@ -112,7 +113,6 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             0,
             defaultLPRRate,
-            address(vaultFounderToken),
             defaultFounderFee
         );
         StrategyMock strategyWrongVault = new StrategyMock(
@@ -326,7 +326,7 @@ contract VaultTest is TestWithERC1820Registry {
     }
 
     function testSetManagementFee(uint256 newFee) public {
-        vm.assume(newFee <= MAX_BPS);
+        vm.assume(newFee <= MAX_BPS - defaultFounderFee);
 
         assertEq(vault.managementFee(), defaultFee);
 
@@ -381,7 +381,6 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             fee,
             defaultLPRRate,
-            address(vaultFounderToken),
             founderFee
         );
     }
@@ -396,7 +395,6 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             fee,
             defaultLPRRate,
-            address(vaultFounderToken),
             0
         );
         vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
@@ -443,9 +441,9 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             0,
             defaultLPRRate,
-            address(vaultFounderToken),
             founderFee
         );
+        vault.setFounders(address(vaultFounderToken));
         vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -489,9 +487,9 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             chargingFee,
             defaultLPRRate,
-            address(vaultFounderToken),
             founderFee
         );
+        vault.setFounders(address(vaultFounderToken));
         vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -534,9 +532,12 @@ contract VaultTest is TestWithERC1820Registry {
         uint192 initialVaultBalance,
         uint16 fee,
         uint16 strategyRatio,
-        uint256 strategyGain
+        uint256 strategyGain,
+        uint256 founderFee
     ) public {
         vm.assume(fee <= MAX_BPS);
+        vm.assume(founderFee <= MAX_BPS);
+        vm.assume(fee + founderFee <= MAX_BPS);
         vm.assume(strategyRatio <= MAX_BPS);
         vm.assume(
             strategyGain <
@@ -548,8 +549,7 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             fee,
             defaultLPRRate,
-            address(vaultFounderToken),
-            defaultFounderFee
+            founderFee
         );
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -1122,9 +1122,9 @@ contract VaultTest is TestWithERC1820Registry {
             rewards,
             fees,
             lockedProfitReleaseRate,
-            address(vaultFounderToken),
             foundersFee
         );
+        vault.setFounders(address(vaultFounderToken));
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -1147,6 +1147,16 @@ contract VaultTest is TestWithERC1820Registry {
     function testFounderTokenMint(uint192 deposit) public {
         // deposit have to be above min first investment
         vm.assume(deposit > 200 && deposit < MAX_DEPOSIT);
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            0,
+            defaultLPRRate,
+            0
+        );
+        vaultFounderToken = new VaultFounderTokenMock(address(vault));
+        vault.setFounders(address(vaultFounderToken));
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);

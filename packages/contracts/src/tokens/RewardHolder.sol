@@ -30,11 +30,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     bytes32 public constant BALANCE_UPDATER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
     bytes32 public constant REWARD_CLAIMER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
 
-//    /// @custom:oz-upgrades-unsafe-allow constructor
-//    constructor()
-//    {
-//        _disableInitializers(); //todo discuss what proper way to initialize in scope uip proxy migation
-//    }
+    /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
     function __RewardHolder_init(
         address admin_

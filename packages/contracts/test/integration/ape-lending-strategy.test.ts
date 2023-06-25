@@ -5,6 +5,7 @@ import {
   ApeLendingStrategy__factory,
   IERC20,
   Vault,
+  VaultFounderToken,
 } from "../../typechain-types";
 import { Contract } from "ethers";
 import deployVault from "./helpers/deploy-vault";
@@ -14,6 +15,7 @@ import { binanceSmartChainFork } from "../../hardhat/forks";
 import warp from "./helpers/warp";
 import getToken from "./helpers/get-erc20-token";
 import resetBalance from "./helpers/reset-balance";
+import deployVaultFounderToken from "./helpers/deploy-vault-founder-token";
 
 describe("Ape Lending Strategy", function () {
   const { ethers } = hre;
@@ -36,6 +38,7 @@ describe("Ape Lending Strategy", function () {
   let ops: SignerWithAddress;
 
   let vault: Vault;
+  let vaultFounderToken: VaultFounderToken;
   let strategy: ApeLendingStrategy;
   let assetToken: IERC20 & Contract;
 
@@ -55,6 +58,17 @@ describe("Ape Lending Strategy", function () {
 
     vault = await deployVault(hre, { asset, rewards, signer: owner });
     hre.tracer.nameTags[vault.address] = "Vault";
+
+    // todo add vft in integration test
+    vaultFounderToken = await deployVaultFounderToken(hre, {
+      maxCountTokens: 100,
+      nextTokenPriceMultiplier: 1200,
+      initialTokenPrice: 200,
+      admin: vault.address,
+      signer: owner,
+    });
+    vaultFounderToken.setVault(vault);
+    vault.setFounders(vaultFounderToken.address);
 
     await resetBalance(vault.address, { tokens: [asset] });
 
