@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { ChainId } from "./helpers";
 
 export enum WalletStatus {

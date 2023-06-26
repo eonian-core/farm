@@ -8336,10 +8336,10 @@
     ethers "5.5.4"
     joi "17.9.1"
 
-"@web3-onboard/core@^2.20.1":
-  version "2.20.1"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.20.1.tgz#ad3a15aa6c1083d6da83fd9d06d5fe250e750b5a"
-  integrity sha512-OlNQUYBsbvy389AQD5VggqCRGvmiE7/w0LeLt6yyUwAksGnRPSpLjiPaOOjMAJFq0d3TnSX5yXbAoG1SRJM7ww==
+"@web3-onboard/core@^2.20.2":
+  version "2.20.2"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.20.2.tgz#06c35b2d39a119950d3d850d23e2126f6f77c1f5"
+  integrity sha512-XrdOatA00ULnPleQbAbXppGGVErUZpscrauoXy/Zt8qpr7i+NQSeRD2/fllfx5JP6wI0whP8ZoVb9yRp52Ii0Q==
   dependencies:
     "@web3-onboard/common" "^2.3.3"
     bignumber.js "^9.0.0"
@@ -8355,22 +8355,22 @@
     svelte "^3.49.0"
     svelte-i18n "^3.3.13"
 
-"@web3-onboard/injected-wallets@^2.10.0":
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/injected-wallets/-/injected-wallets-2.10.0.tgz#c33ed40efd8bc615fb205bd537b23c0c17b84e7f"
-  integrity sha512-I/14Z511Oft1UTx/ZezT/UC2LqUBH3mMN1kABcxCy4t3zx4Yfh6LMEBmR2XWBoxSvz9iaLIQz4egH+u9mdz0sg==
+"@web3-onboard/injected-wallets@^2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/injected-wallets/-/injected-wallets-2.10.1.tgz#d4a45ba897c578819544805399761c61b8173166"
+  integrity sha512-PhmMI+RNeGowL2cfmp7/v3atrJ8KsjKXgXs6CofwMzDxQXfu1DwXdIh+Hd2Py/ZeRgOEeAehf63gftaVvfn/9g==
   dependencies:
     "@web3-onboard/common" "^2.3.3"
     joi "17.9.1"
     lodash.uniqby "^4.7.0"
 
-"@web3-onboard/react@^2.8.6":
-  version "2.8.6"
-  resolved "https://registry.yarnpkg.com/@web3-onboard/react/-/react-2.8.6.tgz#83a1aa1affbfb4c1a233ccda824fdbfc6656b77b"
-  integrity sha512-hhOwhfjI9uP/h8B8t2+G41DMLjvpfl3FdtgE8T3PNnPbmSgcPsV30GifqXindRf5ex5pUFmESFgJWL+XZjPHdA==
+"@web3-onboard/react@^2.8.7":
+  version "2.8.7"
+  resolved "https://registry.yarnpkg.com/@web3-onboard/react/-/react-2.8.7.tgz#47ecc5cc4ef6c677f8b13c5496c72d7c2e5e5806"
+  integrity sha512-pWLxWz5WNXDXAt3/gE2qVMZMO8ULZf0mp5ceLfJJw3E7DtoypZZ8kqcmogt8Pdw6Y13lEAxfC9R4+HSoi6BDCw==
   dependencies:
     "@web3-onboard/common" "^2.3.3"
-    "@web3-onboard/core" "^2.20.1"
+    "@web3-onboard/core" "^2.20.2"
     use-sync-external-store "1.0.0"
 
 "@web3-onboard/walletconnect@^2.3.9":
@@ -18758,6 +18758,13 @@ react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
   integrity sha512-F27qZr8uUqwhWZboondsPx8tnC3Ct3SxZA3V5WyEvujRyyNv0VYPhoBg1gZ8/MV5tubQp76Trw8lTv9hzRBa+A==
+
+react-toastify@^9.1.3:
+  version "9.1.3"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.1.3.tgz#1e798d260d606f50e0fab5ee31daaae1d628c5ff"
+  integrity sha512-fPfb8ghtn/XMxw3LkxQBk3IyagNpF/LIKjOBflbexr2AWxAH1MJgvnESwEwBn9liLFXgTKWgBSdZpw9m4OTHTg==
+  dependencies:
+    clsx "^1.1.1"
 
 react-transition-group@^4.4.5:
   version "4.4.5"

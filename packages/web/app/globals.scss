@@ -350,3 +350,10 @@ html {
 ul {
   list-style-type: none;
 }
+
+// Overrides of "react-tostify"
+:root {
+  --toastify-color-dark: var(--color-dark-500) !important;
+  --toastify-color-progress-dark: var(--color-secondary-500) !important; 
+  --toastify-text-color-dark: var(--color-text-200) !important;
+}

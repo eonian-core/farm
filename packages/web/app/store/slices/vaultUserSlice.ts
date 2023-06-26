@@ -40,24 +40,24 @@ export const fetchVaultUserData = createAsyncThunk(
 
 interface VaultUserSlice {
   walletBalance: number;
-  walletBalanceBig: string;
+  walletBalanceBN: string;
   vaultBalance: number;
-  vaultBalanceBig: string;
+  vaultBalanceBN: string;
   assetAllowance: number;
-  assetAllowanceBig: string;
+  assetAllowanceBN: string;
   isLoading: boolean;
   lastRequestForWallet: string;
 }
 
 const initialState: VaultUserSlice = {
   walletBalance: 0,
-  walletBalanceBig: "0",
+  walletBalanceBN: "0",
   vaultBalance: 0,
-  vaultBalanceBig: "0",
+  vaultBalanceBN: "0",
   assetAllowance: 0,
-  assetAllowanceBig: "0",
+  assetAllowanceBN: "0",
   isLoading: true,
-  lastRequestForWallet: "0x",
+  lastRequestForWallet: "",
 };
 
 const vaultUserSlice = createSlice({
@@ -83,13 +83,13 @@ const vaultUserSlice = createSlice({
           assetAllowance,
         ] = data;
 
-        state.walletBalanceBig = assetBalance;
+        state.walletBalanceBN = assetBalance;
         state.walletBalance = denominateTokenValue(assetBalance, assetDecimals);
 
-        state.vaultBalanceBig = vaultBalance;
+        state.vaultBalanceBN = vaultBalance;
         state.vaultBalance = denominateTokenValue(vaultBalance, vaultDecimals);
 
-        state.assetAllowanceBig = assetAllowance;
+        state.assetAllowanceBN = assetAllowance;
         state.assetAllowance = denominateTokenValue(
           assetAllowance,
           assetDecimals

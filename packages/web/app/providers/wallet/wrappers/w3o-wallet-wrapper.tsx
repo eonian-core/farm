@@ -201,7 +201,7 @@ const getWalletIconSrc = (iconContent: string) => {
   return (cachedIcons[iconContent] = URL.createObjectURL(svg));
 };
 
-const getDefaultChain = (chains: Chain[]): Chain => {
+export const getDefaultChain = (chains: Chain[]): Chain => {
   const chain = chains.find((chain) => chain.isDefault);
   if (!chain) {
     throw new Error("There must be at least one default chain");

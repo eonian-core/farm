@@ -15,36 +15,40 @@ import useVaultUserInfo from "./use-vault-user-info";
 import { useAppSelector } from "../../../store/hooks";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/types";
+import { toast } from "react-toastify";
 
 interface Props {
   vault: Vault;
 }
 
-/**
- * TODO:
- * 1) Provider should be persistent to avoid extra rerenders and hooks triggers
- */
 const Form: React.FC<Props> = ({ vault }) => {
-  const { wallet, status } = useWalletWrapperContext();
+  const { wallet, status, chains } = useWalletWrapperContext();
 
   useVaultUserInfo(vault, { autoUpdateInterval: 5000 });
 
-  const { walletBalance, vaultBalance, isLoading, lastRequestForWallet } = useAppSelector(
-    (state) => state.vaultUser
-  );
+  const { walletBalance, vaultBalance, isLoading, lastRequestForWallet } =
+    useAppSelector((state) => state.vaultUser);
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
   const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
-  const isFormReady = !isLoading || isFirstRequestFinished || isWalletNotConnected;
+  const isFormReady =
+    !isLoading || isFirstRequestFinished || isWalletNotConnected;
 
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT
   );
 
+  // TODO: Refactor this logic. Temporarily (for alpha test) we use only one chain, later we will have multiple supported chains.
+  const vaultChain = React.useMemo(() => {
+    return chains.find((chain) => chain.isDefault)!;
+  }, [chains]);
+
   const [value, displayValue, handleValueChange] =
     useNumberInputValue(walletBalance);
 
-  const handleSubmit = React.useCallback(() => {}, []);
+  const handleSubmit = React.useCallback(() => {
+    toast("Wow so easy !");
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -83,6 +87,7 @@ const Form: React.FC<Props> = ({ vault }) => {
             isLoading={!isFormReady}
           />
           <FormButton
+            vaultChain={vaultChain}
             disabled={!isFormReady}
             formAction={formAction}
             onSubmit={handleSubmit}

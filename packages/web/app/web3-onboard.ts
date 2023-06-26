@@ -1,4 +1,4 @@
-import type { ThemingMap } from "@web3-onboard/core/dist/types";
+import type { InitOptions, ThemingMap } from "@web3-onboard/core/dist/types";
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
 import { ChainId } from "./providers/wallet/wrappers/helpers";
@@ -12,19 +12,27 @@ const theme: ThemingMap = {
   "--w3o-border-radius": "var(--border-radius-500)",
 };
 
-const chains: Partial<Record<ChainId, any>> = {
+const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
   [ChainId.SEPOLIA]: {
     id: ChainId.toHex(ChainId.SEPOLIA),
     token: "SepoliaETH",
     label: "Sepolia - Testnet",
     rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
-  }
+  },
 };
 
 export default init({
   theme,
   wallets: [injectedModule()],
   chains: Object.values(chains),
+  accountCenter: {
+    desktop: {
+      enabled: false,
+    },
+    mobile: {
+      enabled: false,
+    },
+  },
   appMetadata: {
     name: "Eonian Finance",
     icon: `
@@ -50,4 +58,4 @@ export default init({
   },
 });
 
-export const defaultChain = chains[ChainId.SEPOLIA];
+export const defaultChain = chains[ChainId.SEPOLIA]!;

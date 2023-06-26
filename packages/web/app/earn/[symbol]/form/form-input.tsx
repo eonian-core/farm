@@ -2,7 +2,6 @@
 
 import { FormElement, Input, Loading } from "@nextui-org/react";
 import React from "react";
-import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 
 import styles from "./form-input.module.scss";
 import IconCoin from "../../../components/icons/icon-coin";
@@ -50,7 +49,6 @@ function InputRightContent({
   balance,
   isLoading,
 }: Pick<Props, "balance" | "isLoading">) {
-  const { wallet } = useWalletWrapperContext();
   if (isLoading) {
     return <Loading className={styles.loading} size="sm" />;
   }

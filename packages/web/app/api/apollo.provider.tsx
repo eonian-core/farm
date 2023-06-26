@@ -11,10 +11,16 @@ import {
   NextSSRInMemoryCache,
   SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
+import { ChainId } from "../providers/wallet/wrappers/helpers";
+import { defaultChain } from "../web3-onboard";
+import { getGraphQLEndpoint } from "./endpoints";
 
 function makeClient() {
+  // TODO: Remove this logic. Temporarily (for alpha test) we use only one default API endpoint, 
+  // then we will need to select a URL depending on user choice
+  const chainId = ChainId.parse(defaultChain.id);
   const httpLink = new HttpLink({
-    uri: process.env.NEXT_PUBLIC_GRAPH_URL || "http://localhost:4000/",
+    uri: getGraphQLEndpoint(chainId),
   });
 
   return new ApolloClient({
