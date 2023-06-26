@@ -9,6 +9,7 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
 
     constructor(
         address _vault,
+        address _asset,
         address _cToken,
         address _ops,
         address __nativeTokenPriceFeed,
@@ -18,6 +19,7 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
     ) ApeLendingStrategy(false) {
         initialize(
             _vault,
+            _asset,
             _cToken,
             _ops,
             __nativeTokenPriceFeed,

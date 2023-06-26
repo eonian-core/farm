@@ -12,6 +12,8 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
 
     uint256 public harvestProfit = 0;
     uint256 public harvestLoss = 0;
+    uint256 public override interestRatePerBlock;
+    
     uint256 private _liquidateAllPositionsReturn = 0;
     uint256 private _estimatedTotalAssets = 0;
 

@@ -13,7 +13,7 @@ contract OpsReadyMock is OpsReady, SafeInitializableMock {
     // allow sending eth to the test contract
     receive() external payable {}
 
-    function __OpsReadyMock_init(address _ops) public initializer {
+    function __OpsReadyMock_init(IOps _ops) public initializer {
         __OpsReady_init(_ops);
     }
 

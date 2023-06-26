@@ -8,6 +8,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract CTokenMock is ERC20, ICToken {
     address internal _underlying;
     uint8 internal _decimals;
+    bool public blocksBased;
 
     uint256 public balanceSnapshot;
     uint256 public exchangeRate;

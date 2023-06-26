@@ -18,6 +18,8 @@ import "./mocks/RainMakerMock.sol";
 import "./mocks/PancakeRouterMock.sol";
 import "./mocks/ApeLendingStrategyMock.sol";
 
+import "contracts/strategies/CTokenBaseStrategy.sol";
+
 import "./helpers/TestWithERC1820Registry.sol";
 
 contract ApeLendingStrategyTest is TestWithERC1820Registry {
@@ -55,7 +57,12 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ApeLendingStrategyMock strategy;
 
     function setUp() public {
+        vm.label(rewards, "rewards");
+        vm.label(alice, "alice");
+        vm.label(culprit, "culprit");
+
         underlying = new ERC20Mock("Mock Token", "TKN");
+        vm.label(address(underlying), "underlying");
 
         vault = new VaultMock(
             address(underlying),
@@ -63,11 +70,14 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             defaultFee,
             defaultLPRRate
         );
+        vm.label(address(vault), "vault");
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
+        vm.label(address(ops), "ops");
 
         cToken = new CTokenMock(address(underlying));
+        vm.label(address(cToken), "cToken");
 
         nativeTokenPriceFeed = new AggregatorV3Mock();
         nativeTokenPriceFeed.setDecimals(8);
@@ -89,6 +99,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
         strategy = new ApeLendingStrategyMock(
             address(vault),
+            address(underlying),
             address(cToken),
             address(ops),
             address(nativeTokenPriceFeed),
@@ -105,6 +116,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vm.expectRevert(UnsupportedDecimals.selector);
         strategy = new ApeLendingStrategyMock(
             address(vault),
+            address(underlying),
             address(cToken),
             address(ops),
             address(nativeTokenPriceFeed),
@@ -120,6 +132,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vm.expectRevert(UnsupportedDecimals.selector);
         strategy = new ApeLendingStrategyMock(
             address(vault),
+            address(underlying),
             address(cToken),
             address(ops),
             address(nativeTokenPriceFeed),
@@ -142,6 +155,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new ApeLendingStrategyMock(
             address(vault),
+            address(underlying),
             address(cToken),
             address(ops),
             address(nativeTokenPriceFeed),

@@ -46,7 +46,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         address _assetPriceFeed,
         uint256 _minReportInterval,
         bool _isPrepaid
-    ) public initializer {
+    ) public onlyInitializing {
         __BaseStrategy_init(
             _lender,
             _asset,

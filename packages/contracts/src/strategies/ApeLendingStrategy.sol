@@ -76,15 +76,15 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
             _isPrepaid
         ); // ownable under the hood
 
-        __ApeLendingStrategy_init_unchained(BANANA, PANCAKE_ROUTER);
+        __ApeLendingStrategy_init_unchained(IERC20Upgradeable(BANANA), IPancakeRouter(PANCAKE_ROUTER));
     }
 
-    function __ApeLendingStrategy_init_unchained(address _bananaToken, address _pancakeRouter) internal onlyInitializing {
-        pancakeRouter = IPancakeRouter(_bananaToken);
+    function __ApeLendingStrategy_init_unchained(IERC20Upgradeable _bananaToken, IPancakeRouter _pancakeRouter) internal onlyInitializing {
+        pancakeRouter = _pancakeRouter;
 
         minBananaToSell = 0.1 ether;
 
-        approveTokenMax(BANANA, _pancakeRouter);
+        approveTokenMax(address(_bananaToken), address(_pancakeRouter));
     }
 
     /// @notice Sets the minimum number of BANANA tokens that must be on the contract to sell.
