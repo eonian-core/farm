@@ -1,40 +1,44 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.0;
 
-import "contracts/strategies/BaseStrategy.sol";
+import "contracts/strategies/CTokenBaseStrategy.sol";
 import "./SafeInitializableMock.sol";
 
-contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
+contract CTokenBaseStrategyMock is CTokenBaseStrategy, SafeInitializableMock {
+    event LiquidatePositionCalled(uint256 assets);
     event HarvestCalled();
     event HarvestAfterShutdownCalled();
     event AdjustPositionCalled(uint256 outstandingDebt);
-    event LiquidatePositionCalled(uint256 assets);
 
     uint256 public harvestProfit = 0;
     uint256 public harvestLoss = 0;
-    uint256 public override interestRatePerBlock;
-    
+
     uint256 private _liquidateAllPositionsReturn = 0;
     uint256 private _estimatedTotalAssets = 0;
 
     constructor(
         IStrategiesLender _lender,
         IERC20Upgradeable _asset,
+        ICToken _cToken,
+        IRainMaker _rainMaker,
+        IERC20Upgradeable _compToken,
         IOps _ops,
-        uint256 _minReportInterval,
-        bool _isPrepaid,
         AggregatorV3Interface __nativeTokenPriceFeed,
-        AggregatorV3Interface __assetPriceFeed
+        AggregatorV3Interface __assetPriceFeed,
+        uint256 _minReportInterval,
+        bool _isPrepaid
     ) initializer {
-        __BaseStrategy_init(
+        __CTokenBaseStrategy_init(
             _lender,
             _asset,
+            _cToken,
+            _rainMaker,
+            _compToken,
             _ops,
-            _minReportInterval,
-            _isPrepaid,
             __nativeTokenPriceFeed,
             __assetPriceFeed,
-            address(0)
+            _minReportInterval,
+            _isPrepaid
         );
     }
 
@@ -72,56 +76,24 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         return _estimatedTotalAssets;
     }
 
-    function emitHarvestCalled() public {
-        emit HarvestCalled();
+    function currentBananaBalance() public view returns (uint256) {
+        return super._currentBananaBalance();
     }
 
-    function emitHarvestAfterShutdownCalled() public {
-        emit HarvestAfterShutdownCalled();
-    }
-
-    function emitAjustPositionCalled(uint256 outstandingDebt) public {
-        emit AdjustPositionCalled(outstandingDebt);
+    function claimBanana() public {
+        return super._claimBanana();
     }
 
     function emitLiquidatePositionCalled(uint256 assets) public {
         emit LiquidatePositionCalled(assets);
     }
 
-    function emitDebtThresholdUpdated(uint256 debtThreshold) public {
-        emit DebtThresholdUpdated(debtThreshold);
+    function emitHarvestCalled() public {
+        emit HarvestCalled();
     }
 
-    function emitEstimatedWorkGasUpdated(uint256 estimatedWorkGas) public {
-        emit EstimatedWorkGasUpdated(estimatedWorkGas);
-    }
-
-    function emitUpdatedProfitFactor(uint256 profitFactor) public {
-        emit UpdatedProfitFactor(profitFactor);
-    }
-
-    function _harvestAfterShutdown(uint256 outstandingDebt)
-        internal
-        override
-        returns (
-            uint256 profit,
-            uint256 loss,
-            uint256 debtPayment
-        )
-    {
-        emitHarvestAfterShutdownCalled();
-        return super._harvestAfterShutdown(outstandingDebt);
-    }
-
-    function harvestAfterShutdown(uint256 outstandingDebt)
-        public
-        returns (
-            uint256 profit,
-            uint256 loss,
-            uint256 debtPayment
-        )
-    {
-        return _harvestAfterShutdown(outstandingDebt);
+    function emitAjustPositionCalled(uint256 outstandingDebt) public {
+        emit AdjustPositionCalled(outstandingDebt);
     }
 
     function _harvest(uint256 outstandingDebt)
@@ -166,4 +138,5 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     {
         return _liquidateAllPositionsReturn;
     }
+
 }

@@ -67,8 +67,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             ops,
             minReportInterval,
             isPrepaid,
-            address(nativeTokenPriceFeed),
-            address(assetPriceFeed)
+            nativeTokenPriceFeed,
+            assetPriceFeed
         );
         vault.addStrategy(address(baseStrategy), 10_000);
     }
@@ -90,8 +90,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             ops,
             minReportInterval,
             isPrepaid,
-            address(nativeTokenPriceFeed),
-            address(assetPriceFeed)
+            nativeTokenPriceFeed,
+            assetPriceFeed
         );
     }
 

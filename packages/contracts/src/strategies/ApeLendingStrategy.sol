@@ -4,6 +4,7 @@ pragma solidity ^0.8.19;
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 import {BaseStrategy} from "./BaseStrategy.sol";
 import {CTokenBaseStrategy, IOps} from "./CTokenBaseStrategy.sol";
@@ -70,8 +71,8 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
             IRainMaker(RAIN_MAKER), 
             IERC20Upgradeable(BANANA),
             IOps(_ops),
-            _nativeTokenPriceFeed,
-            _assetPriceFeed,
+            AggregatorV3Interface(_nativeTokenPriceFeed),
+            AggregatorV3Interface(_assetPriceFeed),
             _minReportInterval,
             _isPrepaid
         ); // ownable under the hood

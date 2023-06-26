@@ -85,8 +85,8 @@ abstract contract BaseStrategy is
         IOps _ops,
         uint256 _minReportInterval,
         bool _isPrepaid,
-        address __nativeTokenPriceFeed,
-        address __assetPriceFeed,
+        AggregatorV3Interface __nativeTokenPriceFeed,
+        AggregatorV3Interface __assetPriceFeed,
         address _healthCheck
     ) internal onlyInitializing {
         __HealthChecker_init(_healthCheck); // ownable under the hood
@@ -104,8 +104,8 @@ abstract contract BaseStrategy is
     function __BaseStrategy_init_unchained(
         IStrategiesLender _lender,
         IERC20Upgradeable _asset,
-        address __nativeTokenPriceFeed,
-        address __assetPriceFeed
+        AggregatorV3Interface __nativeTokenPriceFeed,
+        AggregatorV3Interface __assetPriceFeed
     ) internal onlyInitializing {
         lender = _lender;
         asset = _asset;
@@ -114,8 +114,8 @@ abstract contract BaseStrategy is
         estimatedWorkGas = 0;
         profitFactor = 100;
 
-        _nativeTokenPriceFeed = AggregatorV3Interface(__nativeTokenPriceFeed);
-        _assetPriceFeed = AggregatorV3Interface(__assetPriceFeed);
+        _nativeTokenPriceFeed = __nativeTokenPriceFeed;
+        _assetPriceFeed = __assetPriceFeed;
         if (_nativeTokenPriceFeed.decimals() != _assetPriceFeed.decimals()) {
             revert IncompatiblePriceFeeds();
         }

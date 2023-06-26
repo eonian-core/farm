@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 import {ICInterestRate} from "./protocols/ICInterestRate.sol";
 import {BaseStrategy, IOps} from "./BaseStrategy.sol";
@@ -42,8 +43,8 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         IRainMaker _rainMaker,
         IERC20Upgradeable _compToken,
         IOps _ops,
-        address _nativeTokenPriceFeed,
-        address _assetPriceFeed,
+        AggregatorV3Interface _nativeTokenPriceFeed,
+        AggregatorV3Interface _assetPriceFeed,
         uint256 _minReportInterval,
         bool _isPrepaid
     ) public onlyInitializing {

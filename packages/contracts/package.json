@@ -12,6 +12,7 @@
     "build": "hardhat compile && forge build",
     "test:hardhat": "hardhat test",
     "test:forge": "forge test -vvv",
+    "test:forge:watch": "forge test -vvv -w",
     "test": "yarn clean && yarn build && yarn test:hardhat && yarn test:forge",
     "docgen": "hardhat docgen",
     "postinstall": "forge install",
