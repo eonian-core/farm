@@ -30,24 +30,28 @@ type Vault @entity(immutable: false) @regularPolling {
   decimals: Int!
 
   """
-  The total amount of shares in vault. Adjusted for decimals.
+  The total amount of shares in vault.
+  @dev decimals adjustment from decumals feild
   """
-  totalSupply: BigDecimal!
+  totalSupply: BigInt!
 
   """
   Amount of tokens that all borrowers have taken
+  @dev decimals adjustment from token decumals feild
   """
   totalDebt: BigInt!
   
   """
-  BPS points used to make adjustments from BigInt to BigDecimals for Vault and Lender
+  BPS points used to make adjustments for percentage-like fields for Vault and Lender
+  @dev actually hold Int but Lender use uint256, to not cause overflow use BigInt
   """
   maxBps: BigInt!
 
   """
   Debt ratio for the Lender across all borrowers
+  @dev decimals adjustment from maxBps feild
   """
-  debtRatio: BigDecimal!
+  debtRatio: BigInt!
 
   """
   Last time a report occurred by any borrower
@@ -129,8 +133,14 @@ type InterestRate @entity(immutable: false) @regularPolling {
   " { Interest rate side }-{ Interest rate type }-{ Market ID } "
   id: ID!
 
-  " Interest rate in percentage APY. E.g. 5.21% should be stored as 5.21 "
-  rate: BigDecimal!
+  """
+  Interest rate per block scaled by 10^18
+  @dev decimals hardcoded on lower levels
+  """
+  perBlock: BigInt!
+
+  " The interest rate recalculated to APY terms per different time periods "
+  apy: RewardAPY!
 
   " Duration of the loan in days. Only applies to fixed term lending (e.g. Notional) "
   duration: Int
@@ -143,6 +153,27 @@ type InterestRate @entity(immutable: false) @regularPolling {
 
   " The type of interest rate (e.g. stable, fixed, variable, etc) "
   type: InterestRateType!
+}
+
+" The interest rate recalculated to APY terms per different time periods "
+type RewardAPY @entity(immutable: false) @regularPolling {
+  " { InterestRate.id } "
+  id: ID!
+
+  " Decimals of the APY values "
+  decimals: Int!
+
+  " Dayly interest rate, represented as percentage scaled by 10^decimals "
+  dayly: BigInt!
+
+  " Weekly interest rate, represented as percentage scaled by 10^decimals "
+  weekly: BigInt!
+
+  " Monthly interest rate, represented as percentage scaled by 10^decimals "
+  monthly: BigInt!
+
+  " Yearly interest rate, represented as percentage scaled by 10^decimals "
+  yearly: BigInt!
 }
 
 

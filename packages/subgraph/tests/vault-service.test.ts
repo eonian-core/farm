@@ -62,10 +62,10 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "symbol", "eonUSDT")
             assert.fieldEquals("Vault", vaultAddress, "version", "0.1.0")
             assert.fieldEquals("Vault", vaultAddress, "decimals", "18")
-            assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100")
+            assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "totalDebt", "50000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
-            assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.5")
+            assert.fieldEquals("Vault", vaultAddress, "debtRatio", "5000")
             assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
             assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
         
@@ -115,10 +115,10 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "symbol", "bbb")
             assert.fieldEquals("Vault", vaultAddress, "version", "0.2.0")
             assert.fieldEquals("Vault", vaultAddress, "decimals", "18") // shuldnt be updated
-            assert.fieldEquals("Vault", vaultAddress, "totalSupply", "200")
+            assert.fieldEquals("Vault", vaultAddress, "totalSupply", "200000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "totalDebt", "80000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
-            assert.fieldEquals("Vault", vaultAddress, "debtRatio", "0.9")
+            assert.fieldEquals("Vault", vaultAddress, "debtRatio", "9000")
             assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "234");
             assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
         

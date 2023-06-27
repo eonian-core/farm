@@ -585,6 +585,31 @@ export class Vault__borrowersDataResult {
   }
 }
 
+export class Vault__interestRatePerBlockResult {
+  value0: BigInt;
+  value1: BigInt;
+
+  constructor(value0: BigInt, value1: BigInt) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    return map;
+  }
+
+  getValue0(): BigInt {
+    return this.value0;
+  }
+
+  getValue1(): BigInt {
+    return this.value1;
+  }
+}
+
 export class Vault extends ethereum.SmartContract {
   static bind(address: Address): Vault {
     return new Vault("Vault", address);
@@ -971,6 +996,21 @@ export class Vault extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  fundAssets(): BigInt {
+    let result = super.call("fundAssets", "fundAssets():(uint256)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_fundAssets(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("fundAssets", "fundAssets():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   getQueueSize(): BigInt {
     let result = super.call("getQueueSize", "getQueueSize():(uint256)", []);
 
@@ -979,6 +1019,29 @@ export class Vault extends ethereum.SmartContract {
 
   try_getQueueSize(): ethereum.CallResult<BigInt> {
     let result = super.tryCall("getQueueSize", "getQueueSize():(uint256)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUtilisationRate(borrower: Address): BigInt {
+    let result = super.call(
+      "getUtilisationRate",
+      "getUtilisationRate(address):(uint256)",
+      [ethereum.Value.fromAddress(borrower)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getUtilisationRate(borrower: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUtilisationRate",
+      "getUtilisationRate(address):(uint256)",
+      [ethereum.Value.fromAddress(borrower)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -999,6 +1062,39 @@ export class Vault extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  interestRatePerBlock(): Vault__interestRatePerBlockResult {
+    let result = super.call(
+      "interestRatePerBlock",
+      "interestRatePerBlock():(uint256,uint256)",
+      []
+    );
+
+    return new Vault__interestRatePerBlockResult(
+      result[0].toBigInt(),
+      result[1].toBigInt()
+    );
+  }
+
+  try_interestRatePerBlock(): ethereum.CallResult<
+    Vault__interestRatePerBlockResult
+  > {
+    let result = super.tryCall(
+      "interestRatePerBlock",
+      "interestRatePerBlock():(uint256,uint256)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new Vault__interestRatePerBlockResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
+    );
   }
 
   isActivated(): boolean {
@@ -1115,25 +1211,6 @@ export class Vault extends ethereum.SmartContract {
     let result = super.tryCall(
       "lastReportTimestamp",
       "lastReportTimestamp():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  lendingAssets(): BigInt {
-    let result = super.call("lendingAssets", "lendingAssets():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_lendingAssets(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "lendingAssets",
-      "lendingAssets():(uint256)",
       []
     );
     if (result.reverted) {

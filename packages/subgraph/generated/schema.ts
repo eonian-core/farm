@@ -117,17 +117,17 @@ export class Vault extends Entity {
     this.set("decimals", Value.fromI32(value));
   }
 
-  get totalSupply(): BigDecimal {
+  get totalSupply(): BigInt {
     let value = this.get("totalSupply");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigDecimal();
+      return value.toBigInt();
     }
   }
 
-  set totalSupply(value: BigDecimal) {
-    this.set("totalSupply", Value.fromBigDecimal(value));
+  set totalSupply(value: BigInt) {
+    this.set("totalSupply", Value.fromBigInt(value));
   }
 
   get totalDebt(): BigInt {
@@ -156,17 +156,17 @@ export class Vault extends Entity {
     this.set("maxBps", Value.fromBigInt(value));
   }
 
-  get debtRatio(): BigDecimal {
+  get debtRatio(): BigInt {
     let value = this.get("debtRatio");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigDecimal();
+      return value.toBigInt();
     }
   }
 
-  set debtRatio(value: BigDecimal) {
-    this.set("debtRatio", Value.fromBigDecimal(value));
+  set debtRatio(value: BigInt) {
+    this.set("debtRatio", Value.fromBigInt(value));
   }
 
   get lastReportTimestamp(): BigInt {
@@ -344,17 +344,30 @@ export class InterestRate extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get rate(): BigDecimal {
-    let value = this.get("rate");
+  get perBlock(): BigInt {
+    let value = this.get("perBlock");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigDecimal();
+      return value.toBigInt();
     }
   }
 
-  set rate(value: BigDecimal) {
-    this.set("rate", Value.fromBigDecimal(value));
+  set perBlock(value: BigInt) {
+    this.set("perBlock", Value.fromBigInt(value));
+  }
+
+  get apy(): string {
+    let value = this.get("apy");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set apy(value: string) {
+    this.set("apy", Value.fromString(value));
   }
 
   get duration(): i32 {
@@ -411,6 +424,111 @@ export class InterestRate extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+}
+
+export class RewardAPY extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save RewardAPY entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type RewardAPY must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("RewardAPY", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): RewardAPY | null {
+    return changetype<RewardAPY | null>(store.get_in_block("RewardAPY", id));
+  }
+
+  static load(id: string): RewardAPY | null {
+    return changetype<RewardAPY | null>(store.get("RewardAPY", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get decimals(): i32 {
+    let value = this.get("decimals");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set decimals(value: i32) {
+    this.set("decimals", Value.fromI32(value));
+  }
+
+  get dayly(): BigInt {
+    let value = this.get("dayly");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set dayly(value: BigInt) {
+    this.set("dayly", Value.fromBigInt(value));
+  }
+
+  get weekly(): BigInt {
+    let value = this.get("weekly");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set weekly(value: BigInt) {
+    this.set("weekly", Value.fromBigInt(value));
+  }
+
+  get monthly(): BigInt {
+    let value = this.get("monthly");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set monthly(value: BigInt) {
+    this.set("monthly", Value.fromBigInt(value));
+  }
+
+  get yearly(): BigInt {
+    let value = this.get("yearly");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set yearly(value: BigInt) {
+    this.set("yearly", Value.fromBigInt(value));
   }
 }
 

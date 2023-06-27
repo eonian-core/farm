@@ -4,6 +4,7 @@ import { Vault as VaultEntity, Token } from "../generated/schema"
 import {ILogger, Logger, WithLogger} from './logger'
 import { TokenService } from "./token-service";
 import { Context } from "./Context";
+import { toId } from "./types/id";
 
 
 export class VaultService extends WithLogger {
@@ -49,31 +50,18 @@ export class VaultService extends WithLogger {
         this.logger.debug('vault entity state {} {} {}', [entity.address, entity.name, entity.symbol])
 
         // totalSupply / decimals = convert int to float
-        entity.totalSupply = toDecimalWithBasei32(vault.totalSupply(), entity.decimals)
+        entity.totalSupply = vault.totalSupply()
 
         entity.totalDebt = vault.totalDebt();
         entity.maxBps = vault.MAX_BPS();
-        entity.debtRatio = toDecimalWithBaseBigInt(vault.debtRatio(), entity.maxBps)
+        entity.debtRatio = vault.debtRatio()
         entity.lastReportTimestamp = vault.lastReportTimestamp();
+
+        entity.rates = [];
 
         entity.save()
     }
 }
 
-export function toId(address: Address): Bytes {
-    return Bytes.fromHexString(address.toHexString())
-}
 
-export function toDecimalWithBasei32(n: BigInt, decimals: i32): BigDecimal {
-    const value = n.toBigDecimal();
-    const base = BigInt.fromI64(10).pow(decimals as u8).toBigDecimal()
-
-    // BigInt / 10^decimals -> BigDecimal
-    return value.div(base)
-}
-
-export function toDecimalWithBaseBigInt(n: BigInt, decimals: BigInt): BigDecimal {
-    // BigInt / 10^decimals -> BigDecimal
-    return n.toBigDecimal().div(decimals.toBigDecimal())
-}
 
