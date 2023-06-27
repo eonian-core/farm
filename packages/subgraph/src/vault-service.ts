@@ -5,10 +5,17 @@ import {ILogger, Logger, WithLogger} from './logger'
 import { TokenService } from "./token-service";
 import { Context } from "./Context";
 import { toId } from "./types/id";
+import { IInterestRateService } from "./interest-rate/interest-rate-service";
+import { InterestRateSide, InterestRateType } from "./interest-rate/types";
 
 
 export class VaultService extends WithLogger {
-    constructor(ctx: Context, logger: ILogger, public tokenService: TokenService) {
+    constructor(
+        ctx: Context, 
+        logger: ILogger, 
+        public tokenService: TokenService, 
+        public interestService: IInterestRateService
+    ) {
         super(ctx, logger);
     }
 
@@ -57,7 +64,15 @@ export class VaultService extends WithLogger {
         entity.debtRatio = vault.debtRatio()
         entity.lastReportTimestamp = vault.lastReportTimestamp();
 
-        entity.rates = [];
+        const interestAndUtilisation = vault.interestRatePerBlock();
+        entity.totalUtilisationRate = interestAndUtilisation.getValue1();
+
+        entity.rates = [this.interestService.createOrUpdate(
+            contractAddress,
+            interestAndUtilisation.getValue0(), // interest rate
+            InterestRateSide.Lender,
+            InterestRateType.Variable // expect compund like interest rate
+        ).id];
 
         entity.save()
     }

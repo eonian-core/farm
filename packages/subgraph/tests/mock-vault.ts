@@ -28,6 +28,11 @@ export function mockVaultContract(vault: Address): void {
   mockViewFunction(vault, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(123))])
   // Mock the contract call for getting the asset
   mockViewFunction(vault, "asset", "address", [ethereum.Value.fromAddress(tokenAddress)])
+  // Mock the contract call for getting the interestRatePerBlock
+  mockViewFunction(vault, "interestRatePerBlock", "uint256,uint256", [
+    ethereum.Value.fromSignedBigInt(BigInt.fromI64(321)), 
+    ethereum.Value.fromSignedBigInt(BigInt.fromI64(555))
+  ])
   
   mockTokenContract(tokenAddress)
 }

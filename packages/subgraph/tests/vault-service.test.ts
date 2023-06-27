@@ -9,7 +9,7 @@ import {
     afterEach,
     beforeEach,
 } from "matchstick-as/assembly/index"
-import { Address, ethereum, BigInt } from "@graphprotocol/graph-ts"
+import { Address, ethereum, BigInt, Bytes } from "@graphprotocol/graph-ts"
 import { createUpgradedEvent } from "./vault-utils";
 import { VaultService } from "../src/vault-service";
 import { MockLogger, defaultAddress, mockViewFunction } from "./mocking";
@@ -17,10 +17,13 @@ import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
 import { mockTokenContract } from "./mock-token";
 import { tokenAddress, mockVaultContract, vaultAddress, tokenAddressStr } from "./mock-vault";
+import { IInterestRateService } from "../src/interest-rate/interest-rate-service";
+import { MockInterestRateService } from "./mock-interest-rate";
 
 let implementationAddress: Address
 let event: ethereum.Event
 let tokenService: TokenService
+let interestService: IInterestRateService
 let service: VaultService
 
 describe("VaultService", () => {
@@ -36,7 +39,9 @@ describe("VaultService", () => {
         const ctx = new Context(event, 'test')
         const logger = new MockLogger()
         tokenService = new TokenService(ctx, logger)
-        service = new VaultService(ctx, logger, tokenService)
+        interestService = new MockInterestRateService()
+        
+        service = new VaultService(ctx, logger, tokenService, interestService)
     })
 
     afterAll(() => {
@@ -68,6 +73,8 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "debtRatio", "5000")
             assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
             assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
+            assert.fieldEquals("Vault", vaultAddress, "totalUtilisationRate", "555");
+            assert.fieldEquals("Vault", vaultAddress, "rates", "[" + Bytes.fromHexString(vaultAddress + "-LENDER-VARIABLE-321").toHexString() + "]");
         
             assert.entityCount("Token", 2)
 
@@ -98,6 +105,11 @@ describe("VaultService", () => {
             mockViewFunction(defaultAddress, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(9000))])
             // Mock the contract call for getting the lastReportTimestamp
             mockViewFunction(defaultAddress, "lastReportTimestamp", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(234))])
+            // Mock the contract call for getting the interestRatePerBlock
+            mockViewFunction(defaultAddress, "interestRatePerBlock", "uint256,uint256", [
+                ethereum.Value.fromSignedBigInt(BigInt.fromI64(444)), 
+                ethereum.Value.fromSignedBigInt(BigInt.fromI64(666))
+            ])
 
             // Mock the contract call for getting the name
             mockViewFunction(tokenAddress, "name", "string", [ethereum.Value.fromString("qqq")])
@@ -121,7 +133,9 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "debtRatio", "9000")
             assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "234");
             assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
-        
+            assert.fieldEquals("Vault", vaultAddress, "totalUtilisationRate", "666");
+            assert.fieldEquals("Vault", vaultAddress, "rates", "[" + Bytes.fromHexString(vaultAddress + "-LENDER-VARIABLE-444").toHexString() + "]");
+
             assert.entityCount("Token", 2)
 
             // shuldnt be updated
