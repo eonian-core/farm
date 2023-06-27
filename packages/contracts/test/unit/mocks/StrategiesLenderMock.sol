@@ -7,6 +7,7 @@ import "./SafeInitializableMock.sol";
 contract StrategiesLenderMock is StrategiesLender, SafeInitializableMock {
 
     uint256 public beforeStrategyRegisteredCalled;
+    mapping(address => uint256) public utilizationRates;
 
     constructor(
     ) initializer {
@@ -97,5 +98,17 @@ contract StrategiesLenderMock is StrategiesLender, SafeInitializableMock {
         override
     {
         // do nothing
+    }
+
+    function setUtilisationRate(address strategy, uint256 _utilizationRate) external {
+        utilizationRates[strategy] = _utilizationRate;
+    }
+
+    function utilizationRate(address strategy) public view override returns (uint256) {
+        return utilizationRates[strategy];
+    }
+
+    function setTotalDebt(uint256 _totalDebt) external {
+        totalDebt = _totalDebt;
     }
 }

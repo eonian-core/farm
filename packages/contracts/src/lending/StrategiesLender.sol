@@ -194,7 +194,7 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
             return (0, 0);
         }
 
-        return (totalInterestRate / totalUtilisationRate, totalUtilisationRate);
+        return (totalInterestRate, totalUtilisationRate);
     }
 
     /// @inheritdoc Lender

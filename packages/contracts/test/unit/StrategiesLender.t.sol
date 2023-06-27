@@ -253,5 +253,44 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
         vm.prank(culprit);
         lender.reorderWithdrawalQueue(newOrder);
     }
+
+    function testInterestRatePerBlock(
+        uint256 totalDebt,
+        uint128 _utilisationRateA, uint128 _utilisationRateB, 
+        uint128 interestA, uint128 interestB
+    ) public {
+        uint256 utilisationRateA = _utilisationRateA;
+        uint256 utilisationRateB = _utilisationRateB;
+        vm.assume(utilisationRateA + utilisationRateB <= MAX_BPS);
+
+        lender.setTotalDebt(totalDebt);
+
+        lender.addStrategy(address(strategy), 0);
+        lender.setUtilisationRate(address(strategy), utilisationRateA);
+        strategy.setInterestRatePerBlock(interestA);
+
+        StrategyMock strategyB = new StrategyMock(
+            address(underlying),
+            address(lender)
+        );
+        lender.addStrategy(address(strategyB), 0);
+        lender.setUtilisationRate(address(strategyB), utilisationRateB);
+        strategyB.setInterestRatePerBlock(interestB);
+
+        (uint256 interest, uint256 utilisation) = lender.interestRatePerBlock();
+
+        uint256 expectedUtilisation = utilisationRateA + utilisationRateB;
+        if(expectedUtilisation == 0 || totalDebt == 0) {    
+            assertEq(interest, 0);
+            assertEq(utilisation, 0);
+        } else {
+            uint256 expectedInterest = 
+                utilisationRateA * uint256(interestA) / MAX_BPS +
+                utilisationRateB * uint256(interestB) / MAX_BPS;
+
+            assertEq(interest, expectedInterest);
+            assertEq(utilisation, expectedUtilisation);
+        }
+    }
     
 }

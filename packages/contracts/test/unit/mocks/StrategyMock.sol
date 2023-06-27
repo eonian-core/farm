@@ -34,4 +34,8 @@ contract StrategyMock is IStrategy {
         return "StrategyMock";
     }
 
+    function setInterestRatePerBlock(uint256 _interestRatePerBlock) external {
+        interestRatePerBlock = _interestRatePerBlock;
+    }
+
 }
