@@ -5,7 +5,7 @@ export default {
       "chainId": "11155111",
       "contracts": {
         "Vault": {
-          "address": "0x894E996d3a7D4160c6321dF8f15BF7cD9CF8ce9b",
+          "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
           "abi": [
             {
               "anonymous": false,
@@ -997,6 +997,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "fundAssets",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "getQueueSize",
               "outputs": [
                 {
@@ -1062,6 +1075,24 @@ export default {
               "name": "initialize",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "interestRatePerBlock",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -1155,19 +1186,6 @@ export default {
             {
               "inputs": [],
               "name": "lastReportTimestamp",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "lendingAssets",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -1962,6 +1980,25 @@ export default {
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
+              "name": "utilizationRate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "version",
               "outputs": [
@@ -2060,7 +2097,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0x741B00BbBB5905Dd7Bd1F6Db4E699d59D576f1Fd",
+          "address": "0xD2BA929B68B29521c6c2d7d94C75b9f0ed4F5625",
           "abi": [
             {
               "inputs": [
@@ -3055,6 +3092,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "fundAssets",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "getQueueSize",
               "outputs": [
                 {
@@ -3120,6 +3170,24 @@ export default {
               "name": "initialize",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "interestRatePerBlock",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -3213,19 +3281,6 @@ export default {
             {
               "inputs": [],
               "name": "lastReportTimestamp",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "lendingAssets",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -4020,6 +4075,25 @@ export default {
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
+              "name": "utilizationRate",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "version",
               "outputs": [
@@ -4102,7 +4176,7 @@ export default {
           ]
         },
         "Vault_Proxy": {
-          "address": "0x894E996d3a7D4160c6321dF8f15BF7cD9CF8ce9b",
+          "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
           "abi": [
             {
               "inputs": [
