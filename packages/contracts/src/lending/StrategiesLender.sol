@@ -68,7 +68,25 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
         __Lender_init();
     }
 
-   /// @notice Adds a new strategy to the vault.
+    /// @notice Switches the vault pause state.
+    /// @param shutdown a new vault pause state. If "true" is passed, the vault will be paused.
+    function setEmergencyShutdown(bool shutdown) external onlyOwner {
+        shutdown ? _pause() : _unpause();
+    }
+
+    /// @notice Returns the current debt of the strategy.
+    /// @param strategy the strategy address.
+    function strategyDebt(address strategy) external view returns (uint256) {
+        return borrowersData[strategy].debt;
+    }
+
+    /// @notice Returns the debt ratio of the strategy.
+    /// @param strategy the strategy address.
+    function strategyRatio(address strategy) external view returns (uint256) {
+        return borrowersData[strategy].debtRatio;
+    }
+
+    /// @notice Adds a new strategy to the vault.
     /// @param strategy a new strategy address.
     /// @param debtRatio a ratio that shows how much of the new strategy can take, relative to other strategies.
     function addStrategy(address strategy, uint256 debtRatio)

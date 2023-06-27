@@ -171,12 +171,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         managementFee = _managementFee;
     }
 
-    /// @notice Switches the vault pause state.
-    /// @param shutdown a new vault pause state. If "true" is passed, the vault will be paused.
-    function setEmergencyShutdown(bool shutdown) external onlyOwner {
-        shutdown ? _pause() : _unpause();
-    }
-
     /// @notice Changes the rate of release of locked-in profit.
     /// @param rate the rate of release of locked profit (percent per second scaled to 1e18).
     ///             The desire value of this parameter can be calculated as 1e18 / DurationInSeconds.
@@ -242,18 +236,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         lockedProfitBaseline = currentLockedProfit > loss
             ? currentLockedProfit - loss
             : 0;
-    }
-
-    /// @notice Returns the current debt of the strategy.
-    /// @param strategy the strategy address.
-    function strategyDebt(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debt;
-    }
-
-    /// @notice Returns the debt ratio of the strategy.
-    /// @param strategy the strategy address.
-    function strategyRatio(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debtRatio;
     }
 
     /// @inheritdoc Lender
