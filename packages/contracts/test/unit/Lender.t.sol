@@ -56,7 +56,7 @@ contract LenderTest is Test {
 
     function testOutstandingDebtCalculation(
         uint192 lenderBalance,
-        uint192 borrowerDebt,
+        uint128 borrowerDebt,
         uint64 borrowerDebtRatio,
         bool addSecondBorrower
     ) public {
@@ -67,16 +67,23 @@ contract LenderTest is Test {
         lenderMock.addBorrower(borrowerA, borrowerDebtRatio);
         lenderMock.setBorrowerDept(borrowerA, borrowerDebt);
 
+        uint256 totalBorrowersDept = borrowerDebt;
+
         if (addSecondBorrower) {
             lenderMock.addBorrower(borrowerB, MAX_BPS - borrowerDebtRatio);
             lenderMock.setBorrowerDept(borrowerB, borrowerDebt);
+            totalBorrowersDept = uint256(borrowerDebt) * 2;
         }
 
-        uint256 lenderFunds = uint256(borrowerDebt) + lenderBalance;
+        uint256 lenderFunds = totalBorrowersDept + lenderBalance;
         uint256 borrowerDebtLimit = (borrowerDebtRatio * lenderFunds) / MAX_BPS;
         uint256 expected = borrowerDebtLimit >= borrowerDebt
             ? 0
             : borrowerDebt - borrowerDebtLimit;
+        
+        _logBorrower(borrowerA);
+        _logBorrower(borrowerB);
+        _logLender();
 
         uint256 outstandingDebt = lenderMock.outstandingDebt(borrowerA);
         assertEq(outstandingDebt, expected);
@@ -320,6 +327,64 @@ contract LenderTest is Test {
         );
 
         lenderMock.addBorrower(borrowerB, MAX_BPS);
+    }
+
+    function testUtilizationRate(
+        uint96 _balance, 
+        uint256 borrowerARatio, uint256 borrowerBRatio, 
+        uint96 _borrowerADebt, uint96 _borrowerBDebt
+    )
+        public
+    {
+        // To prevent overflow exceptions
+        vm.assume(borrowerARatio <= MAX_BPS);
+        vm.assume(borrowerBRatio <= MAX_BPS);
+
+        // Let's make a constraint to divide the whole ratio between two borrowers
+        vm.assume(borrowerARatio + borrowerBRatio <= MAX_BPS);
+
+        // Limit total balance + debt A + debt B to prevent overflow
+        uint256 balance = _balance;
+        uint256 borrowerADebt = _borrowerADebt;
+        uint256 borrowerBDebt = _borrowerBDebt;
+
+        // Ensure lender doesn't have any given debt
+        assertEq(lenderMock.totalDebt(), 0);
+        assertEq(lenderMock.debtRatio(), 0);
+
+        // Adding the first borrower
+        lenderMock.addBorrower(borrowerA, borrowerARatio);
+        assertEq(lenderMock.borrowerDebtRatio(borrowerA), borrowerARatio);
+        assertEq(lenderMock.debtRatio(), borrowerARatio);
+
+        // Adding the second borrower
+        lenderMock.addBorrower(borrowerB, borrowerBRatio);
+        assertEq(lenderMock.borrowerDebtRatio(borrowerB), borrowerBRatio);
+        assertEq(lenderMock.debtRatio(), borrowerARatio + borrowerBRatio);
+
+        // Check if the total debt is still 0 because we just registered the borrowers and haven't issued any loans yet.
+        assertEq(lenderMock.totalDebt(), 0);
+
+        lenderMock.setBalance(balance);
+        lenderMock.setBorrowerDept(borrowerA, borrowerADebt);
+        lenderMock.setBorrowerDept(borrowerB, borrowerBDebt);
+
+        assertEq(lenderMock.totalDebt(), borrowerADebt + borrowerBDebt);
+        assertEq(lenderMock.fundAssets(), balance + borrowerADebt + borrowerBDebt);
+
+        if(balance + borrowerADebt + borrowerBDebt == 0) {
+            assertEq(lenderMock.utilizationRate(borrowerA), 0);
+            assertEq(lenderMock.utilizationRate(borrowerB), 0);
+        } else {
+            assertEq(
+                lenderMock.utilizationRate(borrowerA),
+                (borrowerADebt) * MAX_BPS / (balance + borrowerADebt + borrowerBDebt)
+            );
+            assertEq(
+                lenderMock.utilizationRate(borrowerB),
+                (borrowerBDebt) * MAX_BPS / (balance + borrowerADebt + borrowerBDebt)
+            );
+        }
     }
 
     // Positive and negative reports should behave the same if a value of 0 is passed

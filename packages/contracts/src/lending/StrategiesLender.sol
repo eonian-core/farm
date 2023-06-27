@@ -181,7 +181,7 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
         for (uint256 i = 0; i < withdrawalQueue.length; i++) {
             IStrategy strategy = IStrategy(withdrawalQueue[i]);
 
-            uint256 utilisationRate = getUtilisationRate(address(strategy)); // in BPS
+            uint256 utilisationRate = utilizationRate(address(strategy)); // in BPS
             totalUtilisationRate += utilisationRate;
             
             // interest rate scaled by 1e18
