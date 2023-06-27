@@ -1091,11 +1091,6 @@ export default {
                   "type": "address[]"
                 },
                 {
-                  "internalType": "address",
-                  "name": "_founders",
-                  "type": "address"
-                },
-                {
                   "internalType": "uint256",
                   "name": "_foundersRewardRate",
                   "type": "uint256"
@@ -2160,7 +2155,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xb693ae5F2CF753463fb02aa07806649AB5eFa0cA",
+          "address": "0x20C4877686a0145D12036568B11425EeA10885eB",
           "abi": [
             {
               "inputs": [
@@ -3247,11 +3242,6 @@ export default {
                   "internalType": "address[]",
                   "name": "_defaultOperators",
                   "type": "address[]"
-                },
-                {
-                  "internalType": "address",
-                  "name": "_founders",
-                  "type": "address"
                 },
                 {
                   "internalType": "uint256",
