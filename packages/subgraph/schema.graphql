@@ -166,7 +166,7 @@ type RewardAPY @entity(immutable: false) @regularPolling {
   " { InterestRate.id } "
   id: Bytes!
 
-  " Decimals of the APY values, mainly BPS "
+  " Decimals of the APY values, mainly "
   decimals: Int!
 
   " Dayly interest rate, represented as percentage scaled by 10^decimals "

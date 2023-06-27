@@ -8,7 +8,7 @@ dataSources:
     name: Vault
     network: sepolia
     source:
-      address: "0x894E996d3a7D4160c6321dF8f15BF7cD9CF8ce9b"
+      address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
       abi: Vault
       startBlock: 3726610
     mapping:
