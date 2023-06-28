@@ -1,1 +1,2 @@
-export * from './humanize';
+export * from "./humanize";
+export * from "./web3";

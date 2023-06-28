@@ -49,7 +49,7 @@ const Form: React.FC<Props> = ({ vault }) => {
   }, [chains]);
 
   const [value, displayValue, handleValueChange] =
-    useNumberInputValue(walletBalance);
+    useNumberInputValue(walletBalance, vault.underlyingAsset.decimals);
 
   const handleSubmit = React.useCallback(
     async (formAction: FormAction) => {

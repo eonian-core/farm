@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { Vault } from "../../../api";
 import { createVaultActionToast } from "../../../earn/[symbol]/components";
+import { toBigIntWithDecimals } from "../../../shared";
 import { RootState } from "../../store";
 import { validateAndShowToast } from "./validation";
 
@@ -59,9 +60,9 @@ export const startVaultAction = createAsyncThunk(
   "vaultAction/executeAction",
   async (payload: ExecuteActionPayload, { getState }) => {
     const state = getState() as RootState;
-    const { amount, action } = payload;
+    const { amount, action, vault } = payload;
     const { assetAllowanceBN } = state.vaultUser;
-
+    
     validateAndShowToast(payload, state);
 
     let completedSteps: FormActionStep[] = [];
@@ -69,7 +70,7 @@ export const startVaultAction = createAsyncThunk(
 
     if (action === FormAction.DEPOSIT) {
       const allowanceBN = BigInt(assetAllowanceBN);
-      const amountBN = BigInt(amount);
+      const amountBN = toBigIntWithDecimals(amount, vault.underlyingAsset.decimals);
       if (allowanceBN >= amountBN) {
         completedSteps = [FormActionStep.APPROVAL];
         stepsSkipped++;
