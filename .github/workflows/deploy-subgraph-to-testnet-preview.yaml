@@ -62,6 +62,11 @@ jobs:
           cd packages/subgraph
           yarn codegen
 
+      - name: Generate subgraph environments configurations
+        run: |-
+          cd packages/subgraph
+          yarn gen:configs
+
       - name: Build subgraph
         run: |-
           cd packages/subgraph
@@ -74,7 +79,7 @@ jobs:
         # Use warapper for yarn deploy command to highlight step failure
         run: |-
           cd packages/subgraph
-          output=$(yarn graph deploy --studio eonian-sepolia-testnet subgraph.yaml --version-label=$VERSION --deploy-key $SUBGRAPH_DEPLOY_KEY 2>&1); echo "$output"; if echo "$output" | grep -q "UNCAUGHT EXCEPTION"; then exit 1; fi
+          output=$(yarn graph deploy --studio eonian-sepolia-testnet ./deploy/environments/eonian-sepolia-testnet.yaml --version-label=$VERSION --deploy-key $SUBGRAPH_DEPLOY_KEY 2>&1); echo "$output"; if echo "$output" | grep -q "UNCAUGHT EXCEPTION"; then exit 1; fi
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9

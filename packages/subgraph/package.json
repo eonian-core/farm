@@ -6,6 +6,7 @@
     "dev": "graph codegen --watch",
     "build": "graph build",
     "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet ./deploy/environments/eonian-sepolia-testnet.yaml --version-label=$VERSION",
+    "deploy:bsc-dev": "graph deploy --product hosted-service eonian-core/eonian-bsc-development ./deploy/environments/eonian-bsc-development.yaml",
     "deploy": "yarn build && yarn deploy:studio",
     "deploy:node": "graph deploy --node https://api.studio.thegraph.com/deploy/ eonian-sepolia-testnet",
     "create:local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
