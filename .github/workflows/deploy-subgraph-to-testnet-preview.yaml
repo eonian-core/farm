@@ -43,6 +43,11 @@ jobs:
           bump: ${{ steps.bump.outputs.match }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Save new version in image package.json
+        run: |-
+          cd packages/subgraph
+          sed -i -E 's/"version": "(.*)",/"version": "${{ steps.next_version.outputs.version }}",/g' package.json
+
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
@@ -64,9 +69,16 @@ jobs:
 
       - name: Deploy subgraph
         env:
+          VERSION: ${{ steps.next_version.outputs.version }}
           SUBGRAPH_DEPLOY_KEY: ${{ secrets.SUBGRAPH_PREVIEW_DEPLOY_KEY }}
+        # Use warapper for yarn deploy command to highlight step failure
         run: |-
           cd packages/subgraph
-          yarn graph deploy --studio eonian-sepolia-testnet subgraph.yaml --version-label=$VERSION --deploy-key $SUBGRAPH_DEPLOY_KEY
+          output=$(yarn graph deploy --studio eonian-sepolia-testnet subgraph.yaml --version-label=$VERSION --deploy-key $SUBGRAPH_DEPLOY_KEY 2>&1); echo "$output"; if echo "$output" | grep -q "UNCAUGHT EXCEPTION"; then exit 1; fi
 
-        
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with: 
+          default_author: github_actions
+          message: 'Deployed contracts to Preview / Sepolia Testnet'
+          fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
