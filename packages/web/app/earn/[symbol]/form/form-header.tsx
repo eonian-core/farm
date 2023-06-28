@@ -5,7 +5,7 @@ import { Card, Button, PressEvent } from "@nextui-org/react";
 
 import styles from "./form-header.module.scss";
 import clsx from "clsx";
-import { FormAction } from "../../../store/slices/vaultActionSlice/vaultActionSlice";
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 
 interface Props {
   currentAction: FormAction;

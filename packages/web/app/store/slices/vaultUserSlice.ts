@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Multicall, MulticallRequest } from "../../shared/web3/multicall";
 import VaultABI from "../../abi/Vault.json";
 import ERC20ABI from "../../abi/ERC20.json";
-import { denominateTokenValue } from "../../shared/humanize";
 
 interface FetchParams {
   walletAddress: string;
@@ -39,23 +38,21 @@ export const fetchVaultUserData = createAsyncThunk(
 );
 
 interface VaultUserSlice {
-  walletBalance: number;
   walletBalanceBN: string;
-  vaultBalance: number;
   vaultBalanceBN: string;
-  assetAllowance: number;
   assetAllowanceBN: string;
+  vaultDecimals: number;
+  assetDecimals: number;
   isLoading: boolean;
   lastRequestForWallet: string;
 }
 
 const initialState: VaultUserSlice = {
-  walletBalance: 0,
   walletBalanceBN: "0",
-  vaultBalance: 0,
   vaultBalanceBN: "0",
-  assetAllowance: 0,
   assetAllowanceBN: "0",
+  vaultDecimals: 0,
+  assetDecimals: 0,
   isLoading: true,
   lastRequestForWallet: "",
 };
@@ -83,17 +80,12 @@ const vaultUserSlice = createSlice({
           assetAllowance,
         ] = data;
 
+        state.assetAllowanceBN = assetAllowance;
         state.walletBalanceBN = assetBalance;
-        state.walletBalance = denominateTokenValue(assetBalance, assetDecimals);
+        state.assetDecimals = parseInt(assetDecimals);
 
         state.vaultBalanceBN = vaultBalance;
-        state.vaultBalance = denominateTokenValue(vaultBalance, vaultDecimals);
-
-        state.assetAllowanceBN = assetAllowance;
-        state.assetAllowance = denominateTokenValue(
-          assetAllowance,
-          assetDecimals
-        );
+        state.vaultDecimals = parseInt(vaultDecimals);
 
         state.lastRequestForWallet = requestForWallet;
       })

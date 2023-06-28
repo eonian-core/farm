@@ -1,11 +1,14 @@
 import React from "react";
-import { toBigIntWithDecimals } from "../../../shared";
+import { toBigIntWithDecimals, toNumberFromDecimals } from "../../../shared";
 
 export const useNumberInputValue = (
-  defaultValue: number,
+  defaultValue: bigint,
   decimals: number
-): [number, string, (value: number | string) => void] => {
-  const [value, setValue] = React.useState(defaultValue);
+): [number, string, bigint, (value: number | string) => void] => {
+  const [bigValue, setBigValue] = React.useState(defaultValue);
+  const [value, setValue] = React.useState(
+    toNumberFromDecimals(bigValue, decimals)
+  );
   const [displayValue, setDisplayValue] = React.useState(value + "");
 
   const handleValueChange = React.useCallback(
@@ -16,16 +19,16 @@ export const useNumberInputValue = (
         return;
       }
 
-      // Perhaps later we can consider to use some big decimal library for this.
       const numberValue = parseFloat(newValue);
-      const safeValue = isNaN(numberValue) ? 0 : numberValue;
+      const isNumber = !isNaN(numberValue);
       setDisplayValue(newValue);
-      setValue(safeValue);
+      setValue(isNumber ? numberValue : 0);
+      setBigValue(isNumber ? toBigIntWithDecimals(newValue, decimals) : 0n);
     },
-    [setValue, setDisplayValue, decimals]
+    [decimals]
   );
 
-  return [value, displayValue, handleValueChange];
+  return [value, displayValue, bigValue, handleValueChange];
 };
 
 function normalizeValue(value: string | number): string {
@@ -66,7 +69,7 @@ function validateRange(value: string, decimals: number) {
 }
 
 /**
- * Since the ending zeros in the fractional part are ignored by the range validator, 
+ * Since the ending zeros in the fractional part are ignored by the range validator,
  * the length of the value can be inflated.
  * E.g. "0.01" number is invalid (if decimals = 1), but "0.01000" is considered as a valid number.
  */

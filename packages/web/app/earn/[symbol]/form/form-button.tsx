@@ -6,7 +6,7 @@ import { Button, ButtonProps, Loading } from "@nextui-org/react";
 import styles from "./form-button.module.scss";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { Chain, WalletStatus } from "../../../providers/wallet/wrappers/types";
-import { FormAction } from "../../../store/slices/vaultActionSlice/vaultActionSlice";
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 
 interface Props extends Omit<ButtonProps, "onSubmit"> {
   formAction: FormAction;

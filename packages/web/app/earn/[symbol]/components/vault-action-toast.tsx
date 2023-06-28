@@ -8,11 +8,12 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
   FormAction,
   FormActionStep,
-  reset as resetVaultActionState,
-} from "../../../store/slices/vaultActionSlice/vaultActionSlice";
+  resetVaultAction,
+} from "../../../store/slices/vaultActionSlice";
 
 import styles from "./vault-action-toast.module.scss";
 import { getActiveStepSelector } from "../../../store";
+import { toNumberFromDecimals } from "../../../shared";
 
 const VaultActionToast = () => {
   const { wallet } = useWalletWrapperContext();
@@ -51,7 +52,7 @@ function useToastCloseCleanup() {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     return () => {
-      dispatch(resetVaultActionState());
+      dispatch(resetVaultAction());
     };
   }, [dispatch]);
 }
@@ -66,11 +67,13 @@ function useTransactionCounters(): [total: number, confirmed: number] {
 }
 
 function useTransactionDescription(): string | undefined {
-  const { ongoingAction, amount, assetSymbol } = useAppSelector(
+  const { ongoingAction, amountBN, assetSymbol } = useAppSelector(
     (state) => state.vaultAction
   );
+  const { assetDecimals } = useAppSelector((state) => state.vaultUser);
   const activeStep = useAppSelector(getActiveStepSelector);
 
+  const amount = toNumberFromDecimals(amountBN, assetDecimals);
   return React.useMemo(() => {
     switch (activeStep) {
       case FormActionStep.APPROVAL:

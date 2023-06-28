@@ -11,7 +11,7 @@ import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 import styles from "./vault-info-card.module.scss";
 import { calculateVaultAPY } from "../../../shared/projections/calculate-apy";
 import clsx from "clsx";
-import { FormAction } from "../../../store/slices/vaultActionSlice/vaultActionSlice";
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 
 interface Props {
   value: number;

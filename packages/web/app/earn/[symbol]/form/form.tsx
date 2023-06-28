@@ -12,11 +12,16 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/types";
 import { PercentButtonGroup, VaultInfoCard } from "../components";
-import { useVaultUserInfo, useNumberInputValue } from "../hooks";
+import {
+  useVaultUserInfo,
+  useNumberInputValue,
+  useExecuteTransaction,
+} from "../hooks";
 import {
   FormAction,
   startVaultAction,
-} from "../../../store/slices/vaultActionSlice/vaultActionSlice";
+} from "../../../store/slices/vaultActionSlice";
+import { getBalancesSelector } from "../../../store";
 
 interface Props {
   vault: Vault;
@@ -27,12 +32,12 @@ const Form: React.FC<Props> = ({ vault }) => {
 
   useVaultUserInfo(vault, { autoUpdateInterval: 5000 });
 
-  const { walletBalance, vaultBalance, isLoading, lastRequestForWallet } =
-    useAppSelector((state) => state.vaultUser);
+  const { isLoading, lastRequestForWallet } = useAppSelector(
+    (state) => state.vaultUser
+  );
+  const { walletBalance, vaultBalance } = useAppSelector(getBalancesSelector);
 
   const hasPendingTransactions = useHasPendingTransactions();
-
-  const dispatch = useAppDispatch();
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
   const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
@@ -48,20 +53,16 @@ const Form: React.FC<Props> = ({ vault }) => {
     return chains.find((chain) => chain.isDefault)!;
   }, [chains]);
 
-  const [value, displayValue, handleValueChange] =
-    useNumberInputValue(walletBalance, vault.underlyingAsset.decimals);
+  const [value, displayValue, bigValue, handleValueChange] =
+    useInputValue(vault);
+
+  const executeTransaction = useExecuteTransaction();
 
   const handleSubmit = React.useCallback(
     async (formAction: FormAction) => {
-      await dispatch(
-        startVaultAction({
-          action: formAction,
-          vault,
-          amount: value,
-        })
-      );
+      await executeTransaction(formAction, vault, bigValue);
     },
-    [dispatch, value, vault]
+    [executeTransaction, vault, bigValue]
   );
 
   return (
@@ -114,6 +115,11 @@ const Form: React.FC<Props> = ({ vault }) => {
     </div>
   );
 };
+
+function useInputValue({ underlyingAsset }: Vault) {
+  const { walletBalanceBN } = useAppSelector((state) => state.vaultUser);
+  return useNumberInputValue(BigInt(walletBalanceBN), underlyingAsset.decimals);
+}
 
 function useHasPendingTransactions() {
   const { ongoingAction } = useAppSelector((state) => state.vaultAction);
