@@ -3,7 +3,7 @@ description: The subgraph of Eonian yield aggregator protocol for Binance Smart
   Chain development environment
 repository: https://github.com/eonian-core/farm
 schema:
-  file: ./schema.graphql
+  file: ../../schema.graphql
 dataSources:
   - kind: ethereum
     name: Vault
@@ -42,9 +42,9 @@ dataSources:
         - Withdraw
       abis:
         - name: Vault
-          file: ./abis/VaultImplementation.json
+          file: ../../abis/VaultImplementation.json
         - name: ERC20
-          file: ./abis/ERC20.json
+          file: ../../abis/ERC20.json
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged
@@ -91,4 +91,4 @@ dataSources:
           handler: handleUpgraded
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/event-handlers.ts
+      file: ../../src/event-handlers.ts

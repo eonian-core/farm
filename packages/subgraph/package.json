@@ -1,11 +1,11 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "scripts": {
     "gen:code": "graph codegen",
     "dev": "graph codegen --watch",
     "build": "graph build",
-    "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet --version-label=$VERSION",
+    "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet ./deploy/environments/eonian-sepolia-testnet.yaml --version-label=$VERSION",
     "deploy": "yarn build && yarn deploy:studio",
     "deploy:node": "graph deploy --node https://api.studio.thegraph.com/deploy/ eonian-sepolia-testnet",
     "create:local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
