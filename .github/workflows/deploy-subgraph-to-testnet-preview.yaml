@@ -1,0 +1,72 @@
+name: Deploy Subgraph to Testnet Preview
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - labeled
+      - unlabeled
+    paths:
+      - "packages/subgraph/**"
+
+jobs:
+  deploy: 
+    name: Deploy Subgraph
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Resolve bump label
+        id: bump
+        uses: zwaldowski/match-label-action@v1
+        with:
+          allowed: major,minor,patch   
+
+      - name: Read version from package.json and set version variables
+        run: |
+          VER=$(grep version packages/subgraph/package.json | cut -d ':' -f 2 | cut -d '"' -f 2)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+
+      - name: Generate new version
+        id: next_version
+        uses: leovs09/semver-release-action@v3
+        with:
+          version: ${{ env.VERSION }}
+          bump: ${{ steps.bump.outputs.match }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+      
+      - name: Generate subgraph schema code
+        run: |-
+          cd packages/subgraph
+          yarn codegen
+
+      - name: Build subgraph
+        run: |-
+          cd packages/subgraph
+          yarn build
+
+      - name: Deploy subgraph
+        env:
+          SUBGRAPH_DEPLOY_KEY: ${{ secrets.SUBGRAPH_PREVIEW_DEPLOY_KEY }}
+        run: |-
+          cd packages/subgraph
+          yarn graph deploy --studio eonian-sepolia-testnet subgraph.yaml --version-label=$VERSION --deploy-key $SUBGRAPH_DEPLOY_KEY
+
+        
