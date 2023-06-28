@@ -1,0 +1,11 @@
+files:
+  - output: output1.yaml
+    data:
+      name: John Doe
+      age: 30
+      city: New York
+  - output: output2.yaml
+    data:
+      name: Jane Doe
+      age: 28
+      city: Los Angeles
