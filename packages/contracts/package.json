@@ -72,8 +72,8 @@
   "dependencies": {
     "@chainlink/contracts": "^0.6.1",
     "@nomicfoundation/hardhat-foundry": "^1.0.1",
-    "@openzeppelin/contracts": "^4.9.1",
-    "@openzeppelin/contracts-upgradeable": "^4.9.1",
+    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "@types/sinon": "^10.0.15",
     "lodash": "^4.17.21",
     "sinon": "^15.1.0",
