@@ -1,16 +1,16 @@
 specVersion: 0.0.5
-description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+description: {{ description }}
 repository: https://github.com/eonian-core/farm
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: Vault
-    network: sepolia
+    network: {{ network }}
     source:
-      address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
+      address: {{{ vault.address }}}
       abi: Vault
-      startBlock: 3726610
+      startBlock: {{ vault.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

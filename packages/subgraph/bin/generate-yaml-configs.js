@@ -32,8 +32,17 @@ config.files.forEach(item => {
   // Render the template with data
   const renderedTemplate = templateScript(item.data);
 
+  // We need to wrap the output in single quotes to ensure
+  // it is treated as a string in the YAML file.
+  const modifiedTemplate = renderedTemplate.split('\n').map(line => {
+    if (line.includes('0x')) {
+      return `${line.substring(0, line.indexOf(':') + 1)} '${line.substring(line.indexOf(':') + 1).trim()}'`;
+    }
+    return line;
+  }).join('\n');
+
   // Parse the rendered template to an object
-  const object = YAML.parse(renderedTemplate);
+  const object = YAML.parse(modifiedTemplate);
 
   // Stringify and write the object to a YAML file
   const yamlContent = YAML.stringify(object);

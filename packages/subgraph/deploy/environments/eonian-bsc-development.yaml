@@ -1,16 +1,17 @@
 specVersion: 0.0.5
-description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+description: The subgraph of Eonian yield aggregator protocol for Binance Smart
+  Chain development environment
 repository: https://github.com/eonian-core/farm
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: Vault
-    network: sepolia
+    network: bsc
     source:
-      address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
+      address: "0xa3923Fa94c7332e2561E88290B884419dca9E23C"
       abi: Vault
-      startBlock: 3726610
+      startBlock: 28907512
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
