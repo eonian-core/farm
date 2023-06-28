@@ -21,7 +21,7 @@ interface WalletWrapperContextValue {
   status: WalletStatus;
   chain: Chain | null;
   chains: Chain[];
-  provider: ethers.Provider | null;
+  provider: ethers.BrowserProvider | null;
   connect: () => Promise<void>;
   disconnect: () => Promise<void>;
   setCurrentChain: (chainId: ChainId) => Promise<void>;

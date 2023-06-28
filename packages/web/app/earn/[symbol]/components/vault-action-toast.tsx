@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { toast } from "react-toastify";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
@@ -15,10 +14,8 @@ import styles from "./vault-action-toast.module.scss";
 import { getActiveStepSelector } from "../../../store";
 import { toNumberFromDecimals } from "../../../shared";
 
-const VaultActionToast = () => {
+export const VaultActionToast = () => {
   const { wallet } = useWalletWrapperContext();
-
-  useToastCloseCleanup();
 
   const [total, confirmed] = useTransactionCounters();
 
@@ -44,18 +41,6 @@ const VaultActionToast = () => {
     </div>
   );
 };
-
-/**
- * Clears the store data after closing the toast.
- */
-function useToastCloseCleanup() {
-  const dispatch = useAppDispatch();
-  React.useEffect(() => {
-    return () => {
-      dispatch(resetVaultAction());
-    };
-  }, [dispatch]);
-}
 
 function useTransactionCounters(): [total: number, confirmed: number] {
   const { steps, completedSteps, stepsSkipped } = useAppSelector(
@@ -90,10 +75,6 @@ function useTransactionDescription(): string | undefined {
   }, [activeStep, ongoingAction, amount, assetSymbol]);
 }
 
-export const createVaultActionToast = (): number | string => {
-  return toast(<VaultActionToast />, {
-    autoClose: false,
-    closeOnClick: false,
-    toastId: "vault-action-toast",
-  });
+export const createVaultActionToast = () => {
+  return <VaultActionToast />;
 };

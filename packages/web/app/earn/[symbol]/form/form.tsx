@@ -17,10 +17,7 @@ import {
   useNumberInputValue,
   useExecuteTransaction,
 } from "../hooks";
-import {
-  FormAction,
-  startVaultAction,
-} from "../../../store/slices/vaultActionSlice";
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 import { getBalancesSelector } from "../../../store";
 
 interface Props {

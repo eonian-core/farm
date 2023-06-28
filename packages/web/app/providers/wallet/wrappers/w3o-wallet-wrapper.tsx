@@ -95,7 +95,7 @@ export const getCurrentChain = (
  * Returns ethers provider.
  * @param provider - The web3-onboard's provider.
  */
-export const getProvider = (provider: EIP1193Provider): ethers.Provider => {
+export const getProvider = (provider: EIP1193Provider): ethers.BrowserProvider => {
   return new ethers.BrowserProvider(provider, "any");
 };
 

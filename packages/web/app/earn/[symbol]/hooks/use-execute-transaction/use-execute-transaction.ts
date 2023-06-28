@@ -1,10 +1,14 @@
+import { ethers, isError } from "ethers";
 import React from "react";
 import { Vault } from "../../../../api";
+import { useWalletWrapperContext } from "../../../../providers/wallet/wallet-wrapper-provider";
+import { approveERC20 } from "../../../../shared";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import {
+  prepareVaultAction,
   FormAction,
   resetVaultAction,
-  startVaultAction,
+  failVaultAction,
 } from "../../../../store/slices/vaultActionSlice";
 import { validateAndShowToast } from "./validation";
 
@@ -22,7 +26,7 @@ export function useExecuteTransaction() {
       return dispatch(resetVaultAction());
     }
 
-    dispatch(startVaultAction({ action, vault, amount }));
+    dispatch(prepareVaultAction({ action, vault, amount }));
 
     switch (action) {
       case FormAction.DEPOSIT:
@@ -41,8 +45,19 @@ export function useExecuteTransaction() {
 }
 
 function useDepositTransaction() {
-  const execute = async (vault: Vault, amount: bigint) => {};
-  return React.useCallback(execute, []);
+  const send = useWriteTransactionSender();
+
+  const execute = async (vault: Vault, amount: bigint) => {
+    await send(async (signer) => {
+      return await approveERC20(signer, {
+        tokenAddress: vault.underlyingAsset.address,
+        spenderAddress: vault.address,
+        amount,
+      });
+    });
+  };
+
+  return React.useCallback(execute, [send]);
 }
 
 function useWithdrawTransaction() {
@@ -65,4 +80,23 @@ function useValidateTransaction() {
     },
     [walletBalanceBN, assetDecimals]
   );
+}
+
+function useWriteTransactionSender() {
+  const { provider } = useWalletWrapperContext();
+  const dispatch = useAppDispatch();
+
+  const send = async <T>(
+    transactionBuilder: (signer: ethers.JsonRpcSigner) => Promise<T>
+  ): Promise<T | null> => {
+    try {
+      const signer = await provider!.getSigner();
+      return await transactionBuilder(signer);
+    } catch (error) {
+      dispatch(failVaultAction(error as Error));
+      return null;
+    }
+  };
+
+  return React.useCallback(send, [provider, dispatch]);
 }
