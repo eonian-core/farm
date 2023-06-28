@@ -1,12 +1,12 @@
 "use client";
 
-import { FormElement, Input, Loading } from "@nextui-org/react";
+import { FormElement, Input, InputProps, Loading } from "@nextui-org/react";
 import React from "react";
 
 import styles from "./form-input.module.scss";
 import IconCoin from "../../../components/icons/icon-coin";
 
-interface Props {
+interface Props extends Partial<Omit<InputProps, "value" | "onChange">> {
   value: string;
   balance: number;
   assetSymbol: string;
@@ -20,6 +20,8 @@ const FormInput: React.FC<Props> = ({
   value,
   onChange,
   isLoading,
+  disabled,
+  ...restProps
 }) => {
   const handleInputValueChange = React.useCallback(
     (event: React.ChangeEvent<FormElement>) => onChange(event.target.value),
@@ -38,9 +40,12 @@ const FormInput: React.FC<Props> = ({
         <IconCoin symbol={assetSymbol} width="1.5em" height="1.5em" />
       }
       contentRightStyling={false}
-      contentRight={<InputRightContent balance={balance} isLoading={isLoading} />}
+      contentRight={
+        <InputRightContent balance={balance} isLoading={isLoading} />
+      }
       onChange={handleInputValueChange}
-      disabled={isLoading}
+      disabled={disabled || isLoading}
+      {...restProps}
     />
   );
 };

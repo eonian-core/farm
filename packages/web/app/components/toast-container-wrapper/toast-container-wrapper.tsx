@@ -30,7 +30,7 @@ const ToastContainerWrapper = () => {
   return (
     <ToastContainer
       position={toast.POSITION.TOP_LEFT}
-      theme="light"
+      theme="dark"
       style={{ top: `${toastTopOffset}px` }}
     />
   );

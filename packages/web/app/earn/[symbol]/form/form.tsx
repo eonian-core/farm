@@ -4,18 +4,19 @@ import React from "react";
 
 import styles from "./form.module.scss";
 import { Card } from "@nextui-org/react";
-import FormHeader, { FormAction } from "./form-header";
+import FormHeader from "./form-header";
 import FormButton from "./form-button";
-import PercentButtonGroup from "./percent-button-group";
 import { Vault } from "../../../api";
 import FormInput from "./form-input";
-import VaultInfoCard from "./vault-info-card";
-import { useNumberInputValue } from "./use-number-input-value";
-import useVaultUserInfo from "./use-vault-user-info";
-import { useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/types";
-import { toast } from "react-toastify";
+import { PercentButtonGroup, VaultInfoCard } from "../components";
+import { useVaultUserInfo, useNumberInputValue } from "../hooks";
+import {
+  FormAction,
+  startVaultAction,
+} from "../../../store/slices/vaultActionSlice/vaultActionSlice";
 
 interface Props {
   vault: Vault;
@@ -28,6 +29,10 @@ const Form: React.FC<Props> = ({ vault }) => {
 
   const { walletBalance, vaultBalance, isLoading, lastRequestForWallet } =
     useAppSelector((state) => state.vaultUser);
+
+  const hasPendingTransactions = useHasPendingTransactions();
+
+  const dispatch = useAppDispatch();
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
   const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
@@ -46,9 +51,18 @@ const Form: React.FC<Props> = ({ vault }) => {
   const [value, displayValue, handleValueChange] =
     useNumberInputValue(walletBalance);
 
-  const handleSubmit = React.useCallback(() => {
-    toast("Wow so easy !");
-  }, []);
+  const handleSubmit = React.useCallback(
+    async (formAction: FormAction) => {
+      await dispatch(
+        startVaultAction({
+          action: formAction,
+          vault,
+          amount: value,
+        })
+      );
+    },
+    [dispatch, value, vault]
+  );
 
   return (
     <div className={styles.container}>
@@ -78,6 +92,7 @@ const Form: React.FC<Props> = ({ vault }) => {
             inputValue={value}
             maxValue={walletBalance}
             onValueChange={handleValueChange}
+            disabled={hasPendingTransactions}
           />
           <FormInput
             assetSymbol={vault.underlyingAsset.symbol}
@@ -85,17 +100,24 @@ const Form: React.FC<Props> = ({ vault }) => {
             balance={walletBalance}
             onChange={handleValueChange}
             isLoading={!isFormReady}
+            disabled={hasPendingTransactions}
           />
           <FormButton
             vaultChain={vaultChain}
             disabled={!isFormReady}
             formAction={formAction}
             onSubmit={handleSubmit}
+            isLoading={hasPendingTransactions}
           />
         </Card.Body>
       </Card>
     </div>
   );
 };
+
+function useHasPendingTransactions() {
+  const { ongoingAction } = useAppSelector((state) => state.vaultAction);
+  return !!ongoingAction;
+}
 
 export default Form;

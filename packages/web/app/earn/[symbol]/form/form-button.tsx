@@ -1,22 +1,25 @@
 "use client";
 
 import React from "react";
-import { Button, ButtonProps } from "@nextui-org/react";
+import { Button, ButtonProps, Loading } from "@nextui-org/react";
 
 import styles from "./form-button.module.scss";
-import { FormAction } from "./form-header";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { Chain, WalletStatus } from "../../../providers/wallet/wrappers/types";
+import { FormAction } from "../../../store/slices/vaultActionSlice/vaultActionSlice";
 
 interface Props extends Omit<ButtonProps, "onSubmit"> {
   formAction: FormAction;
   vaultChain: Chain;
+  isLoading?: boolean;
   onSubmit: (formAction: FormAction) => void;
 }
 
 const FormButton: React.FC<Props> = ({
   formAction,
   vaultChain,
+  isLoading,
+  disabled,
   onSubmit,
   ...restProps
 }) => {
@@ -67,9 +70,10 @@ const FormButton: React.FC<Props> = ({
       size="lg"
       className={styles.button}
       onPress={handlePress}
+      disabled={disabled || isLoading}
       {...restProps}
     >
-      {text}
+      {isLoading ? <Loading color="currentColor" size="md" /> : text}
     </Button>
   );
 };

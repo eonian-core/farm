@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import localeReducer from "./slices/localeSlice";
 import navigationReducer from "./slices/navigationSlice";
+import vaultActionReducer from "./slices/vaultActionSlice/vaultActionSlice";
 import vaultUserReducer from "./slices/vaultUserSlice";
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     locale: localeReducer,
     navigation: navigationReducer,
     vaultUser: vaultUserReducer,
+    vaultAction: vaultActionReducer,
   },
 });
 

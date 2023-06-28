@@ -13,7 +13,7 @@ interface Params {
   autoUpdateInterval?: number;
 }
 
-export default function useVaultUserInfo(vault: Vault, params: Params = {}) {
+export function useVaultUserInfo(vault: Vault, params: Params = {}) {
   const { autoUpdateInterval } = params;
 
   const dispatch = useAppDispatch();
