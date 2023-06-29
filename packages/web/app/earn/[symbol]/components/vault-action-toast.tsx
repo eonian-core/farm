@@ -13,6 +13,7 @@ import {
 import styles from "./vault-action-toast.module.scss";
 import { getActiveStepSelector } from "../../../store";
 import { toNumberFromDecimals } from "../../../shared";
+import { Loading } from "@nextui-org/react";
 
 export const VaultActionToast = () => {
   const { wallet } = useWalletWrapperContext();
@@ -23,15 +24,7 @@ export const VaultActionToast = () => {
 
   return (
     <div className={styles.container}>
-      {wallet && (
-        <Image
-          className={styles.image}
-          src={wallet.iconImageSrc}
-          alt={wallet.label}
-          width={35}
-          height={35}
-        />
-      )}
+      <ToastImage />
       <div>
         <h4>
           {confirmed} / {total} Transaction confirmed
@@ -73,6 +66,28 @@ function useTransactionDescription(): string | undefined {
       }
     }
   }, [activeStep, ongoingAction, amount, assetSymbol]);
+}
+
+function ToastImage() {
+  const { wallet } = useWalletWrapperContext();
+  const { isTransactionActive } = useAppSelector((state) => state.vaultAction);
+
+  if (isTransactionActive) {
+    return <Loading className={styles.image} size="md" />;
+  }
+
+  const size = 32; // Same size as <Loading /> component has.
+  return (
+    wallet && (
+      <Image
+        className={styles.image}
+        src={wallet.iconImageSrc}
+        alt={wallet.label}
+        width={size}
+        height={size}
+      />
+    )
+  );
 }
 
 export const createVaultActionToast = () => {

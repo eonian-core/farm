@@ -27,7 +27,9 @@ interface Props {
 const Form: React.FC<Props> = ({ vault }) => {
   const { wallet, status, chains } = useWalletWrapperContext();
 
-  useVaultUserInfo(vault, { autoUpdateInterval: 5000 });
+  const refetechVaultUserData = useVaultUserInfo(vault, {
+    autoUpdateInterval: 5000,
+  });
 
   const { isLoading, lastRequestForWallet } = useAppSelector(
     (state) => state.vaultUser
@@ -57,9 +59,13 @@ const Form: React.FC<Props> = ({ vault }) => {
 
   const handleSubmit = React.useCallback(
     async (formAction: FormAction) => {
+      // Execute Deposit/Withdraw transaction
       await executeTransaction(formAction, vault, bigValue);
+
+      // Refresh wallet balance & vault deposit after the transaction executed.
+      refetechVaultUserData?.();
     },
-    [executeTransaction, vault, bigValue]
+    [executeTransaction, refetechVaultUserData, vault, bigValue]
   );
 
   return (

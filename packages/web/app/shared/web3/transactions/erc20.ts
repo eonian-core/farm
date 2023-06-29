@@ -11,10 +11,12 @@ interface ApproveERC20Params {
 export async function approveERC20(
   signer: ethers.JsonRpcSigner,
   params: ApproveERC20Params
-): Promise<ethers.TransactionReceipt> {
+): Promise<() => Promise<ethers.TransactionReceipt | null>> {
   const { tokenAddress, spenderAddress, amount } = params;
   const contract = new ethers.Contract(tokenAddress, ERC20ABI, signer);
-  const tx = await contract.approve(spenderAddress, amount);
-  const receipt: ethers.TransactionReceipt = await tx.wait();
-  return receipt;
+  const response: ethers.TransactionResponse = await contract.approve(
+    spenderAddress,
+    amount
+  );
+  return (): Promise<ethers.TransactionReceipt | null> => response.wait();
 }

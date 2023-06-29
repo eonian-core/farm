@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import { toast, UpdateOptions } from "react-toastify";
 import { Vault } from "../../api";
 import { createVaultActionToast } from "../../earn/[symbol]/components";
+import { parseError } from "../../shared";
 
 const TOAST_ID = "vault-action-toast";
 
@@ -33,6 +34,7 @@ interface VaultActionSlice {
   steps: FormActionStep[];
   completedSteps: FormActionStep[];
   stepsSkipped: number;
+  isTransactionActive: boolean;
 
   error: string | null;
 }
@@ -47,6 +49,7 @@ const initialState: VaultActionSlice = {
   steps: [],
   completedSteps: [],
   stepsSkipped: 0,
+  isTransactionActive: false,
 
   error: null,
 };
@@ -65,21 +68,6 @@ const vaultActionSlice = createSlice({
     resetVaultAction: () => {
       toast.dismiss(TOAST_ID);
       return initialState;
-    },
-    goToNextActionStep: (state) => {
-      const { ongoingAction, steps, completedSteps } = state;
-      if (!ongoingAction) {
-        return;
-      }
-
-      const progress = completedSteps.length / steps.length;
-      toast.update(TOAST_ID, { progress });
-
-      const stepsDone = completedSteps.length;
-      if (stepsDone < steps.length) {
-        const nextActionStep = steps[stepsDone];
-        state.completedSteps = [...state.completedSteps, nextActionStep];
-      }
     },
     initVaultAction: (state, action: PayloadAction<PrepareActionPayload>) => {
       const {
@@ -101,23 +89,42 @@ const vaultActionSlice = createSlice({
         state.stepsSkipped = stepsToSkip;
       }
 
+      state.isTransactionActive = false;
       state.error = null;
+    },
+    goToNextActionStep: (state) => {
+      const { error, ongoingAction, steps, completedSteps } = state;
+
+      state.isTransactionActive = false;
+
+      if (!ongoingAction || !!error) {
+        return;
+      }
+
+      const stepsDone = completedSteps.length;
+      if (stepsDone < steps.length) {
+        const nextActionStep = steps[stepsDone];
+        state.completedSteps = [...state.completedSteps, nextActionStep];
+      }
+
+      const progress = state.completedSteps.length / steps.length;
+      toast.update(TOAST_ID, { progress });
+    },
+    setTransactionStarted: (state) => {
+      state.isTransactionActive = true;
     },
     failVaultAction: (state, action: PayloadAction<Error>) => {
       const error = action.payload;
-
-      const update: UpdateOptions = { type: "error", autoClose: 7500 };
-      if (ethers.isError(error, "ACTION_REJECTED")) {
-        update.type = "warning";
-        switch (error.reason) {
-          case 'rejected': {
-            update.render =
-              "Transaction Rejected: The transaction has been declined or canceled by the user.";
-            break;
-          }
-        }
-      }
+      const [message, severity] = parseError(error);
+      const update: UpdateOptions = {
+        render: message,
+        type: severity,
+        autoClose: 7500,
+        progress: 0,
+      };
       toast.update(TOAST_ID, update);
+
+      state.error = message;
     },
   },
 });
@@ -131,6 +138,7 @@ export const prepareVaultAction = createAsyncThunk(
       autoClose: false,
       closeOnClick: false,
       toastId: TOAST_ID,
+      progress: 0,
     });
 
     const unsubscribe = toast.onChange(({ id, status }) => {
@@ -142,6 +150,11 @@ export const prepareVaultAction = createAsyncThunk(
   }
 );
 
-export const { resetVaultAction, goToNextActionStep, failVaultAction } =
-  vaultActionSlice.actions;
+export const {
+  resetVaultAction,
+  goToNextActionStep,
+  failVaultAction,
+  initVaultAction,
+  setTransactionStarted,
+} = vaultActionSlice.actions;
 export default vaultActionSlice.reducer;

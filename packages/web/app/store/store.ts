@@ -2,7 +2,10 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import localeReducer from "./slices/localeSlice";
 import navigationReducer from "./slices/navigationSlice";
-import vaultActionReducer, { failVaultAction } from "./slices/vaultActionSlice";
+import vaultActionReducer, {
+  failVaultAction,
+  initVaultAction,
+} from "./slices/vaultActionSlice";
 import vaultUserReducer from "./slices/vaultUserSlice";
 
 export const store = configureStore({
@@ -15,7 +18,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [failVaultAction.type],
+        ignoredActions: [failVaultAction.type, initVaultAction.type],
       },
     }),
 });

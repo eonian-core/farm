@@ -81,4 +81,6 @@ export function useVaultUserInfo(vault: Vault, params: Params = {}) {
     }
     return executeAfter(autoUpdateInterval, () => refetch?.());
   }, [autoUpdateInterval, isLoading, refetch]);
+
+  return refetch;
 }
