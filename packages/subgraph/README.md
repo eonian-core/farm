@@ -2,7 +2,7 @@
 
 This is Subgraph package for Eonian yield aggregator.
 
-## Requiremetns
+## Requirements
 
 * Docker - required for local testing
 * JQ - <https://howtoinstall.co/en/jq> 
@@ -24,7 +24,7 @@ yarn test
 
 ## Known Issues
 
-In case of error `binary-install-raw/bin/0.5.4/binary-linux-20: error while loading shared libraries: libpq.so.5: cannot open shared object file: No such file or directory` during `yarn test` you need to install postgress. [Why it need?](https://thegraph.com/docs/en/developing/unit-testing-framework/).
+In case of error `binary-install-raw/bin/0.5.4/binary-linux-20: error while loading shared libraries: libpq.so.5: cannot open shared object file: No such file or directory` during `yarn test` you need to install Postgress. [Why it need?](https://thegraph.com/docs/en/developing/unit-testing-framework/).
 
 ```bash
 sudo apt install postgresql
