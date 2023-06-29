@@ -43,7 +43,7 @@ jobs:
           bump: ${{ steps.bump.outputs.match }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Save new version in image package.json
+      - name: Save new version in package.json
         run: |-
           cd packages/subgraph
           sed -i -E 's/"version": "(.*)",/"version": "${{ steps.next_version.outputs.version }}",/g' package.json
@@ -60,7 +60,7 @@ jobs:
       - name: Generate subgraph schema code
         run: |-
           cd packages/subgraph
-          yarn codegen
+          yarn gen:code
 
       - name: Generate subgraph environments configurations
         run: |-
