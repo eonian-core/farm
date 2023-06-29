@@ -1,0 +1,17 @@
+.input {
+  width: auto;
+
+  input {
+    margin: auto !important;
+  }
+}
+
+.balance {
+  font-size: var(--font-size-300);
+  color: var(--color-text-300);
+  white-space: nowrap;
+  padding: 0 var(--padding-200);
+
+  display: flex;
+  align-items: center;
+}

@@ -1,13 +1,20 @@
+@import "../../screen.scss";
 
 .logoSection {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    padding: var(--padding-300);
+    padding-top: 0;
 
     a {
         width: fit-content;
         padding: 0;
         min-height: var(--font-size-900);
+        margin-bottom: var(--margin-300);
+    }
+
+    @media (max-width: $screen-tablet) {
         margin-bottom: var(--margin-300);
     }
 }
@@ -26,6 +33,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    width: 100%;
+    max-width: var(--width-900);
+    padding: var(--padding-500);
+    padding-top: var(--padding-750);
+
 
     h5 {
         margin-bottom: var(--margin-300);
@@ -34,6 +46,39 @@
 
     li {
         margin-bottom: var(--margin-200);
+    }
+}
+
+.content {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    grid-gap: var(--margin-700);
+
+    @media (max-width: $screen-tablet) {
+        grid-template-columns: 1fr;
+        row-gap: var(--margin-300);
+
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: var(--margin-700);
+
+        & > * {
+            padding-left: var(--padding-300);
+            padding-right: var(--padding-300);
+        }
+    }
+}
+
+
+.linksSection {
+    margin-bottom: var(--margin-400);
+    max-width: var(--width-200);
+    min-width: var(--width-200);
+
+    h5 {
+        font-size: var(--font-size-700);
+        line-height: var(--line-height-300);
+        font-weight: var(--font-medium)
     }
 }
 
@@ -58,4 +103,8 @@
 .copyright {
     text-align: center;
     margin-top: auto;
+
+    span {
+        font-weight: var(--font-medium)
+    }
 }

@@ -1,0 +1,88 @@
+schema {
+  query: Query
+}
+
+# Custom scalar type to represent large integers
+scalar BigInt
+
+type Query {
+  """
+  Fetches an array of Vault objects.
+  """
+  vaults: [Vault!]!
+
+  """
+  Fetches a Vault by a specific symbol (token's name).
+  """
+  vaultBySymbol(symbol: String!): Vault
+}
+
+"""
+Represents a financial vault storing assets and managing them.
+"""
+type Vault {
+  """
+  The underlying asset stored in the vault.
+  """
+  underlyingAsset: UnderlyingAsset!
+  
+  """
+  The total balance of the vault.
+  """
+  totalBalance: BigInt!
+  
+  """
+  The interest rate applied to the assets in the vault.
+  """
+  interestRate: BigInt!
+  
+  """
+  The timestamp of the last harvest event (in seconds since Unix epoch).
+  """
+  lastHarvestTime: BigInt!
+  
+  """
+  The blockchain address of the vault.
+  """
+  address: String!
+  
+  """
+  The name of the vault.
+  """
+  name: String!
+  
+  """
+  The symbol of the vault.
+  """
+  symbol: String!
+  
+  """
+  The number of decimal places for the vault's assets.
+  """
+  decimals: Int!
+}
+
+"""
+Represents the underlying asset stored in a vault.
+"""
+type UnderlyingAsset {
+  """
+  The blockchain address of the asset.
+  """
+  address: String!
+  
+  """
+  The name of the asset.
+  """
+  name: String!
+  
+  """
+  The symbol of the asset.
+  """
+  symbol: String!
+  
+  """
+  The number of decimal places for the asset.
+  """
+  decimals: Int!
+}
