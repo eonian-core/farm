@@ -1,4 +1,3 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { expect } from "chai";
 import sinon from "sinon";
 

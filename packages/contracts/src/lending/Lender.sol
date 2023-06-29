@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
@@ -250,7 +251,7 @@ abstract contract Lender is
         virtual;
 
     /// @notice Returns the total amount of all tokens (including those on the contract balance and taken by borrowers)
-    function lendingAssets() public view virtual returns (uint256) {
+    function fundAssets() public view virtual returns (uint256) {
         return _freeAssets() + totalDebt;
     }
 
@@ -271,7 +272,7 @@ abstract contract Lender is
 
     /// @notice Returns the total number of tokens borrowers can take.
     function _debtLimit() private view returns (uint256) {
-        return (debtRatio * lendingAssets()) / MAX_BPS;
+        return (debtRatio * fundAssets()) / MAX_BPS;
     }
 
     /// @notice Lowers the borrower's debt he can take by specified loss and decreases his credibility.
@@ -315,7 +316,7 @@ abstract contract Lender is
         uint256 lenderDebtLimit = _debtLimit();
         uint256 lenderDebt = totalDebt;
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            lendingAssets()) / MAX_BPS;
+            fundAssets()) / MAX_BPS;
         uint256 borrowerDebt = borrowersData[borrower].debt;
 
         // There're no more funds for the borrower because he has outstanding debt or the lender's available funds have been exhausted
@@ -355,7 +356,7 @@ abstract contract Lender is
         }
 
         uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            lendingAssets()) / MAX_BPS;
+            fundAssets()) / MAX_BPS;
         if (borrowerDebt <= borrowerDebtLimit) {
             return 0;
         }
@@ -420,6 +421,23 @@ abstract contract Lender is
         delete borrowersData[borrower];
     }
 
+    /// Calculate utilisation rate for specific borrower
+    /// @notice Based on last report data, can be outdated, but close to latest state of fund
+    /// @return percent of total assets taken by strategy in BPS
+    function utilizationRate(address borrower) public virtual view returns (uint256) {
+        // assets in vault + amount lent to strategies
+        uint256 _fundAssets = fundAssets(); 
+        // to decrease amount of calls to borrower contract,
+        // assume that borrower have same amount like in last update
+        uint256 borrowerAssets = borrowersData[borrower].debt; 
+
+        if (_fundAssets == 0) {
+            return 0;
+        }
+
+        return borrowerAssets * MAX_BPS / _fundAssets;
+    }
+
     /// @notice Charges a fee on the borrower's income.
     /// @param extraFreeFunds an income from which the fees will be calculated.
     /// @return The total amount of fees charged.
@@ -439,4 +457,16 @@ abstract contract Lender is
     /// @notice Callback that is called at the end of the negative report function.
     /// @param loss the number of tokens by which the borrower's balance has decreased since the last report.
     function _afterNegativeDebtManagementReport(uint256 loss) internal virtual;
+
+    /// @inheritdoc ILender
+    /// @dev Explicitly overridden here to keep this function exposed via "ILender" interface.
+    function paused()
+        public
+        view
+        override(ILender, PausableUpgradeable)
+        virtual
+        returns (bool)
+    {
+        return super.paused();
+    }
 }

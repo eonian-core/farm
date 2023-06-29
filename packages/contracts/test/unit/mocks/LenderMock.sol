@@ -111,8 +111,8 @@ contract LenderMock is Lender, SafeInitializableMock {
     }
 
     function setBorrowerDept(address borrower, uint256 debt) external {
+        totalDebt = totalDebt - borrowersData[borrower].debt + debt;
         borrowersData[borrower].debt = debt;
-        totalDebt = debt;
     }
 
     function setBorrowerDebtRatio(address borrower, uint256 debtRatio)

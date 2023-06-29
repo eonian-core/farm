@@ -1,0 +1,16 @@
+files:
+  - output: eonian-sepolia-testnet.yaml
+    data:
+      network: sepolia
+      description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      vault:
+        address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
+        startBlock: 3726610
+
+  - output: eonian-bsc-development.yaml
+    data:
+      network: bsc
+      description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
+      vault:
+        address: "0xa3923Fa94c7332e2561E88290B884419dca9E23C"
+        startBlock: 28907512

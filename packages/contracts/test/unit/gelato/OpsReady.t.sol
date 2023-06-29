@@ -31,7 +31,7 @@ contract OpsReadyTest is Test {
         ops.setGelato(payable(alice));
 
         opsReady = new OpsReadyMock();
-        opsReady.__OpsReadyMock_init(address(ops));
+        opsReady.__OpsReadyMock_init(ops);
 
     }
     
@@ -41,7 +41,7 @@ contract OpsReadyTest is Test {
         _ops.setGelato(payable(gelato));
 
         OpsReadyMock _opsReady = new OpsReadyMock();
-        _opsReady.__OpsReadyMock_init(address(_ops));
+        _opsReady.__OpsReadyMock_init(_ops);
 
         assertEq(_opsReady.gelato(), gelato);
     }

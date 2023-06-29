@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers";
-
 import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
 import { BlockchainType } from "../hardhat.config";
 
@@ -20,10 +18,12 @@ const func = deployOrUpgrade({
       gelatoOps,
       chainlink__BNB_USD_feed,
       chainlink__USDT_USD_feed,
+      USDT,
     },
     dependencies: [vault],
   }) => [
     vault.address,
+    USDT,
     apeSwap__cUSDT, // cToken - lending market
     gelatoOps, // gelato coordination contract
     chainlink__BNB_USD_feed, // native token price feed

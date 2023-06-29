@@ -12,19 +12,23 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
 
     uint256 public harvestProfit = 0;
     uint256 public harvestLoss = 0;
+    uint256 public override interestRatePerBlock;
+    
     uint256 private _liquidateAllPositionsReturn = 0;
     uint256 private _estimatedTotalAssets = 0;
 
     constructor(
-        IVault _vault,
-        address _ops,
+        IStrategiesLender _lender,
+        IERC20Upgradeable _asset,
+        IOps _ops,
         uint256 _minReportInterval,
         bool _isPrepaid,
-        address __nativeTokenPriceFeed,
-        address __assetPriceFeed
+        AggregatorV3Interface __nativeTokenPriceFeed,
+        AggregatorV3Interface __assetPriceFeed
     ) initializer {
         __BaseStrategy_init(
-            _vault,
+            _lender,
+            _asset,
             _ops,
             _minReportInterval,
             _isPrepaid,
