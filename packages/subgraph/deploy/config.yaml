@@ -12,5 +12,5 @@ files:
       network: bsc
       description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
       vault:
-        address: "0xa3923Fa94c7332e2561E88290B884419dca9E23C"
-        startBlock: 28907512
+        address: "0xe782b7277725ccc8b9BDeE0fad8B4D87503d9436"
+        startBlock: 29538460
