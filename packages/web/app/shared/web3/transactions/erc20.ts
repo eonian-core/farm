@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-import ERC20ABI from "../../../abi/ERC20.json";
+import ERC20ABI from "../abi/ERC20.json";
 
 interface ApproveERC20Params {
   tokenAddress: string;

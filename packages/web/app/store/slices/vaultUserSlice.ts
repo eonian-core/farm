@@ -1,8 +1,11 @@
 import { Provider } from "ethers";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { Multicall, MulticallRequest } from "../../shared/web3/multicall";
-import VaultABI from "../../abi/Vault.json";
-import ERC20ABI from "../../abi/ERC20.json";
+import {
+  createERC20Request,
+  createVaultRequest,
+  Multicall,
+  MulticallRequest,
+} from "../../shared";
 
 interface FetchParams {
   walletAddress: string;
@@ -101,36 +104,14 @@ function getRequests(
   vaultAddress: string
 ): MulticallRequest[] {
   return [
-    {
-      address: vaultAddress,
-      abi: VaultABI,
-      functionName: "maxWithdraw",
-      args: [walletAddress],
-    },
-    {
-      address: vaultAddress,
-      abi: VaultABI,
-      functionName: "decimals",
-      args: [],
-    },
-    {
-      address: assetAddress,
-      abi: ERC20ABI,
-      functionName: "balanceOf",
-      args: [walletAddress],
-    },
-    {
-      address: assetAddress,
-      abi: ERC20ABI,
-      functionName: "decimals",
-      args: [],
-    },
-    {
-      address: assetAddress,
-      abi: ERC20ABI,
-      functionName: "allowance",
-      args: [walletAddress, vaultAddress],
-    },
+    createVaultRequest(vaultAddress, "maxWithdraw", [walletAddress]),
+    createVaultRequest(vaultAddress, "decimals"),
+    createERC20Request(assetAddress, "balanceOf", [walletAddress]),
+    createERC20Request(assetAddress, "decimals"),
+    createERC20Request(assetAddress, "allowance", [
+      walletAddress,
+      vaultAddress,
+    ]),
   ];
 }
 
