@@ -29,7 +29,7 @@ export class VaultService extends WithLogger {
             this.logger.info("Creating new Vault entity for {}", [contractAddress.toHexString()])
             entity = new VaultEntity(id)
 
-            // unchangable data need setup only once
+            // unchangeable data must be set only once
             entity.decimals = vault.decimals()
 
             // create vault token as ERC20 standard
@@ -39,7 +39,7 @@ export class VaultService extends WithLogger {
         this.logger.info("Creating new underling asset token for {}", [contractAddress.toHexString()])
         let asset = vault.try_asset();
         if (asset.reverted) {
-            // Asset can not exists before first initialization
+            // Asset can not exist before first initialization
             this.logger.warn("vault.asset() call reverted", [])
             entity.asset = Bytes.empty();
         } else {
