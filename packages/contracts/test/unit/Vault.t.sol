@@ -9,6 +9,7 @@ import "./mocks/ERC20Mock.sol";
 import "./mocks/StrategyMock.sol";
 
 import "contracts/lending/Lender.sol";
+import "contracts/lending/StrategiesLender.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
 

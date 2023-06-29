@@ -14,6 +14,8 @@ import "./mocks/AggregatorV3Mock.sol";
 import "contracts/IVault.sol";
 import "contracts/structures/PriceConverter.sol";
 
+import "contracts/strategies/CTokenBaseStrategy.sol";
+
 import "./helpers/TestWithERC1820Registry.sol";
 
 contract BaseStrategyTest is TestWithERC1820Registry {
@@ -61,11 +63,12 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         baseStrategy = new BaseStrategyMock(
             vault,
-            address(ops),
+            IERC20Upgradeable(address(underlying)),
+            ops,
             minReportInterval,
             isPrepaid,
-            address(nativeTokenPriceFeed),
-            address(assetPriceFeed)
+            nativeTokenPriceFeed,
+            assetPriceFeed
         );
         vault.addStrategy(address(baseStrategy), 10_000);
     }
@@ -83,11 +86,12 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         baseStrategy = new BaseStrategyMock(
             vault,
-            address(ops),
+            IERC20Upgradeable(address(underlying)),
+            ops,
             minReportInterval,
             isPrepaid,
-            address(nativeTokenPriceFeed),
-            address(assetPriceFeed)
+            nativeTokenPriceFeed,
+            assetPriceFeed
         );
     }
 
@@ -288,7 +292,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     }
 
     function testRevertOnWithdrawIfCallerIsNotAVault(uint256 assets) public {
-        vm.expectRevert(CallerIsNotAVault.selector);
+        vm.expectRevert(CallerIsNotALender.selector);
         baseStrategy.withdraw(assets);
     }
 

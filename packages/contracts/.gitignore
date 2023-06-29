@@ -21,3 +21,4 @@ cache_hardhat/
 !/broadcast
 /broadcast/*
 /broadcast/*/31337/
+deployments/local.json

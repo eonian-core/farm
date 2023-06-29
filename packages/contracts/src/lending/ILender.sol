@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+
+/// Base contract for lending protocols, can be used for colletaralized and not colletaralized lending.
 interface ILender {
+
     /// @notice Returns the number of tokens the borrower (caller of this function) can take from the lender
     /// @return Available credit as amount of tokens
     function availableCredit() external view returns (uint256);
@@ -23,6 +27,10 @@ interface ILender {
     /// @notice Returns the activation status of the borrower (caller of this function).
     /// @return "true" if the borrower is active
     function isActivated() external view returns (bool);
+
+    /// @notice Indicates if the vault was shutted down or not.
+    /// @return "true" if the contract is paused, and "false" otherwise.
+    function paused() external view returns (bool);
 
     /// @notice Reports a positive result of the borrower's debt management.
     ///         Borrower must call this function if he has made any profit

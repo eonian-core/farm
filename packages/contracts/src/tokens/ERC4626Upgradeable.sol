@@ -51,27 +51,6 @@ abstract contract ERC4626Upgradeable is
      */
     uint256[50] private __gap;
 
-    /* ///////////////////////////// EVENTS ///////////////////////////// */
-
-    /// `sender` has exchanged `assets` for `shares`, and transferred those `shares` to `owner`.
-    /// emitted when tokens are deposited into the Vault via the mint and deposit methods.
-    event Deposit(
-        address indexed caller,
-        address indexed owner,
-        uint256 assets,
-        uint256 shares
-    );
-
-    /// `sender` has exchanged `shares`, owned by `owner`, for `assets`, and transferred those `assets` to `receiver`.
-    /// emitted when shares are withdrawn from the Vault in ERC4626.redeem or ERC4626.withdraw methods.
-    event Withdraw(
-        address indexed caller,
-        address indexed receiver,
-        address indexed owner,
-        uint256 assets,
-        uint256 shares
-    );
-
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
     /**
