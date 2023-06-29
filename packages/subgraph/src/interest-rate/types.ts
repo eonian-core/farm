@@ -11,7 +11,7 @@ export enum InterestRateType {
 
 }
 
-// assembly script not allow to use enum with string values
+// assembly script doesn't allow to use enum with string values
 // so there is a workaround
 export function rateTypeToString(type: InterestRateType): string {
     switch(type) {
