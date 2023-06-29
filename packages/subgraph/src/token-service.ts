@@ -6,7 +6,7 @@ import {WithLogger} from './logger'
 export class TokenService extends WithLogger {
 
     /** 
-     * Creates new token if it not exsits 
+     * Creates a new token if it does not exist 
      * or return it in another case 
      * */
     getOrCreateToken(contractAddress: Address): Token {
