@@ -425,7 +425,7 @@ abstract contract Lender is
     /// @notice Based on last report data, can be outdated, but close to latest state of fund
     /// @return percent of total assets taken by strategy in BPS
     function utilizationRate(address borrower) public virtual view returns (uint256) {
-        // assets in vault + lended to strategies
+        // assets in vault + amount lent to strategies
         uint256 _fundAssets = fundAssets(); 
         // to decrease amount of calls to borrower contract,
         // assume that borrower have same amount like in last update
