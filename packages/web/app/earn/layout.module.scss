@@ -24,7 +24,6 @@
     width: 200vw;
     height: 200vh;
     transform: translate(-50vw, -100vh);
-    background: linear-gradient(var(--color-primary-1000) 0%, var(--color-dark-800) 100%);
   }
 
   @media (max-width: $screen-mobile) {
