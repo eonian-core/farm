@@ -2,14 +2,17 @@
 pragma solidity ^0.8.19;
 
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
-import {SafeERC20Upgradeable, IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 import {IVault} from "./IVault.sol";
+import {ILender} from "./lending/ILender.sol";
 import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
-import {SafeERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
-import {ERC4626Upgradeable} from "./tokens/ERC4626Upgradeable.sol";
+import {StrategiesLender} from "./lending/StrategiesLender.sol";
+import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
+import {IERC4626} from "./tokens/IERC4626.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
 import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
@@ -21,18 +24,13 @@ import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
 
 
 error ExceededMaximumFeeValue();
-error UnexpectedZeroAddress();
-error InappropriateStrategy();
-error StrategyNotFound();
-error StrategyAlreadyExists();
-error InsufficientVaultBalance(uint256 assets, uint256 shares);
-error WrongQueueSize(uint256 size);
-error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
-error AccessDeniedForCaller(address caller);
 
-contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, SafeERC4626Lifecycle {
+error InsufficientVaultBalance(uint256 assets, uint256 shares);
+error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
+error InappropriateStrategy();
+
+contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender, SafeERC4626Lifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
-    using AddressList for address[];
 
     /// @notice Represents the maximum value of the locked-in profit ratio scale (where 1e18 is 100%).
     uint256 public constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
@@ -49,9 +47,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
     /// @notice Vault founders reward (in BPS).
     uint256 public vaultFoundersRewardFee;
 
-    /// @notice Arranged list of addresses of strategies, which defines the order for withdrawal.
-    address[] public withdrawalQueue;
-
     /// @notice The amount of funds that cannot be withdrawn by users.
     ///         Decreases with time at the rate of "lockedProfitReleaseRate".
     uint256 public lockedProfitBaseline;
@@ -60,42 +55,17 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
     ///         Represents the amount of funds that will be unlocked when one second passes.
     uint256 public lockedProfitReleaseRate;
 
-    /// @notice Event that should happen when the strategy connects to the vault.
-    /// @param strategy Address of the strategy contract.
-    /// @param debtRatio Maximum portion of the loan that the strategy can take (in BPS).
-    event StrategyAdded(address indexed strategy, uint256 debtRatio);
-
-    /// @notice Event that should happen when the strategy has been revoked from the vault.
-    /// @param strategy Address of the strategy contract.
-    event StrategyRevoked(address indexed strategy);
-
-    /// @notice Event that should happen when the strategy has been removed from the vault.
-    /// @param strategy Address of the strategy contract.
-    /// @param fromQueueOnly If "true", then the strategy has only been removed from the withdrawal queue.
-    event StrategyRemoved(address indexed strategy, bool fromQueueOnly);
-
-    /// @notice Event that should happen when the strategy has been returned to the withdrawal queue.
-    /// @param strategy Address of the strategy contract.
-    event StrategyReturnedToQueue(address indexed strategy);
-
-    /// @notice Event that should happen when the locked-in profit release rate changed.
-    event LockedProfitReleaseRateChanged(uint256 rate);
-
     /// @dev This empty reserved space is put in place to allow future versions to add new
     ///      variables without shifting down storage in the inheritance chain.
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[50] private __gap;
 
+    /// @notice Event that should happen when the locked-in profit release rate changed.
+    event LockedProfitReleaseRateChanged(uint256 rate);
+
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.1.9";
-    }
-
-    modifier onlyOwnerOrStrategy(address strategy) {
-        if (msg.sender != owner() && msg.sender != strategy) {
-            revert AccessDeniedForCaller(msg.sender);
-        }
-        _;
+        return "0.2.0";
     }
 
     // ------------------------------------------ Constructors ------------------------------------------
@@ -114,7 +84,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         uint256 _foundersRewardRate
     ) public initializer {
         __SafeUUPSUpgradeable_init(); // Ownable under the hood
-        __Lender_init();
+        __StrategiesLender_init_lenderSpecific(); // require Ownable
         __SafeERC4626_init(
             IERC20Upgradeable(_asset),
             bytes(_name).length == 0
@@ -193,85 +163,11 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
         SafeERC4626Lifecycle.beforeWithdraw(assets, shares);
     }
 
-    /// @notice Adds a new strategy to the vault.
-    /// @param strategy a new strategy address.
-    /// @param debtRatio a ratio that shows how much of the new strategy can take, relative to other strategies.
-    function addStrategy(address strategy, uint256 debtRatio)
-        external
-        onlyOwner
-        whenNotPaused
-    {
-        if (strategy == address(0)) {
-            revert UnexpectedZeroAddress();
-        }
-
-        // Strategy should refer to this vault and has the same underlying asset
-        if (
-            this != IStrategy(strategy).vault() ||
-            asset != IStrategy(strategy).asset()
-        ) {
+    /// Check that all new strategies refer to this vault and has the same underlying asset
+    function _beforeStrategyRegistered(IStrategy strategy) internal view override {
+        if (this != strategy.lender() || asset != strategy.asset()) {
             revert InappropriateStrategy();
         }
-
-        _registerBorrower(strategy, debtRatio);
-        withdrawalQueue.add(strategy);
-
-        emit StrategyAdded(strategy, debtRatio);
-    }
-
-    /// @notice Adds a strategy to the withdrawal queue. The strategy must already be registered as a borrower.
-    /// @param strategy a strategy address.
-    function addStrategyToQueue(address strategy) external onlyOwner {
-        if (strategy == address(0)) {
-            revert UnexpectedZeroAddress();
-        }
-
-        if (withdrawalQueue.contains(strategy)) {
-            revert StrategyAlreadyExists();
-        }
-
-        if (borrowersData[strategy].activationTimestamp == 0) {
-            revert BorrowerDoesNotExist();
-        }
-
-        withdrawalQueue.add(strategy);
-
-        emit StrategyReturnedToQueue(strategy);
-    }
-
-    /// @inheritdoc IVault
-    function revokeStrategy(address strategy)
-        external
-        onlyOwnerOrStrategy(strategy)
-    {
-        _setBorrowerDebtRatio(strategy, 0);
-        emit StrategyRevoked(strategy);
-    }
-
-    /// @notice Removes a strategy from the vault.
-    /// @param strategy a strategy to remove.
-    /// @param fromQueueOnly if "true", then the strategy will only be removed from the withdrawal queue.
-    function removeStrategy(address strategy, bool fromQueueOnly)
-        external
-        onlyOwner
-    {
-        bool removedFromQueue = withdrawalQueue.remove(strategy);
-        if (!removedFromQueue) {
-            revert StrategyNotFound();
-        }
-
-        if (!fromQueueOnly) {
-            _unregisterBorrower(strategy);
-        }
-
-        emit StrategyRemoved(strategy, fromQueueOnly);
-    }
-
-    /// @notice Sets the withdrawal queue.
-    /// @param queue a new queue that will replace the existing one.
-    ///        Should contain only those elements that already present in the existing queue.
-    function reorderWithdrawalQueue(address[] memory queue) external onlyOwner {
-        withdrawalQueue = withdrawalQueue.reorder(queue);
     }
 
     /// @notice Sets the vault rewards address.
@@ -304,12 +200,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
             revert ExceededMaximumFeeValue();
         }
         vaultFoundersRewardFee = _foundersRewardFee;
-    }
-
-    /// @notice Switches the vault pause state.
-    /// @param shutdown a new vault pause state. If "true" is passed, the vault will be paused.
-    function setEmergencyShutdown(bool shutdown) external onlyOwner {
-        shutdown ? _pause() : _unpause();
     }
 
     /// @notice Changes the rate of release of locked-in profit.
@@ -385,23 +275,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
             : 0;
     }
 
-    /// @notice Returns the current debt of the strategy.
-    /// @param strategy the strategy address.
-    function strategyDebt(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debt;
-    }
-
-    /// @notice Returns the debt ratio of the strategy.
-    /// @param strategy the strategy address.
-    function strategyRatio(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debtRatio;
-    }
-
-    /// @notice Returns the size of the withdrawal queue.
-    function getQueueSize() external view returns (uint256) {
-        return withdrawalQueue.length;
-    }
-
     /// @inheritdoc Lender
     function _freeAssets() internal view override returns (uint256) {
         return asset.balanceOf(address(this));
@@ -418,16 +291,16 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Lender, S
     }
 
     /// @inheritdoc ERC4626Upgradeable
-    function totalAssets() public view override returns (uint256) {
-        return super.lendingAssets() - _lockedProfit();
+    function totalAssets() public view override(ERC4626Upgradeable, IERC4626) returns (uint256) {
+        return super.fundAssets() - _lockedProfit();
     }
 
-    /// @inheritdoc IVault
-    /// @dev Explicitly overridden here to keep this function exposed via "IVault" interface.
+    /// @inheritdoc ILender
+    /// @dev Explicitly overridden here to keep this function exposed via "ILender" interface.
     function paused()
         public
         view
-        override(IVault, PausableUpgradeable)
+        override(ILender, StrategiesLender)
         returns (bool)
     {
         return super.paused();

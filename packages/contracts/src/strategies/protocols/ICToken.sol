@@ -1,11 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-/// @notice Interface for Compound-like market (or vault in common terms), that allows to deposit and borrow tokens.
-interface ICToken {
-    function decimals() external returns (uint8);
+import {ICInterestRate} from "./ICInterestRate.sol";
 
-    function underlying() external returns (address);
+/// @notice Interface for Compound-like market (or vault in common terms), that allows to deposit and borrow tokens.
+interface ICToken is ICInterestRate {
+
+    /** 
+     * Indicates if the calculations should be blocks or time based
+     * @notice Specific for Ola Finance
+     */
+    function blocksBased() external view returns (bool);
+
+    function decimals() external view returns (uint8);
+
+    function underlying() external view returns (address);
 
     function transfer(address dst, uint256 amount) external returns (bool);
 
@@ -36,10 +45,6 @@ interface ICToken {
             uint256
         );
 
-    function borrowRatePerBlock() external view returns (uint256);
-
-    function supplyRatePerBlock() external view returns (uint256);
-
     function totalBorrowsCurrent() external returns (uint256);
 
     function borrowBalanceCurrent(address account) external returns (uint256);
@@ -49,15 +54,9 @@ interface ICToken {
         view
         returns (uint256);
 
-    function exchangeRateCurrent() external returns (uint256);
-
-    function exchangeRateStored() external view returns (uint256);
-
     function getCash() external view returns (uint256);
 
     function totalSupply() external view returns (uint256);
-
-    function accrueInterest() external returns (uint256);
 
     function seize(
         address liquidator,

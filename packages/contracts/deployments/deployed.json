@@ -5,7 +5,7 @@
       "chainId": "11155111",
       "contracts": {
         "Vault": {
-          "address": "0xd4C84Eb6dD0f8c6d20430474EA77C84112c6cb89",
+          "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
           "abi": [
             {
               "anonymous": false,
@@ -996,32 +996,13 @@
               "type": "function"
             },
             {
-              "inputs": [
+              "inputs": [],
+              "name": "fundAssets",
+              "outputs": [
                 {
                   "internalType": "uint256",
                   "name": "",
                   "type": "uint256"
-                }
-              ],
-              "name": "depositHooks",
-              "outputs": [
-                {
-                  "internalType": "contract IVaultHook",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "founders",
-              "outputs": [
-                {
-                  "internalType": "address",
-                  "name": "",
-                  "type": "address"
                 }
               ],
               "stateMutability": "view",
@@ -1089,16 +1070,29 @@
                   "internalType": "address[]",
                   "name": "_defaultOperators",
                   "type": "address[]"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "_foundersRewardRate",
-                  "type": "uint256"
                 }
               ],
               "name": "initialize",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "interestRatePerBlock",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -1192,19 +1186,6 @@
             {
               "inputs": [],
               "name": "lastReportTimestamp",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "lendingAssets",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -1775,32 +1756,6 @@
             {
               "inputs": [
                 {
-                  "internalType": "address",
-                  "name": "_founders",
-                  "type": "address"
-                }
-              ],
-              "name": "setFounders",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "_foundersRewardFee",
-                  "type": "uint256"
-                }
-              ],
-              "name": "setFoundersRewardFee",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
                   "internalType": "uint256",
                   "name": "rate",
                   "type": "uint256"
@@ -2025,8 +1980,14 @@
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "vaultFoundersRewardFee",
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
+              "name": "utilizationRate",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -2106,25 +2067,6 @@
                   "type": "uint256"
                 }
               ],
-              "name": "withdrawHooks",
-              "outputs": [
-                {
-                  "internalType": "contract IVaultHook",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
               "name": "withdrawalQueue",
               "outputs": [
                 {
@@ -2155,7 +2097,7 @@
           ]
         },
         "Vault_Implementation": {
-          "address": "0x20C4877686a0145D12036568B11425EeA10885eB",
+          "address": "0xbE55cCd98Fd5b2f915768bF73F664B4a0864C5cB",
           "abi": [
             {
               "inputs": [
@@ -3149,32 +3091,13 @@
               "type": "function"
             },
             {
-              "inputs": [
+              "inputs": [],
+              "name": "fundAssets",
+              "outputs": [
                 {
                   "internalType": "uint256",
                   "name": "",
                   "type": "uint256"
-                }
-              ],
-              "name": "depositHooks",
-              "outputs": [
-                {
-                  "internalType": "contract IVaultHook",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "founders",
-              "outputs": [
-                {
-                  "internalType": "address",
-                  "name": "",
-                  "type": "address"
                 }
               ],
               "stateMutability": "view",
@@ -3242,16 +3165,29 @@
                   "internalType": "address[]",
                   "name": "_defaultOperators",
                   "type": "address[]"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "_foundersRewardRate",
-                  "type": "uint256"
                 }
               ],
               "name": "initialize",
               "outputs": [],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "interestRatePerBlock",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -3345,19 +3281,6 @@
             {
               "inputs": [],
               "name": "lastReportTimestamp",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "lendingAssets",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -3928,32 +3851,6 @@
             {
               "inputs": [
                 {
-                  "internalType": "address",
-                  "name": "_founders",
-                  "type": "address"
-                }
-              ],
-              "name": "setFounders",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "_foundersRewardFee",
-                  "type": "uint256"
-                }
-              ],
-              "name": "setFoundersRewardFee",
-              "outputs": [],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
                   "internalType": "uint256",
                   "name": "rate",
                   "type": "uint256"
@@ -4178,8 +4075,14 @@
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "vaultFoundersRewardFee",
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
+              "name": "utilizationRate",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -4259,25 +4162,6 @@
                   "type": "uint256"
                 }
               ],
-              "name": "withdrawHooks",
-              "outputs": [
-                {
-                  "internalType": "contract IVaultHook",
-                  "name": "",
-                  "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
               "name": "withdrawalQueue",
               "outputs": [
                 {
@@ -4292,7 +4176,7 @@
           ]
         },
         "Vault_Proxy": {
-          "address": "0xd4C84Eb6dD0f8c6d20430474EA77C84112c6cb89",
+          "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
           "abi": [
             {
               "inputs": [

@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {Job} from "./Job.sol";
 import {IResolver} from "./gelato/IResolver.sol";
-import {OpsReady} from "./gelato/OpsReady.sol";
+import {OpsReady, IOps} from "./gelato/OpsReady.sol";
 
 /// @notice Contract expect work will be prepayd, so it cannot pay for work
 error PayableWorkNotAllowed();
@@ -29,7 +29,7 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
      * @param _isPrepaid - If job is prepaid, then it not will try to pay on executed work
      */
     function __GelatoJobAdapter_init(
-        address _ops,
+        IOps _ops,
         uint256 _minimumBetweenExecutions,
         bool _isPrepaid
     ) internal onlyInitializing {

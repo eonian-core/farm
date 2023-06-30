@@ -4,26 +4,27 @@ pragma solidity ^0.8.19;
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 import {BaseStrategy} from "./BaseStrategy.sol";
+import {CTokenBaseStrategy, IOps} from "./CTokenBaseStrategy.sol";
 import {ICToken} from "./protocols/ICToken.sol";
 import {IPancakeRouter} from  "./protocols/IPancakeRouter.sol";
 import {IRainMaker} from "./protocols/IRainMaker.sol";
 import {IStrategy} from "./IStrategy.sol";
-import {IVault} from "../IVault.sol";
+import {IStrategiesLender} from "../lending/IStrategiesLender.sol";
 
 import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
 
-error IncompatibleCTokenContract();
-error UnsupportedDecimals();
+
 error MintError(uint256 code);
 error RedeemError(uint256 code);
 
-contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
-    uint256 private constant SECONDS_PER_BLOCK = 3;
-    uint256 private constant REWARD_ESTIMATION_ACCURACY = 90;
+contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
+    uint256 public constant SECONDS_PER_BLOCK = 3; // for BSC only
+    uint256 public constant REWARD_ESTIMATION_ACCURACY = 90;
 
     address public constant BANANA = 0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95;
     address public constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
@@ -33,9 +34,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
     /// @notice Minimum BANANA token amount to sell.
     uint256 public minBananaToSell;
 
-    ICToken public cToken;
     IPancakeRouter public pancakeRouter;
-    IRainMaker public rainMaker;
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new
@@ -46,7 +45,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.1.3";
+        return "0.3.0";
     }
 
     // ------------------------------------------ Constructors ------------------------------------------
@@ -56,6 +55,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
     function initialize(
         address _vault,
+        address _asset,
         address _cToken,
         address _ops,
         address _nativeTokenPriceFeed,
@@ -64,36 +64,28 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
         bool _isPrepaid
     ) public initializer {
         __SafeUUPSUpgradeable_init_direct();
-        __BaseStrategy_init(
-            IVault(_vault),
-            _ops,
+        __CTokenBaseStrategy_init(
+            IStrategiesLender(_vault),
+            IERC20Upgradeable(_asset),
+            ICToken(_cToken),
+            IRainMaker(RAIN_MAKER), 
+            IERC20Upgradeable(BANANA),
+            IOps(_ops),
+            AggregatorV3Interface(_nativeTokenPriceFeed),
+            AggregatorV3Interface(_assetPriceFeed),
             _minReportInterval,
-            _isPrepaid,
-            _nativeTokenPriceFeed,
-            _assetPriceFeed,
-            address(0)
+            _isPrepaid
         ); // ownable under the hood
 
-        __ApeLendingStrategy_init_unchained(_cToken);
+        __ApeLendingStrategy_init_unchained(IERC20Upgradeable(BANANA), IPancakeRouter(PANCAKE_ROUTER));
     }
 
-    function __ApeLendingStrategy_init_unchained(address _cToken) internal onlyInitializing {
-        cToken = ICToken(_cToken);
-        pancakeRouter = IPancakeRouter(PANCAKE_ROUTER);
-        rainMaker = IRainMaker(RAIN_MAKER);
-
-        if (cToken.decimals() != 8 || _assetDecimals != 18) {
-            revert UnsupportedDecimals();
-        }
-
-        if (cToken.underlying() != address(asset)) {
-            revert IncompatibleCTokenContract();
-        }
+    function __ApeLendingStrategy_init_unchained(IERC20Upgradeable _bananaToken, IPancakeRouter _pancakeRouter) internal onlyInitializing {
+        pancakeRouter = _pancakeRouter;
 
         minBananaToSell = 0.1 ether;
 
-        approveTokenMax(BANANA, PANCAKE_ROUTER);
-        approveTokenMax(address(asset), _cToken);
+        approveTokenMax(address(_bananaToken), address(_pancakeRouter));
     }
 
     /// @notice Sets the minimum number of BANANA tokens that must be on the contract to sell.
@@ -160,13 +152,14 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
         if (bananaPerBlock == 0) {
             return 0;
         }
-        uint256 blocksSinceLastHarvest = (block.timestamp - vault.lastReport()) / SECONDS_PER_BLOCK; // solhint-disable-line not-rely-on-time
+        // TODO: remove call to vault, need decrease gas usage
+        // TODO: use block.number instead of block.timestamp
+        // can use block dependent operation in this case
+        // this logic is criticial only for cases when strategy need make harvest
+        // but Job contract check minimum blocks interval between harvests
+        // which decrease change of manipulation with block data by miners
+        uint256 blocksSinceLastHarvest = (block.timestamp - lender.lastReport()) / SECONDS_PER_BLOCK; // solhint-disable-line not-rely-on-time
         return blocksSinceLastHarvest * bananaPerBlock;
-    }
-
-    /// @notice Returns the current banana balance of the strategy contract.
-    function _currentBananaBalance() internal view returns (uint256) {
-        return IERC20Upgradeable(BANANA).balanceOf(address(this));
     }
 
     /// @notice Returns the current (and estimated accrued) banana balance of the strategy contract (in asset).
@@ -202,16 +195,9 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
         }
     }
 
-    /// @notice Retrieves accrued BANANA from the protocol.
-    function _claimBanana() internal {
-        ICToken[] memory tokens = new ICToken[](1);
-        tokens[0] = cToken;
-        rainMaker.claimComp(address(this), tokens);
-    }
-
     /// @notice Changes the existing BANANA on the contract to an asset token.
     function _swapBananaToAsset() internal {
-        uint256 bananaBalance = IERC20Upgradeable(BANANA).balanceOf(
+        uint256 bananaBalance = compToken.balanceOf(
             address(this)
         );
         if (bananaBalance < minBananaToSell) {
@@ -221,7 +207,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
         pancakeRouter.swapExactTokensForTokens(
             bananaBalance,
             0,
-            _tokenSwapPath(BANANA, address(asset)),
+            _tokenSwapPath(address(compToken), address(asset)),
             address(this),
             block.timestamp // solhint-disable-line not-rely-on-time
         );
@@ -257,7 +243,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, BaseStrategy {
         uint256 assetBalance = asset.balanceOf(address(this));
         uint256 balance = deposits + assetBalance;
 
-        uint256 debt = vault.currentDebt();
+        uint256 debt = lender.currentDebt();
 
         if (balance > debt) {
             profit = balance - debt;

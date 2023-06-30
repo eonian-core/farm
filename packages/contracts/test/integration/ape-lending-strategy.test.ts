@@ -75,7 +75,7 @@ describe("Ape Lending Strategy", function () {
 
     await resetBalance(vault.address, { tokens: [asset] });
 
-    strategy = await deployStrategy({ signer: owner, vault });
+    strategy = await deployStrategy({ signer: owner, vault, asset });
     hre.tracer.nameTags[strategy.address] = "Strategy";
 
     assetToken = await getToken(asset, owner);
@@ -279,8 +279,9 @@ describe("Ape Lending Strategy", function () {
   async function deployStrategy(options: {
     signer: SignerWithAddress;
     vault: Vault;
+    asset: string;
   }): Promise<ApeLendingStrategy> {
-    const { signer, vault } = options;
+    const { signer, vault, asset } = options;
     const factory =
       await ethers.getContractFactory<ApeLendingStrategy__factory>(
         "ApeLendingStrategy",
@@ -291,6 +292,7 @@ describe("Ape Lending Strategy", function () {
 
     let tx = await contract.initialize(
       vault.address,
+      asset,
       cToken,
       ops.address,
       nativePriceFeed,
