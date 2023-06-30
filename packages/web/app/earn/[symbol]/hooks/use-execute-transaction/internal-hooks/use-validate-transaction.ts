@@ -1,7 +1,27 @@
+import React from "react";
 import { toast } from "react-toastify";
-import { FormAction } from "../../../../store/slices/vaultActionSlice";
-import { Vault } from "../../../../api";
-import { toNumberFromDecimals } from "../../../../shared";
+
+import { FormAction } from "../../../../../store/slices/vaultActionSlice";
+import { Vault } from "../../../../../api";
+import { toNumberFromDecimals } from "../../../../../shared";
+import { useAppSelector } from "../../../../../store/hooks";
+
+export function useValidateTransaction() {
+  const { walletBalanceBN, assetDecimals } = useAppSelector(
+    (state) => state.vaultUser
+  );
+  return React.useCallback(
+    (action: FormAction, vault: Vault, amount: bigint) => {
+      return validateAndShowToast(action, {
+        vault,
+        amount,
+        assetDecimals,
+        walletBalance: BigInt(walletBalanceBN),
+      });
+    },
+    [walletBalanceBN, assetDecimals]
+  );
+}
 
 interface ValidationData {
   vault: Vault;
@@ -10,7 +30,12 @@ interface ValidationData {
   assetDecimals: number;
 }
 
-export function validateAndShowToast(action: FormAction, data: ValidationData) {
+function validateAndShowToast(action: FormAction, data: {
+  vault: Vault;
+  amount: bigint;
+  walletBalance: bigint;
+  assetDecimals: number;
+}) {
   try {
     validate(action, data);
     hideToast();
@@ -22,7 +47,7 @@ export function validateAndShowToast(action: FormAction, data: ValidationData) {
   return true;
 }
 
-export function validate(action: FormAction, data: ValidationData) {
+function validate(action: FormAction, data: ValidationData) {
   switch (action) {
     case FormAction.DEPOSIT:
       validateDeposit(data);

@@ -2,7 +2,7 @@
   {
     "name": "Eonian USDT Vault Shares",
     "symbol": "eonUSDT",
-    "address": "0xd4C84Eb6dD0f8c6d20430474EA77C84112c6cb89",
+    "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
     "underlyingAsset": {
       "name": "Tether USD",
       "symbol": "USDT",
