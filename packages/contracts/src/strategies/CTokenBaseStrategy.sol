@@ -25,7 +25,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     IERC20Upgradeable public compToken;
 
     /** Required for mapping of interest rate calculated per second to rate calculated per block */
-    uint256 public secondPerBlock = 3;
+    uint256 public secondPerBlock;
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new
@@ -63,6 +63,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     }
 
     function __CTokenBaseStrategyinit_unchained(ICToken _cToken, IRainMaker _rainMaker, IERC20Upgradeable _compToken) internal onlyInitializing {
+        secondPerBlock = 3; // 3.01 awarage seconds for BSC
         cToken = _cToken;
         rainMaker = _rainMaker;
         compToken = _compToken;
