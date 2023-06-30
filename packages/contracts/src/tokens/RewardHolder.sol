@@ -27,17 +27,16 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     Vault public vault;
 
+    // 0xbb788f92e65e1a823e2c502bc4e7f9c3e55531bd56bfc7c0a895fb3ac9eb7716
     bytes32 public constant BALANCE_UPDATER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
-    bytes32 public constant REWARD_CLAIMER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
+    // 0x350f4eb58665205037e4a10647f66a623dc93281f72575646a8f0c90d88b72ae
+    bytes32 public constant REWARD_CLAIMER_ROLE = keccak256("REWARD_CLAIMER_ROLE");
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
-    function __RewardHolder_init(
-        address admin_
-    ) internal onlyInitializing {
+    function __RewardHolder_init() internal onlyInitializing {
         __AccessControl_init();
-        _setupRole(BALANCE_UPDATER_ROLE, admin_);
-        _setupRole(DEFAULT_ADMIN_ROLE, admin_);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         __ReentrancyGuard_init();
     }
 
@@ -57,8 +56,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     }
 
     /// @dev claim reward for token owner
-    /// @notice only role with REWARD_CLAIMER_ROLE can call this function
-    function claimReward() external onlyRole(REWARD_CLAIMER_ROLE) nonReentrant {
+    function claimReward() external nonReentrant {
         require(vault != Vault(address(0)), "Vault not set.");
 
         require(rewardOwnerIndex[msg.sender] != 0, "Caller doesn't have reward.");
@@ -76,9 +74,8 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     }
 
     /// @dev setup new owner for reward usually called when minting new token
-    function setupNewOwner(address rewardOwner) external onlyRole(BALANCE_UPDATER_ROLE) {
+    function setupNewOwner(address rewardOwner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
         rewardOwnerIndex[rewardOwner] = rewardIndex;
-        _setupRole(REWARD_CLAIMER_ROLE, rewardOwner);
         numberCoins++;
     }
 }

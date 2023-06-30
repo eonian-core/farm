@@ -35,9 +35,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.Neither,
-            true,
-            address(this)
+            true
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
     }
 
     function testVaultMetadata() public {
@@ -69,9 +69,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.Neither,
-            false,
-            address(this)
+            false
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
         token.safeMint(alice, url);
         token.safeMint(alice, url);
         token.safeMint(alice, url);
@@ -107,9 +107,10 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.IssuerOnly,
-            mintOnce_,
-            address(this)
+            mintOnce_
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
+        token.grantRole(token.BURNER_ROLE(), address(this));
 
         token.safeMint(alice, url);
         assertEq(token.totalSupply(), 1);
@@ -126,9 +127,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.IssuerOnly,
-            mintOnce_,
-            address(this)
+            mintOnce_
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
 
         token.safeMint(alice, url);
         assertEq(token.totalSupply(), 1);
@@ -147,9 +148,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.OwnerOnly,
-            mintOnce_,
-            address(this)
+            mintOnce_
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
 
         token.safeMint(alice, url);
         assertEq(token.totalSupply(), 1);
@@ -165,9 +166,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.OwnerOnly,
-            mintOnce_,
-            address(this)
+            mintOnce_
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
 
         token.safeMint(alice, url);
         assertEq(token.totalSupply(), 1);
@@ -188,9 +189,11 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             "SBT Name",
             "SBT",
             IERC5484.BurnAuth.Both,
-            mintOnce_,
-            address(this)
+            mintOnce_
         );
+        token.grantRole(token.MINTER_ROLE(), address(this));
+        token.grantRole(token.BURNER_ROLE(), address(alice));
+        token.grantRole(token.BURNER_ROLE(), address(this));
 
         token.safeMint(alice, url);
         token.safeMint(bob, url);

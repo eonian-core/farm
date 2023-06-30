@@ -7,6 +7,8 @@ import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
 import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
 import {VaultFounderTokenMock} from "./mocks/VaultFounderTokenMock.sol";
+import {VaultMock} from "./mocks/VaultMock.sol";
+import "./mocks/ERC20Mock.sol";
 
 contract VaultFounderTokenTest is TestWithERC1820Registry {
     VaultFounderToken private token;
@@ -25,7 +27,9 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         //create a new instance of Founder token contact before each test run
-        token = new VaultFounderTokenMock(address(this));
+        token = new VaultFounderTokenMock();
+        token.grantRole(token.BALANCE_UPDATER_ROLE(), address(this));
+        token.grantRole(token.MINTER_ROLE(), address(this));
     }
 
     function testVaultMetadata() public {
@@ -120,6 +124,23 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         ));
         vm.prank(alice);
         token.setNextTokenMultiplier(200);
+    }
+
+    function testSetVault() public {
+        ERC20Mock underlying = new ERC20Mock("Mock Token", "TKN");
+        uint256 defaultFee = 1000;
+        uint256 defaultLPRRate = 10**18;
+        uint256 defaultFounderFee = 100;
+
+        VaultMock vault = new VaultMock(
+            address(underlying),
+            rewards,
+            defaultFee,
+            defaultLPRRate,
+            defaultFounderFee
+        );
+        vault.setFounders(address(token));
+        assertEq(vault.founders(), address(token));
     }
 
 }

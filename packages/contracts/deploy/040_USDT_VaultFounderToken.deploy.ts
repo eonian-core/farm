@@ -1,16 +1,10 @@
-import { BigNumber } from "ethers";
-
 import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
-import { BlockchainType, Stage } from "../hardhat.config";
-
-
+import { BlockchainType } from "../hardhat.config";
 
 /**
- * Deploy USDT Vault contract
+ * Deploy Vault Founder Token contract
  */
-const func = () => {};
-
-/* const func = deployOrUpgrade({
+const func = deployOrUpgrade({
   contract: "VaultFounderToken",
   chains: [
     BlockchainType.Mainnet,
@@ -18,17 +12,42 @@ const func = () => {};
     BlockchainType.Local,
   ],
   tags: ["asset:USDT"],
-  getArgs: ({ accounts: { USDT, treasury }, stage }) => [
-    USDT, // asset
-    treasury, // rewards
-    stage !== Stage.Production // managment fee
-      ? 1500 // 15% for development and test versions
-      : 2000, // 20% for production versions
-    BigNumber.from("1" + "0".repeat(18)).div(3600), // 6 hours of locked profit release rate
-    "Eonian USDT Vault Shares", // name
-    "eonUSDT", // symbol
-    [], // defaultOperators
+  dependencies: ["Vault"],
+  getArgs: () => [
+    100, // maxCountTokens
+    12_000, // nextTokenPriceMultiplier
+    200, // initialTokenPrice
   ],
-}); */
+  afterDeploy: async ({ ethers, deployments: { log } }, Strategy, [vault]) => {
+    log("Adding Vault to VaultFounderToken");
+    const Vault = await ethers.getContractAt("Vault", vault.address);
+    const VaultFounderToken = await ethers.getContract("VaultFounderToken");
+
+    const txVault = await Vault.setFounders(VaultFounderToken.address);
+    const resultAddingVaultFounderToken = await txVault.wait();
+    log("VaultFounderToken added to vault", resultAddingVaultFounderToken);
+
+    const txVaultFounderToken = await VaultFounderToken.setVault(Vault.address);
+    const resultAddingVault = await txVaultFounderToken.wait();
+    log("Vault added to VaultFounderToken", resultAddingVault);
+
+    const grantMinterRole = await VaultFounderToken.grantRole(
+      VaultFounderToken.MINTER_ROLE(),
+      Vault.address
+    );
+    const resultGrantMinterRole = await grantMinterRole.wait();
+    log("VaultFounderToken grant MINTER_ROLE to Vault", resultGrantMinterRole);
+
+    const grantBalanceUpdaterRole = await VaultFounderToken.grantRole(
+      VaultFounderToken.BALANCE_UPDATER_ROLE(),
+      Vault.address
+    );
+    const resultGrantBalanceUpdaterRole = await grantBalanceUpdaterRole.wait();
+    log(
+      "VaultFounderToken grant BALANCE_UPDATER_ROLE to Vault",
+      resultGrantBalanceUpdaterRole
+    );
+  },
+});
 
 export default func;

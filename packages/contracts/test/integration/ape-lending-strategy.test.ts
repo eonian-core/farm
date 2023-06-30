@@ -59,16 +59,19 @@ describe("Ape Lending Strategy", function () {
     vault = await deployVault(hre, { asset, rewards, signer: owner });
     hre.tracer.nameTags[vault.address] = "Vault";
 
-    // todo add vft in integration test
     vaultFounderToken = await deployVaultFounderToken(hre, {
       maxCountTokens: 100,
       nextTokenPriceMultiplier: 1200,
       initialTokenPrice: 200,
-      admin: vault.address,
       signer: owner,
     });
-    vaultFounderToken.setVault(vault);
     vault.setFounders(vaultFounderToken.address);
+    vaultFounderToken.setVault(vault.address);
+    vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), vault.address);
+    vaultFounderToken.grantRole(
+      vaultFounderToken.BALANCE_UPDATER_ROLE(),
+      vault.address
+    );
 
     await resetBalance(vault.address, { tokens: [asset] });
 

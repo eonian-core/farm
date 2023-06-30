@@ -29,7 +29,6 @@ type Options = {
   maxCountTokens: BigNumberish;
   nextTokenPriceMultiplier: BigNumberish;
   initialTokenPrice: BigNumberish;
-  admin: string;
   overrides?: Overrides & { from?: string | Promise<string> };
   signer?: Signer | string;
 };

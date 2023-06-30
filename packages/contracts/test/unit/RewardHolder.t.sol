@@ -39,7 +39,6 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vaultFounderToken = new VaultFounderTokenMock(address(this));
         vault = new VaultMock(
             address(underlying),
             rewards,
@@ -47,13 +46,10 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
             defaultLPRRate,
             defaultFounderRate
         );
-        vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.setVault(vault);
 
-        rewardHolder = new RewardHolderMock(address(this));
+        rewardHolder = new RewardHolderMock();
+        rewardHolder.grantRole(rewardHolder.BALANCE_UPDATER_ROLE(), address(this));
         rewardHolder.setVault(vault);
-
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
     }
 
     function testDepositReward(uint192 amount) public {
@@ -74,7 +70,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vault.deposit(amount);
 
         // Put funds on vault to be able to move them to token owners from the reward holder
-        rewardHolder.setupNewOwner(address(alice));
+        rewardHolder.setupOwner(address(alice));
         vault.mint(address(rewardHolder), amount);
 
         vm.expectEmit(address(rewardHolder));
@@ -95,9 +91,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.assume(amount > 10**11 && amount < address(this).balance);
 
         // Allow the vault to take funds from Alice but not from test to check roles
-        rewardHolder = new RewardHolderMock(address(alice));
-        vm.prank(alice);
-        rewardHolder.setVault(vault);
+        rewardHolder.revokeRole(rewardHolder.BALANCE_UPDATER_ROLE(), address(this));
+        rewardHolder.grantRole(rewardHolder.BALANCE_UPDATER_ROLE(), address(alice));
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);
@@ -115,12 +110,12 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
         // Put funds on vault to be able to move them to token owners from the reward holder
         vm.prank(alice);
-        rewardHolder.setupNewOwner(address(alice));
+        rewardHolder.setupOwner(address(alice));
         vault.mint(address(rewardHolder), amount);
 
         vm.expectRevert(
             abi.encodePacked(
-                AccessTestHelper.getErrorMessage(address(this), rewardHolder.REWARD_CLAIMER_ROLE())
+                AccessTestHelper.getErrorMessage(address(this), rewardHolder.BALANCE_UPDATER_ROLE())
             )
         );
         rewardHolder.depositReward(amount);
@@ -128,13 +123,12 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
     }
 
     function testSetupNewsOwner() public {
-        rewardHolder.setupNewOwner(address(alice));
+        rewardHolder.setupOwner(address(alice));
         assertEq(rewardHolder.numberCoins(), 1);
     }
 
     function testSetupNewOwnerFail() public {
-        rewardHolder = new RewardHolderMock(address(alice));
-        vm.prank(alice);
+        rewardHolder = new RewardHolderMock();
         rewardHolder.setVault(vault);
 
         vm.expectRevert(
@@ -142,7 +136,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
                 AccessTestHelper.getErrorMessage(address(this), rewardHolder.BALANCE_UPDATER_ROLE())
             )
         );
-        rewardHolder.setupNewOwner(address(alice));
+        rewardHolder.setupOwner(address(alice));
     }
 
     function testCorrectRewardClaimed() public {
@@ -169,8 +163,8 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vault.deposit(amount);
 
         // Put funds on vault to be able to move them to token owners from the reward holder
-        rewardHolder.setupNewOwner(address(alice));
-        rewardHolder.setupNewOwner(address(bob));
+        rewardHolder.setupOwner(address(alice));
+        rewardHolder.setupOwner(address(bob));
         vault.mint(address(rewardHolder), amount);
         rewardHolder.depositReward(amount);
 

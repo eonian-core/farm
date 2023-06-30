@@ -20,6 +20,7 @@ contract ERC5484Upgradeable is
 {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
+    // @dev utility object for counting tokens
     CountersUpgradeable.Counter private _tokenIdCounter;
 
     /// @dev burn mode with different behavior
@@ -28,7 +29,11 @@ contract ERC5484Upgradeable is
     /// @dev Token can me minted only once per user
     bool private _mintOnce;
 
+    /// @dev Role for minting tokens
+    /// value is 0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    /// @dev Role for burning tokens which can be used only if _burnAuth isn't BurnAuth.None
+    /// value is 0x3c11d16cbaffd01df69ce1c404f6340ee057498f5f00246190ea54220576a848
     bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
 
     /// @dev Modifier to protect a burn a token without permission
@@ -65,8 +70,7 @@ contract ERC5484Upgradeable is
         string memory name_,
         string memory symbol_,
         BurnAuth burnAuth_,
-        bool mintOnce_,
-        address admin_
+        bool mintOnce_
     ) internal onlyInitializing {
         __ERC721_init(name_, symbol_);
         __ERC721Enumerable_init();
@@ -76,20 +80,22 @@ contract ERC5484Upgradeable is
         _mintOnce = mintOnce_;
 
         // setup roles depend on mode for SoulBound token
-        _setupRole(DEFAULT_ADMIN_ROLE, admin_);
-        _setupRole(MINTER_ROLE, admin_);
-        if(burnAuth_ == BurnAuth.IssuerOnly || burnAuth_ == BurnAuth.Both) {
-            _setupRole(BURNER_ROLE, admin_);
-        }
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     /// @dev function for mint new SBT token
     /// @param to address of user who will receive token
     /// @param uri token metadata uri
-    function safeMint(address to, string memory uri) public virtual onlyRole(MINTER_ROLE) {
+    /// @return true if token was minted
+    function safeMint(address to, string memory uri)
+        public
+        virtual
+        onlyRole(MINTER_ROLE)
+        returns(bool)
+    {
         // allow to mint only once per user if _mintOnce is true
         if(_mintOnce && balanceOf(to) != 0) {
-            return;
+            return false;
         }
 
         // mint token
@@ -105,6 +111,7 @@ contract ERC5484Upgradeable is
 
         // emit event
         emit Issued(address(0), to, tokenId, _burnAuth);
+        return true;
     }
 
     /// @dev Token is SOUL BOUND and it is not allowed to move token between users
