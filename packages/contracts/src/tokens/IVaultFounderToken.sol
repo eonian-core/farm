@@ -21,4 +21,8 @@ interface IVaultFounderToken is
     /// @dev set token metadata uri
     /// can be used as utility method and custom logic on front-end
     function setTokenURI(string memory _tokenURI) external;
+    /// @dev set token metadata uri
+    /// can be used as utility method and custom logic on front-end by owner of the contract
+    /// in case of end user has a wrong uri or somebody corrupted it
+    function setTokenURI(string memory _tokenURI, uint256 tokenId) external;
 }

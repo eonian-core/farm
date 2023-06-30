@@ -21,6 +21,7 @@ import "./mocks/CTokenBaseStrategyMock.sol";
 import "contracts/strategies/CTokenBaseStrategy.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     address private constant BANANA = 0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95;
@@ -32,6 +33,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
 
     ERC20Mock underlying;
     VaultMock vault;
+    VaultFounderTokenMock vaultFounderToken;
     OpsMock ops;
     CTokenMock cToken;
 
@@ -41,6 +43,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderFee = 100;
 
     uint256 minReportInterval = 3600;
     bool isPrepaid = false;
@@ -65,9 +68,16 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
         vm.label(address(vault), "vault");
+
+        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken.setVault(vault);
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
+        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
@@ -152,8 +162,14 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
+        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken.setVault(vault);
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
+        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
 
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new CTokenBaseStrategyMock(

@@ -115,6 +115,11 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         _setTokenURI(tokenId, _tokenURI);
     }
 
+    /// @inheritdoc IVaultFounderToken
+    function setTokenURI(string memory _tokenURI, uint256 tokenId) external override onlyRole(DEFAULT_ADMIN_ROLE) {
+        _setTokenURI(tokenId, _tokenURI);
+    }
+
     function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
             external override
     {

@@ -23,7 +23,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     mapping(address => uint) public rewardOwnerIndex;
 
     /// @notice
-    uint public numberCoins;
+    uint16 public numberCoins;
 
     Vault public vault;
 
