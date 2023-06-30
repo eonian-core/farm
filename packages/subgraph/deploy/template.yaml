@@ -2,7 +2,7 @@ specVersion: 0.0.5
 description: {{ description }}
 repository: https://github.com/eonian-core/farm
 schema:
-  file: ../../schema.graphql
+  file: {{ schema }}
 dataSources:
   - kind: ethereum
     name: Vault
@@ -41,9 +41,9 @@ dataSources:
         - Withdraw
       abis:
         - name: Vault
-          file: ../../abis/VaultImplementation.json
+          file: {{ abis.Vault }}
         - name: ERC20
-          file: ../../abis/ERC20.json
+          file: {{ abis.ERC20 }}
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged
@@ -90,4 +90,4 @@ dataSources:
           handler: handleUpgraded
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: ../../src/event-handlers.ts
+      file: {{ eventHandlers.file }}

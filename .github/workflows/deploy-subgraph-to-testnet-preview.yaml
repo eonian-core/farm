@@ -58,15 +58,15 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
       
-      - name: Generate subgraph schema code
-        run: |-
-          cd packages/subgraph
-          yarn gen:code
-
       - name: Generate subgraph environments configurations
         run: |-
           cd packages/subgraph
           yarn gen:configs
+
+      - name: Generate subgraph schema code
+        run: |-
+          cd packages/subgraph
+          yarn gen:code
 
       - name: Build subgraph
         run: |-
