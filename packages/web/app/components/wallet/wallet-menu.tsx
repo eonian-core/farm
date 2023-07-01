@@ -85,7 +85,7 @@ export const useOnMenuClick = () => {
         }
       }
     },
-    [push, disconnect]
+    [push, disconnect, logout]
   );
 }
 
