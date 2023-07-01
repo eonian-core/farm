@@ -1,0 +1,94 @@
+specVersion: 0.0.5
+description: The subgraph of Eonian yield aggregator protocol for Binance Smart
+  Chain development environment
+repository: https://github.com/eonian-core/farm
+schema:
+  file: ../../schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Vault
+    network: bsc
+    source:
+      address: "0xa3923Fa94c7332e2561E88290B884419dca9E23C"
+      abi: Vault
+      startBlock: 28907512
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vault
+        - ContractAdminChanged
+        - Approval
+        - AuthorizedOperator
+        - ContractBeaconUpgraded
+        - BorrowerDebtManagementReported
+        - Burned
+        - Deposit
+        - Initialized
+        - LockedProfitReleaseRateChanged
+        - Minted
+        - OwnershipTransferred
+        - Paused
+        - RevokedOperator
+        - Sent
+        - StrategyAdded
+        - StrategyRemoved
+        - StrategyReturnedToQueue
+        - StrategyRevoked
+        - Transfer
+        - Unpaused
+        - ContractUpgraded
+        - Withdraw
+      abis:
+        - name: Vault
+          file: ../../abis/VaultImplementation.json
+        - name: ERC20
+          file: ../../abis/ERC20.json
+      eventHandlers:
+        - event: AdminChanged(address,address)
+          handler: handleAdminChanged
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: AuthorizedOperator(indexed address,indexed address)
+          handler: handleAuthorizedOperator
+        - event: BeaconUpgraded(indexed address)
+          handler: handleBeaconUpgraded
+        - event: BorrowerDebtManagementReported(indexed
+            address,uint256,uint256,uint256,uint256,uint256)
+          handler: handleBorrowerDebtManagementReported
+        - event: Burned(indexed address,indexed address,uint256,bytes,bytes)
+          handler: handleBurned
+        - event: Deposit(indexed address,indexed address,uint256,uint256)
+          handler: handleDeposit
+        - event: Initialized(uint8)
+          handler: handleInitialized
+        - event: LockedProfitReleaseRateChanged(uint256)
+          handler: handleLockedProfitReleaseRateChanged
+        - event: Minted(indexed address,indexed address,uint256,bytes,bytes)
+          handler: handleMinted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: Paused(address)
+          handler: handlePaused
+        - event: RevokedOperator(indexed address,indexed address)
+          handler: handleRevokedOperator
+        - event: Sent(indexed address,indexed address,indexed address,uint256,bytes,bytes)
+          handler: handleSent
+        - event: StrategyAdded(indexed address,uint256)
+          handler: handleStrategyAdded
+        - event: StrategyRemoved(indexed address,bool)
+          handler: handleStrategyRemoved
+        - event: StrategyReturnedToQueue(indexed address)
+          handler: handleStrategyReturnedToQueue
+        - event: StrategyRevoked(indexed address)
+          handler: handleStrategyRevoked
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Unpaused(address)
+          handler: handleUnpaused
+        - event: Upgraded(indexed address)
+          handler: handleUpgraded
+        - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleWithdraw
+      file: ../../src/event-handlers.ts

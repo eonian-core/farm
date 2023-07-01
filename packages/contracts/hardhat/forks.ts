@@ -8,7 +8,7 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
 export const binanceSmartChainFork: ForkData = {
   // official BSC RPC unstable use unofficail instead
   url: "https://bsc.getblock.io/beac5e27-711d-4570-abed-8ddb5dd41d9e/mainnet/",
-  // do not use blockNumber for BSC, 
+  // do not use blockNumber for BSC,
   // hardhat or providers cannot correctly exchange non latest block data
   accounts: {
     holderA: "0xe2fc31f816a9b94326492132018c3aecc4a93ae1", // Holder (Binance Hot Wallet)

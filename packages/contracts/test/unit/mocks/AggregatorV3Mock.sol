@@ -5,13 +5,13 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract AggregatorV3Mock is AggregatorV3Interface {
     uint8 private _decimals;
-    uint256 private _price;
+    int256 private _price;
 
     function setDecimals(uint8 __decimals) external {
         _decimals = __decimals;
     }
 
-    function setPrice(uint256 __price) external {
+    function setPrice(int256 __price) external {
         _price = __price;
     }
 
@@ -52,6 +52,6 @@ contract AggregatorV3Mock is AggregatorV3Interface {
             uint80 answeredInRound
         )
     {
-        return (0, int256(_price), 0, 0, 0);
+        return (0, _price, 0, 0, 0);
     }
 }

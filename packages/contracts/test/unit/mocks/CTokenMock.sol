@@ -12,6 +12,12 @@ contract CTokenMock is ERC20, ICToken {
     uint256 public balanceSnapshot;
     uint256 public exchangeRate;
 
+    bool public blocksBased;
+    uint256 public borrowRatePerBlock;
+    uint256 public supplyRatePerBlock;
+    uint256 public exchangeRateCurrent;
+    uint256 public accrueInterest;
+
     constructor(address __underlying) ERC20("CToken", "CT") {
         setUnderlying(__underlying);
         setDecimals(8);
@@ -31,6 +37,26 @@ contract CTokenMock is ERC20, ICToken {
 
     function setExchangeRate(uint256 _exchangeRate) public {
         exchangeRate = _exchangeRate;
+    }
+
+    function setBlocksBased(bool _blocksBased) public {
+        blocksBased = _blocksBased;
+    }
+
+    function setBorrowRatePerBlock(uint256 _borrowRatePerBlock) public {
+        borrowRatePerBlock = _borrowRatePerBlock;
+    }
+
+    function setSupplyRatePerBlock(uint256 _supplyRatePerBlock) public {
+        supplyRatePerBlock = _supplyRatePerBlock;
+    }
+
+    function setExchangeRateCurrent(uint256 _exchangeRateCurrent) public {
+        exchangeRateCurrent = _exchangeRateCurrent;
+    }
+
+    function setAccrueInterest(uint256 _accrueInterest) public {
+        accrueInterest = _accrueInterest;
     }
 
     function decimals() public view override(ICToken, ERC20) returns (uint8) {
@@ -109,14 +135,6 @@ contract CTokenMock is ERC20, ICToken {
         return (0, balanceSnapshot, 0, exchangeRate);
     }
 
-    function borrowRatePerBlock() external pure override returns (uint256) {
-        return 0;
-    }
-
-    function supplyRatePerBlock() external pure override returns (uint256) {
-        return 0;
-    }
-
     function totalBorrowsCurrent() external pure override returns (uint256) {
         return 0;
     }
@@ -130,10 +148,6 @@ contract CTokenMock is ERC20, ICToken {
     function borrowBalanceStored(
         address /* account */
     ) external pure override returns (uint256) {
-        return 0;
-    }
-
-    function exchangeRateCurrent() external pure override returns (uint256) {
         return 0;
     }
 
@@ -154,9 +168,6 @@ contract CTokenMock is ERC20, ICToken {
         return super.totalSupply();
     }
 
-    function accrueInterest() external pure override returns (uint256) {
-        return 0;
-    }
 
     function seize(
         address, /* liquidator */

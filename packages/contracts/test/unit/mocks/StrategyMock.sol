@@ -9,11 +9,13 @@ contract StrategyMock is IStrategy {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     IERC20Upgradeable public asset;
-    IVault public vault;
+    IStrategiesLender public lender;
 
-    constructor(address _asset, address _vault) {
+    uint256 public override interestRatePerBlock;
+
+    constructor(address _asset, address _lender) {
         asset = IERC20Upgradeable(_asset);
-        vault = IVault(_vault);
+        lender = IStrategiesLender(_lender);
     }
 
     function withdraw(uint256 assets) external override returns (uint256 loss) {
@@ -31,4 +33,9 @@ contract StrategyMock is IStrategy {
     function name() external pure override returns (string memory) {
         return "StrategyMock";
     }
+
+    function setInterestRatePerBlock(uint256 _interestRatePerBlock) external {
+        interestRatePerBlock = _interestRatePerBlock;
+    }
+
 }
