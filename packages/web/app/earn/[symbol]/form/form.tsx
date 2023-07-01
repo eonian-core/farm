@@ -70,9 +70,6 @@ const Form: React.FC<Props> = ({ vault }) => {
 
   return (
     <div className={styles.container}>
-      <h4>
-        <VaultLink vault={vault} chainId={vaultChain.id} />
-      </h4>
       <Card variant="bordered">
         <FormHeader
           currentAction={formAction}
@@ -115,6 +112,9 @@ const Form: React.FC<Props> = ({ vault }) => {
           />
         </Card.Body>
       </Card>
+      <h4>
+        <VaultLink vault={vault} chainId={vaultChain.id} />
+      </h4>
     </div>
   );
 };

@@ -24,7 +24,7 @@
 
     content: "";
     position: absolute;
-    top: 5rem;
+    top: 3rem;
     left: 3rem;
     height: calc(100% - 2 * 3.5rem);
     width: calc(100% - 2 * 3rem);
@@ -41,7 +41,7 @@
 
   &:hover {
     &:before {
-      top: 4rem;
+      top: 1rem;
       left: 2.5rem;
       height: calc(100% - 2 * 1.5rem);
       width: calc(100% - 2 * 2.5rem);
