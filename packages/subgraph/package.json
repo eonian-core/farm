@@ -1,6 +1,6 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "scripts": {
     "gen:code": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml",
     "dev": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml --watch",
@@ -14,6 +14,7 @@
     "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eonian-sepolia-testnet",
     "copy:local-schema": "cp ./deploy/environments/local.yaml ./subgraph.yaml",
     "test": "graph test",
+    "test:local": "yarn copy:local-schema && yarn test",
     "test:docker": "graph test -d",
     "test:watch": "nodemon",
     "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments"

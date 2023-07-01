@@ -106,7 +106,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         }
 
         // in this case "PerBlock" actually means "PerSecond"
-        return cToken.borrowRatePerBlock() / secondPerBlock;
+        return cToken.borrowRatePerBlock() * secondPerBlock;
     }
 
     /// @inheritdoc ICInterestRate
@@ -116,7 +116,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         }
 
         // in this case "PerBlock" actually means "PerSecond"
-        return cToken.supplyRatePerBlock() / secondPerBlock;
+        return cToken.supplyRatePerBlock() * secondPerBlock;
     }
 
     /// @inheritdoc ICInterestRate
