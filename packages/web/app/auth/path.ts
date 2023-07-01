@@ -25,3 +25,19 @@ export function getTopLevelPath(url: string): string {
         return url;
     }
 }
+
+/**
+ * Attach path to url or replace if there exists such
+ */
+export function attachOrReplacePath(originalUrl: string, newPath: string): string {
+    try {
+        // Parse the original URL
+        const parsedUrl = new URL(originalUrl);
+
+        // Concatenate the origin with the new path
+        return parsedUrl.origin + (newPath.startsWith('/') ? newPath : `/${newPath}`);
+    } catch (error) {
+        console.warn('Invalid URL:', error);
+        return originalUrl;
+    }
+}
