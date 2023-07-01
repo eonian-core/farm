@@ -215,7 +215,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         if (_blocksBased) {
             assertEq(strategy.interestRatePerBlock(), interestRatePerBlock);
         } else {
-            assertEq(strategy.interestRatePerBlock(), interestRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.interestRatePerBlock(), interestRatePerBlock * strategy.secondPerBlock());
         }
     }
 
@@ -230,7 +230,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         if (_blocksBased) {
             assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock);
         } else {
-            assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock * strategy.secondPerBlock());
         }
     }
 
@@ -245,7 +245,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         if (_blocksBased) {
             assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock);
         } else {
-            assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock * strategy.secondPerBlock());
         }
     }
 
