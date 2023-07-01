@@ -498,8 +498,8 @@ export class RewardAPY extends Entity {
     this.set("decimals", Value.fromI32(value));
   }
 
-  get dayly(): BigInt {
-    let value = this.get("dayly");
+  get daily(): BigInt {
+    let value = this.get("daily");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -507,8 +507,8 @@ export class RewardAPY extends Entity {
     }
   }
 
-  set dayly(value: BigInt) {
-    this.set("dayly", Value.fromBigInt(value));
+  set daily(value: BigInt) {
+    this.set("daily", Value.fromBigInt(value));
   }
 
   get weekly(): BigInt {
