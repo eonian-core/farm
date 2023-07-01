@@ -15,9 +15,11 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     event RewardClaimed(uint256 reward, address receiver);
     /// @notice Emitted when new rewards are deposited
     event RewardDeposited(address sender, uint value);
+    /// @notice Emitted when a new owner is added
+    event OwnerAdded(address owner, uint index);
 
     /// @notice Accumulator of the total earned interest rate since the opening of the token
-    uint public rewardIndex = 1e8;
+    uint public rewardIndex = 1;
 
     /// @notice The owners' reward indexes for eachas of the last time they accrued
     mapping(address => uint) public rewardOwnerIndex;
@@ -49,7 +51,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     /// @dev deposit reward to the contract to be claimed by token owners
     /// @notice only role with BALANCE_UPDATER_ROLE can call this function
     /// @param plusReward amount of reward to be deposited
-    function depositReward(uint256 plusReward) public onlyRole(BALANCE_UPDATER_ROLE) nonReentrant {
+    function depositReward(uint256 plusReward) external onlyRole(BALANCE_UPDATER_ROLE) nonReentrant {
         // update reward index for claim reward logic
         rewardIndex += plusReward;
         emit RewardDeposited(_msgSender(), plusReward);
@@ -58,14 +60,10 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     /// @dev claim reward for token owner
     function claimReward() external nonReentrant {
         require(vault != Vault(address(0)), "Vault not set.");
-
         require(rewardOwnerIndex[msg.sender] != 0, "Caller doesn't have reward.");
 
-        uint deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
-
         // calculate reward for token owner
-        //todo discuss the proper calculation mechanism
-        uint256 tokenOwnerReward = deltaIndex.mulDivDown(1, numberCoins);
+        uint256 tokenOwnerReward = _calcReward();
         rewardOwnerIndex[msg.sender] = rewardIndex;
 
         // transfer reward to token owner
@@ -73,9 +71,16 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
         emit RewardClaimed(tokenOwnerReward, address(msg.sender));
     }
 
+    function _calcReward() internal view returns (uint256) {
+        //todo discuss the proper calculation mechanism
+        uint deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
+        return deltaIndex.mulDivDown(1, numberCoins);
+    }
+
     /// @dev setup new owner for reward usually called when minting new token
     function setupNewOwner(address rewardOwner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
         rewardOwnerIndex[rewardOwner] = rewardIndex;
         numberCoins++;
+        emit OwnerAdded(rewardOwner, rewardIndex);
     }
 }

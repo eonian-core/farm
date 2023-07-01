@@ -1107,6 +1107,62 @@ contract VaultTest is TestWithERC1820Registry {
         _assertEqWithRoundingError(vault.calculateLockedProfit(), 0);
     }
 
+    function testFounderFeeCanBeClaimed() public {
+        uint256 initialVaultBalance = 10_000_000;
+        uint256 deposit = 10_000;
+        uint256 gain = 1_000_000;
+        uint256 fees = 500;
+        uint256 foundersFees = 500;
+        uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
+
+        _initVaultWithStrategy(
+            initialVaultBalance,
+            fees,
+            lockedProfitReleaseRate,
+            foundersFees
+        );
+
+        // Give the required funds to Alice and Bob
+        underlying.mint(alice, deposit);
+        underlying.mint(bob, deposit);
+
+        // Allow the vault to take funds from Alice and Bob
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+        vm.prank(bob);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+        vm.prank(alice);
+        vault.deposit(deposit);
+        vm.prank(bob);
+        vault.deposit(deposit);
+
+        assertEq(vaultFounderToken.totalSupply(), 2);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(strategy), gain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(gain, 0);
+
+        // Immediately after the report, all profit should be locked (except the fees)
+        uint256 feesAmount = (fees * gain) / MAX_BPS + (foundersFees * gain) / MAX_BPS;
+        assertEq(vault.totalAssets(), initialVaultBalance + feesAmount + deposit * 2);
+        assertEq(vault.calculateLockedProfit(), gain - feesAmount);
+
+        // check alice has balance
+
+        console.log(vault.balanceOf(address(vaultFounderToken)));
+        // let's try to claim rewards
+        vm.prank(alice);
+        vaultFounderToken.claimReward();
+
+        // check alice has empty balance after claim and bob still has balance
+        vm.prank(alice);
+        assertEq(vaultFounderToken.calculateReward(), 0);
+        vm.prank(bob);
+        assertEq(vaultFounderToken.calculateReward(), 25);
+    }
+
     function testLockedProfitReleaseWithNegativeReport() public {
         uint256 initialVaultBalance = 10_000_000;
         uint256 gain = 1_000_000;
@@ -1173,6 +1229,9 @@ contract VaultTest is TestWithERC1820Registry {
             foundersFee
         );
         vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
+        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
+        vaultFounderToken.setVault(vault);
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault

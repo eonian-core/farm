@@ -21,6 +21,7 @@ import {IVersionable} from "./upgradeable/IVersionable.sol";
 import {SafeERC4626Lifecycle} from "./tokens/SafeERC4626Lifecycle.sol";
 import {IVaultHook} from "./tokens/IVaultHook.sol";
 import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
+import {RewardHolder} from "./tokens/RewardHolder.sol";
 
 
 error ExceededMaximumFeeValue();
@@ -28,6 +29,7 @@ error ExceededMaximumFeeValue();
 error InsufficientVaultBalance(uint256 assets, uint256 shares);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error InappropriateStrategy();
+error FoundersNotSet();
 
 contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender, SafeERC4626Lifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -246,7 +248,10 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         }
         uint256 vaultFoundersReward = (extraFreeFunds * foundersFee) / MAX_BPS;
         if (vaultFoundersReward > 0) {
-            _mint(founders, convertToShares(vaultFoundersReward), "", "", false);
+            // if rewards are set, we mint the tokens to the vault and update index for Claim rewards contract
+            uint256 shares = convertToShares(vaultFoundersReward);
+            _mint(founders, shares, "", "", false);
+            RewardHolder(founders).depositReward(shares);
         }
         return fee + vaultFoundersReward;
     }

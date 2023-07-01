@@ -11,4 +11,8 @@ contract VaultFounderTokenMock is VaultFounderToken {
             200
         );
     }
+
+    function calculateReward() public view returns (uint256) {
+        return _calcReward();
+    }
 }
