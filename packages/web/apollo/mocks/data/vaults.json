@@ -2,14 +2,14 @@
   {
     "name": "Eonian USDT Vault Shares",
     "symbol": "eonUSDT",
-    "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
+    "address": "0x342F2B34113a437452282CC78E6e1FE4935AC695",
     "underlyingAsset": {
       "name": "Tether USD",
       "symbol": "USDT",
       "decimals": 18,
-      "address": "0x6175a8471C2122f778445e7E07A164250a19E661"
+      "address": "0x55d398326f99059ff775485246999027b3197955"
     },
     "decimals": 18,
-    "interestRate": "3793356699"
+    "interestRate": "431126159"
   }
 ]

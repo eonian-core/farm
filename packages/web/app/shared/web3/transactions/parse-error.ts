@@ -38,7 +38,7 @@ function parseCallExceptionError(
   error: ethers.CallExceptionError
 ): [string, TransactionErrorSeverity] {
   return [
-    `Transaction failed, reason: ${error.reason}`,
+    `Transaction failed, reason: ${error.reason || error.message}`,
     TransactionErrorSeverity.ERROR,
   ];
 }

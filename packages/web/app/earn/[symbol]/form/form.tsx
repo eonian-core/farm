@@ -59,11 +59,14 @@ const Form: React.FC<Props> = ({ vault }) => {
 
   const handleSubmit = React.useCallback(
     async (formAction: FormAction) => {
+      // Refresh vault <-> user data before the transaction to make sure all calculations are correct.
+      await refetechVaultUserData!();
+
       // Execute Deposit/Withdraw transaction
       await executeTransaction(formAction, vault, bigValue);
 
       // Refresh wallet balance & vault deposit after the transaction executed.
-      refetechVaultUserData?.();
+      refetechVaultUserData!();
     },
     [executeTransaction, refetechVaultUserData, vault, bigValue]
   );

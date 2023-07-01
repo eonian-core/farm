@@ -1,7 +1,27 @@
 import React from "react";
 import { Vault } from "../../../../api";
+import { withdraw } from "../../../../shared/web3/transactions/vault";
+import { useAppDispatch } from "../../../../store/hooks";
+import {
+  FormAction,
+  prepareVaultAction,
+} from "../../../../store/slices/vaultActionSlice";
+import { useWriteTransactionSender } from "./internal-hooks";
 
 export function useWithdrawTransaction() {
-  const execute = async (vault: Vault, amount: bigint) => {};
-  return React.useCallback(execute, []);
+  const dispatch = useAppDispatch();
+  const send = useWriteTransactionSender();
+
+  const execute = async (vault: Vault, amount: bigint) => {
+    const action = FormAction.WITHDRAW;
+
+    dispatch(prepareVaultAction({ action, vault, amount }));
+
+    // Execute "deposit" transaction if approve has been granted.
+    await send(withdraw, {
+      vaultAddress: vault.address,
+      amount,
+    });
+  };
+  return React.useCallback(execute, [send, dispatch]);
 }

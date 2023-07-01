@@ -19,6 +19,12 @@ const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
     label: "Sepolia - Testnet",
     rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
   },
+  [ChainId.BSC_MAINNET]: {
+    id: ChainId.toHex(ChainId.BSC_MAINNET),
+    token: "BNB",
+    label: "BSC Mainnet",
+    rpcUrl: "https://bsc-dataseed1.binance.org/",
+  },
 };
 
 export default init({
@@ -58,4 +64,4 @@ export default init({
   },
 });
 
-export const defaultChain = chains[ChainId.SEPOLIA]!;
+export const defaultChain = chains[ChainId.BSC_MAINNET]!;

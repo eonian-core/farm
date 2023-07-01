@@ -29,7 +29,8 @@ export function useVaultUserInfo(vault: Vault, params: Params = {}) {
     if (!walletAddress || !multicallAddress || !provider) {
       return null;
     }
-    return () => {
+
+    return async () => {
       const params = {
         walletAddress,
         vaultAddress,
@@ -37,7 +38,7 @@ export function useVaultUserInfo(vault: Vault, params: Params = {}) {
         multicallAddress,
         provider,
       };
-      dispatch(fetchVaultUserData(params));
+      await dispatch(fetchVaultUserData(params));
     };
   }, [
     dispatch,
