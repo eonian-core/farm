@@ -3,6 +3,12 @@
   animation: appearWithDelay 1s ease-in;
 }
 
+.bold {
+  button p {
+    font-weight: var(--font-bold);
+  }
+}
+
 @keyframes appearWithDelay {
   0% {
     opacity: 0;
