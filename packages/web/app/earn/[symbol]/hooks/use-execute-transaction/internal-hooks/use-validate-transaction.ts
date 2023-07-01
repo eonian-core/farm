@@ -7,7 +7,7 @@ import { toNumberFromDecimals } from "../../../../../shared";
 import { useAppSelector } from "../../../../../store/hooks";
 
 export function useValidateTransaction() {
-  const { walletBalanceBN, assetDecimals } = useAppSelector(
+  const { walletBalanceBN, vaultBalanceBN, assetDecimals } = useAppSelector(
     (state) => state.vaultUser
   );
   return React.useCallback(
@@ -17,25 +17,22 @@ export function useValidateTransaction() {
         amount,
         assetDecimals,
         walletBalance: BigInt(walletBalanceBN),
+        vaultBalance: BigInt(vaultBalanceBN),
       });
     },
-    [walletBalanceBN, assetDecimals]
+    [walletBalanceBN, vaultBalanceBN, assetDecimals]
   );
 }
 
 interface ValidationData {
   vault: Vault;
   amount: bigint;
-  walletBalance: bigint;
   assetDecimals: number;
+  walletBalance: bigint;
+  vaultBalance: bigint;
 }
 
-function validateAndShowToast(action: FormAction, data: {
-  vault: Vault;
-  amount: bigint;
-  walletBalance: bigint;
-  assetDecimals: number;
-}) {
+function validateAndShowToast(action: FormAction, data: ValidationData) {
   try {
     validate(action, data);
     hideToast();
@@ -58,7 +55,20 @@ function validate(action: FormAction, data: ValidationData) {
   }
 }
 
-function validateWithdraw(data: ValidationData) {}
+function validateWithdraw(data: ValidationData) {
+  const { amount, vault, vaultBalance, assetDecimals } = data;
+  if (amount <= 0) {
+    throw new Error("Please enter an amount greater than 0 to continue.");
+  }
+
+  const assetSymbol = vault.underlyingAsset.symbol;
+  if (amount > vaultBalance) {
+    const balance = toNumberFromDecimals(vaultBalance, assetDecimals);
+    throw new Error(
+      `Insufficient token balance. You are trying to withdraw more tokens than are available in your vault balance. Available balance: ${balance} ${assetSymbol}`
+    );
+  }
+}
 
 function validateDeposit(data: ValidationData) {
   const { amount, vault, walletBalance, assetDecimals } = data;

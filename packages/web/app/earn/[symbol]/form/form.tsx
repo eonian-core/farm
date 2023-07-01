@@ -28,7 +28,7 @@ interface Props {
 }
 
 const Form: React.FC<Props> = ({ vault }) => {
-  const { wallet, status, chains } = useWalletWrapperContext();
+  const { wallet, status } = useWalletWrapperContext();
 
   const refetechVaultUserData = useVaultUserInfo(vault, {
     autoUpdateInterval: 5000,
@@ -37,27 +37,16 @@ const Form: React.FC<Props> = ({ vault }) => {
   const { isLoading, lastRequestForWallet } = useAppSelector(
     (state) => state.vaultUser
   );
-  const { walletBalance, vaultBalance } = useAppSelector(getBalancesSelector);
-
-  const hasPendingTransactions = useHasPendingTransactions();
-
-  const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
-  const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
-  const isFormReady =
-    !isLoading || isFirstRequestFinished || isWalletNotConnected;
+  const { vaultBalance } = useAppSelector(getBalancesSelector);
 
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT
   );
 
-  // TODO: Refactor this logic. Temporarily (for alpha test) we use only one chain, later we will have multiple supported chains.
-  const vaultChain = React.useMemo(() => {
-    return chains.find((chain) => chain.isDefault)!;
-  }, [chains]);
-
-  const [value, displayValue, bigValue, handleValueChange] =
-    useInputValue(vault);
-
+  const [value, displayValue, bigValue, handleValueChange] = useInputValue();
+  const balance = useBalance(formAction);
+  const vaultChain = useVaultChain();
+  const hasPendingTransactions = useHasPendingTransactions();
   const executeTransaction = useExecuteTransaction();
 
   const handleSubmit = React.useCallback(
@@ -73,6 +62,11 @@ const Form: React.FC<Props> = ({ vault }) => {
     },
     [executeTransaction, refetechVaultUserData, vault, bigValue]
   );
+
+  const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
+  const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
+  const isFormReady =
+    !isLoading || isFirstRequestFinished || isWalletNotConnected;
 
   return (
     <div className={styles.container}>
@@ -100,14 +94,14 @@ const Form: React.FC<Props> = ({ vault }) => {
         <Card.Body className={styles.fragment}>
           <PercentButtonGroup
             inputValue={value}
-            maxValue={walletBalance}
+            maxValue={balance}
             onValueChange={handleValueChange}
             disabled={hasPendingTransactions}
           />
           <FormInput
             assetSymbol={vault.underlyingAsset.symbol}
             value={displayValue}
-            balance={walletBalance}
+            balance={balance}
             onChange={handleValueChange}
             isLoading={!isFormReady}
             disabled={hasPendingTransactions}
@@ -125,14 +119,32 @@ const Form: React.FC<Props> = ({ vault }) => {
   );
 };
 
-function useInputValue({ underlyingAsset }: Vault) {
-  const { walletBalanceBN } = useAppSelector((state) => state.vaultUser);
-  return useNumberInputValue(BigInt(walletBalanceBN), underlyingAsset.decimals);
+function useInputValue() {
+  const { assetDecimals } = useAppSelector((state) => state.vaultUser);
+  return useNumberInputValue(0n, assetDecimals);
+}
+
+function useBalance(action: FormAction): number {
+  const { walletBalance, vaultBalance } = useAppSelector(getBalancesSelector);
+  switch (action) {
+    case FormAction.DEPOSIT:
+      return walletBalance;
+    case FormAction.WITHDRAW:
+      return vaultBalance;
+  }
 }
 
 function useHasPendingTransactions() {
   const activeStep = useAppSelector(getActiveStepSelector);
   return activeStep !== null && activeStep !== FormActionStep.DONE;
+}
+
+// TODO: Refactor this logic. Temporarily (for alpha test) we use only one chain, later we will have multiple supported chains.
+function useVaultChain() {
+  const { chains } = useWalletWrapperContext();
+  return React.useMemo(() => {
+    return chains.find((chain) => chain.isDefault)!;
+  }, [chains]);
 }
 
 export default Form;
