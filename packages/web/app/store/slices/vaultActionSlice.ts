@@ -1,6 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { error } from "console";
-import { ethers } from "ethers";
 import { toast, UpdateOptions } from "react-toastify";
 import { Vault } from "../../api";
 import { createVaultActionToast } from "../../earn/[symbol]/components";
@@ -25,7 +23,7 @@ export const formActionSteps: Record<FormAction, FormActionStep[]> = {
 };
 
 interface VaultActionSlice {
-  ongoingAction: FormAction | null;
+  activeAction: FormAction | null;
 
   vaultName: string | null;
   assetSymbol: string | null;
@@ -40,7 +38,7 @@ interface VaultActionSlice {
 }
 
 const initialState: VaultActionSlice = {
-  ongoingAction: null,
+  activeAction: null,
 
   vaultName: null,
   assetSymbol: null,
@@ -65,8 +63,7 @@ const vaultActionSlice = createSlice({
   name: "vaultAction",
   initialState,
   reducers: {
-    resetVaultAction: () => {
-      toast.dismiss(TOAST_ID);
+    resetState: () => {
       return initialState;
     },
     initVaultAction: (state, action: PayloadAction<PrepareActionPayload>) => {
@@ -77,7 +74,7 @@ const vaultActionSlice = createSlice({
         stepsToSkip = 0,
       } = action.payload;
 
-      state.ongoingAction = newAction;
+      state.activeAction = newAction;
 
       state.vaultName = vault.name;
       state.assetSymbol = vault.underlyingAsset.symbol;
@@ -93,22 +90,22 @@ const vaultActionSlice = createSlice({
       state.error = null;
     },
     goToNextActionStep: (state) => {
-      const { error, ongoingAction, steps, completedSteps } = state;
+      const { error, activeAction, steps, completedSteps } = state;
+
+      if (!activeAction || !!error) {
+        return initialState;
+      }
 
       state.isTransactionActive = false;
-
-      if (!ongoingAction || !!error) {
-        return;
-      }
-
-      const stepsDone = completedSteps.length;
-      if (stepsDone < steps.length) {
-        const nextActionStep = steps[stepsDone];
-        state.completedSteps = [...state.completedSteps, nextActionStep];
-      }
+      const nextActionStep = steps[completedSteps.length];
+      state.completedSteps = [...state.completedSteps, nextActionStep];
 
       const progress = state.completedSteps.length / steps.length;
-      toast.update(TOAST_ID, { progress });
+      const isDone = progress >= 1;
+      toast.update(TOAST_ID, {
+        progress: isDone ? undefined : progress,
+        autoClose: isDone ? 7500 : false,
+      });
     },
     setTransactionStarted: (state) => {
       state.isTransactionActive = true;
@@ -130,31 +127,41 @@ const vaultActionSlice = createSlice({
 });
 
 export const prepareVaultAction = createAsyncThunk(
-  "vaultAction/start",
+  "vaultAction/prepare",
   (payload: PrepareActionPayload, { dispatch }) => {
-    dispatch(vaultActionSlice.actions.initVaultAction(payload));
+    const { resetState, initVaultAction } = vaultActionSlice.actions;
+
+    toast.update(TOAST_ID, {
+      progress: 0,
+      autoClose: false,
+    });
+
+    dispatch(initVaultAction(payload));
 
     toast(createVaultActionToast(), {
-      autoClose: false,
       closeOnClick: false,
       toastId: TOAST_ID,
       progress: 0,
+      autoClose: false,
     });
 
     const unsubscribe = toast.onChange(({ id, status }) => {
       if (id === TOAST_ID && status === "removed") {
-        dispatch(resetVaultAction());
+        dispatch(resetState());
         unsubscribe();
       }
     });
   }
 );
 
+export const stopVaultAction = createAsyncThunk("vaultAction/stop", () => {
+  toast.dismiss(TOAST_ID);
+});
+
 export const {
-  resetVaultAction,
-  goToNextActionStep,
   failVaultAction,
   initVaultAction,
+  goToNextActionStep,
   setTransactionStarted,
 } = vaultActionSlice.actions;
 export default vaultActionSlice.reducer;

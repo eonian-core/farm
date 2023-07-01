@@ -3,11 +3,10 @@
 import React from "react";
 import Image from "next/image";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import {
   FormAction,
   FormActionStep,
-  resetVaultAction,
 } from "../../../store/slices/vaultActionSlice";
 
 import styles from "./vault-action-toast.module.scss";
@@ -16,8 +15,6 @@ import { toNumberFromDecimals } from "../../../shared";
 import { Loading } from "@nextui-org/react";
 
 export const VaultActionToast = () => {
-  const { wallet } = useWalletWrapperContext();
-
   const [total, confirmed] = useTransactionCounters();
 
   const description = useTransactionDescription();
@@ -39,33 +36,37 @@ function useTransactionCounters(): [total: number, confirmed: number] {
   const { steps, completedSteps, stepsSkipped } = useAppSelector(
     (state) => state.vaultAction
   );
-  return React.useMemo(() => {
-    return [steps.length - stepsSkipped, completedSteps.length - stepsSkipped];
-  }, [steps, completedSteps, stepsSkipped]);
+  return [steps.length - stepsSkipped, completedSteps.length - stepsSkipped];
 }
 
 function useTransactionDescription(): string | undefined {
-  const { ongoingAction, amountBN, assetSymbol } = useAppSelector(
+  const { activeAction, amountBN, assetSymbol } = useAppSelector(
     (state) => state.vaultAction
   );
   const { assetDecimals } = useAppSelector((state) => state.vaultUser);
   const activeStep = useAppSelector(getActiveStepSelector);
 
   const amount = toNumberFromDecimals(amountBN, assetDecimals);
-  return React.useMemo(() => {
-    switch (activeStep) {
-      case FormActionStep.APPROVAL:
-        return `Approve spending ${amount} ${assetSymbol} to complete the deposit`;
-      case FormActionStep.CONFIRMATION: {
-        switch (ongoingAction) {
-          case FormAction.DEPOSIT:
-            return `Confirm wallet transaction to complete deposit of ${amount} ${assetSymbol}`;
-          case FormAction.WITHDRAW:
-            return `Confirm wallet transaction to complete withdrawal of ${amount} ${assetSymbol}`;
-        }
+  switch (activeStep) {
+    case FormActionStep.APPROVAL:
+      return `Approve spending ${amount} ${assetSymbol} to complete the deposit`;
+    case FormActionStep.CONFIRMATION: {
+      switch (activeAction) {
+        case FormAction.DEPOSIT:
+          return `Confirm wallet transaction to complete deposit of ${amount} ${assetSymbol}`;
+        case FormAction.WITHDRAW:
+          return `Confirm wallet transaction to complete withdrawal of ${amount} ${assetSymbol}`;
       }
     }
-  }, [activeStep, ongoingAction, amount, assetSymbol]);
+    case FormActionStep.DONE: {
+      switch (activeAction) {
+        case FormAction.DEPOSIT:
+          return `You have successfully deposited ${amount} ${assetSymbol}`;
+        case FormAction.WITHDRAW:
+          return `You have successfully withdrew ${amount} ${assetSymbol}`;
+      }
+    }
+  }
 }
 
 function ToastImage() {

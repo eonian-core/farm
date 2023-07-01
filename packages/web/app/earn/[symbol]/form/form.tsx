@@ -8,7 +8,7 @@ import FormHeader from "./form-header";
 import FormButton from "./form-button";
 import { Vault } from "../../../api";
 import FormInput from "./form-input";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/types";
 import { PercentButtonGroup, VaultInfoCard } from "../components";
@@ -17,8 +17,11 @@ import {
   useNumberInputValue,
   useExecuteTransaction,
 } from "../hooks";
-import { FormAction } from "../../../store/slices/vaultActionSlice";
-import { getBalancesSelector } from "../../../store";
+import {
+  FormAction,
+  FormActionStep,
+} from "../../../store/slices/vaultActionSlice";
+import { getActiveStepSelector, getBalancesSelector } from "../../../store";
 
 interface Props {
   vault: Vault;
@@ -128,8 +131,8 @@ function useInputValue({ underlyingAsset }: Vault) {
 }
 
 function useHasPendingTransactions() {
-  const { ongoingAction } = useAppSelector((state) => state.vaultAction);
-  return !!ongoingAction;
+  const activeStep = useAppSelector(getActiveStepSelector);
+  return activeStep !== null && activeStep !== FormActionStep.DONE;
 }
 
 export default Form;

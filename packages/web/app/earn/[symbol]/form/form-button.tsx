@@ -73,7 +73,11 @@ const FormButton: React.FC<Props> = ({
       disabled={disabled || isLoading}
       {...restProps}
     >
-      {isLoading ? <Loading color="currentColor" size="md" /> : text}
+      {isLoading ? (
+        <Loading type="points-opacity" color="currentColor" size="md" />
+      ) : (
+        text
+      )}
     </Button>
   );
 };

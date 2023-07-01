@@ -3,11 +3,9 @@ import { Vault } from "../../../../api";
 import { useAppDispatch } from "../../../../store/hooks";
 import {
   FormAction,
-  resetVaultAction,
+  stopVaultAction,
 } from "../../../../store/slices/vaultActionSlice";
-import {
-  useValidateTransaction,
-} from "./internal-hooks";
+import { useValidateTransaction } from "./internal-hooks";
 
 import { useDepositTransaction } from "./use-deposit-transaction";
 import { useWithdrawTransaction } from "./use-withdraw-transaction";
@@ -23,7 +21,7 @@ export function useExecuteTransaction() {
   const execute = async (action: FormAction, vault: Vault, amount: bigint) => {
     const isValid = validateTransaction(action, vault, amount);
     if (!isValid) {
-      return dispatch(resetVaultAction());
+      return dispatch(stopVaultAction());
     }
 
     switch (action) {
