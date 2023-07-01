@@ -207,8 +207,9 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     // test interestRatePerBlock
     function testShouldReturnCorrectInterestRatePerBlock(
         bool _blocksBased,
-        uint256 interestRatePerBlock
+        uint128 _interestRatePerBlock
     ) public {
+        uint256 interestRatePerBlock = _interestRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setSupplyRatePerBlock(interestRatePerBlock);
 
@@ -222,8 +223,9 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     // test borrowRatePerBlock
     function testShouldReturnCorrectBorrowRatePerBlock(
         bool _blocksBased,
-        uint256 borrowRatePerBlock
+        uint128 _borrowRatePerBlock
     ) public {
+        uint256 borrowRatePerBlock = _borrowRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setBorrowRatePerBlock(borrowRatePerBlock);
 
@@ -237,8 +239,9 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     // test supplyRatePerBlock
     function testShouldReturnCorrectSupplyRatePerBlock(
         bool _blocksBased,
-        uint256 supplyRatePerBlock
+        uint128 _supplyRatePerBlock
     ) public {
+        uint256 supplyRatePerBlock = _supplyRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setSupplyRatePerBlock(supplyRatePerBlock);
 
