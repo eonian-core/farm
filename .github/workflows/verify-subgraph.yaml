@@ -1,0 +1,58 @@
+name: Verify Subgraph
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - development
+    paths:
+      - "packages/subgraph/**"
+  
+  pull_request:
+    branches:
+      - main
+      - staging
+      - development
+    types:
+      - opened
+      - synchronize
+    paths:
+      - "packages/subgraph/**"
+
+jobs:
+  test:
+    name: Test subgraph
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Copy local schema
+        run: |-
+          cd packages/subgraph
+          yarn copy:local-schema
+
+      - name: Generate code
+        run: |-
+          cd packages/subgraph
+          yarn gen:code
+
+      - name: Run tests 
+        run: |-
+          cd packages/subgraph
+          yarn test
+
+
+

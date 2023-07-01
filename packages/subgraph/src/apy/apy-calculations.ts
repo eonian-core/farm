@@ -1,6 +1,7 @@
 import { Address, Bytes, ethereum, BigInt } from "@graphprotocol/graph-ts";
 
-export const MAX_BPS = 10_000;
+export const MAX_BPS = 4;
+export const INTEREST_RATE_DECIMALS = 18;
 export const PERCENTS_SCALE = BigInt.fromI64(100);
 
 // TODO: add values per chain
@@ -10,9 +11,9 @@ export const BLOCK_TIME = 3.01; // In seconds, https://ycharts.com/indicators/bi
 
 export const SECONDS_PER_DAY: f64 = 60 * 60 * 24;
 
-export const BLOCKS_PER_WEEK = BigInt.fromI64(Math.round((7 as f64) * SECONDS_PER_DAY * BLOCK_TIME) as i64);
-export const BLOCKS_PER_MONTH = BigInt.fromI64(Math.round((30 as f64) * SECONDS_PER_DAY * BLOCK_TIME) as i64);
-export const BLOCKS_PER_YEAR = BigInt.fromI64(Math.round((365 as f64) * SECONDS_PER_DAY * BLOCK_TIME) as i64);
+export const BLOCKS_PER_WEEK = BigInt.fromI64(Math.round((7 as f64) * SECONDS_PER_DAY / BLOCK_TIME) as i64);
+export const BLOCKS_PER_MONTH = BigInt.fromI64(Math.round((30 as f64) * SECONDS_PER_DAY / BLOCK_TIME) as i64);
+export const BLOCKS_PER_YEAR = BigInt.fromI64(Math.round((365 as f64) * SECONDS_PER_DAY / BLOCK_TIME) as i64);
 
 /**
  * Returns APY in percents scaled by 10 ^ 18
