@@ -4,7 +4,8 @@ import Loading from '../earn/loading';
 import { useEffect } from 'react';
 import { getTopLevelPath } from './path';
 
-export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === "true";
+export const isInBrowser = () => typeof window !== "undefined";
+export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === "true" && isInBrowser();
 
 /** Wraper for authorisation provider, which enables authentication based on environment */
 export const AuthProvider = ({ children }: React.PropsWithChildren) => {
