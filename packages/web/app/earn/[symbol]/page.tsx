@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { Vault, useGetVaultBySymbol } from "../../api";
 import Form from "./form/form";
 import { ClientOnly } from "../../components/client-only/client-only";
-import { AuthProvider } from "../auth";
+import { AuthProvider } from "../../auth";
 
 import 'react-toastify/dist/ReactToastify.css';
 
