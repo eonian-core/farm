@@ -3,7 +3,10 @@ import IconWarning from "../../../../components/icons/icon-warning";
 import { Chain } from "../types";
 import { ChainId } from "./wallet-chain-id";
 
-export const getChainIcon = (id: ChainId, iconSize: number): React.ReactNode => {
+export const getChainIcon = (
+  id: ChainId,
+  iconSize: number
+): React.ReactNode => {
   let icon: CoinIcon;
 
   switch (id) {
@@ -18,6 +21,17 @@ export const getChainIcon = (id: ChainId, iconSize: number): React.ReactNode => 
   }
 
   return <IconCoin symbol={icon} width={iconSize} height={iconSize} />;
+};
+
+export const getChainExplorer = (id: ChainId): string | null => {
+  switch (id) {
+    case ChainId.SEPOLIA:
+      return "https://sepolia.etherscan.io/";
+    case ChainId.BSC_MAINNET:
+      return "https://bscscan.com/";
+    case ChainId.UNKNOWN:
+      return null;
+  }
 };
 
 /**

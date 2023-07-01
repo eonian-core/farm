@@ -11,7 +11,7 @@ import FormInput from "./form-input";
 import { useAppSelector } from "../../../store/hooks";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/types";
-import { PercentButtonGroup, VaultInfoCard } from "../components";
+import { PercentButtonGroup, VaultInfoCard, VaultLink } from "../components";
 import {
   useVaultUserInfo,
   useNumberInputValue,
@@ -71,7 +71,7 @@ const Form: React.FC<Props> = ({ vault }) => {
   return (
     <div className={styles.container}>
       <h4>
-        {vault.name} ({vault.symbol})
+        <VaultLink vault={vault} chainId={vaultChain.id} />
       </h4>
       <Card variant="bordered">
         <FormHeader
