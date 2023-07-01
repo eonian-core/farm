@@ -39,6 +39,18 @@
     superjson "^1.12.2"
     ts-invariant "^0.10.3"
 
+"@auth0/auth0-react@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@auth0/auth0-react/-/auth0-react-2.1.1.tgz#69caec80ddcde6f7312677e9522997441419e8ec"
+  integrity sha512-KOFdTaFvashPX1o3h3ARYSCtR0qMya1ia57rSL2q7yggKv7PijHI/cKoG/gDvLA2G0M1qoCR3eACGDgHxstO3Q==
+  dependencies:
+    "@auth0/auth0-spa-js" "^2.0.8"
+
+"@auth0/auth0-spa-js@^2.0.8":
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/@auth0/auth0-spa-js/-/auth0-spa-js-2.0.8.tgz#42a8e5aad043e66dbba2a8fadc086a46bf0d021f"
+  integrity sha512-qCgWZS58S69WCg2ybd+SDiaw3ahBVJ4/tSFWMtIpc//Fq8kRHGwMOmgpNKVAFrpHG0ck2oWFGrpylxoto8Z0mA==
+
 "@babel/runtime@^7.12.1", "@babel/runtime@^7.13.10", "@babel/runtime@^7.20.1", "@babel/runtime@^7.20.7", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.5.tgz#8564dd588182ce0047d55d7a75e93921107b57ec"
