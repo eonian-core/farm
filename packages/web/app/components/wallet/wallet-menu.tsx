@@ -25,44 +25,38 @@ interface Props {
   children: React.ReactNode;
 }
 
-const WalletMenu: React.FC<Props> = ({ children }) => {
+export const useMenuItems = (isOnEarn: boolean): ItemType[] => React.useMemo(() => {
+  const items: ItemType[] = [
+    {
+      key: MenuOption.DISCONNECT,
+      text: "Disconnect",
+      color: "error",
+      withDivider: !isOnEarn,
+    },
+  ];
+
+  if (!isOnEarn) {
+    items.unshift({
+      key: MenuOption.GO_TO_EARN,
+      text: "Go to Earn",
+    });
+  }
+
+  return items;
+}, [isOnEarn]);
+
+export const useOnMenuClick = () => {
   const { disconnect } = useWalletWrapperContext();
-  const { width = 0 } = useWindowSize();
-
-  const menuPlacement = React.useMemo(() => {
-    const isWideScreen = width >= ULTRA_WIDE_SCREEN;
-    return isWideScreen ? "bottom" : "bottom-right";
-  }, [width]);
-
   const [push] = useRouterPush();
-  const pathname = usePathname();
-  const isOnEarn = pathname.includes(EARN_ROUTE);
 
-  const menuItems = React.useMemo(() => {
-    const items: ItemType[] = [
-      {
-        key: MenuOption.DISCONNECT,
-        text: "Disconnect",
-        color: "error",
-        withDivider: !isOnEarn,
-      },
-    ];
-    if (!isOnEarn) {
-      items.unshift({
-        key: MenuOption.GO_TO_EARN,
-        text: "Go to Earn",
-      });
-    }
-    return items;
-  }, [isOnEarn]);
-
-  const handleMenuClick = React.useCallback(
+  return React.useCallback(
     (key: string | number) => {
       switch (key) {
         case MenuOption.DISCONNECT: {
           disconnect();
           break;
         }
+        
         case MenuOption.GO_TO_EARN: {
           push(EARN_ROUTE);
           break;
@@ -71,6 +65,21 @@ const WalletMenu: React.FC<Props> = ({ children }) => {
     },
     [push, disconnect]
   );
+}
+
+const WalletMenu: React.FC<Props> = ({ children }) => {
+  const { width = 0 } = useWindowSize();
+
+  const menuPlacement = React.useMemo(() => {
+    const isWideScreen = width >= ULTRA_WIDE_SCREEN;
+    return isWideScreen ? "bottom" : "bottom-right";
+  }, [width]);
+  
+  const pathname = usePathname();
+  const isOnEarn = pathname.includes(EARN_ROUTE);
+
+  const menuItems = useMenuItems(isOnEarn)
+  const handleMenuClick = useOnMenuClick()
 
   return (
     <Dropdown placement={menuPlacement}>
