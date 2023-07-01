@@ -1,33 +1,15 @@
 [
   {
-    "name": "Ethereum Vault",
-    "symbol": "eonETH",
-    "underlyingAsset": {
-      "name": "Ethereum",
-      "symbol": "ETH",
-      "decimals": 18
-    },
-    "decimals": 18,
-    "interestRate": "3789356699"
-  },
-  {
-    "name": "Bitcoin Vault",
-    "symbol": "eonBTC",
-    "underlyingAsset": {
-      "name": "Bitcoin",
-      "symbol": "BTC",
-      "decimals": 9
-    },
-    "decimals": 9
-  },
-  {
-    "name": "USDT Vault",
+    "name": "Eonian USDT Vault Shares",
     "symbol": "eonUSDT",
+    "address": "0x342F2B34113a437452282CC78E6e1FE4935AC695",
     "underlyingAsset": {
       "name": "Tether USD",
       "symbol": "USDT",
-      "decimals": 18
+      "decimals": 18,
+      "address": "0x55d398326f99059ff775485246999027b3197955"
     },
-    "decimals": 18
+    "decimals": 18,
+    "interestRate": "431126159"
   }
 ]

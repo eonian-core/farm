@@ -11,6 +11,7 @@ import SlidingFooter from "./components/sliding-footer/sliding-footer";
 import GoogleAnalytics from "./google-analytics";
 import { store } from "./store/store";
 import { setLocale } from "./store/slices/localeSlice";
+import { ToastContainerWrapperDynamic } from "./components";
 
 const roboto = Roboto({
   subsets: ["latin", "cyrillic"],
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <Providers locale={locale}>
           <PageLoaderTop />
           <Navigation />
+          <ToastContainerWrapperDynamic />
           <SlidingFooter footer={<Footer />}>{children}</SlidingFooter>
         </Providers>
       </body>

@@ -4,7 +4,7 @@ interface WalletLoginChecker {
   isConnected(): Promise<boolean>;
 }
 
-export default function isLoggedInWallet(label: string): Promise<boolean> {
+export const isLoggedInWallet = (label: string): Promise<boolean> => {
   let connectionChecker: WalletLoginChecker;
   switch (label) {
     case "MetaMask": {
@@ -20,12 +20,12 @@ export default function isLoggedInWallet(label: string): Promise<boolean> {
 }
 
 class MetaMaskLoginChecker implements WalletLoginChecker {
-  private provider: ethers.providers.Web3Provider | null = null;
+  private provider: ethers.BrowserProvider | null = null;
 
   constructor() {
     const { ethereum } = window;
     if (ethereum) {
-      this.provider = new ethers.providers.Web3Provider(ethereum);
+      this.provider = new ethers.BrowserProvider(ethereum);
     }
   }
 

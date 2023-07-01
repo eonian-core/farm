@@ -5,11 +5,7 @@ import { Card, Button, PressEvent } from "@nextui-org/react";
 
 import styles from "./form-header.module.scss";
 import clsx from "clsx";
-
-export const enum FormAction {
-  DEPOSIT = "deposit",
-  WITHDRAW = "withdraw",
-}
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 
 interface Props {
   currentAction: FormAction;

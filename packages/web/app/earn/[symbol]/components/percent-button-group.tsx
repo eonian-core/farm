@@ -1,9 +1,11 @@
-import { Button } from "@nextui-org/react";
+"use client";
+
+import { Button, ButtonProps } from "@nextui-org/react";
 import React from "react";
 
 import styles from "./percent-button-group.module.scss";
 
-interface Props {
+interface Props extends ButtonProps {
   inputValue: number;
   maxValue: number;
   onValueChange: (value: number) => void;
@@ -11,10 +13,11 @@ interface Props {
 
 const COUNT = 4;
 
-const PercentButtonGroup: React.FC<Props> = ({
+export const PercentButtonGroup: React.FC<Props> = ({
   inputValue,
   maxValue,
   onValueChange,
+  ...restProps
 }) => {
   return (
     <div className={styles.container}>
@@ -30,6 +33,7 @@ const PercentButtonGroup: React.FC<Props> = ({
             auto
             bordered={!isActive}
             onPress={() => onValueChange(maxValue * factor)}
+            {...restProps}
           >
             {value}%
           </Button>
@@ -38,5 +42,3 @@ const PercentButtonGroup: React.FC<Props> = ({
     </div>
   );
 };
-
-export default PercentButtonGroup;
