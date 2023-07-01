@@ -81,6 +81,8 @@ const vaultActionSlice = createSlice({
       state.amountBN = amount.toString();
 
       state.steps = [...formActionSteps[newAction]];
+      state.completedSteps = [];
+
       if (stepsToSkip > 0) {
         state.completedSteps = state.steps.slice(0, stepsToSkip);
         state.stepsSkipped = stepsToSkip;
