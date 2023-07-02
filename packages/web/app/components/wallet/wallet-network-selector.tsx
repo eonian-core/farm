@@ -13,7 +13,7 @@ const WalletNetworkSelector = () => {
     (keys: "all" | Set<string | number>) => {
       const set = keys as Set<string>;
       const [id] = Array.from(set);
-      setCurrentChain(id);
+      setCurrentChain(+id);
     },
     [setCurrentChain]
   );
@@ -27,7 +27,7 @@ const WalletNetworkSelector = () => {
         css={{ $$dropdownMenuWidth: "320px" }}
         disallowEmptySelection
         selectionMode="single"
-        selectedKeys={[chain!.id]}
+        selectedKeys={[String(chain!.id)]}
         onSelectionChange={handleSelectionChanged}
       >
         {chains.map((chain) => {

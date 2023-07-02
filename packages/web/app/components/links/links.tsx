@@ -23,6 +23,7 @@ export type LinkWithIconProps = BaseLinkProps & {
   children?: React.ReactNode;
   /** Class name for icon */
   iconClassName?: string;
+  iconAtEnd?: boolean;
 };
 
 /** Link which can contain optional icon */
@@ -31,25 +32,38 @@ export const LinkWithIcon = ({
   className,
   icon,
   children,
+  iconAtEnd,
   iconClassName,
   ...props
-}: LinkWithIconProps) => (
-  <Link
-    href={href}
-    className={clsx(
-      styles.linkWithIcon,
-      {
-        [styles.onlyIcon]: !children,
-        [styles.onlyText]: !icon,
-      },
-      className
-    )}
-    {...props}
-  >
-    {icon && <span className={clsx(styles.icon, iconClassName)}>{icon}</span>}
-    {children}
-  </Link>
-);
+}: LinkWithIconProps) => {
+  const iconElement = icon && (
+    <span
+      className={clsx(styles.icon, iconClassName, {
+        [styles.iconEnd]: iconAtEnd,
+      })}
+    >
+      {icon}
+    </span>
+  );
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        styles.linkWithIcon,
+        {
+          [styles.onlyIcon]: !children,
+          [styles.onlyText]: !icon,
+        },
+        className
+      )}
+      {...props}
+    >
+      {!iconAtEnd && iconElement}
+      {children}
+      {iconAtEnd && iconElement}
+    </Link>
+  );
+};
 
 /** Link used for navigation between pages **inside** application */
 export const InternalLink = ({

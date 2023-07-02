@@ -3,14 +3,15 @@
 import { Card } from "@nextui-org/react";
 import React from "react";
 
+import { Vault } from "../../../api";
+
 import CompactNumber from "../../../components/compact-number/compact-number";
 import IconBoxArrow from "../../../components/icons/icon-box-arrow";
 
 import styles from "./vault-info-card.module.scss";
 import { calculateVaultAPY } from "../../../shared/projections/calculate-apy";
-import { FormAction } from "./form-header";
-import { Vault } from "../../../api";
 import clsx from "clsx";
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 
 interface Props {
   value: number;
@@ -20,7 +21,7 @@ interface Props {
   className?: string;
 }
 
-const VaultInfoCard: React.FC<Props> = ({
+export const VaultInfoCard: React.FC<Props> = ({
   value,
   currentDeposit,
   vault,
@@ -118,4 +119,3 @@ function ProfitChangeIndicator({ profitChange }: { profitChange: number }) {
   );
 }
 
-export default VaultInfoCard;

@@ -1,20 +1,31 @@
 "use client";
 
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { Button, ButtonProps, Loading } from "@nextui-org/react";
 
 import styles from "./form-button.module.scss";
-import { FormAction } from "./form-header";
-import { WalletStatus } from "../../../providers/wallet/wrappers/wallet-wrapper";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
+import { Chain, WalletStatus } from "../../../providers/wallet/wrappers/types";
+import { FormAction } from "../../../store/slices/vaultActionSlice";
 
-interface Props {
+interface Props extends Omit<ButtonProps, "onSubmit"> {
   formAction: FormAction;
+  vaultChain: Chain;
+  isLoading?: boolean;
   onSubmit: (formAction: FormAction) => void;
 }
 
-const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
-  const { status, connect } = useWalletWrapperContext();
+const FormButton: React.FC<Props> = ({
+  formAction,
+  vaultChain,
+  isLoading,
+  disabled,
+  onSubmit,
+  ...restProps
+}) => {
+  const { status, connect, chain, setCurrentChain } = useWalletWrapperContext();
+
+  const isOnDifferentChain = vaultChain.id !== chain?.id;
 
   const text = React.useMemo(() => {
     switch (status) {
@@ -22,19 +33,35 @@ const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
         return "Connect to a wallet";
       case WalletStatus.CONNECTING:
         return "Connecting to a wallet...";
-      case WalletStatus.CONNECTED:
+      case WalletStatus.CONNECTED: {
+        if (isOnDifferentChain) {
+          return `Switch to ${vaultChain.name}`;
+        }
         return formAction === FormAction.DEPOSIT ? "Deposit" : "Withdraw";
+      }
     }
-  }, [formAction, status]);
+  }, [isOnDifferentChain, vaultChain, formAction, status]);
 
   const handlePress = React.useCallback(() => {
     switch (status) {
       case WalletStatus.NOT_CONNECTED:
         return connect();
-      case WalletStatus.CONNECTED:
+      case WalletStatus.CONNECTED: {
+        if (isOnDifferentChain) {
+          return setCurrentChain(vaultChain.id);
+        }
         return onSubmit(formAction);
+      }
     }
-  }, [status, connect, formAction, onSubmit]);
+  }, [
+    isOnDifferentChain,
+    vaultChain,
+    status,
+    setCurrentChain,
+    connect,
+    formAction,
+    onSubmit,
+  ]);
 
   return (
     <Button
@@ -43,8 +70,14 @@ const FormButton: React.FC<Props> = ({ formAction, onSubmit }) => {
       size="lg"
       className={styles.button}
       onPress={handlePress}
+      disabled={disabled || isLoading}
+      {...restProps}
     >
-      {text}
+      {isLoading ? (
+        <Loading type="points-opacity" color="currentColor" size="md" />
+      ) : (
+        text
+      )}
     </Button>
   );
 };

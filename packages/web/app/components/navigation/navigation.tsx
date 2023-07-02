@@ -18,7 +18,7 @@ export default function Navigation() {
   }, [isOpen]);
 
   return (
-    <nav className={styles.navigation}>
+    <nav className={styles.navigation} id="navigation">
       <div className={styles.content}>
         <div className={styles.logo}>
           <LogoWithText />
