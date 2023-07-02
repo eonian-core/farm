@@ -6,6 +6,7 @@ import {
   ChainId,
   getChainExplorer,
 } from "../../../providers/wallet/wrappers/helpers";
+import styles from './vault-link.module.scss'
 
 interface Props {
   vault: Vault;
@@ -20,6 +21,7 @@ export function VaultLink({ vault, chainId }: Props) {
   }
   return (
     <ExternalLink
+      className={styles.vaultLink}
       icon={<IconExternal />}
       iconAtEnd
       href={href + "address/" + vault.address}

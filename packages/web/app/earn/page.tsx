@@ -19,6 +19,6 @@ function Redirect() {
   const [{ symbol }] = data.vaults;
   redirect("/earn/" + symbol);
   
-  return <></>;
+  return null;
 }
 

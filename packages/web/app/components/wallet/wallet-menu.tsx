@@ -1,6 +1,7 @@
 "use client";
 
 import { Dropdown } from "@nextui-org/react";
+import { useAuth0 } from '@auth0/auth0-react';
 import { DropdownItemBaseProps } from "@nextui-org/react/types/dropdown/base/dropdown-item-base";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -8,6 +9,7 @@ import useRouterPush from "../links/use-router-push";
 import { ULTRA_WIDE_SCREEN } from "../resize-hooks/screens";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
 import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
+import { isAuthEnabled, useLogout } from "../../auth";
 
 interface ItemType extends Partial<DropdownItemBaseProps> {
   key: string;
@@ -17,6 +19,7 @@ interface ItemType extends Partial<DropdownItemBaseProps> {
 const enum MenuOption {
   GO_TO_EARN = "go_to_earn",
   DISCONNECT = "disconnect",
+  LOGOUT = "logout",
 }
 
 const EARN_ROUTE = "/earn";
@@ -25,20 +28,12 @@ interface Props {
   children: React.ReactNode;
 }
 
-const WalletMenu: React.FC<Props> = ({ children }) => {
-  const { disconnect } = useWalletWrapperContext();
-  const { width = 0 } = useWindowSize();
-
-  const menuPlacement = React.useMemo(() => {
-    const isWideScreen = width >= ULTRA_WIDE_SCREEN;
-    return isWideScreen ? "bottom" : "bottom-right";
-  }, [width]);
-
-  const [push] = useRouterPush();
+export const useMenuItems = (): ItemType[] => {
   const pathname = usePathname();
   const isOnEarn = pathname.includes(EARN_ROUTE);
+  const {isLoading, isAuthenticated} = useAuth0();
 
-  const menuItems = React.useMemo(() => {
+  return React.useMemo(() => {
     const items: ItemType[] = [
       {
         key: MenuOption.DISCONNECT,
@@ -47,30 +42,63 @@ const WalletMenu: React.FC<Props> = ({ children }) => {
         withDivider: !isOnEarn,
       },
     ];
+
     if (!isOnEarn) {
       items.unshift({
         key: MenuOption.GO_TO_EARN,
         text: "Go to Earn",
       });
     }
-    return items;
-  }, [isOnEarn]);
 
-  const handleMenuClick = React.useCallback(
+    if (isAuthEnabled() && !isLoading && isAuthenticated) {
+      items.push({
+        key: MenuOption.LOGOUT,
+        text: "Log out",
+      });
+    }
+
+    return items;
+  }, [isOnEarn, isLoading, isAuthenticated])
+};
+
+export const useOnMenuClick = () => {
+  const { disconnect } = useWalletWrapperContext();
+  const [push] = useRouterPush();
+  const logout = useLogout()
+
+  return React.useCallback(
     (key: string | number) => {
       switch (key) {
         case MenuOption.DISCONNECT: {
           disconnect();
           break;
         }
+
         case MenuOption.GO_TO_EARN: {
           push(EARN_ROUTE);
           break;
         }
+
+        case MenuOption.LOGOUT: {
+          logout();
+          break;
+        }
       }
     },
-    [push, disconnect]
+    [push, disconnect, logout]
   );
+}
+
+const WalletMenu: React.FC<Props> = ({ children }) => {
+  const { width = 0 } = useWindowSize();
+
+  const menuPlacement = React.useMemo(() => {
+    const isWideScreen = width >= ULTRA_WIDE_SCREEN;
+    return isWideScreen ? "bottom" : "bottom-right";
+  }, [width]);
+
+  const menuItems = useMenuItems()
+  const handleMenuClick = useOnMenuClick()
 
   return (
     <Dropdown placement={menuPlacement}>
