@@ -85,7 +85,9 @@ export const deployOrUpgrade = ({
       },
     });
 
-    await afterDeploy?.(hre, result, deployedContracts);
+    if (result.newlyDeployed) {
+      await afterDeploy?.(hre, result, deployedContracts);
+    }
   };
 
   func.tags = [contract, ...chains, ...tags];
@@ -149,13 +151,13 @@ export const resolveDependencies = async (
  * */
 export const skipFactory =
   (contractChains: Array<BlockchainType>) =>
-  async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
-    for (const chain of network.config.tags) {
-      // Dont skip if contract expected to be deployed in this chain
-      if (contractChains.includes(chain as BlockchainType)) {
-        return false;
+    async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
+      for (const chain of network.config.tags) {
+        // Dont skip if contract expected to be deployed in this chain
+        if (contractChains.includes(chain as BlockchainType)) {
+          return false;
+        }
       }
-    }
 
-    return true;
-  };
+      return true;
+    };
