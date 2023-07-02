@@ -39,5 +39,5 @@ class MetaMaskLoginChecker implements WalletLoginChecker {
 }
 
 class DummyLoginChecker implements WalletLoginChecker {
-  isConnected = async (): Promise<boolean> => Promise.resolve(true);
+  isConnected = async (): Promise<boolean> => Promise.resolve(false);
 }
