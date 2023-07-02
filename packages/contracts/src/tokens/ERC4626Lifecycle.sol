@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 import {SafeERC4626Upgradeable} from "./SafeERC4626Upgradeable.sol";
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
-import {IVaultHook, ERC4626UpgradeableRequest} from "./IVaultHook.sol";
+import {IVaultHook, ERC4626HookPayload} from "./IVaultHook.sol";
 
 abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
     // list of hooks
@@ -63,7 +63,7 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         if(withdrawHooks.length == 0) {
             return;
         }
-        ERC4626UpgradeableRequest memory request = ERC4626UpgradeableRequest({
+        ERC4626HookPayload memory request = ERC4626UpgradeableRequest({
             assets: assets,
             shares: shares,
             requestSender: msg.sender,
@@ -85,7 +85,7 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         if(depositHooks.length == 0) {
             return;
         }
-        ERC4626UpgradeableRequest memory request = ERC4626UpgradeableRequest({
+        ERC4626HookPayload memory request = ERC4626UpgradeableRequest({
             assets: assets,
             shares: shares,
             requestSender: msg.sender,

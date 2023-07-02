@@ -12,7 +12,7 @@ import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {ERC5484Upgradeable} from "./ERC5484Upgradeable.sol";
 import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultFounderToken} from "./IVaultFounderToken.sol";
-import {IVaultHook, ERC4626UpgradeableRequest} from "./IVaultHook.sol";
+import {IVaultHook, ERC4626HookPayload} from "./IVaultHook.sol";
 import {RewardHolder} from "./RewardHolder.sol";
 import {Vault} from "../Vault.sol";
 
@@ -98,7 +98,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     }
 
     /// @dev return price for the next token
-    function nextTokenPrice() internal view returns (uint256){
+    function nextTokenPrice() internal view returns (uint256) {
         return _nextTokenPrice;
     }
 
@@ -114,7 +114,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         _setTokenURI(tokenId, _tokenURI);
     }
 
-    function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
+    function afterDepositTrigger(ERC4626HookPayload memory request)
             external override
     {
         if(request.senderMaxWithdraw >= nextTokenPrice()) {
@@ -123,7 +123,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     }
 
     /* solhint-disable no-empty-blocks */
-    function beforeWithdrawTrigger(ERC4626UpgradeableRequest memory request) external override
+    function beforeWithdrawTrigger(ERC4626HookPayload memory request) external override
     {
         //empty code
     }
