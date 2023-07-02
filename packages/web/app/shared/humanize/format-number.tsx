@@ -34,3 +34,22 @@ export const formatNumberCompact = (value: number, locale = "en", maxValue = 1e1
   const formattedValue = formatter.format(value);
   return value === maxValue ? `>${formattedValue}` : formattedValue;
 };
+
+/**
+ * Provides string representation of the specified number.
+ * Unlike "toString()", it helps to avoid converting to numbers with scientific notation.
+ * @param value The value to convert.
+ * @param decimals The decimals points.
+ * @returns String representation of a number.
+ */
+export const numberToString = (value: number, decimals: number): string => {
+  const stringValue = String(value);
+  if (stringValue.includes("e")) {
+    if (value < 1) {
+      return value.toFixed(decimals);
+    } else {
+      return value.toLocaleString("fullwide", { useGrouping: false });
+    }
+  }
+  return stringValue;
+}

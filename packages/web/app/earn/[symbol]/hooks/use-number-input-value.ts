@@ -1,10 +1,10 @@
 import React from "react";
-import { toBigIntWithDecimals, toNumberFromDecimals } from "../../../shared";
+import { numberToString, toBigIntWithDecimals, toNumberFromDecimals } from "../../../shared";
 
 export const useNumberInputValue = (
   defaultValue: bigint,
   decimals: number
-): [number, string, bigint, (value: number | string) => void] => {
+): [number, string, bigint, (value: number | string | bigint) => void] => {
   const [bigValue, setBigValue] = React.useState(defaultValue);
   const [value, setValue] = React.useState(
     toNumberFromDecimals(bigValue, decimals)
@@ -12,24 +12,57 @@ export const useNumberInputValue = (
   const [displayValue, setDisplayValue] = React.useState(value + "");
 
   const handleValueChange = React.useCallback(
-    (value: string | number) => {
-      const newValue = normalizeValue(value);
-      const isValid = validate(newValue, decimals);
-      if (!isValid) {
+    (value: string | number | bigint) => {
+      const isBigInt = typeof value === "bigint";
+      const values = isBigInt
+        ? parseBigIntValue(value, decimals)
+        : parseValue(value, decimals);
+      if (!values) {
         return;
       }
 
-      const numberValue = parseFloat(newValue);
-      const isNumber = !isNaN(numberValue);
-      setDisplayValue(newValue);
-      setValue(isNumber ? numberValue : 0);
-      setBigValue(isNumber ? toBigIntWithDecimals(newValue, decimals) : 0n);
+      const [numberValue, displayValue, bigValue] = values;
+      setValue(numberValue);
+      setDisplayValue(displayValue);
+      setBigValue(bigValue);
     },
     [decimals]
   );
 
   return [value, displayValue, bigValue, handleValueChange];
 };
+
+export type ValueParseResult = [
+  value: number,
+  displayValue: string,
+  bigValue: bigint
+];
+
+export function parseValue(
+  value: string | number,
+  decimals: number
+): ValueParseResult | null {
+  const newValue = normalizeValue(value);
+  const isValid = validate(newValue, decimals);
+  if (!isValid) {
+    return null;
+  }
+  const numberValue = parseFloat(newValue);
+  const isNumber = !isNaN(numberValue);
+  return [
+    isNumber ? numberValue : 0,
+    newValue,
+    isNumber ? toBigIntWithDecimals(newValue, decimals) : 0n,
+  ];
+}
+
+export function parseBigIntValue(
+  value: bigint,
+  decimals: number
+): ValueParseResult | null {
+  const numberValue = toNumberFromDecimals(value, decimals);
+  return [numberValue, numberToString(numberValue, decimals), value];
+}
 
 function normalizeValue(value: string | number): string {
   return String(value)

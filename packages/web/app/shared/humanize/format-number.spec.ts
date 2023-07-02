@@ -1,4 +1,4 @@
-import { formatNumberCompactWithThreshold } from "./format-number";
+import { formatNumberCompactWithThreshold, numberToString } from "./format-number";
 
 describe("formatNumberCompactWithThreshold", () => {
   it("Should format value", () => {
@@ -37,4 +37,12 @@ describe("formatNumberCompactWithThreshold", () => {
     expect(format(1e6)).toBe("1M");
     expect(format(2000000.5132)).toBe("2M");
   });
+});
+
+describe("numberToString", () => {
+  it('Should convert numbers without e notation', () => {
+    expect(numberToString(123, 18)).toEqual("123");
+    expect(numberToString(13e18, 18)).toEqual("13000000000000000000");
+    expect(numberToString(4e27, 18)).toEqual("4000000000000000000000000000");
+  })
 });
