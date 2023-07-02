@@ -1,19 +1,5 @@
 @import "../../../screen.scss";
 
-@keyframes animatedGradient {
-  0% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
-
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 .container {
   width: 470px;
   padding: var(--padding-200);
@@ -30,16 +16,11 @@
 
     background: var(--color-accent-background-gradient);
     border-radius: calc(2 * var(--border-radius-400));
-    animation: animatedGradient 60s ease alternate infinite;
     background-size: 300% 300%;
     mix-blend-mode: screen;
     filter: blur(3rem);
     transition: transform 0.2s ease;
     opacity: 0.5;
-
-    @media (max-width: $screen-mobile) {
-      animation: none;
-    }
   }
 
   &:focus-within:before {
