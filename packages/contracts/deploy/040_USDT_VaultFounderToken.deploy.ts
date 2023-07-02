@@ -30,23 +30,6 @@ const func = deployOrUpgrade({
     const txVaultFounderToken = await VaultFounderToken.setVault(Vault.address);
     const resultAddingVault = await txVaultFounderToken.wait();
     log("Vault added to VaultFounderToken", resultAddingVault);
-
-    const grantMinterRole = await VaultFounderToken.grantRole(
-      VaultFounderToken.MINTER_ROLE(),
-      Vault.address
-    );
-    const resultGrantMinterRole = await grantMinterRole.wait();
-    log("VaultFounderToken grant MINTER_ROLE to Vault", resultGrantMinterRole);
-
-    const grantBalanceUpdaterRole = await VaultFounderToken.grantRole(
-      VaultFounderToken.BALANCE_UPDATER_ROLE(),
-      Vault.address
-    );
-    const resultGrantBalanceUpdaterRole = await grantBalanceUpdaterRole.wait();
-    log(
-      "VaultFounderToken grant BALANCE_UPDATER_ROLE to Vault",
-      resultGrantBalanceUpdaterRole
-    );
   },
 });
 

@@ -29,6 +29,11 @@ contract ERC5484Upgradeable is
     /// @dev Token can me minted only once per user
     bool private _mintOnce;
 
+    /// @dev This empty reserved space is put in place to allow future versions to add new
+    /// variables without shifting down storage in the inheritance chain.
+    /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+    uint256[50] private __gap;
+
     /// @dev Role for minting tokens
     /// value is 0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -76,6 +81,22 @@ contract ERC5484Upgradeable is
         __ERC721Enumerable_init();
         __ERC721URIStorage_init();
         __AccessControl_init();
+        _burnAuth = burnAuth_;
+        _mintOnce = mintOnce_;
+
+        // setup roles depend on mode for SoulBound token
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    function __ERC5484Upgradeable_init_unchained(
+        string memory name_,
+        string memory symbol_,
+        BurnAuth burnAuth_,
+        bool mintOnce_
+    ) internal onlyInitializing {
+        __ERC721_init(name_, symbol_);
+        __ERC721Enumerable_init();
+        __ERC721URIStorage_init();
         _burnAuth = burnAuth_;
         _mintOnce = mintOnce_;
 
@@ -164,9 +185,4 @@ contract ERC5484Upgradeable is
         require(_exists(tokenId), "ERC5484: token doesn't exists");
         return _burnAuth;
     }
-
-    /// @dev This empty reserved space is put in place to allow future versions to add new
-    /// variables without shifting down storage in the inheritance chain.
-    /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-    uint256[48] private __gap;
 }

@@ -11,7 +11,7 @@ import {VaultMock} from "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
 
 contract VaultFounderTokenTest is TestWithERC1820Registry {
-    VaultFounderToken private token;
+    VaultFounderTokenMock private token;
 
     address private rewards = vm.addr(1);
     address private culprit = vm.addr(2);
@@ -74,27 +74,13 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     }
 
     function testNextTokenPrice() public {
-        assertEq(token.nextTokenPrice(), 200);
+        assertEq(token.nextTokenPriceRead(), 200);
         token.safeMint(alice, "testUrl");
-        assertEq(token.nextTokenPrice(), 240);
+        assertEq(token.nextTokenPriceRead(), 240);
         token.safeMint(bob, "testUrl2");
-        assertEq(token.nextTokenPrice(), 288);
+        assertEq(token.nextTokenPriceRead(), 288);
         token.safeMint(culprit, "testUrl3");
-        assertEq(token.nextTokenPrice(), 345);
-    }
-
-    function testPriceOf() public {
-        token.safeMint(alice, "testUrl");
-        assertEq(token.priceOf(0), 200);
-        token.safeMint(bob, "testUrl2");
-        assertEq(token.priceOf(1), 240);
-        token.safeMint(culprit, "testUrl3");
-        assertEq(token.priceOf(2), 288);
-    }
-
-    function testPriceOfFail() public {
-        vm.expectRevert("EVFT: Token does not exist");
-        token.priceOf(0);
+        assertEq(token.nextTokenPriceRead(), 345);
     }
 
     function testSetTokenURI() public {
@@ -128,14 +114,14 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     }
 
     function testSetTokenMultiplier() public {
-        assertEq(token.nextTokenPrice(), 200);
+        assertEq(token.nextTokenPriceRead(), 200);
         token.safeMint(alice, "testUrl");
         token.setNextTokenMultiplier(20_000);
-        assertEq(token.nextTokenPrice(), 400);
+        assertEq(token.nextTokenPriceRead(), 400);
     }
 
     function testSetTokenMultiplierFail() public {
-        assertEq(token.nextTokenPrice(), 200);
+        assertEq(token.nextTokenPriceRead(), 200);
         vm.expectRevert(abi.encodePacked(
             AccessTestHelper.getErrorMessage(address(alice), token.DEFAULT_ADMIN_ROLE())
         ));

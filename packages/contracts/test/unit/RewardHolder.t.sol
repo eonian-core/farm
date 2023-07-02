@@ -47,7 +47,6 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
         rewardHolder = new RewardHolderMock();
         rewardHolder.grantRole(rewardHolder.BALANCE_UPDATER_ROLE(), address(this));
-        rewardHolder.grantRole(rewardHolder.BALANCE_UPDATER_ROLE(), address(vault));
         rewardHolder.setVault(vault);
     }
 

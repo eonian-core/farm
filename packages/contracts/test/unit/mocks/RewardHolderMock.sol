@@ -24,4 +24,8 @@ contract RewardHolderMock is RewardHolder {
     function checkRole(bytes32 role, address account) onlyRole(BALANCE_UPDATER_ROLE) external view returns (bool) {
         return hasRole(role, account);
     }
+
+    function setVault(Vault vault_) external {
+        _setVault(vault_);
+    }
 }

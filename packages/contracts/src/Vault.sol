@@ -40,14 +40,8 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     /// @notice Rewards contract where management fees are sent to.
     address public rewards;
 
-    /// @notice Vault Founders Token contract where rewards for founders are sent to.
-    address public founders;
-
     /// @notice Vault management fee (in BPS).
     uint256 public managementFee;
-
-    /// @notice Vault founders reward (in BPS).
-    uint256 public foundersFee;
 
     /// @notice The amount of funds that cannot be withdrawn by users.
     ///         Decreases with time at the rate of "lockedProfitReleaseRate".
@@ -57,10 +51,16 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     ///         Represents the amount of funds that will be unlocked when one second passes.
     uint256 public lockedProfitReleaseRate;
 
+    /// @notice Vault Founders Token contract where rewards for founders are sent to.
+    address public founders;
+
+    /// @notice Vault founders reward (in BPS).
+    uint256 public foundersFee;
+
     /// @dev This empty reserved space is put in place to allow future versions to add new
     ///      variables without shifting down storage in the inheritance chain.
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-    uint256[50] private __gap;
+    uint256[48] private __gap;
 
     /// @notice Event that should happen when the locked-in profit release rate changed.
     event LockedProfitReleaseRateChanged(uint256 rate);

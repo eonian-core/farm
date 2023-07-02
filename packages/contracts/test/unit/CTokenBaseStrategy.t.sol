@@ -76,8 +76,6 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         vaultFounderToken = new VaultFounderTokenMock();
         vaultFounderToken.setVault(vault);
         vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
@@ -168,8 +166,6 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         vaultFounderToken = new VaultFounderTokenMock();
         vaultFounderToken.setVault(vault);
         vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
 
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new CTokenBaseStrategyMock(

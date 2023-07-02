@@ -14,6 +14,7 @@ import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultFounderToken} from "./IVaultFounderToken.sol";
 import {IVaultHook, ERC4626UpgradeableRequest} from "./IVaultHook.sol";
 import {RewardHolder} from "./RewardHolder.sol";
+import {Vault} from "../Vault.sol";
 
 contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Upgradeable, IVaultHook, RewardHolder {
 
@@ -24,16 +25,12 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     uint256 private _nextTokenPriceMultiplier;
 
     // Initial token price
-    uint256 private _initialTokenPrice;
-
-    // Cache to save gas for nextTokenPrice calculation
-    bool private _nextPriceToBeUpdated = true;
-    uint256 private _nextPriceCache;
+    uint256 private _nextTokenPrice;
 
     /// @dev This empty reserved space is put in place to allow future versions to add new
     /// variables without shifting down storage in the inheritance chain.
     /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-    uint256[46] private __gap;
+    uint256[50] private __gap;
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
@@ -46,16 +43,26 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         uint256 initialTokenPrice_
     ) public initializer {
         __SafeUUPSUpgradeable_init_direct();
-        __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true);
-        __RewardHolder_init();
+        __ERC5484Upgradeable_init_unchained("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true);
+        __RewardHolder_init_unchained();
         _maxCountTokens = maxCountTokens_;
         _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
-        _initialTokenPrice = initialTokenPrice_;
+        _nextTokenPrice = initialTokenPrice_;
     }
 
     /// @inheritdoc IVersionable
     function version() external pure returns (string memory) {
         return "0.1.0";
+    }
+
+    /// @dev set vault
+    /// @notice that is mandatory to be set before reward can be claimed
+    function setVault(Vault vault_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        if(address(vault) != address(0)) {
+            revokeRole(MINTER_ROLE, address(vault_));
+        }
+        super._setVault(vault_);
+        grantRole(MINTER_ROLE, address(vault_));
     }
 
     /// @dev function for mint new SBT token
@@ -67,6 +74,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
             bool tokenCreated = super.safeMint(to, uri);
             if(tokenCreated) {
                 setupNewOwner(to);
+                _nextTokenPrice = _nextTokenPrice * _nextTokenPriceMultiplier / 10000;
                 return true;
             }
         }
@@ -76,45 +84,22 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// @inheritdoc ERC721Upgradeable
     function _safeMint(address to, uint256 tokenId) internal override {
         require(totalSupply() < _maxCountTokens, "EVFT: max number of tokens");
-        _nextPriceToBeUpdated = true;
         super._safeMint(to, tokenId);
     }
 
-    /// @inheritdoc IVaultFounderToken
-    function priceOf(uint256 tokenId) external view returns (uint256) {
-        require(tokenId < totalSupply(), "EVFT: Token does not exist");
-        return _priceOf(tokenId);
-    }
-
-    /// @dev internal implementation for calculate price for the next token based on
-    /// the current sequential token id
-    function _priceOf(uint256 tokenId) internal view returns (uint256) {
-        uint256 price = _initialTokenPrice;
-        for (uint256 i = 0; i < tokenId; i++) {
-            price = (price * _nextTokenPriceMultiplier) / 10_000;
-        }
-        return price;
-    }
-
+    event DebugEvent(uint256 value);
     /// @dev set multiplicator for the next token in percents
     /// in case nextTokenPriceMultiplier_ = 13_000 the next price of the token will be: curPrice * 130%
     /// @param nextTokenPriceMultiplier_ persent multiplicator
     function setNextTokenMultiplier(uint256 nextTokenPriceMultiplier_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _nextTokenPrice = _nextTokenPrice * 10000 / _nextTokenPriceMultiplier;
         _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
+        _nextTokenPrice = _nextTokenPrice * _nextTokenPriceMultiplier / 10000;
     }
 
-    /// @inheritdoc IVaultFounderToken
-    function nextTokenPrice() external returns (uint256){
-        return _nextTokenPrice();
-    }
-
-    /// @dev calculate price for the next token
-    function _nextTokenPrice() internal returns (uint256){
-        if(_nextPriceToBeUpdated) { // cache for gas optimization
-            _nextPriceCache = _priceOf(totalSupply());
-            _nextPriceToBeUpdated = false;
-        }
-        return _nextPriceCache;
+    /// @dev return price for the next token
+    function nextTokenPrice() internal view returns (uint256){
+        return _nextTokenPrice;
     }
 
     /// @inheritdoc IVaultFounderToken
@@ -132,7 +117,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
             external override
     {
-        if(request.senderMaxWithdraw >= _nextTokenPrice()) {
+        if(request.senderMaxWithdraw >= nextTokenPrice()) {
             safeMint(request.requestSender, "");
         }
     }

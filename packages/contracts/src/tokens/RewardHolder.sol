@@ -29,6 +29,11 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     Vault public vault;
 
+    /// @dev This empty reserved space is put in place to allow future versions to add new
+    /// variables without shifting down storage in the inheritance chain.
+    /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+    uint256[50] private __gap;
+
     // 0xbb788f92e65e1a823e2c502bc4e7f9c3e55531bd56bfc7c0a895fb3ac9eb7716
     bytes32 public constant BALANCE_UPDATER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
     // 0x350f4eb58665205037e4a10647f66a623dc93281f72575646a8f0c90d88b72ae
@@ -42,10 +47,19 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
         __ReentrancyGuard_init();
     }
 
+    function __RewardHolder_init_unchained() internal onlyInitializing {
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        __ReentrancyGuard_init();
+    }
+
     /// @dev set vault
     /// @notice that is mandatory to be set before reward can be claimed
-    function setVault(Vault vault_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function _setVault(Vault vault_) internal virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        if(address(vault) != address(0)) {
+            revokeRole(BALANCE_UPDATER_ROLE, address(vault));
+        }
         vault = vault_;
+        grantRole(BALANCE_UPDATER_ROLE, address(vault));
     }
 
     /// @dev deposit reward to the contract to be claimed by token owners

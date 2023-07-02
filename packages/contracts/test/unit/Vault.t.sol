@@ -54,9 +54,6 @@ contract VaultTest is TestWithERC1820Registry {
         vaultFounderToken.setVault(vault);
         vault.setFounders(address(vaultFounderToken));
 
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
-
         strategy = new StrategyMock(address(underlying), address(vault));
     }
 
@@ -398,8 +395,6 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             0
         );
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -446,8 +441,7 @@ contract VaultTest is TestWithERC1820Registry {
             founderFee
         );
         vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
+        vaultFounderToken.setVault(vault);
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -493,8 +487,7 @@ contract VaultTest is TestWithERC1820Registry {
             founderFee
         );
         vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
+        vaultFounderToken.setVault(vault);
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -1229,8 +1222,6 @@ contract VaultTest is TestWithERC1820Registry {
             foundersFee
         );
         vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
         vaultFounderToken.setVault(vault);
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -1264,9 +1255,8 @@ contract VaultTest is TestWithERC1820Registry {
             0
         );
         vaultFounderToken = new VaultFounderTokenMock();
-        vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), address(vault));
-        vaultFounderToken.grantRole(vaultFounderToken.BALANCE_UPDATER_ROLE(), address(vault));
         vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);

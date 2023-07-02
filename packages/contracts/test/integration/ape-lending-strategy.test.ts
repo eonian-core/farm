@@ -67,11 +67,6 @@ describe("Ape Lending Strategy", function () {
     });
     vault.setFounders(vaultFounderToken.address);
     vaultFounderToken.setVault(vault.address);
-    vaultFounderToken.grantRole(vaultFounderToken.MINTER_ROLE(), vault.address);
-    vaultFounderToken.grantRole(
-      vaultFounderToken.BALANCE_UPDATER_ROLE(),
-      vault.address
-    );
 
     await resetBalance(vault.address, { tokens: [asset] });
 
