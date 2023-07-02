@@ -2693,7 +2693,7 @@
     ethers "5.5.4"
     joi "17.9.1"
 
-"@web3-onboard/core@^2.20.2", "@web3-onboard/core@^2.20.4":
+"@web3-onboard/core@^2.20.4":
   version "2.20.4"
   resolved "https://registry.yarnpkg.com/@web3-onboard/core/-/core-2.20.4.tgz#ccc9ff509e56720e526b4ceae5459a1f2a435d22"
   integrity sha512-IFI3DVq5QgFj5w1TyL61gHmeOlkX8AJiBAARO3cd4zW8I3h9K2+7HeE7LbsfwefZYLILzXCfF0gMB3qRN/GWYQ==
@@ -2721,7 +2721,7 @@
     joi "17.9.1"
     lodash.uniqby "^4.7.0"
 
-"@web3-onboard/react@^2.8.7":
+"@web3-onboard/react@^2.8.9":
   version "2.8.9"
   resolved "https://registry.yarnpkg.com/@web3-onboard/react/-/react-2.8.9.tgz#e64b5067d490b22d3a4566fb7c8d71d7b1787703"
   integrity sha512-Ih2PJhyTEpiW9wQbli+ZYqU8qkWqgR3PYmT2teHdDiaDaF8nPBvztBPPZkLjZSyx67iLsOBqS4kw8n74BK7DQw==
@@ -2730,7 +2730,7 @@
     "@web3-onboard/core" "^2.20.4"
     use-sync-external-store "1.0.0"
 
-"@web3-onboard/walletconnect@^2.3.9":
+"@web3-onboard/walletconnect@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@web3-onboard/walletconnect/-/walletconnect-2.4.0.tgz#fe446706cde736ca629c56c190bc9b314eaa70b3"
   integrity sha512-Qu3uHWsumOedHDzwqOoUrA40rNO0C6Sgw62XeIxSC+JsIB2K4Y5rXhTbMeYtO0lmWmHA8DYXxk8czYkdMZh19Q==
