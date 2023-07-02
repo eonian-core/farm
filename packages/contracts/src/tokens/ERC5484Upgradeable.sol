@@ -82,12 +82,10 @@ contract ERC5484Upgradeable is
         __ERC721URIStorage_init();
         __AccessControl_init();
         
-        __ERC5484Upgradeable_init_unchained(name_, symbol_, burnAuth_, mintOnce_);
+        __ERC5484Upgradeable_init_unchained(burnAuth_, mintOnce_);
     }
 
     function __ERC5484Upgradeable_init_unchained(
-        string memory name_,
-        string memory symbol_,
         BurnAuth burnAuth_,
         bool mintOnce_
     ) internal onlyInitializing {

@@ -11,8 +11,4 @@ contract VaultFounderTokenMock is VaultFounderToken {
             200
         );
     }
-
-    function nextTokenPriceRead() external view returns (uint256){
-        return super.nextTokenPrice();
-    }
 }

@@ -93,7 +93,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         }
 
         setupNewOwner(to);
-        _nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier / 10000;
+        uint256 _nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier / 10000;
 
         // Will be used to record price of current holder token in The Graph
         emit FounderAdded(to, nextTokenPrice, _nextTokenPrice, nextTokenPriceMultiplier);
@@ -106,7 +106,11 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// in case nextTokenPriceMultiplier_ = 13_000 the next price of the token will be: curPrice * 130%
     /// @param nextTokenPriceMultiplier_ persent multiplicator
     function setNextTokenMultiplier(uint256 nextTokenPriceMultiplier_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        // the price of the previous token
+        nextTokenPrice = nextTokenPrice * 10000 / nextTokenPriceMultiplier;
         nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
+        // calculation the price with the new multiplier
+        nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier_ / 10000;
     }
 
     /// @inheritdoc IVaultFounderToken

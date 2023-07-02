@@ -63,7 +63,7 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         if(withdrawHooks.length == 0) {
             return;
         }
-        ERC4626HookPayload memory request = ERC4626UpgradeableRequest({
+        ERC4626HookPayload memory request = ERC4626HookPayload({
             assets: assets,
             shares: shares,
             requestSender: msg.sender,
@@ -85,7 +85,7 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         if(depositHooks.length == 0) {
             return;
         }
-        ERC4626HookPayload memory request = ERC4626UpgradeableRequest({
+        ERC4626HookPayload memory request = ERC4626HookPayload({
             assets: assets,
             shares: shares,
             requestSender: msg.sender,

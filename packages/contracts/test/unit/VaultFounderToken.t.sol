@@ -74,13 +74,13 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     }
 
     function testNextTokenPrice() public {
-        assertEq(token.nextTokenPriceRead(), 200);
+        assertEq(token.nextTokenPrice(), 200);
         token.safeMint(alice, "testUrl");
-        assertEq(token.nextTokenPriceRead(), 240);
+        assertEq(token.nextTokenPrice(), 240);
         token.safeMint(bob, "testUrl2");
-        assertEq(token.nextTokenPriceRead(), 288);
+        assertEq(token.nextTokenPrice(), 288);
         token.safeMint(culprit, "testUrl3");
-        assertEq(token.nextTokenPriceRead(), 345);
+        assertEq(token.nextTokenPrice(), 345);
     }
 
     function testSetTokenURI() public {
@@ -114,14 +114,14 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     }
 
     function testSetTokenMultiplier() public {
-        assertEq(token.nextTokenPriceRead(), 200);
+        assertEq(token.nextTokenPrice(), 200);
         token.safeMint(alice, "testUrl");
         token.setNextTokenMultiplier(20_000);
-        assertEq(token.nextTokenPriceRead(), 400);
+        assertEq(token.nextTokenPrice(), 400);
     }
 
     function testSetTokenMultiplierFail() public {
-        assertEq(token.nextTokenPriceRead(), 200);
+        assertEq(token.nextTokenPrice(), 200);
         vm.expectRevert(abi.encodePacked(
             AccessTestHelper.getErrorMessage(address(alice), token.DEFAULT_ADMIN_ROLE())
         ));
