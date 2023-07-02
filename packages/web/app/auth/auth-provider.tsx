@@ -8,10 +8,10 @@ export const isInBrowser = () => typeof window !== "undefined";
 export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === "true" && isInBrowser();
 
 /** Wraper for authorisation provider, which enables authentication based on environment */
-export const AuthProvider = ({ children }: React.PropsWithChildren) => {
+export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element => {
   if (!isAuthEnabled()) {
     // ignore authentication locally or in production
-    return children;
+    return <>{children}</>;
   }
 
   console.log('Authentication is enabled');
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren) => {
 
 
 /** Allow open page only for authenticated users */
-export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren) => {
+export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren): JSX.Element => {
   const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
   console.log("user, isAuthenticated, isLoading", user, isAuthenticated, isLoading)
 
@@ -50,5 +50,5 @@ export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren) => {
     return <Loading />
   }
 
-  return children;
+  return <>{children}</>;
 }

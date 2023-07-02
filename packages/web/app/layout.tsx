@@ -79,16 +79,3 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-export const overrideMetadata = (
-  title: string,
-  description: string
-): Metadata => {
-  return {
-    title,
-    description,
-    openGraph: {
-      description,
-      title,
-    },
-  };
-};
