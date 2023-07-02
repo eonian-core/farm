@@ -5,7 +5,7 @@
       "chainId": "56",
       "contracts": {
         "ApeLendingStrategy": {
-          "address": "0x1389e320207dd3170DFDec445d39e018e06E6BfB",
+          "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
           "abi": [
             {
               "anonymous": false,
@@ -1132,7 +1132,7 @@
           ]
         },
         "ApeLendingStrategy_Implementation": {
-          "address": "0x5B99e0893225178dBf4Ffe9FfD2142a21E8d1087",
+          "address": "0x254F008fb17cB11A873CE4C3eDA65999B14A6196",
           "abi": [
             {
               "inputs": [
@@ -2246,7 +2246,7 @@
           ]
         },
         "ApeLendingStrategy_Proxy": {
-          "address": "0x1389e320207dd3170DFDec445d39e018e06E6BfB",
+          "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
           "abi": [
             {
               "inputs": [
@@ -2320,7 +2320,7 @@
           ]
         },
         "Vault": {
-          "address": "0x342F2B34113a437452282CC78E6e1FE4935AC695",
+          "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
           "abi": [
             {
               "anonymous": false,
@@ -4507,7 +4507,7 @@
           ]
         },
         "VaultFounderToken": {
-          "address": "0x9dAC5525744E1ca4BB2b632835D50e5458902fa2",
+          "address": "0x1f60aF11889b8829E5ae3030BC8ac7203af6E7d9",
           "abi": [
             {
               "anonymous": false,
@@ -5800,7 +5800,7 @@
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0xcfe2e6013de429789fF51c45a10064eFF758aB5e",
+          "address": "0xEdF11ced88AEE8e9e15B3977d8DC6B01f25Bb3Fb",
           "abi": [
             {
               "inputs": [
@@ -7080,7 +7080,7 @@
           ]
         },
         "VaultFounderToken_Proxy": {
-          "address": "0x9dAC5525744E1ca4BB2b632835D50e5458902fa2",
+          "address": "0x1f60aF11889b8829E5ae3030BC8ac7203af6E7d9",
           "abi": [
             {
               "inputs": [
@@ -7154,7 +7154,7 @@
           ]
         },
         "Vault_Implementation": {
-          "address": "0x6B109c1E28E73Ba0595b9e92Ce58d86b97d71F7e",
+          "address": "0xB5F330B64f2D95FBBD1E5f317c6Fa2Be348388FC",
           "abi": [
             {
               "inputs": [
@@ -9328,7 +9328,7 @@
           ]
         },
         "Vault_Proxy": {
-          "address": "0x342F2B34113a437452282CC78E6e1FE4935AC695",
+          "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
           "abi": [
             {
               "inputs": [
