@@ -23,7 +23,6 @@ import {IVaultHook} from "./tokens/IVaultHook.sol";
 import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
 import {RewardHolder} from "./tokens/RewardHolder.sol";
 
-
 error ExceededMaximumFeeValue();
 
 error InsufficientVaultBalance(uint256 assets, uint256 shares);
