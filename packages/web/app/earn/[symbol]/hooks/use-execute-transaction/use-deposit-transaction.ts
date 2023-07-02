@@ -25,7 +25,7 @@ export function useDepositTransaction() {
     // Execute "approve" transaction if needed.
     if (!hasApprove) {
       const result = await send(approveERC20, {
-        tokenAddress: vault.underlyingAsset.address,
+        tokenAddress: vault.asset.address,
         spenderAddress: vault.address,
         amount,
       });

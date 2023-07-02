@@ -8,16 +8,16 @@ interface Params {
 
 const GetVaultBySymbol = gql`
   query VaultBySymbol($symbol: String!) {
-    vaultBySymbol(symbol: $symbol) {
-      underlyingAsset {
+    vaults(where: { symbol: $symbol }) {
+      asset {
         address
         name
         symbol
         decimals
       }
-      totalBalance
-      interestRate
-      lastHarvestTime
+      rates(first: 1, where: { side: LENDER }) {
+        perBlock
+      }
       address
       name
       symbol

@@ -61,7 +61,7 @@ function validateWithdraw(data: ValidationData) {
     throw new Error("Please enter an amount greater than 0 to continue.");
   }
 
-  const assetSymbol = vault.underlyingAsset.symbol;
+  const assetSymbol = vault.asset.symbol;
   if (amount > vaultBalance) {
     const balance = toNumberFromDecimals(vaultBalance, assetDecimals);
     throw new Error(
@@ -76,7 +76,7 @@ function validateDeposit(data: ValidationData) {
     throw new Error("Please enter an amount greater than 0 to continue.");
   }
 
-  const assetSymbol = vault.underlyingAsset.symbol;
+  const assetSymbol = vault.asset.symbol;
   if (amount > walletBalance) {
     const balance = toNumberFromDecimals(walletBalance, assetDecimals);
     throw new Error(

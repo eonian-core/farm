@@ -96,7 +96,7 @@ const Form: React.FC<Props> = ({ vault }) => {
             disabled={hasPendingTransactions}
           />
           <FormInput
-            assetSymbol={vault.underlyingAsset.symbol}
+            assetSymbol={vault.asset.symbol}
             value={displayValue}
             balance={balance}
             onChange={handleValueChange}
