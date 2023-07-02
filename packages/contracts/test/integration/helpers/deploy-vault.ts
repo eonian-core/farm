@@ -30,6 +30,7 @@ type Options = {
   name?: string;
   symbol?: string;
   defaultOperators?: string[];
+  foundersRewardFee?: BigNumberish;
   overrides?: Overrides & { from?: string | Promise<string> };
   signer?: Signer | string;
 };
@@ -40,6 +41,7 @@ const defaultOptions: Partial<Options> = {
   name: "Vault Token",
   symbol: "VTN",
   defaultOperators: [],
+  foundersRewardFee: 100, // 1%
 };
 
 export default async function deployVault(

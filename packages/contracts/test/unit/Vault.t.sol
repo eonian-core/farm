@@ -12,13 +12,16 @@ import "contracts/lending/Lender.sol";
 import "contracts/lending/StrategiesLender.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 contract VaultTest is TestWithERC1820Registry {
     uint256 constant MAX_BPS = 10_000;
+    uint256 constant MAX_DEPOSIT = 10**38;
     uint256 constant LOCKED_PROFIT_RELEASE_SCALE = 10**18;
 
     ERC20Mock underlying;
     VaultMock vault;
+    VaultFounderTokenMock vaultFounderToken;
 
     StrategyMock strategy;
 
@@ -30,6 +33,7 @@ contract VaultTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderFee = 100;
 
     function setUp() public {
         vm.label(rewards, "rewards");
@@ -39,12 +43,16 @@ contract VaultTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
+        vaultFounderToken = new VaultFounderTokenMock();
         vault = new VaultMock(
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
+        vaultFounderToken.setVault(vault);
+        vault.setFounders(address(vaultFounderToken));
 
         strategy = new StrategyMock(address(underlying), address(vault));
     }
@@ -65,7 +73,8 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             "",
             "",
-            new address[](0)
+            new address[](0),
+            defaultFounderFee
         );
     }
 
@@ -101,7 +110,8 @@ contract VaultTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             0,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
         StrategyMock strategyWrongVault = new StrategyMock(
             address(underlying),
@@ -314,7 +324,7 @@ contract VaultTest is TestWithERC1820Registry {
     }
 
     function testSetManagementFee(uint256 newFee) public {
-        vm.assume(newFee <= MAX_BPS);
+        vm.assume(newFee <= MAX_BPS - defaultFounderFee);
 
         assertEq(vault.managementFee(), defaultFee);
 
@@ -358,21 +368,45 @@ contract VaultTest is TestWithERC1820Registry {
         vault.setEmergencyShutdown(true);
     }
 
-    function testChargingFees() public {
+    function testChargingAndFounderFeesFail() public {
+        vm.expectRevert(ExceededMaximumFeeValue.selector);
+
         uint256 fee = MAX_BPS;
+        uint256 founderFee = 1;
 
         vault = new VaultMock(
             address(underlying),
             rewards,
             fee,
-            defaultLPRRate
+            defaultLPRRate,
+            founderFee
+        );
+    }
+
+    // test only chargingFees
+    function testChargingFees() public {
+        uint256 fee = MAX_BPS;
+        uint256 deposit = 10_000_000;
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            fee,
+            defaultLPRRate,
+            0
         );
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
-        underlying.mint(address(vault), 10_000_000);
-        vm.prank(address(strategy));
+        vm.prank(alice);
         underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Alice deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(deposit);
 
         // Initialize the strategy
         vault.addStrategy(address(strategy), MAX_BPS);
@@ -384,22 +418,167 @@ contract VaultTest is TestWithERC1820Registry {
         underlying.mint(address(vault), 10_000);
 
         vm.expectEmit(true, true, true, true);
-        vault.emitMintTransferEvent(rewards, 10_000);
+        vault.emitMintTransferEvent(address(rewards), 9990);
+
 
         vm.prank(address(strategy));
         vault.reportPositiveDebtManagement(10_000, 0);
 
-        // The full amount must be transferred to the rewards address, as the fee factor is 100%
-        assertEq(vault.balanceOf(rewards), 10_000);
+        // The full amount must be transferred to the vaultFounderToken address, as the fee factor is 50%
+        assertEq(vault.balanceOf(rewards), 9990);
+    }
+
+    // test only founderFees
+    function testChargingFoundersFees() public {
+        uint256 founderFee = MAX_BPS;
+        uint256 deposit = 10_000_000;
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            0,
+            defaultLPRRate,
+            founderFee
+        );
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
+        strategy = new StrategyMock(address(underlying), address(vault));
+
+        // Mint some initial funds for the vault
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Alice deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(vault), 10_000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitMintTransferEvent(address(vaultFounderToken), 9990);
+
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(10_000, 0);
+
+        // The full amount must be transferred to the rewards address, as the fee factor is 50%
+        assertEq(vault.balanceOf(address(vaultFounderToken)), 9990);
+    }
+
+    function testChargingManagmentAndFoundersFees() public {
+        uint256 chargingFee = 100;
+        uint256 founderFee = 100;
+        uint256 deposit = 10_000_000;
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            chargingFee,
+            defaultLPRRate,
+            founderFee
+        );
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
+        strategy = new StrategyMock(address(underlying), address(vault));
+
+        // Mint some initial funds for the vault
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Alice deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(vault), 10_000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitMintTransferEvent(address(rewards), 99);
+        vm.expectEmit(true, true, true, true);
+        vault.emitMintTransferEvent(address(vaultFounderToken), 99);
+
+
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(10_000, 0);
+
+        // The half amount must be transferred to the rewards address, as the fee factor is 50%
+        assertEq(vault.balanceOf(address(vaultFounderToken)), 99);
+        // The half amount must be transferred to the vaultFounderToken address, as the fee factor is 50%
+        assertEq(vault.balanceOf(rewards), 99);
+    }
+
+    function testChargingManagementFeesWithoutVaultFounderToken() public {
+        uint256 chargingFee = 100;
+        uint256 founderFee = 100;
+        uint256 deposit = 10_000_000;
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            chargingFee,
+            defaultLPRRate,
+            founderFee
+        );
+        strategy = new StrategyMock(address(underlying), address(vault));
+
+        // Mint some initial funds for the vault
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Alice deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Initialize the strategy
+        vault.addStrategy(address(strategy), MAX_BPS);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(0, 0);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(vault), 10_000);
+
+        vm.expectEmit(true, true, true, true);
+        vault.emitMintTransferEvent(address(rewards), 99);
+
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(10_000, 0);
+
+        // The half amount must be transferred to the vaultFounderToken address, as the fee factor is 50%
+        assertEq(vault.balanceOf(rewards), 99);
     }
 
     function testChargingFeesFuzz(
         uint192 initialVaultBalance,
         uint16 fee,
         uint16 strategyRatio,
-        uint256 strategyGain
+        uint256 strategyGain,
+        uint256 founderFee
     ) public {
         vm.assume(fee <= MAX_BPS);
+        vm.assume(founderFee <= MAX_BPS);
+        vm.assume(fee + founderFee <= MAX_BPS);
         vm.assume(strategyRatio <= MAX_BPS);
         vm.assume(
             strategyGain <
@@ -410,7 +589,8 @@ contract VaultTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             fee,
-            defaultLPRRate
+            defaultLPRRate,
+            founderFee
         );
         strategy = new StrategyMock(address(underlying), address(vault));
 
@@ -478,6 +658,7 @@ contract VaultTest is TestWithERC1820Registry {
         uint256 gain
     ) public {
         vm.assume(gain < initialVaultBalance / 10);
+        vm.assume(initialVaultBalance < 10**16);
 
         // Mint some initial funds for the vault
         underlying.mint(address(vault), initialVaultBalance);
@@ -658,7 +839,7 @@ contract VaultTest is TestWithERC1820Registry {
     }
 
     function testDepositAndAssessShares(uint192 deposit) public {
-        vm.assume(deposit > 0);
+        vm.assume(deposit > 0 && deposit < MAX_DEPOSIT);
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);
@@ -749,7 +930,7 @@ contract VaultTest is TestWithERC1820Registry {
         uint128 strategyBalance,
         uint128 withdrawAmount
     ) public {
-        vm.assume(withdrawAmount > 0);
+        vm.assume(withdrawAmount > 0 && withdrawAmount < MAX_DEPOSIT);
         vm.assume(vaultBalance > 0);
         vm.assume(withdrawAmount > vaultBalance);
         vm.assume(strategyBalance >= withdrawAmount - vaultBalance);
@@ -833,16 +1014,18 @@ contract VaultTest is TestWithERC1820Registry {
         vault.setLockedProfitReleaseRate(rate);
     }
 
-    function testLockedProfitRelease() public {
+    function testLockedProfitRelease1() public {
         uint256 initialVaultBalance = 10_000_000;
         uint256 gain = 1_000_000;
         uint256 fees = 0;
+        uint256 foundersFees = 0;
         uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
 
         _initVaultWithStrategy(
             initialVaultBalance,
             fees,
-            lockedProfitReleaseRate
+            lockedProfitReleaseRate,
+            foundersFees
         );
 
         // Assume some time passed and strategy got a profit
@@ -875,13 +1058,15 @@ contract VaultTest is TestWithERC1820Registry {
     function testLockedProfitReleaseWithFees() public {
         uint256 initialVaultBalance = 10_000_000;
         uint256 gain = 1_000_000;
-        uint256 fees = 1_000;
+        uint256 fees = 500;
+        uint256 foundersFees = 500;
         uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
 
         _initVaultWithStrategy(
             initialVaultBalance,
             fees,
-            lockedProfitReleaseRate
+            lockedProfitReleaseRate,
+            foundersFees
         );
 
         // Assume some time passed and strategy got a profit
@@ -891,7 +1076,7 @@ contract VaultTest is TestWithERC1820Registry {
         vault.reportPositiveDebtManagement(gain, 0);
 
         // Immediately after the report, all profit should be locked (except the fees)
-        uint256 feesAmount = (fees * gain) / MAX_BPS;
+        uint256 feesAmount = (fees * gain) / MAX_BPS + (foundersFees * gain) / MAX_BPS;
         assertEq(vault.totalAssets(), initialVaultBalance + feesAmount);
         assertEq(vault.calculateLockedProfit(), gain - feesAmount);
 
@@ -915,17 +1100,75 @@ contract VaultTest is TestWithERC1820Registry {
         _assertEqWithRoundingError(vault.calculateLockedProfit(), 0);
     }
 
-    function testLockedProfitReleaseWithNegativeReport() public {
+    function testFounderFeeCanBeClaimed() public {
         uint256 initialVaultBalance = 10_000_000;
+        uint256 deposit = 10_000;
         uint256 gain = 1_000_000;
-        uint256 loss = 250_000;
-        uint256 fees = 0;
+        uint256 fees = 500;
+        uint256 foundersFees = 500;
         uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
 
         _initVaultWithStrategy(
             initialVaultBalance,
             fees,
-            lockedProfitReleaseRate
+            lockedProfitReleaseRate,
+            foundersFees
+        );
+
+        // Give the required funds to Alice and Bob
+        underlying.mint(alice, deposit);
+        underlying.mint(bob, deposit);
+
+        // Allow the vault to take funds from Alice and Bob
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+        vm.prank(bob);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+        vm.prank(alice);
+        vault.deposit(deposit);
+        vm.prank(bob);
+        vault.deposit(deposit);
+
+        assertEq(vaultFounderToken.totalSupply(), 2);
+
+        // Assume some time passed and strategy got a profit
+        vm.warp(block.timestamp + 1000);
+        underlying.mint(address(strategy), gain);
+        vm.prank(address(strategy));
+        vault.reportPositiveDebtManagement(gain, 0);
+
+        // Immediately after the report, all profit should be locked (except the fees)
+        uint256 feesAmount = (fees * gain) / MAX_BPS + (foundersFees * gain) / MAX_BPS;
+        assertEq(vault.totalAssets(), initialVaultBalance + feesAmount + deposit * 2);
+        assertEq(vault.calculateLockedProfit(), gain - feesAmount);
+
+        // check alice has balance
+
+        console.log(vault.balanceOf(address(vaultFounderToken)));
+        // let's try to claim rewards
+        vm.prank(alice);
+        vaultFounderToken.claimReward();
+
+        // check alice has empty balance after claim and bob still has balance
+        vm.prank(alice);
+        assertEq(vaultFounderToken.calcReward(), 0);
+        vm.prank(bob);
+        assertEq(vaultFounderToken.calcReward(), 25);
+    }
+
+    function testLockedProfitReleaseWithNegativeReport() public {
+        uint256 initialVaultBalance = 10_000_000;
+        uint256 gain = 1_000_000;
+        uint256 loss = 250_000;
+        uint256 fees = 0;
+        uint256 foundersFees = 0;
+        uint256 lockedProfitReleaseRate = LOCKED_PROFIT_RELEASE_SCALE / 6 hours;
+
+        _initVaultWithStrategy(
+            initialVaultBalance,
+            fees,
+            lockedProfitReleaseRate,
+            foundersFees
         );
 
         // Assume some time passed and strategy got a profit
@@ -968,14 +1211,18 @@ contract VaultTest is TestWithERC1820Registry {
     function _initVaultWithStrategy(
         uint256 initialVaultBalance,
         uint256 fees,
-        uint256 lockedProfitReleaseRate
+        uint256 lockedProfitReleaseRate,
+        uint256 foundersFee
     ) private {
         vault = new VaultMock(
             address(underlying),
             rewards,
             fees,
-            lockedProfitReleaseRate
+            lockedProfitReleaseRate,
+            foundersFee
         );
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
         strategy = new StrategyMock(address(underlying), address(vault));
 
         // Mint some initial funds for the vault
@@ -994,4 +1241,68 @@ contract VaultTest is TestWithERC1820Registry {
         uint256 min = Math.min(a, b);
         assertLe(max - min, 1);
     }
+
+    function testFounderTokenMint(uint192 deposit) public {
+        // deposit have to be above min first investment
+        vm.assume(deposit > 200 && deposit < MAX_DEPOSIT);
+
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            0,
+            defaultLPRRate,
+            0
+        );
+        vaultFounderToken = new VaultFounderTokenMock();
+        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
+
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Check if Alice has the initial balance
+        assertEq(underlying.balanceOf(alice), deposit);
+        assertEq(vaultFounderToken.totalSupply(), 0);
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Check if Alice has a new vault founder token generated
+        assertEq(vaultFounderToken.totalSupply(), 1);
+    }
+
+    function testFounderTokenMintWithoutVaultFounderToken(uint192 deposit) public {
+        // deposit have to be above min first investment
+        vm.assume(deposit > 200 && deposit < MAX_DEPOSIT);
+
+
+        vault = new VaultMock(
+            address(underlying),
+            rewards,
+            0,
+            defaultLPRRate,
+            0
+        );
+
+        // Allow the vault to take funds from Alice
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Give the required funds to Alice
+        underlying.mint(alice, deposit);
+
+        // Check if Alice has the initial balance
+        assertEq(underlying.balanceOf(alice), deposit);
+
+        vm.prank(alice);
+        vault.deposit(deposit);
+
+        // Check if Alice has a new vault founder token generated
+    }
+
 }

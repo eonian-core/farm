@@ -8,7 +8,7 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
  * https://eips.ethereum.org/EIPS/eip-4626[ERC-4626].
  */
 interface IERC4626 {
-    
+
     /* ///////////////////////////// EVENTS ///////////////////////////// */
 
     /// `sender` has exchanged `assets` for `shares`, and transferred those `shares` to `owner`.

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "forge-std/console.sol";
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
@@ -17,6 +16,7 @@ import "./mocks/CTokenMock.sol";
 import "./mocks/RainMakerMock.sol";
 import "./mocks/PancakeRouterMock.sol";
 import "./mocks/ApeLendingStrategyMock.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 import "contracts/strategies/CTokenBaseStrategy.sol";
 
@@ -37,6 +37,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     VaultMock vault;
     OpsMock ops;
     CTokenMock cToken;
+    VaultFounderTokenMock vaultFounderToken;
 
     address rewards = vm.addr(1);
     address alice = vm.addr(2);
@@ -44,6 +45,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderFee = 100;
 
     uint256 minReportInterval = 3600;
     bool isPrepaid = false;
@@ -64,12 +66,18 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         underlying = new ERC20Mock("Mock Token", "TKN");
         vm.label(address(underlying), "underlying");
 
+        vaultFounderToken = new VaultFounderTokenMock();
+
         vault = new VaultMock(
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
+        vaultFounderToken.setVault(vault);
+        vault.setFounders(address(vaultFounderToken));
+
         vm.label(address(vault), "vault");
 
         ops = new OpsMock();
@@ -149,8 +157,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
+        vault.setFounders((address(vaultFounderToken)));
 
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new ApeLendingStrategyMock(

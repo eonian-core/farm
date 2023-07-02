@@ -18,14 +18,20 @@ import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "./upgradeable/SafeUUPSUpgradeable.sol";
 import {IVersionable} from "./upgradeable/IVersionable.sol";
+import {ERC4626Lifecycle} from "./tokens/ERC4626Lifecycle.sol";
+import {IVaultHook} from "./tokens/IVaultHook.sol";
+import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
+import {RewardHolder} from "./tokens/RewardHolder.sol";
+
 
 error ExceededMaximumFeeValue();
 
 error InsufficientVaultBalance(uint256 assets, uint256 shares);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error InappropriateStrategy();
+error FoundersNotSet();
 
-contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender {
+contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender, ERC4626Lifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /// @notice Represents the maximum value of the locked-in profit ratio scale (where 1e18 is 100%).
@@ -45,10 +51,16 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     ///         Represents the amount of funds that will be unlocked when one second passes.
     uint256 public lockedProfitReleaseRate;
 
+    /// @notice Vault Founders Token contract where rewards for founders are sent to.
+    address public founders;
+
+    /// @notice Vault founders reward (in BPS).
+    uint256 public foundersFee;
+
     /// @dev This empty reserved space is put in place to allow future versions to add new
     ///      variables without shifting down storage in the inheritance chain.
     ///      See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-    uint256[50] private __gap;
+    uint256[48] private __gap;
 
     /// @notice Event that should happen when the locked-in profit release rate changed.
     event LockedProfitReleaseRateChanged(uint256 rate);
@@ -70,7 +82,8 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         uint256 _lockedProfitReleaseRate,
         string memory _name,
         string memory _symbol,
-        address[] memory _defaultOperators
+        address[] memory _defaultOperators,
+        uint256 _foundersFee
     ) public initializer {
         __SafeUUPSUpgradeable_init(); // Ownable under the hood
         __StrategiesLender_init_lenderSpecific(); // require Ownable
@@ -91,6 +104,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         setRewards(_rewards);
         setManagementFee(_managementFee);
         setLockedProfitReleaseRate(_lockedProfitReleaseRate);
+        setFoundersFee(_foundersFee);
     }
 
     /// @dev Override to add the "whenNotPaused" modifier
@@ -106,7 +120,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
 
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
-    function beforeWithdraw(uint256 assets, uint256 shares) internal override {
+    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -146,6 +160,9 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         if (_freeAssets() < assets) {
             revert InsufficientVaultBalance(assets, shares);
         }
+
+        // apply the hook
+        ERC4626Lifecycle.beforeWithdraw(assets, shares);
     }
 
     /// Check that all new strategies refer to this vault and has the same underlying asset
@@ -161,14 +178,30 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         rewards = _rewards;
     }
 
-    /// @notice Sets the vault management fee.
+    /// @notice Sets the vault management fee. Both management and foundersReward fee can't exceed 100%
     /// @param _managementFee a new management fee value (in BPS).
     function setManagementFee(uint256 _managementFee) public onlyOwner {
-        if (_managementFee > MAX_BPS) {
+        if (_managementFee + foundersFee > MAX_BPS) {
             revert ExceededMaximumFeeValue();
         }
 
         managementFee = _managementFee;
+    }
+
+    /// @notice Sets the vault founder token contract;
+    /// @param _founders a new founder token contract address.
+    function setFounders(address _founders) external onlyOwner {
+        founders = _founders;
+        addDepositHook(IVaultHook(founders));
+    }
+
+    /// @notice Sets the vault founder token reward rate. Both management and foundersReward fee can't exceed 100%
+    /// @param _foundersFee a new founder token reward fee (in BPS).
+    function setFoundersFee(uint256 _foundersFee) public onlyOwner {
+        if (_foundersFee + managementFee > MAX_BPS) {
+            revert ExceededMaximumFeeValue();
+        }
+        foundersFee = _foundersFee;
     }
 
     /// @notice Changes the rate of release of locked-in profit.
@@ -210,8 +243,17 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         if (fee > 0) {
             _mint(rewards, convertToShares(fee), "", "", false);
         }
-
-        return fee;
+        if(founders == address(0)) {
+            return fee;
+        }
+        uint256 vaultFoundersReward = (extraFreeFunds * foundersFee) / MAX_BPS;
+        if (vaultFoundersReward > 0) {
+            // if rewards are set, we mint the tokens to the vault and update index for Claim rewards contract
+            uint256 shares = convertToShares(vaultFoundersReward);
+            _mint(founders, shares, "", "", false);
+            RewardHolder(founders).depositReward(shares);
+        }
+        return fee + vaultFoundersReward;
     }
 
     /// @notice Updates the locked-in profit value according to the positive debt management report of the strategy
@@ -283,5 +325,9 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         override
     {
         asset.safeTransferFrom(borrower, address(this), amount);
+    }
+
+    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
+        ERC4626Lifecycle.afterDeposit(assets, shares);
     }
 }
