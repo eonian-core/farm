@@ -28,7 +28,7 @@ export const PercentButtonGroup: React.FC<Props> = ({
         const maxFactor = BigInt(precise);
 
         const resultValue = (maxValue * factor) / maxFactor;
-        const isActive = resultValue === inputValue;
+        const isActive = inputValue > 0n && resultValue === inputValue;
 
         const onPress = () => {
           onValueChange(resultValue);
