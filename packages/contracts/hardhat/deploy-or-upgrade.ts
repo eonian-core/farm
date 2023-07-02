@@ -61,7 +61,7 @@ export const deployOrUpgrade = ({
 
     const { deployer } = accounts;
 
-    const oldDeployment = await getDeployment(contract);
+    const isUpdate = await isDeployedBefore(contract, getDeployment);
 
     const result = await deploy(contract, {
       from: deployer,
@@ -88,7 +88,7 @@ export const deployOrUpgrade = ({
     });
 
     // trigger only on first deploy
-    if (!oldDeployment?.implementation) {
+    if (!isUpdate) {
       await afterDeploy?.(hre, result, deployedContracts);
     }
   };
@@ -100,6 +100,23 @@ export const deployOrUpgrade = ({
   func.dependencies = dependencies;
 
   return func;
+};
+
+type GetDeployement = (name: string) => Promise<Deployment>;
+
+export const isDeployedBefore = async (
+  contract: string,
+  getDeployment: GetDeployement
+): Promise<boolean> => {
+  try {
+    const oldDeployment = await getDeployment(contract);
+    console.log("Old deployment found for", contract, oldDeployment);
+
+    return !!oldDeployment?.implementation;
+  } catch (e) {
+    console.warn("Probably wasan't deployed before", e);
+    return false;
+  }
 };
 
 export interface Context {
@@ -154,13 +171,13 @@ export const resolveDependencies = async (
  * */
 export const skipFactory =
   (contractChains: Array<BlockchainType>) =>
-    async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
-      for (const chain of network.config.tags) {
-        // Dont skip if contract expected to be deployed in this chain
-        if (contractChains.includes(chain as BlockchainType)) {
-          return false;
-        }
+  async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
+    for (const chain of network.config.tags) {
+      // Dont skip if contract expected to be deployed in this chain
+      if (contractChains.includes(chain as BlockchainType)) {
+        return false;
       }
+    }
 
-      return true;
-    };
+    return true;
+  };
