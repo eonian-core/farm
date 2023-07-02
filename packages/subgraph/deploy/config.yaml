@@ -27,6 +27,20 @@ files:
       eventHandlers:
         file: ../../src/event-handlers.ts
 
+  - output: eonian-bsc-staging.yaml
+    data:
+      network: bsc
+      description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain staging environment
+      schema: ../../schema.graphql
+      vault:
+        address: "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2"
+        startBlock: 29619484
+      abis:
+        Vault: ../../abis/VaultImplementation.json
+        ERC20: ../../abis/ERC20.json
+      eventHandlers:
+        file: ../../src/event-handlers.ts
+
   # used primarly for testing
   # matchstic framework not aloow to pass path to the schema
   - output: local.yaml 
