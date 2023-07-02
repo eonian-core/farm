@@ -20,32 +20,30 @@
   position: relative;
 
   &:before {
-    --blur-size: 2rem;
-
     content: "";
     position: absolute;
     top: 3rem;
     left: 3rem;
     height: calc(100% - 2 * 3.5rem);
     width: calc(100% - 2 * 3rem);
+    z-index: -1;
 
     background: var(--color-accent-background-gradient);
     border-radius: calc(2 * var(--border-radius-400));
-    z-index: -1;
     animation: animatedGradient 60s ease alternate infinite;
     background-size: 300% 300%;
     mix-blend-mode: screen;
     filter: blur(3rem);
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease;
+    opacity: 0.5;
+
+    @media (max-width: $screen-mobile) {
+      animation: none;
+    }
   }
 
-  &:hover {
-    &:before {
-      top: 1rem;
-      left: 2.5rem;
-      height: calc(100% - 2 * 1.5rem);
-      width: calc(100% - 2 * 2.5rem);
-    }
+  &:focus-within:before {
+    transform: scale(1.1);
   }
 
   @media (max-width: $screen-mobile) {
