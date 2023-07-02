@@ -19,18 +19,30 @@ import {Vault} from "../Vault.sol";
 contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Upgradeable, IVaultHook, RewardHolder {
 
     // Max number of tokens that can be minted
-    uint256 private _maxCountTokens;
+    uint256 public maxCountTokens;
 
     // Next token price multiplier in percents
-    uint256 private _nextTokenPriceMultiplier;
+    uint256 public nextTokenPriceMultiplier;
 
-    // Initial token price
-    uint256 private _nextTokenPrice;
+    /// @dev return price for the next token
+    uint256 public nextTokenPrice;
 
     /// @dev This empty reserved space is put in place to allow future versions to add new
     /// variables without shifting down storage in the inheritance chain.
     /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[50] private __gap;
+
+    /// @notice Emit when new token minted and token price updated.
+    /// @param founder Address of the founder.
+    /// @param tokenPrice Price of the token.
+    /// @param nextTokenPrice Price of the next token.
+    /// @param nextTokenPriceMultiplier Next token price multiplier in percents.
+    event FounderAdded(
+        address indexed founder, 
+        uint256 tokenPrice, 
+        uint256 nextTokenPrice, 
+        uint256 nextTokenPriceMultiplier
+    );
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
@@ -43,11 +55,13 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         uint256 initialTokenPrice_
     ) public initializer {
         __SafeUUPSUpgradeable_init_direct();
-        __ERC5484Upgradeable_init_unchained("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true);
-        __RewardHolder_init_unchained();
-        _maxCountTokens = maxCountTokens_;
-        _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
-        _nextTokenPrice = initialTokenPrice_;
+        __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true); // __AccessControl_init inside
+        __ReentrancyGuard_init();
+        __RewardHolder_init_unchained(); // require __AccessControl_init
+
+        maxCountTokens = maxCountTokens_;
+        nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
+        nextTokenPrice = initialTokenPrice_;
     }
 
     /// @inheritdoc IVersionable
@@ -70,36 +84,29 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// @param uri token metadata uri
     /// @return true if token was minted
     function safeMint(address to, string memory uri) public virtual override(ERC5484Upgradeable) returns(bool){
-        if(totalSupply() < _maxCountTokens) {
-            bool tokenCreated = super.safeMint(to, uri);
-            if(tokenCreated) {
-                setupNewOwner(to);
-                _nextTokenPrice = _nextTokenPrice * _nextTokenPriceMultiplier / 10000;
-                return true;
-            }
+        if(totalSupply() >= maxCountTokens) {
+            return false;
         }
-        return false;
+        
+        if(!super.safeMint(to, uri)) { // requires MINTER_ROLE inside
+            return false;
+        }
+
+        setupNewOwner(to);
+        _nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier / 10000;
+
+        // Will be used to record price of current holder token in The Graph
+        emit FounderAdded(to, nextTokenPrice, _nextTokenPrice, nextTokenPriceMultiplier);
+        
+        nextTokenPrice = _nextTokenPrice;
+        return true;
     }
 
-    /// @inheritdoc ERC721Upgradeable
-    function _safeMint(address to, uint256 tokenId) internal override {
-        require(totalSupply() < _maxCountTokens, "EVFT: max number of tokens");
-        super._safeMint(to, tokenId);
-    }
-
-    event DebugEvent(uint256 value);
     /// @dev set multiplicator for the next token in percents
     /// in case nextTokenPriceMultiplier_ = 13_000 the next price of the token will be: curPrice * 130%
     /// @param nextTokenPriceMultiplier_ persent multiplicator
     function setNextTokenMultiplier(uint256 nextTokenPriceMultiplier_) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _nextTokenPrice = _nextTokenPrice * 10000 / _nextTokenPriceMultiplier;
-        _nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
-        _nextTokenPrice = _nextTokenPrice * _nextTokenPriceMultiplier / 10000;
-    }
-
-    /// @dev return price for the next token
-    function nextTokenPrice() internal view returns (uint256){
-        return _nextTokenPrice;
+        nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
     }
 
     /// @inheritdoc IVaultFounderToken
@@ -117,7 +124,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     function afterDepositTrigger(ERC4626UpgradeableRequest memory request)
             external override
     {
-        if(request.senderMaxWithdraw >= nextTokenPrice()) {
+        if(request.senderMaxWithdraw >= nextTokenPrice) {
             safeMint(request.requestSender, "");
         }
     }

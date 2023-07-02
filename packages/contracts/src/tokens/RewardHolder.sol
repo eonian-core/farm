@@ -41,13 +41,12 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     function __RewardHolder_init() internal onlyInitializing {
         __AccessControl_init();
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         __ReentrancyGuard_init();
+        __RewardHolder_init_unchained();
     }
 
     function __RewardHolder_init_unchained() internal onlyInitializing {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        __ReentrancyGuard_init();
     }
 
     /// @dev set vault
