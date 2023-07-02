@@ -35,8 +35,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
 
 /** Allow open page only for authenticated users */
 export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren): JSX.Element => {
-  const { user, isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
-  console.log("user, isAuthenticated, isLoading", user, isAuthenticated, isLoading)
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   useEffect(() => {
 
