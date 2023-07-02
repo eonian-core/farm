@@ -223,45 +223,48 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     // test interestRatePerBlock
     function testShouldReturnCorrectInterestRatePerBlock(
         bool _blocksBased,
-        uint256 interestRatePerBlock
+        uint128 _interestRatePerBlock
     ) public {
+        uint256 interestRatePerBlock = _interestRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setSupplyRatePerBlock(interestRatePerBlock);
 
         if (_blocksBased) {
             assertEq(strategy.interestRatePerBlock(), interestRatePerBlock);
         } else {
-            assertEq(strategy.interestRatePerBlock(), interestRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.interestRatePerBlock(), interestRatePerBlock * strategy.secondPerBlock());
         }
     }
 
     // test borrowRatePerBlock
     function testShouldReturnCorrectBorrowRatePerBlock(
         bool _blocksBased,
-        uint256 borrowRatePerBlock
+        uint128 _borrowRatePerBlock
     ) public {
+        uint256 borrowRatePerBlock = _borrowRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setBorrowRatePerBlock(borrowRatePerBlock);
 
         if (_blocksBased) {
             assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock);
         } else {
-            assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock * strategy.secondPerBlock());
         }
     }
 
     // test supplyRatePerBlock
     function testShouldReturnCorrectSupplyRatePerBlock(
         bool _blocksBased,
-        uint256 supplyRatePerBlock
+        uint128 _supplyRatePerBlock
     ) public {
+        uint256 supplyRatePerBlock = _supplyRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setSupplyRatePerBlock(supplyRatePerBlock);
 
         if (_blocksBased) {
             assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock);
         } else {
-            assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock * strategy.secondPerBlock());
         }
     }
 

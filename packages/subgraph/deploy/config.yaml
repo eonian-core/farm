@@ -3,14 +3,42 @@ files:
     data:
       network: sepolia
       description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      schema: ../../schema.graphql
       vault:
         address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
         startBlock: 3726610
+      abis:
+        Vault: ../../abis/VaultImplementation.json
+        ERC20: ../../abis/ERC20.json
+      eventHandlers:
+        file: ../../src/event-handlers.ts
 
   - output: eonian-bsc-development.yaml
     data:
       network: bsc
       description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
+      schema: ../../schema.graphql
       vault:
-        address: "0xa3923Fa94c7332e2561E88290B884419dca9E23C"
-        startBlock: 28907512
+        address: "0x342F2B34113a437452282CC78E6e1FE4935AC695"
+        startBlock: 29558525
+      abis:
+        Vault: ../../abis/VaultImplementation.json
+        ERC20: ../../abis/ERC20.json
+      eventHandlers:
+        file: ../../src/event-handlers.ts
+
+  # used primarly for testing
+  # matchstic framework not aloow to pass path to the schema
+  - output: local.yaml 
+    data:
+      network: sepolia
+      description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      schema: ./schema.graphql
+      vault:
+        address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
+        startBlock: 3726610
+      abis:
+        Vault: ./abis/VaultImplementation.json
+        ERC20: ./abis/ERC20.json
+      eventHandlers:
+        file: ./src/event-handlers.ts

@@ -1,10 +1,10 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.9.2",
+  "version": "0.9.5",
   "scripts": {
-    "gen:code": "graph codegen",
-    "dev": "graph codegen --watch",
-    "build": "graph build",
+    "gen:code": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml",
+    "dev": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml --watch",
+    "build": "graph build ./deploy/environments/eonian-sepolia-testnet.yaml",
     "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet ./deploy/environments/eonian-sepolia-testnet.yaml --version-label=$VERSION",
     "deploy:bsc-dev": "graph deploy --product hosted-service eonian-core/eonian-bsc-development ./deploy/environments/eonian-bsc-development.yaml",
     "deploy": "yarn build && yarn deploy:studio",
@@ -12,7 +12,9 @@
     "create:local": "graph create --node http://localhost:8020/ eonian-sepolia-testnet",
     "remove:local": "graph remove --node http://localhost:8020/ eonian-sepolia-testnet",
     "deploy:local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 eonian-sepolia-testnet",
+    "copy:local-schema": "cp ./deploy/environments/local.yaml ./subgraph.yaml",
     "test": "graph test",
+    "test:local": "yarn copy:local-schema && yarn test",
     "test:docker": "graph test -d",
     "test:watch": "nodemon",
     "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments"

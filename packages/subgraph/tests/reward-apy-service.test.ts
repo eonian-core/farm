@@ -13,7 +13,7 @@ import { MockLogger, mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
 import { Context } from "../src/Context";
 import { RewardApyService } from "../src/apy/reward-apy-service";
-import { MAX_BPS } from "../src/apy/apy-calculations";
+import { INTEREST_RATE_DECIMALS } from "../src/apy/apy-calculations";
 
 const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 const tokenAddressStr = tokenAddress.toHexString()
@@ -52,12 +52,11 @@ describe("RewardApyService", () => {
 
             assert.entityCount("RewardAPY", 1)
 
-            assert.fieldEquals("RewardAPY", idStr, "decimals", MAX_BPS.toString())
-            assert.fieldEquals("RewardAPY", idStr, "dayly", "353403600")
-            assert.fieldEquals("RewardAPY", idStr, "weekly", "22391510400")
-            assert.fieldEquals("RewardAPY", idStr, "monthly", "95963616000")
-            assert.fieldEquals("RewardAPY", idStr, "yearly", "1167557328000")
-
+            assert.fieldEquals("RewardAPY", idStr, "decimals", INTEREST_RATE_DECIMALS.toString())
+            assert.fieldEquals("RewardAPY", idStr, "daily", "353403600")
+            assert.fieldEquals("RewardAPY", idStr, "weekly", "2471439000")
+            assert.fieldEquals("RewardAPY", idStr, "monthly", "10591899000")
+            assert.fieldEquals("RewardAPY", idStr, "yearly", "128868034800")
         })
 
         test("should update APY entity", () => {
@@ -70,11 +69,11 @@ describe("RewardApyService", () => {
 
             assert.entityCount("RewardAPY", 1)
 
-            assert.fieldEquals("RewardAPY", idStr, "decimals", MAX_BPS.toString())
-            assert.fieldEquals("RewardAPY", idStr, "dayly", "706807200")
-            assert.fieldEquals("RewardAPY", idStr, "weekly", "44783020800")
-            assert.fieldEquals("RewardAPY", idStr, "monthly", "191927232000")
-            assert.fieldEquals("RewardAPY", idStr, "yearly", "2335114656000")
+            assert.fieldEquals("RewardAPY", idStr, "decimals", INTEREST_RATE_DECIMALS.toString())
+            assert.fieldEquals("RewardAPY", idStr, "daily", "706807200")
+            assert.fieldEquals("RewardAPY", idStr, "weekly", "4942878000")
+            assert.fieldEquals("RewardAPY", idStr, "monthly", "21183798000")
+            assert.fieldEquals("RewardAPY", idStr, "yearly", "257736069600")
         })
 
     })

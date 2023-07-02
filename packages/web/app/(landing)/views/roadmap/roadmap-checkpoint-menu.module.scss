@@ -1,0 +1,48 @@
+@import "../../../screen.scss";
+
+.menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: var(--margin-400);
+}
+
+.point {
+    cursor: pointer;
+    opacity: 0.2;
+    padding: var(--padding-100);
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.active {
+    opacity: 0.6;
+}
+
+.pointDot {
+    height: var(--padding-200);
+    width: var(--padding-200);
+    border-radius: 9999px;
+    background-color: hsl(0, 0%, 98%);
+}
+
+.chevron {
+    cursor: pointer;
+
+    &:hover {
+        color: hsl(240 6% 90%);
+    }
+}
+
+.chevronDiabled {
+
+    &, &:hover {
+        color: hsl(240 5% 34%);
+    }
+}
+
+.chevronLeft {
+    transform: rotate(180deg);
+}
