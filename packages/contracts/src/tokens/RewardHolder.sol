@@ -36,8 +36,6 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     // 0xbb788f92e65e1a823e2c502bc4e7f9c3e55531bd56bfc7c0a895fb3ac9eb7716
     bytes32 public constant BALANCE_UPDATER_ROLE = keccak256("BALANCE_UPDATE_ROLE");
-    // 0x350f4eb58665205037e4a10647f66a623dc93281f72575646a8f0c90d88b72ae
-    bytes32 public constant REWARD_CLAIMER_ROLE = keccak256("REWARD_CLAIMER_ROLE");
 
     /* ///////////////////////////// CONSTRUCTORS ///////////////////////////// */
 
@@ -77,7 +75,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
         require(rewardOwnerIndex[msg.sender] != 0, "Caller doesn't have reward.");
 
         // calculate reward for token owner
-        uint256 tokenOwnerReward = _calcReward();
+        uint256 tokenOwnerReward = calcReward();
         rewardOwnerIndex[msg.sender] = rewardIndex;
 
         // transfer reward to token owner
@@ -85,10 +83,12 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
         emit RewardClaimed(tokenOwnerReward, address(msg.sender));
     }
 
-    function _calcReward() internal view returns (uint256) {
-        //todo discuss the proper calculation mechanism
+    function calcReward() public view returns (uint256) {
+        if(numberCoins == 0 || rewardOwnerIndex[msg.sender] == 0) {
+            return 0;
+        }
         uint deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
-        return deltaIndex.mulDivDown(1, numberCoins);
+        return deltaIndex / numberCoins;
     }
 
     /// @dev setup new owner for reward usually called when minting new token

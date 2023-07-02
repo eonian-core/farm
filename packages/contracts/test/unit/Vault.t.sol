@@ -1151,9 +1151,9 @@ contract VaultTest is TestWithERC1820Registry {
 
         // check alice has empty balance after claim and bob still has balance
         vm.prank(alice);
-        assertEq(vaultFounderToken.calculateReward(), 0);
+        assertEq(vaultFounderToken.calcReward(), 0);
         vm.prank(bob);
-        assertEq(vaultFounderToken.calculateReward(), 25);
+        assertEq(vaultFounderToken.calcReward(), 25);
     }
 
     function testLockedProfitReleaseWithNegativeReport() public {

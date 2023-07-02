@@ -169,9 +169,35 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         assertEq(rewardHolder.rewardIndex(), amount + 1);
 
         // Send reward to Alice and check emits
-        /*vm.expectEmit(address(rewardHolder));
-        rewardHolder.emitRewardClaimed(amount.mulDivDown(1, 2), address(alice));
+        vm.expectEmit(address(rewardHolder));
+        rewardHolder.emitRewardClaimed(amount / 2, address(alice));
         vm.prank(alice);
-        rewardHolder.claimReward();*/
+        rewardHolder.claimReward();
+    }
+
+    function testCorrectRewardClaimed2(uint256 reward) public {
+        vm.assume(reward > 0 && reward < type(uint256).max / 2);
+
+        rewardHolder.depositReward(reward);
+
+        // to users set and reward have to be zero
+        assertEq(rewardHolder.calcReward(), 0);
+
+        // setup new token owners and reward still have to be zero
+        rewardHolder.setupOwner(address(alice));
+        rewardHolder.setupOwner(address(bob));
+        rewardHolder.setupOwner(address(culprit));
+
+        // check for contract owner
+        assertEq(rewardHolder.calcReward(), 0);
+        // check for alice
+        vm.prank(alice);
+        assertEq(rewardHolder.calcReward(), 0);
+
+        // deposit additional reward
+        rewardHolder.depositReward(reward);
+
+        vm.prank(alice);
+        assertEq(rewardHolder.calcReward(), reward / 3);
     }
 }

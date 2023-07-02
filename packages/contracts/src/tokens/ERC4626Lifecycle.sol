@@ -63,13 +63,11 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         if(withdrawHooks.length == 0) {
             return;
         }
-        uint256[46] memory gap_; // this is needed for future upgrades
         ERC4626UpgradeableRequest memory request = ERC4626UpgradeableRequest({
             assets: assets,
             shares: shares,
             requestSender: msg.sender,
-            senderMaxWithdraw: maxWithdraw(msg.sender),
-            gap: gap_
+            senderMaxWithdraw: maxWithdraw(msg.sender)
         });
         // iterate over hooks and call it
         for (uint256 i = 0; i < withdrawHooks.length; i++)
@@ -87,13 +85,11 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         if(depositHooks.length == 0) {
             return;
         }
-        uint256[46] memory gap_; // this is needed for future upgrades
         ERC4626UpgradeableRequest memory request = ERC4626UpgradeableRequest({
             assets: assets,
             shares: shares,
             requestSender: msg.sender,
-            senderMaxWithdraw: maxWithdraw(msg.sender),
-            gap: gap_
+            senderMaxWithdraw: maxWithdraw(msg.sender)
         });
         // iterate over depositHooks and call it
         for (uint256 i = 0; i < depositHooks.length; i++)
