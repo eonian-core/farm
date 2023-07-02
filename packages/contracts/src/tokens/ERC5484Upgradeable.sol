@@ -81,11 +81,8 @@ contract ERC5484Upgradeable is
         __ERC721Enumerable_init();
         __ERC721URIStorage_init();
         __AccessControl_init();
-        _burnAuth = burnAuth_;
-        _mintOnce = mintOnce_;
-
-        // setup roles depend on mode for SoulBound token
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        
+        __ERC5484Upgradeable_init_unchained(name_, symbol_, burnAuth_, mintOnce_);
     }
 
     function __ERC5484Upgradeable_init_unchained(
@@ -94,9 +91,6 @@ contract ERC5484Upgradeable is
         BurnAuth burnAuth_,
         bool mintOnce_
     ) internal onlyInitializing {
-        __ERC721_init(name_, symbol_);
-        __ERC721Enumerable_init();
-        __ERC721URIStorage_init();
         _burnAuth = burnAuth_;
         _mintOnce = mintOnce_;
 
