@@ -21,6 +21,8 @@ export function getGraphQLEndpoint(chainId: ChainId): string {
 
 function getBNBChainEndpoint(chainEnvironment: ChainEnvironment): string {
   switch (chainEnvironment) {
+    case ChainEnvironment.STAGING:
+      return "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-staging";
     case ChainEnvironment.DEVELOPMENT:
       return "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-development";
     case ChainEnvironment.LOCAL:
