@@ -50,7 +50,7 @@ export const deployOrUpgrade = ({
   const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const {
       network,
-      deployments: { deploy },
+      deployments: { deploy, get: getDeployment },
     } = hre;
     const { accounts } = await extractContext(hre);
 
@@ -60,6 +60,8 @@ export const deployOrUpgrade = ({
     );
 
     const { deployer } = accounts;
+
+    const oldDeployment = await getDeployment(contract);
 
     const result = await deploy(contract, {
       from: deployer,
@@ -85,7 +87,8 @@ export const deployOrUpgrade = ({
       },
     });
 
-    if (result.newlyDeployed) {
+    // trigger only on first deploy
+    if (result.implementation !== oldDeployment.implementation) {
       await afterDeploy?.(hre, result, deployedContracts);
     }
   };
