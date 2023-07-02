@@ -88,7 +88,7 @@ export const deployOrUpgrade = ({
     });
 
     // trigger only on first deploy
-    if (result.implementation !== oldDeployment.implementation) {
+    if (!oldDeployment?.implementation) {
       await afterDeploy?.(hre, result, deployedContracts);
     }
   };
