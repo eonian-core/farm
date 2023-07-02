@@ -10,7 +10,7 @@ import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {ERC4626Lifecycle} from "contracts/tokens/ERC4626Lifecycle.sol";
-import {IVaultHook, ERC4626UpgradeableRequest} from "contracts/tokens/IVaultHook.sol";
+import {IVaultHook, ERC4626HookPayload} from "contracts/tokens/IVaultHook.sol";
 
 contract SafeERC4626LifecycleTest is TestWithERC1820Registry {
     ERC20Mock underlying;
