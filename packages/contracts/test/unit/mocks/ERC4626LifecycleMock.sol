@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.19;
 
-import {SafeERC4626Lifecycle} from "contracts/tokens/SafeERC4626Lifecycle.sol";
+import {ERC4626Lifecycle} from "contracts/tokens/ERC4626Lifecycle.sol";
 import {IVaultHook} from "contracts/tokens/IVaultHook.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {SafeInitializableMock} from "./SafeInitializableMock.sol";
 
-contract SafeERC4626LifecycleMock is SafeERC4626Lifecycle, SafeInitializableMock {
+contract ERC4626LifecycleMock is ERC4626Lifecycle, SafeInitializableMock {
     constructor(
         IERC20Upgradeable _asset,
         string memory name_,

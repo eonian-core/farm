@@ -18,7 +18,7 @@ import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "./upgradeable/SafeUUPSUpgradeable.sol";
 import {IVersionable} from "./upgradeable/IVersionable.sol";
-import {SafeERC4626Lifecycle} from "./tokens/SafeERC4626Lifecycle.sol";
+import {ERC4626Lifecycle} from "./tokens/ERC4626Lifecycle.sol";
 import {IVaultHook} from "./tokens/IVaultHook.sol";
 import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
 import {RewardHolder} from "./tokens/RewardHolder.sol";
@@ -31,7 +31,7 @@ error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error InappropriateStrategy();
 error FoundersNotSet();
 
-contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender, SafeERC4626Lifecycle {
+contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender, ERC4626Lifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /// @notice Represents the maximum value of the locked-in profit ratio scale (where 1e18 is 100%).
@@ -120,7 +120,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
 
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
-    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, SafeERC4626Lifecycle) {
+    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -162,7 +162,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         }
 
         // apply the hook
-        SafeERC4626Lifecycle.beforeWithdraw(assets, shares);
+        ERC4626Lifecycle.beforeWithdraw(assets, shares);
     }
 
     /// Check that all new strategies refer to this vault and has the same underlying asset
@@ -327,7 +327,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         asset.safeTransferFrom(borrower, address(this), amount);
     }
 
-    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, SafeERC4626Lifecycle) {
-        SafeERC4626Lifecycle.afterDeposit(assets, shares);
+    function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
+        ERC4626Lifecycle.afterDeposit(assets, shares);
     }
 }

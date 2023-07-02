@@ -26,6 +26,10 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     // Initial token price
     uint256 private _initialTokenPrice;
 
+    // Cache to save gas for nextTokenPrice calculation
+    bool private _nextPriceToBeUpdated = true;
+    uint256 private _nextPriceCache;
+
     /// @dev This empty reserved space is put in place to allow future versions to add new
     /// variables without shifting down storage in the inheritance chain.
     /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
@@ -72,6 +76,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// @inheritdoc ERC721Upgradeable
     function _safeMint(address to, uint256 tokenId) internal override {
         require(totalSupply() < _maxCountTokens, "EVFT: max number of tokens");
+        _nextPriceToBeUpdated = true;
         super._safeMint(to, tokenId);
     }
 
@@ -99,13 +104,17 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     }
 
     /// @inheritdoc IVaultFounderToken
-    function nextTokenPrice() external view returns (uint256){
+    function nextTokenPrice() external returns (uint256){
         return _nextTokenPrice();
     }
 
     /// @dev calculate price for the next token
-    function _nextTokenPrice() internal view returns (uint256){
-        return _priceOf(totalSupply());
+    function _nextTokenPrice() internal returns (uint256){
+        if(_nextPriceToBeUpdated) { // cache for gas optimization
+            _nextPriceCache = _priceOf(totalSupply());
+            _nextPriceToBeUpdated = false;
+        }
+        return _nextPriceCache;
     }
 
     /// @inheritdoc IVaultFounderToken

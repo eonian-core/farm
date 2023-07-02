@@ -17,7 +17,7 @@ interface IVaultFounderToken is
     /// the current sequential token id
     function priceOf(uint256 tokenId) external view returns (uint256);
     /// @dev calculate price for the next token
-    function nextTokenPrice() external view returns (uint256);
+    function nextTokenPrice() external returns (uint256);
     /// @dev set token metadata uri
     /// can be used as utility method and custom logic on front-end
     function setTokenURI(string memory _tokenURI) external;

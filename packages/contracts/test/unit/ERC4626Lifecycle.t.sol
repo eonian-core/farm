@@ -4,17 +4,17 @@ pragma solidity ^0.8.19;
 import "forge-std/Test.sol";
 
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
-import {SafeERC4626LifecycleMock} from "./mocks/SafeERC4626LifecycleMock.sol";
+import {ERC4626LifecycleMock} from "./mocks/ERC4626LifecycleMock.sol";
 import {IVaultHookMock} from"./mocks/IVaultHookMock.sol";
 import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import {SafeERC4626Lifecycle} from "contracts/tokens/SafeERC4626Lifecycle.sol";
+import {ERC4626Lifecycle} from "contracts/tokens/ERC4626Lifecycle.sol";
 import {IVaultHook, ERC4626UpgradeableRequest} from "contracts/tokens/IVaultHook.sol";
 
 contract SafeERC4626LifecycleTest is TestWithERC1820Registry {
     ERC20Mock underlying;
-    SafeERC4626LifecycleMock vault;
+    ERC4626LifecycleMock vault;
 
     address private alice;
 
@@ -22,7 +22,7 @@ contract SafeERC4626LifecycleTest is TestWithERC1820Registry {
         underlying = new ERC20Mock("Mock Token", "TKN");
 
         address[] memory defaultOperators;
-        vault = new SafeERC4626LifecycleMock(
+        vault = new ERC4626LifecycleMock(
             IERC20Upgradeable(address(underlying)),
             "Mock Token Vault",
             "vwTKN",
