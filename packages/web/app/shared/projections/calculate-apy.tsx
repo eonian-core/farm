@@ -5,8 +5,8 @@ export const calculateVaultAPY = (
   blocksPerDay = 28800
 ): number => {
   return calculateAPY(
-    vault.interestRate,
-    vault.underlyingAsset.decimals,
+    vault.rates[0].perBlock,
+    vault.asset.decimals,
     blocksPerDay
   );
 };

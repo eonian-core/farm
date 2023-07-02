@@ -21,11 +21,8 @@ async function main() {
     loaders: [new GraphQLFileLoader()],
   });
 
-  const store = createMockStore({ schema, mocks });
-  store.set("Query", "ROOT", "vaults", vaults);
-
   const server = new ApolloServer({
-    schema: addMocksToSchema({ schema, store, mocks, resolvers }),
+    schema: addMocksToSchema({ schema, mocks, resolvers }),
   });
 
   // Passing an ApolloServer instance to the `startStandaloneServer` function:
@@ -51,13 +48,13 @@ main();
 
 const mocks = {
   BigInt: scalarsMocks.BigInt,
+  Bytes: scalarsMocks.UUID,
 };
 
 const resolvers = () => ({
   Query: {
-    vaultBySymbol(parent: unknown, args: Record<string, any>) {
-      const { symbol } = args;
-      return vaults.find((vault) => vault.symbol === symbol);
+    vaults() {
+      return vaults;
     },
   },
   BigInt: scalarResolvers.BigInt,

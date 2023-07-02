@@ -21,5 +21,5 @@ export default async function Page() {
 function FormWrapper() {
   const { symbol } = useParams();
   const { data } = useGetVaultBySymbol({ symbol });
-  return <Form vault={data.vaultBySymbol as Vault} />;
+  return <Form vault={data.vaults[0] as Vault} />;
 }

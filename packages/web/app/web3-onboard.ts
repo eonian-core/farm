@@ -1,5 +1,6 @@
 import type { InitOptions, ThemingMap } from "@web3-onboard/core/dist/types";
 import injectedModule from "@web3-onboard/injected-wallets";
+import walletConnectModule from "@web3-onboard/walletconnect";
 import { init } from "@web3-onboard/react";
 import { ChainId } from "./providers/wallet/wrappers/helpers";
 
@@ -29,7 +30,7 @@ const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
 
 export default init({
   theme,
-  wallets: [injectedModule()],
+  wallets: getWallets(),
   chains: Object.values(chains),
   accountCenter: {
     desktop: {
@@ -63,5 +64,21 @@ export default init({
     explore: "https://eonian.finance/", // The url that points to more information about app
   },
 });
+
+function getWallets(): InitOptions["wallets"] {
+  const wallets = [injectedModule()];
+  const walletConnectProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
+  if (walletConnectProjectId) {
+    wallets.push(
+      walletConnectModule({
+        projectId: walletConnectProjectId,
+        requiredChains: Object.keys(chains)
+          .map(Number)
+          .filter((id) => id !== ChainId.SEPOLIA),
+      })
+    );
+  }
+  return wallets;
+}
 
 export const defaultChain = chains[ChainId.BSC_MAINNET]!;

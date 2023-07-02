@@ -22,8 +22,8 @@ export function useVaultUserInfo(vault: Vault, params: Params = {}) {
   const { wallet, provider, chain, status } = useWalletWrapperContext();
   const { multicallAddress } = chain ?? {};
   const { address: walletAddress } = wallet ?? {};
-  const { address: vaultAddress, underlyingAsset } = vault;
-  const { address: assetAddress } = underlyingAsset;
+  const { address: vaultAddress, asset } = vault;
+  const { address: assetAddress } = asset;
 
   const refetch = React.useMemo(() => {
     if (!walletAddress || !multicallAddress || !provider) {

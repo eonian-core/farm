@@ -8,6 +8,8 @@ export const getBalancesSelector = createSelector(
     return {
       walletBalance: toNumberFromDecimals(walletBalanceBN, assetDecimals),
       vaultBalance: toNumberFromDecimals(vaultBalanceBN, assetDecimals),
+      walletBalanceBN: BigInt(walletBalanceBN),
+      vaultBalanceBN: BigInt(vaultBalanceBN),
     };
   }
 );

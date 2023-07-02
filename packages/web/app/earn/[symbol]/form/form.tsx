@@ -43,8 +43,8 @@ const Form: React.FC<Props> = ({ vault }) => {
     FormAction.DEPOSIT
   );
 
-  const [value, displayValue, bigValue, handleValueChange] = useInputValue();
-  const balance = useBalance(formAction);
+  const [value, displayValue, valueBN, handleValueChange] = useInputValue();
+  const [balance, balanceBN] = useBalance(formAction);
   const vaultChain = useVaultChain();
   const hasPendingTransactions = useHasPendingTransactions();
   const executeTransaction = useExecuteTransaction();
@@ -55,12 +55,12 @@ const Form: React.FC<Props> = ({ vault }) => {
       await refetechVaultUserData!();
 
       // Execute Deposit/Withdraw transaction
-      await executeTransaction(formAction, vault, bigValue);
+      await executeTransaction(formAction, vault, valueBN);
 
       // Refresh wallet balance & vault deposit after the transaction executed.
       refetechVaultUserData!();
     },
-    [executeTransaction, refetechVaultUserData, vault, bigValue]
+    [executeTransaction, refetechVaultUserData, vault, valueBN]
   );
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
@@ -90,13 +90,13 @@ const Form: React.FC<Props> = ({ vault }) => {
 
         <Card.Body className={styles.fragment}>
           <PercentButtonGroup
-            inputValue={value}
-            maxValue={balance}
+            inputValue={valueBN}
+            maxValue={balanceBN}
             onValueChange={handleValueChange}
             disabled={hasPendingTransactions}
           />
           <FormInput
-            assetSymbol={vault.underlyingAsset.symbol}
+            assetSymbol={vault.asset.symbol}
             value={displayValue}
             balance={balance}
             onChange={handleValueChange}
@@ -124,13 +124,14 @@ function useInputValue() {
   return useNumberInputValue(0n, assetDecimals);
 }
 
-function useBalance(action: FormAction): number {
-  const { walletBalance, vaultBalance } = useAppSelector(getBalancesSelector);
+function useBalance(action: FormAction): [number, bigint] {
+  const { walletBalance, vaultBalance, walletBalanceBN, vaultBalanceBN } =
+    useAppSelector(getBalancesSelector);
   switch (action) {
     case FormAction.DEPOSIT:
-      return walletBalance;
+      return [walletBalance, walletBalanceBN];
     case FormAction.WITHDRAW:
-      return vaultBalance;
+      return [vaultBalance, vaultBalanceBN];
   }
 }
 

@@ -28,7 +28,7 @@ export const VaultInfoCard: React.FC<Props> = ({
   formAction,
   className,
 }) => {
-  const { symbol: assetSymbol } = vault.underlyingAsset;
+  const { symbol: assetSymbol } = vault.asset;
 
   const apy = React.useMemo(() => calculateVaultAPY(vault), [vault]);
 
