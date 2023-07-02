@@ -19,8 +19,8 @@ files:
       description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
       schema: ../../schema.graphql
       vault:
-        address: "0x342F2B34113a437452282CC78E6e1FE4935AC695"
-        startBlock: 29558525
+        address: "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878"
+        startBlock: 29618633
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
