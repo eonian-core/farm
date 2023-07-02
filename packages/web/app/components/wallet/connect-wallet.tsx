@@ -21,7 +21,7 @@ const ConnectWallet = () => {
   return status === WalletStatus.CONNECTED ? (
     <WalletInfo />
   ) : (
-    <InternalLink href={"/app"} onClick={handleClick}>
+    <InternalLink href={"/earn"} onClick={handleClick}>
       <Button bordered>
         {status === WalletStatus.CONNECTING ? "Connecting..." : "Connect"}
       </Button>

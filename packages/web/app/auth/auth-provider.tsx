@@ -1,6 +1,6 @@
 "use client";
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
-import Loading from '../earn/loading';
+
 import { useEffect } from 'react';
 import { getTopLevelPath } from './path';
 
@@ -45,9 +45,8 @@ export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren): JSX.E
 
   }, [isAuthenticated, isLoading, loginWithRedirect])
 
-  if(isLoading || !isAuthenticated) {
-    return <Loading />
-  }
+  // Imposible to show Loader on (isLoading || !isAuthenticated)
+  // it breaks web3 onboarding, and then imposible to connect any wallet
 
   return <>{children}</>;
 }
