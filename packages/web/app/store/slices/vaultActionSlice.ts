@@ -77,7 +77,7 @@ const vaultActionSlice = createSlice({
       state.activeAction = newAction;
 
       state.vaultName = vault.name;
-      state.assetSymbol = vault.underlyingAsset.symbol;
+      state.assetSymbol = vault.asset.symbol;
       state.amountBN = amount.toString();
 
       state.steps = [...formActionSteps[newAction]];
