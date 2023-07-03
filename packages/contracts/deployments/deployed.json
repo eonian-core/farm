@@ -21136,6 +21136,12 @@
                 {
                   "indexed": false,
                   "internalType": "uint256",
+                  "name": "requiredPrice",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
                   "name": "tokenPrice",
                   "type": "uint256"
                 },
@@ -21422,6 +21428,19 @@
                   "internalType": "bytes32",
                   "name": "",
                   "type": "bytes32"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "MAX_BPS",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
@@ -21928,30 +21947,6 @@
               "inputs": [
                 {
                   "internalType": "address",
-                  "name": "to",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "uri",
-                  "type": "string"
-                }
-              ],
-              "name": "safeMint",
-              "outputs": [
-                {
-                  "internalType": "bool",
-                  "name": "",
-                  "type": "bool"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
                   "name": "from",
                   "type": "address"
                 },
@@ -22221,6 +22216,35 @@
               "inputs": [
                 {
                   "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "uri",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tryToMint",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
                   "name": "newImplementation",
                   "type": "address"
                 }
@@ -22293,7 +22317,7 @@
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0xa68e6E0Ff5AAA5ABFd6B9A5597859F621e7A6d8D",
+          "address": "0x3c32f75b42d72664e5355F1a6Fac214e8145f935",
           "abi": [
             {
               "inputs": [
@@ -22415,6 +22439,12 @@
                   "internalType": "address",
                   "name": "founder",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "requiredPrice",
+                  "type": "uint256"
                 },
                 {
                   "indexed": false,
@@ -22725,6 +22755,19 @@
             },
             {
               "inputs": [],
+              "name": "MAX_BPS",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "MINTER_ROLE",
               "outputs": [
                 {
@@ -23224,30 +23267,6 @@
               "inputs": [
                 {
                   "internalType": "address",
-                  "name": "to",
-                  "type": "address"
-                },
-                {
-                  "internalType": "string",
-                  "name": "uri",
-                  "type": "string"
-                }
-              ],
-              "name": "safeMint",
-              "outputs": [
-                {
-                  "internalType": "bool",
-                  "name": "",
-                  "type": "bool"
-                }
-              ],
-              "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
                   "name": "from",
                   "type": "address"
                 },
@@ -23510,6 +23529,35 @@
               ],
               "name": "transferOwnership",
               "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "to",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "uri",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                }
+              ],
+              "name": "tryToMint",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
               "stateMutability": "nonpayable",
               "type": "function"
             },
@@ -23647,7 +23695,7 @@
           ]
         },
         "Vault_Implementation": {
-          "address": "0x45C1CB6C3b54aC727Aa391bD7711445307814fD6",
+          "address": "0x23aeeAD1cA5533049014bc795f5ad94Dd23C574d",
           "abi": [
             {
               "inputs": [
