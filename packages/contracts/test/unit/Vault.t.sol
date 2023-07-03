@@ -43,7 +43,7 @@ contract VaultTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
         vault = new VaultMock(
             address(underlying),
             rewards,
@@ -1100,9 +1100,13 @@ contract VaultTest is TestWithERC1820Registry {
         _assertEqWithRoundingError(vault.calculateLockedProfit(), 0);
     }
 
-    function testFounderFeeCanBeClaimed() public {
-        uint256 initialVaultBalance = 10_000_000;
-        uint256 deposit = 10_000;
+    function testFounderFeeCanBeClaimed(uint96 _aliceAmount, uint96 _bobAmount) public {
+        uint256 aliceAmount = uint256(_aliceAmount);
+        uint256 bobAmount = uint256(_bobAmount);
+        vm.assume(aliceAmount >= 200);
+        vm.assume(bobAmount >= aliceAmount * vaultFounderToken.nextTokenPriceMultiplier() / vaultFounderToken.MAX_BPS());
+
+        uint256 initialVaultBalance = 0;
         uint256 gain = 1_000_000;
         uint256 fees = 500;
         uint256 foundersFees = 500;
@@ -1116,8 +1120,8 @@ contract VaultTest is TestWithERC1820Registry {
         );
 
         // Give the required funds to Alice and Bob
-        underlying.mint(alice, deposit);
-        underlying.mint(bob, deposit);
+        underlying.mint(alice, aliceAmount);
+        underlying.mint(bob, bobAmount);
 
         // Allow the vault to take funds from Alice and Bob
         vm.prank(alice);
@@ -1125,10 +1129,13 @@ contract VaultTest is TestWithERC1820Registry {
         vm.prank(bob);
         underlying.increaseAllowance(address(vault), type(uint256).max);
         vm.prank(alice);
-        vault.deposit(deposit);
+        vault.deposit(aliceAmount);
         vm.prank(bob);
-        vault.deposit(deposit);
+        vault.deposit(bobAmount);
 
+        assertEq(underlying.balanceOf(address(vault)), aliceAmount + bobAmount);
+        assertEq(underlying.balanceOf(address(alice)), 0);
+        assertEq(underlying.balanceOf(address(bob)), 0);
         assertEq(vaultFounderToken.totalSupply(), 2);
 
         // Assume some time passed and strategy got a profit
@@ -1139,21 +1146,36 @@ contract VaultTest is TestWithERC1820Registry {
 
         // Immediately after the report, all profit should be locked (except the fees)
         uint256 feesAmount = (fees * gain) / MAX_BPS + (foundersFees * gain) / MAX_BPS;
-        assertEq(vault.totalAssets(), initialVaultBalance + feesAmount + deposit * 2);
+        assertEq(vault.totalAssets(), initialVaultBalance + feesAmount + aliceAmount + bobAmount);
         assertEq(vault.calculateLockedProfit(), gain - feesAmount);
 
         // check alice has balance
 
-        console.log(vault.balanceOf(address(vaultFounderToken)));
+        vm.prank(alice);
+        uint256 aliceReward = vaultFounderToken.calcReward();
+        assertGt(aliceReward, 0);
+        vm.prank(bob);
+        uint256 bobReward = vaultFounderToken.calcReward();
+        assertGt(bobReward, 0);
+
+        uint256 aliceBalanceBefore = vault.balanceOf(address(alice));
+        uint256 bobBalanceBefore = vault.balanceOf(address(bob));
+
         // let's try to claim rewards
         vm.prank(alice);
         vaultFounderToken.claimReward();
+
+        assertEq(vault.balanceOf(address(alice)), aliceBalanceBefore + aliceReward);
+        assertEq(vault.balanceOf(address(bob)), bobBalanceBefore);
+        assertEq(underlying.balanceOf(address(alice)), 0);
+        assertEq(underlying.balanceOf(address(bob)), 0);
+
 
         // check alice has empty balance after claim and bob still has balance
         vm.prank(alice);
         assertEq(vaultFounderToken.calcReward(), 0);
         vm.prank(bob);
-        assertEq(vaultFounderToken.calcReward(), 25);
+        assertEq(vaultFounderToken.calcReward(), bobReward);
     }
 
     function testLockedProfitReleaseWithNegativeReport() public {
@@ -1225,8 +1247,10 @@ contract VaultTest is TestWithERC1820Registry {
         vaultFounderToken.setVault(vault);
         strategy = new StrategyMock(address(underlying), address(vault));
 
-        // Mint some initial funds for the vault
-        underlying.mint(address(vault), initialVaultBalance);
+        if(initialVaultBalance > 0) {
+            // Mint some initial funds for the vault
+            underlying.mint(address(vault), initialVaultBalance);
+        }
         vm.prank(address(strategy));
         underlying.increaseAllowance(address(vault), type(uint256).max);
 
@@ -1254,7 +1278,7 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             0
         );
-        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
         vault.setFounders(address(vaultFounderToken));
         vaultFounderToken.setVault(vault);
 
