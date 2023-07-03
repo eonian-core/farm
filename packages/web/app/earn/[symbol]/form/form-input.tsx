@@ -5,10 +5,13 @@ import React from "react";
 
 import styles from "./form-input.module.scss";
 import IconCoin from "../../../components/icons/icon-coin";
+import CompactNumber from "../../../components/compact-number/compact-number";
+import { FractionPartView } from "../../../shared";
 
 interface Props extends Partial<Omit<InputProps, "value" | "onChange">> {
   value: string;
-  balance: number;
+  balance: bigint;
+  decimals: number;
   assetSymbol: string;
   onChange: (value: string) => void;
   isLoading: boolean;
@@ -21,6 +24,7 @@ const FormInput: React.FC<Props> = ({
   onChange,
   isLoading,
   disabled,
+  decimals,
   ...restProps
 }) => {
   const handleInputValueChange = React.useCallback(
@@ -41,7 +45,11 @@ const FormInput: React.FC<Props> = ({
       }
       contentRightStyling={false}
       contentRight={
-        <InputRightContent balance={balance} isLoading={isLoading} />
+        <InputRightContent
+          balance={balance}
+          isLoading={isLoading}
+          decimals={decimals}
+        />
       }
       onChange={handleInputValueChange}
       disabled={disabled || isLoading}
@@ -53,11 +61,22 @@ const FormInput: React.FC<Props> = ({
 function InputRightContent({
   balance,
   isLoading,
-}: Pick<Props, "balance" | "isLoading">) {
+  decimals,
+}: Pick<Props, "balance" | "isLoading" | "decimals">) {
   if (isLoading) {
     return <Loading className={styles.loading} size="sm" />;
   }
-  return <span className={styles.balance}>Balance: {balance.toFixed(1)}</span>;
+  return (
+    <span className={styles.balance}>
+      Balance:&nbsp;
+      <CompactNumber
+        value={balance}
+        decimals={decimals}
+        fractionDigits={2}
+        fractionPartView={FractionPartView.CUT}
+      />
+    </span>
+  );
 }
 
 export default FormInput;

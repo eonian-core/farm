@@ -10,6 +10,7 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {IERC5484} from "./IERC5484.sol";
 
+// https://eips.ethereum.org/EIPS/eip-5484
 contract ERC5484Upgradeable is
     IERC5484,
     Initializable,
@@ -100,8 +101,8 @@ contract ERC5484Upgradeable is
     /// @param to address of user who will receive token
     /// @param uri token metadata uri
     /// @return true if token was minted
-    function safeMint(address to, string memory uri)
-        public
+    function _safeMint(address to, string memory uri)
+        internal
         virtual
         onlyRole(MINTER_ROLE)
         returns(bool)
@@ -114,7 +115,7 @@ contract ERC5484Upgradeable is
         // mint token
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
+        super._safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
 
         // set permission to burn token

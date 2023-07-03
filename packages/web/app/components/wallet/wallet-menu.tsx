@@ -51,7 +51,7 @@ export const useMenuItems = (): ItemType[] => {
     }
 
     if (isAuthEnabled() && !isLoading && isAuthenticated) {
-      items.push({
+      items.unshift({
         key: MenuOption.LOGOUT,
         text: "Log out",
       });

@@ -67,6 +67,10 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.prank(alice);
         vault.deposit(amount);
 
+        assertEq(underlying.balanceOf(alice), 0);
+
+        uint256 aliceBalanceBefore = vault.balanceOf(alice);
+
         // Put funds on vault to be able to move them to token owners from the reward holder
         rewardHolder.setupOwner(address(alice));
         vault.mint(address(rewardHolder), amount);
@@ -83,6 +87,10 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         rewardHolder.emitRewardClaimed(amount, address(alice));
         vm.prank(alice);
         rewardHolder.claimReward();
+
+        // Check if Alice has the expected balance
+        assertEq(underlying.balanceOf(alice), 0);
+        assertEq(vault.balanceOf(alice), aliceBalanceBefore + amount);
     }
 
     function testDepositRewardFail(uint192 amount) public {
@@ -160,6 +168,12 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.prank(bob);
         vault.deposit(amount);
 
+        assertEq(underlying.balanceOf(alice), 0);
+        assertEq(underlying.balanceOf(bob), 0);
+
+        uint256 aliceBalanceBefore = vault.balanceOf(alice);
+        uint256 bobBalanceBefore = vault.balanceOf(bob);
+
         // Put funds on vault to be able to move them to token owners from the reward holder
         rewardHolder.setupOwner(address(alice));
         rewardHolder.setupOwner(address(bob));
@@ -173,6 +187,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         rewardHolder.emitRewardClaimed(amount / 2, address(alice));
         vm.prank(alice);
         rewardHolder.claimReward();
+
+        assertEq(vault.balanceOf(alice), aliceBalanceBefore + amount / 2);
+        assertEq(vault.balanceOf(bob), bobBalanceBefore);
     }
 
     function testCorrectRewardClaimed2(uint256 reward) public {

@@ -14,8 +14,8 @@ import clsx from "clsx";
 import { FormAction } from "../../../store/slices/vaultActionSlice";
 
 interface Props {
-  value: number;
-  currentDeposit: number;
+  value: bigint;
+  currentDeposit: bigint;
   vault: Vault;
   formAction: FormAction;
   className?: string;
@@ -30,21 +30,32 @@ export const VaultInfoCard: React.FC<Props> = ({
 }) => {
   const { symbol: assetSymbol } = vault.asset;
 
-  const apy = React.useMemo(() => calculateVaultAPY(vault), [vault]);
+  const threshold = React.useMemo(() => {
+    return BigInt(1e6) * 10n ** BigInt(vault.asset.decimals);
+  }, [vault.asset.decimals]);
+
+  const [apyPercents, apy, apyD] = React.useMemo(() => {
+    const bps = 1e6;
+    const apy = calculateVaultAPY(vault);
+    return [apy, BigInt(parseInt(String(apy * bps))), BigInt(bps * 100)];
+  }, [vault]);
 
   const total = React.useMemo(() => {
-    return formAction === FormAction.DEPOSIT
-      ? currentDeposit + value
-      : Math.max(currentDeposit - value, 0);
+    switch (formAction) {
+      case FormAction.DEPOSIT:
+        return currentDeposit + value;
+      case FormAction.WITHDRAW:
+        return currentDeposit < value ? 0n : currentDeposit - value;
+    }
   }, [currentDeposit, value, formAction]);
 
   const currentYearlyReward = React.useMemo(() => {
-    return currentDeposit * (apy / 100);
-  }, [currentDeposit, apy]);
+    return (currentDeposit * apy) / apyD;
+  }, [currentDeposit, apy, apyD]);
 
   const yearlyReward = React.useMemo(() => {
-    return total * (apy / 100);
-  }, [total, apy]);
+    return (total * apy) / apyD;
+  }, [total, apy, apyD]);
 
   const depositInAYear = React.useMemo(() => {
     return total + yearlyReward;
@@ -57,7 +68,7 @@ export const VaultInfoCard: React.FC<Props> = ({
   return (
     <Card.Body className={className}>
       <header className={styles.apyInfo}>
-        With the current <b>{apy.toFixed(2)}% APY</b>, projected
+        With the current <b>{apyPercents.toFixed(2)}% APY</b>, projected
       </header>
       <Card variant="bordered" className={styles.info}>
         <Card.Body>
@@ -68,7 +79,8 @@ export const VaultInfoCard: React.FC<Props> = ({
                 <span>
                   <CompactNumber
                     value={yearlyReward}
-                    threshold={1e6}
+                    decimals={vault.asset.decimals}
+                    threshold={threshold}
                     fractionDigits={2}
                   />
                   {assetSymbol}
@@ -82,7 +94,8 @@ export const VaultInfoCard: React.FC<Props> = ({
                 <span>
                   <CompactNumber
                     value={depositInAYear}
-                    threshold={1e6}
+                    decimals={vault.asset.decimals}
+                    threshold={threshold}
                     fractionDigits={2}
                   />
                   {assetSymbol}
@@ -97,7 +110,7 @@ export const VaultInfoCard: React.FC<Props> = ({
   );
 };
 
-function ProfitChangeIndicator({ profitChange }: { profitChange: number }) {
+function ProfitChangeIndicator({ profitChange }: { profitChange: bigint }) {
   const direction = React.useMemo(
     () => (profitChange > 0 ? "top" : "bottom"),
     [profitChange]
@@ -108,8 +121,8 @@ function ProfitChangeIndicator({ profitChange }: { profitChange: number }) {
   }
 
   const className = clsx({
-    [styles.positiveChange]: profitChange > 0,
-    [styles.negativeChange]: profitChange < 0,
+    [styles.positiveChange]: profitChange > 0n,
+    [styles.negativeChange]: profitChange < 0n,
   });
 
   return (
@@ -118,4 +131,3 @@ function ProfitChangeIndicator({ profitChange }: { profitChange: number }) {
     </span>
   );
 }
-

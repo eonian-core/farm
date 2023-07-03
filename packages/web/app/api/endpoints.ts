@@ -1,10 +1,10 @@
 import { ChainId } from "../providers/wallet/wrappers/helpers";
 
 export enum ChainEnvironment {
+  LOCAL = "LOCAL",
   DEVELOPMENT = "DEVELOPMENT",
   STAGING = "STAGING",
   PRODUCTION = "PRODUCTION",
-  LOCAL = 'LOCAL'
 }
 
 export function getGraphQLEndpoint(chainId: ChainId): string {
@@ -21,12 +21,12 @@ export function getGraphQLEndpoint(chainId: ChainId): string {
 
 function getBNBChainEndpoint(chainEnvironment: ChainEnvironment): string {
   switch (chainEnvironment) {
-    case ChainEnvironment.STAGING:
-      return "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-staging";
-    case ChainEnvironment.DEVELOPMENT:
-      return "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-development";
     case ChainEnvironment.LOCAL:
       return "http://localhost:4000/";
+    case ChainEnvironment.DEVELOPMENT:
+      return "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-development";
+    case ChainEnvironment.STAGING:
+      return "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-staging";
     default:
       return process.env.NEXT_PUBLIC_GRAPH_URL || "http://localhost:4000/";
   }

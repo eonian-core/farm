@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { toBigIntWithDecimals, toNumberFromDecimals } from "./big-numbers";
+import { toBigIntWithDecimals, toStringNumberFromDecimals } from "./big-numbers";
 
 describe("toBigIntWithDecimals", () => {
   it("Should transform value", () => {
@@ -38,27 +38,30 @@ describe("toBigIntWithDecimals", () => {
   })
 });
 
-describe("toNumberFromDecimals", () => {
+describe("toStringNumberFromDecimals", () => {
   it("Should transform value", () => {
-    let value = toNumberFromDecimals(2200000000000000000n, 18);
-    expect(value).toBe(2.2);
+    let value = toStringNumberFromDecimals(2200000000000000000n, 18);
+    expect(value).toBe('2.2');
 
-    value = toNumberFromDecimals(50000000000000000n, 16);
-    expect(value).toBe(5);
+    value = toStringNumberFromDecimals(50000000000000000n, 16);
+    expect(value).toBe('5.0');
 
-    value = toNumberFromDecimals(5000000000000000000n, 18);
-    expect(value).toBe(5);
+    value = toStringNumberFromDecimals(5000000000000000000n, 18);
+    expect(value).toBe("5.0");
 
-    value = toNumberFromDecimals(500n, 2);
-    expect(value).toBe(5);
+    value = toStringNumberFromDecimals(500n, 2);
+    expect(value).toBe("5.0");
 
-    value = toNumberFromDecimals(500000000000000000000n, 18);
-    expect(value).toBe(500);
+    value = toStringNumberFromDecimals(500000000000000000000n, 18);
+    expect(value).toBe("500.0");
 
-    value = toNumberFromDecimals('500000000000000000000', 18);
-    expect(value).toBe(500);
+    value = toStringNumberFromDecimals("500000000000000000000", 18);
+    expect(value).toBe("500.0");
 
-    value = toNumberFromDecimals(0n, 18);
-    expect(value).toBe(0);
+    value = toStringNumberFromDecimals(0n, 18);
+    expect(value).toBe("0.0");
+
+    value = toStringNumberFromDecimals(9299999999999999999n, 18);
+    expect(value).toBe("9.299999999999999999");
   });
 });

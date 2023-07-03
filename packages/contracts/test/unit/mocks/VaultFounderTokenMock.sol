@@ -4,11 +4,15 @@ pragma solidity ^0.8.19;
 import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
 
 contract VaultFounderTokenMock is VaultFounderToken {
-    constructor() VaultFounderToken(false) {
+    constructor(
+        uint256 maxCountTokens_,
+        uint256 nextTokenPriceMultiplier_,
+        uint256 initialTokenPrice_
+    ) VaultFounderToken(false) {
         initialize(
-            3,
-            12_000,
-            200
+            maxCountTokens_,
+            nextTokenPriceMultiplier_,
+            initialTokenPrice_
         );
     }
 }

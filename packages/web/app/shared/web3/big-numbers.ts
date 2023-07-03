@@ -16,6 +16,6 @@ export function toBigIntWithDecimals(value: number | string, decimals: number): 
  * @param decimals The decimals value of the big number.
  * @returns A number value.
  */
-export function toNumberFromDecimals(value: bigint | string, decimals: number): number {
-  return parseFloat(ethers.formatUnits(value, decimals));
+export function toStringNumberFromDecimals(value: bigint | string, decimals: number): string {
+  return ethers.formatUnits(value, decimals);
 }
