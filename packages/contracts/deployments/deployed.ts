@@ -21000,7 +21000,7 @@ export default {
           ]
         },
         "VaultFounderToken": {
-          "address": "0xCF12D4F16261e1Be068ff81bC0Db49fe03F21cA3",
+          "address": "0xFEb2A14bc4e5f1AA1C40b98da467331B30e9a023",
           "abi": [
             {
               "anonymous": false,
@@ -21128,6 +21128,37 @@ export default {
               "anonymous": false,
               "inputs": [
                 {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "founder",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "tokenPrice",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "nextTokenPrice",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "nextTokenPriceMultiplier",
+                  "type": "uint256"
+                }
+              ],
+              "name": "FounderAdded",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
                   "indexed": false,
                   "internalType": "uint8",
                   "name": "version",
@@ -21179,6 +21210,25 @@ export default {
                 }
               ],
               "name": "MetadataUpdate",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "index",
+                  "type": "uint256"
+                }
+              ],
+              "name": "OwnerAdded",
               "type": "event"
             },
             {
@@ -21391,19 +21441,6 @@ export default {
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "REWARD_CLAIMER_ROLE",
-              "outputs": [
-                {
-                  "internalType": "bytes32",
-                  "name": "",
-                  "type": "bytes32"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
               "inputs": [
                 {
                   "components": [
@@ -21426,14 +21463,9 @@ export default {
                       "internalType": "uint256",
                       "name": "senderMaxWithdraw",
                       "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256[46]",
-                      "name": "gap",
-                      "type": "uint256[46]"
                     }
                   ],
-                  "internalType": "struct ERC4626UpgradeableRequest",
+                  "internalType": "struct ERC4626HookPayload",
                   "name": "request",
                   "type": "tuple"
                 }
@@ -21503,14 +21535,9 @@ export default {
                       "internalType": "uint256",
                       "name": "senderMaxWithdraw",
                       "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256[46]",
-                      "name": "gap",
-                      "type": "uint256[46]"
                     }
                   ],
-                  "internalType": "struct ERC4626UpgradeableRequest",
+                  "internalType": "struct ERC4626HookPayload",
                   "name": "request",
                   "type": "tuple"
                 }
@@ -21547,6 +21574,19 @@ export default {
                   "internalType": "enum IERC5484.BurnAuth",
                   "name": "",
                   "type": "uint8"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "calcReward",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
@@ -21701,6 +21741,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "maxCountTokens",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "name",
               "outputs": [
                 {
@@ -21715,6 +21768,19 @@ export default {
             {
               "inputs": [],
               "name": "nextTokenPrice",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "nextTokenPriceMultiplier",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -21765,25 +21831,6 @@ export default {
                   "internalType": "address",
                   "name": "",
                   "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                }
-              ],
-              "name": "priceOf",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
@@ -22246,7 +22293,7 @@ export default {
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0x944a7bde4Bc84d325aEB3079b193ae1FF2F09b78",
+          "address": "0xa68e6E0Ff5AAA5ABFd6B9A5597859F621e7A6d8D",
           "abi": [
             {
               "inputs": [
@@ -22364,6 +22411,37 @@ export default {
               "anonymous": false,
               "inputs": [
                 {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "founder",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "tokenPrice",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "nextTokenPrice",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "nextTokenPriceMultiplier",
+                  "type": "uint256"
+                }
+              ],
+              "name": "FounderAdded",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
                   "indexed": false,
                   "internalType": "uint8",
                   "name": "version",
@@ -22415,6 +22493,25 @@ export default {
                 }
               ],
               "name": "MetadataUpdate",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "index",
+                  "type": "uint256"
+                }
+              ],
+              "name": "OwnerAdded",
               "type": "event"
             },
             {
@@ -22640,19 +22737,6 @@ export default {
               "type": "function"
             },
             {
-              "inputs": [],
-              "name": "REWARD_CLAIMER_ROLE",
-              "outputs": [
-                {
-                  "internalType": "bytes32",
-                  "name": "",
-                  "type": "bytes32"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
               "inputs": [
                 {
                   "components": [
@@ -22675,14 +22759,9 @@ export default {
                       "internalType": "uint256",
                       "name": "senderMaxWithdraw",
                       "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256[46]",
-                      "name": "gap",
-                      "type": "uint256[46]"
                     }
                   ],
-                  "internalType": "struct ERC4626UpgradeableRequest",
+                  "internalType": "struct ERC4626HookPayload",
                   "name": "request",
                   "type": "tuple"
                 }
@@ -22752,14 +22831,9 @@ export default {
                       "internalType": "uint256",
                       "name": "senderMaxWithdraw",
                       "type": "uint256"
-                    },
-                    {
-                      "internalType": "uint256[46]",
-                      "name": "gap",
-                      "type": "uint256[46]"
                     }
                   ],
-                  "internalType": "struct ERC4626UpgradeableRequest",
+                  "internalType": "struct ERC4626HookPayload",
                   "name": "request",
                   "type": "tuple"
                 }
@@ -22796,6 +22870,19 @@ export default {
                   "internalType": "enum IERC5484.BurnAuth",
                   "name": "",
                   "type": "uint8"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "calcReward",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
@@ -22950,6 +23037,19 @@ export default {
             },
             {
               "inputs": [],
+              "name": "maxCountTokens",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "name",
               "outputs": [
                 {
@@ -22964,6 +23064,19 @@ export default {
             {
               "inputs": [],
               "name": "nextTokenPrice",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "nextTokenPriceMultiplier",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -23014,25 +23127,6 @@ export default {
                   "internalType": "address",
                   "name": "",
                   "type": "address"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "tokenId",
-                  "type": "uint256"
-                }
-              ],
-              "name": "priceOf",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
@@ -23479,7 +23573,7 @@ export default {
           ]
         },
         "VaultFounderToken_Proxy": {
-          "address": "0xCF12D4F16261e1Be068ff81bC0Db49fe03F21cA3",
+          "address": "0xFEb2A14bc4e5f1AA1C40b98da467331B30e9a023",
           "abi": [
             {
               "inputs": [
@@ -23553,7 +23647,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xF716c8d40bA6e7b3C639d5C559Aa17d99f7e6551",
+          "address": "0x45C1CB6C3b54aC727Aa391bD7711445307814fD6",
           "abi": [
             {
               "inputs": [
