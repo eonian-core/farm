@@ -15,7 +15,7 @@ import {IERC5484} from "contracts/tokens/IERC5484.sol";
 import {IERC4626} from "contracts/tokens/IERC4626.sol";
 
 contract ERC5484UpgradeableTest is TestWithERC1820Registry {
-    ERC5484Upgradeable private token;
+    ERC5484UpgradableMock private token;
 
     address private rewards = vm.addr(1);
     address private culprit = vm.addr(2);

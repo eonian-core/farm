@@ -18,6 +18,8 @@ import {Vault} from "../Vault.sol";
 
 contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Upgradeable, IVaultHook, RewardHolder {
 
+    uint256 public constant MAX_BPS = 10_000;
+
     // Max number of tokens that can be minted
     uint256 public maxCountTokens;
 
@@ -34,11 +36,13 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
 
     /// @notice Emit when new token minted and token price updated.
     /// @param founder Address of the founder.
+    /// @param requiredPrice Required price for the token.
     /// @param tokenPrice Price of the token.
     /// @param nextTokenPrice Price of the next token.
     /// @param nextTokenPriceMultiplier Next token price multiplier in percents.
     event FounderAdded(
         address indexed founder, 
+        uint256 requiredPrice,
         uint256 tokenPrice, 
         uint256 nextTokenPrice, 
         uint256 nextTokenPriceMultiplier
@@ -54,7 +58,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         uint256 nextTokenPriceMultiplier_,
         uint256 initialTokenPrice_
     ) public initializer {
-        __SafeUUPSUpgradeable_init_direct();
+        __SafeUUPSUpgradeable_init(); // owner init under the hood
         __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true); // __AccessControl_init inside
         __ReentrancyGuard_init();
         __RewardHolder_init_unchained(); // require __AccessControl_init
@@ -82,21 +86,22 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// @dev function for mint new SBT token
     /// @param to address of user who will receive token
     /// @param uri token metadata uri
+    /// @param amount holder balance, used as token price
     /// @return true if token was minted
-    function safeMint(address to, string memory uri) public virtual override(ERC5484Upgradeable) returns(bool){
-        if(totalSupply() >= maxCountTokens) {
+    function tryToMint(address to, string memory uri, uint256 amount) public virtual returns(bool){
+        if(amount < nextTokenPrice || totalSupply() >= maxCountTokens) {
             return false;
         }
         
-        if(!super.safeMint(to, uri)) { // requires MINTER_ROLE inside
+        if(!_safeMint(to, uri)) { // requires MINTER_ROLE inside
             return false;
         }
 
         setupNewOwner(to);
-        uint256 _nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier / 10000;
+        uint256 _nextTokenPrice = amount * nextTokenPriceMultiplier / MAX_BPS;
 
         // Will be used to record price of current holder token in The Graph
-        emit FounderAdded(to, nextTokenPrice, _nextTokenPrice, nextTokenPriceMultiplier);
+        emit FounderAdded(to, nextTokenPrice, amount, _nextTokenPrice, nextTokenPriceMultiplier);
         
         nextTokenPrice = _nextTokenPrice;
         return true;
@@ -107,10 +112,10 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// @param nextTokenPriceMultiplier_ persent multiplicator
     function setNextTokenMultiplier(uint256 nextTokenPriceMultiplier_) external onlyRole(DEFAULT_ADMIN_ROLE) {
         // the price of the previous token
-        nextTokenPrice = nextTokenPrice * 10000 / nextTokenPriceMultiplier;
+        nextTokenPrice = nextTokenPrice * MAX_BPS / nextTokenPriceMultiplier;
         nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
         // calculation the price with the new multiplier
-        nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier_ / 10000;
+        nextTokenPrice = nextTokenPrice * nextTokenPriceMultiplier_ / MAX_BPS;
     }
 
     /// @inheritdoc IVaultFounderToken
@@ -128,9 +133,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     function afterDepositTrigger(ERC4626HookPayload memory request)
             external override
     {
-        if(request.senderMaxWithdraw >= nextTokenPrice) {
-            safeMint(request.requestSender, "");
-        }
+        tryToMint(request.requestSender, "", request.senderMaxWithdraw);
     }
 
     /* solhint-disable no-empty-blocks */

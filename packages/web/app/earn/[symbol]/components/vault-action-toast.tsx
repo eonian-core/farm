@@ -11,7 +11,7 @@ import {
 
 import styles from "./vault-action-toast.module.scss";
 import { getActiveStepSelector } from "../../../store";
-import { toNumberFromDecimals } from "../../../shared";
+import { toStringNumberFromDecimals } from "../../../shared";
 import { Loading } from "@nextui-org/react";
 
 export const VaultActionToast = () => {
@@ -46,7 +46,7 @@ function useTransactionDescription(): string | undefined {
   const { assetDecimals } = useAppSelector((state) => state.vaultUser);
   const activeStep = useAppSelector(getActiveStepSelector);
 
-  const amount = toNumberFromDecimals(amountBN, assetDecimals);
+  const amount = toStringNumberFromDecimals(amountBN, assetDecimals);
   switch (activeStep) {
     case FormActionStep.APPROVAL:
       return `Approve spending ${amount} ${assetSymbol} to complete the deposit`;

@@ -73,7 +73,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         );
         vm.label(address(vault), "vault");
 
-        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
         vaultFounderToken.setVault(vault);
         vault.setFounders(address(vaultFounderToken));
 
@@ -163,7 +163,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
             defaultLPRRate,
             defaultFounderFee
         );
-        vaultFounderToken = new VaultFounderTokenMock();
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
         vaultFounderToken.setVault(vault);
         vault.setFounders(address(vaultFounderToken));
 

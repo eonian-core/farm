@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 import { FormAction } from "../../../../../store/slices/vaultActionSlice";
 import { Vault } from "../../../../../api";
-import { toNumberFromDecimals } from "../../../../../shared";
+import { toStringNumberFromDecimals } from "../../../../../shared";
 import { useAppSelector } from "../../../../../store/hooks";
 
 export function useValidateTransaction() {
@@ -63,7 +63,7 @@ function validateWithdraw(data: ValidationData) {
 
   const assetSymbol = vault.asset.symbol;
   if (amount > vaultBalance) {
-    const balance = toNumberFromDecimals(vaultBalance, assetDecimals);
+    const balance = toStringNumberFromDecimals(vaultBalance, assetDecimals);
     throw new Error(
       `Insufficient token balance. You are trying to withdraw more tokens than are available in your vault balance. Available balance: ${balance} ${assetSymbol}`
     );
@@ -78,7 +78,7 @@ function validateDeposit(data: ValidationData) {
 
   const assetSymbol = vault.asset.symbol;
   if (amount > walletBalance) {
-    const balance = toNumberFromDecimals(walletBalance, assetDecimals);
+    const balance = toStringNumberFromDecimals(walletBalance, assetDecimals);
     throw new Error(
       `Insufficient token balance in your wallet: ${balance} ${assetSymbol}`
     );

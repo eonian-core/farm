@@ -21,7 +21,7 @@ import {
   FormAction,
   FormActionStep,
 } from "../../../store/slices/vaultActionSlice";
-import { getActiveStepSelector, getBalancesSelector } from "../../../store";
+import { getActiveStepSelector } from "../../../store";
 
 interface Props {
   vault: Vault;
@@ -37,14 +37,13 @@ const Form: React.FC<Props> = ({ vault }) => {
   const { isLoading, lastRequestForWallet } = useAppSelector(
     (state) => state.vaultUser
   );
-  const { vaultBalance } = useAppSelector(getBalancesSelector);
 
   const [formAction, setFormAction] = React.useState<FormAction>(
     FormAction.DEPOSIT
   );
 
-  const [value, displayValue, valueBN, handleValueChange] = useInputValue();
-  const [balance, balanceBN] = useBalance(formAction);
+  const [value, displayValue, handleValueChange] = useInputValue();
+  const [currentBalance, walletBalance, vaultBalance] = useBalance(formAction);
   const vaultChain = useVaultChain();
   const hasPendingTransactions = useHasPendingTransactions();
   const executeTransaction = useExecuteTransaction();
@@ -55,12 +54,12 @@ const Form: React.FC<Props> = ({ vault }) => {
       await refetechVaultUserData!();
 
       // Execute Deposit/Withdraw transaction
-      await executeTransaction(formAction, vault, valueBN);
+      await executeTransaction(formAction, vault, value);
 
       // Refresh wallet balance & vault deposit after the transaction executed.
       refetechVaultUserData!();
     },
-    [executeTransaction, refetechVaultUserData, vault, valueBN]
+    [executeTransaction, refetechVaultUserData, vault, value]
   );
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
@@ -90,15 +89,16 @@ const Form: React.FC<Props> = ({ vault }) => {
 
         <Card.Body className={styles.fragment}>
           <PercentButtonGroup
-            inputValue={valueBN}
-            maxValue={balanceBN}
+            inputValue={value}
+            maxValue={currentBalance}
             onValueChange={handleValueChange}
             disabled={hasPendingTransactions}
           />
           <FormInput
             assetSymbol={vault.asset.symbol}
+            decimals={vault.asset.decimals}
             value={displayValue}
-            balance={balance}
+            balance={currentBalance}
             onChange={handleValueChange}
             isLoading={!isFormReady}
             disabled={hasPendingTransactions}
@@ -124,14 +124,19 @@ function useInputValue() {
   return useNumberInputValue(0n, assetDecimals);
 }
 
-function useBalance(action: FormAction): [number, bigint] {
-  const { walletBalance, vaultBalance, walletBalanceBN, vaultBalanceBN } =
-    useAppSelector(getBalancesSelector);
+function useBalance(
+  action: FormAction
+): [current: bigint, wallet: bigint, vault: bigint] {
+  const { walletBalanceBN, vaultBalanceBN } = useAppSelector(
+    (state) => state.vaultUser
+  );
+  const wallet = BigInt(walletBalanceBN);
+  const vault = BigInt(vaultBalanceBN);
   switch (action) {
     case FormAction.DEPOSIT:
-      return [walletBalance, walletBalanceBN];
+      return [wallet, wallet, vault];
     case FormAction.WITHDRAW:
-      return [vaultBalance, vaultBalanceBN];
+      return [vault, wallet, vault];
   }
 }
 

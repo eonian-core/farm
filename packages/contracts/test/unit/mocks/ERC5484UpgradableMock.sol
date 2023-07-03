@@ -13,4 +13,11 @@ contract ERC5484UpgradableMock is ERC5484Upgradeable {
     ) initializer {
         __ERC5484Upgradeable_init(name_, symbol_, burnAuth_, mintOnce_);
     }
+
+    function safeMint(address to, string memory uri)
+        public
+        returns(bool)
+    {
+        return _safeMint(to, uri);
+    }
 }
