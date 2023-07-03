@@ -437,4 +437,16 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         assertEq(baseStrategy.minimumBetweenExecutions(), time);
     }
+
+    function testFailWithPermissionSetMinimumTimeBetweenExecutions(uint256 time) public {
+        vm.assume(time > 1000);
+
+        assertEq(baseStrategy.minimumBetweenExecutions(), minReportInterval);
+
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+        vm.prank(address(culprit));
+        baseStrategy.setMinimumBetweenExecutions(time);
+
+        assertEq(baseStrategy.minimumBetweenExecutions(), time);
+    }
 }
