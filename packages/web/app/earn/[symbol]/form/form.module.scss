@@ -50,3 +50,18 @@
     padding: 0;
   }
 }
+
+.disclamer {
+  margin-bottom: var(--margin-100) !important;
+  // inset shadow
+  border-radius: var(--border-radius-300);
+
+  p {
+    font-size: var(--font-size-300);
+    color: var(--color-text-400);
+    text-align: center;
+
+    padding: var(--padding-200);
+  }
+
+}
