@@ -26,7 +26,7 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
     }
 
     /// @dev Removes hook from the list of deposit hooks
-    function removeDepositHook(IVaultHook hook) internal {
+    function removeDepositHook(IVaultHook hook) internal returns (bool) {
         // find hook
         for (uint256 i = 0; i < depositHooks.length; i++)
         {
@@ -35,13 +35,14 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
                 // remove hook
                 depositHooks[i] = depositHooks[depositHooks.length - 1];
                 depositHooks.pop();
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /// @dev Removes hook from the list of withdraw hooks
-    function removeWithdrawHook(IVaultHook hook) internal {
+    function removeWithdrawHook(IVaultHook hook) internal returns (bool) {
         // find hook
         for (uint256 i = 0; i < withdrawHooks.length; i++)
         {
@@ -50,9 +51,10 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
                 // remove hook
                 withdrawHooks[i] = withdrawHooks[withdrawHooks.length - 1];
                 withdrawHooks.pop();
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     /// @inheritdoc ERC4626Upgradeable
