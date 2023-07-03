@@ -2024,6 +2024,25 @@
     {
       "inputs": [
         {
+          "internalType": "contract IVaultHook",
+          "name": "hook",
+          "type": "address"
+        }
+      ],
+      "name": "unregisterLifecycleHook",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "address",
           "name": "newImplementation",
           "type": "address"
@@ -2467,6 +2486,11 @@
       "transferOwnership(address)": {
         "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
       },
+      "unregisterLifecycleHook(address)": {
+        "params": {
+          "hook": "the hook address to remove."
+        }
+      },
       "upgradeTo(address)": {
         "custom:oz-upgrades-unsafe-allow-reachable": "delegatecall",
         "details": "Upgrade the implementation of the proxy to `newImplementation`. Calls {_authorizeUpgrade}. Emits an {Upgraded} event."
@@ -2693,6 +2717,9 @@
       "totalDebt()": {
         "notice": "Amount of tokens that all borrowers have taken"
       },
+      "unregisterLifecycleHook(address)": {
+        "notice": "Removes the registered hook from the lifecycle."
+      },
       "utilizationRate(address)": {
         "notice": "Calculate utilisation rate for specific borrowerBased on last report data, can be outdated, but close to latest state of fund"
       },
@@ -2874,7 +2901,7 @@
         "type": "t_array(t_uint256)49_storage"
       },
       {
-        "astId": 10926,
+        "astId": 10946,
         "contract": "src/Vault.sol:Vault",
         "label": "totalDebt",
         "offset": 0,
@@ -2882,7 +2909,7 @@
         "type": "t_uint256"
       },
       {
-        "astId": 10929,
+        "astId": 10949,
         "contract": "src/Vault.sol:Vault",
         "label": "debtRatio",
         "offset": 0,
@@ -2890,7 +2917,7 @@
         "type": "t_uint256"
       },
       {
-        "astId": 10932,
+        "astId": 10952,
         "contract": "src/Vault.sol:Vault",
         "label": "lastReportTimestamp",
         "offset": 0,
@@ -2898,15 +2925,15 @@
         "type": "t_uint256"
       },
       {
-        "astId": 10938,
+        "astId": 10958,
         "contract": "src/Vault.sol:Vault",
         "label": "borrowersData",
         "offset": 0,
         "slot": "354",
-        "type": "t_mapping(t_address,t_struct(BorrowerData)10920_storage)"
+        "type": "t_mapping(t_address,t_struct(BorrowerData)10940_storage)"
       },
       {
-        "astId": 10943,
+        "astId": 10963,
         "contract": "src/Vault.sol:Vault",
         "label": "__gap",
         "offset": 0,
@@ -2962,7 +2989,7 @@
         "type": "t_array(t_uint256)50_storage"
       },
       {
-        "astId": 11879,
+        "astId": 11899,
         "contract": "src/Vault.sol:Vault",
         "label": "withdrawalQueue",
         "offset": 0,
@@ -2970,7 +2997,7 @@
         "type": "t_array(t_address)dyn_storage"
       },
       {
-        "astId": 11884,
+        "astId": 11904,
         "contract": "src/Vault.sol:Vault",
         "label": "__gap",
         "offset": 0,
@@ -3136,12 +3163,12 @@
         "numberOfBytes": "32",
         "value": "t_mapping(t_address,t_uint256)"
       },
-      "t_mapping(t_address,t_struct(BorrowerData)10920_storage)": {
+      "t_mapping(t_address,t_struct(BorrowerData)10940_storage)": {
         "encoding": "mapping",
         "key": "t_address",
         "label": "mapping(address => struct Lender.BorrowerData)",
         "numberOfBytes": "32",
-        "value": "t_struct(BorrowerData)10920_storage"
+        "value": "t_struct(BorrowerData)10940_storage"
       },
       "t_mapping(t_address,t_uint256)": {
         "encoding": "mapping",
@@ -3155,12 +3182,12 @@
         "label": "string",
         "numberOfBytes": "32"
       },
-      "t_struct(BorrowerData)10920_storage": {
+      "t_struct(BorrowerData)10940_storage": {
         "encoding": "inplace",
         "label": "struct Lender.BorrowerData",
         "members": [
           {
-            "astId": 10910,
+            "astId": 10930,
             "contract": "src/Vault.sol:Vault",
             "label": "activationTimestamp",
             "offset": 0,
@@ -3168,7 +3195,7 @@
             "type": "t_uint256"
           },
           {
-            "astId": 10913,
+            "astId": 10933,
             "contract": "src/Vault.sol:Vault",
             "label": "lastReportTimestamp",
             "offset": 0,
@@ -3176,7 +3203,7 @@
             "type": "t_uint256"
           },
           {
-            "astId": 10916,
+            "astId": 10936,
             "contract": "src/Vault.sol:Vault",
             "label": "debt",
             "offset": 0,
@@ -3184,7 +3211,7 @@
             "type": "t_uint256"
           },
           {
-            "astId": 10919,
+            "astId": 10939,
             "contract": "src/Vault.sol:Vault",
             "label": "debtRatio",
             "offset": 0,

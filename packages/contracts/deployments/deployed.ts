@@ -20957,6 +20957,25 @@ export default {
             {
               "inputs": [
                 {
+                  "internalType": "contract IVaultHook",
+                  "name": "hook",
+                  "type": "address"
+                }
+              ],
+              "name": "unregisterLifecycleHook",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "address",
                   "name": "newImplementation",
                   "type": "address"
@@ -25836,6 +25855,25 @@ export default {
               ],
               "name": "transferOwnership",
               "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "contract IVaultHook",
+                  "name": "hook",
+                  "type": "address"
+                }
+              ],
+              "name": "unregisterLifecycleHook",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
               "stateMutability": "nonpayable",
               "type": "function"
             },

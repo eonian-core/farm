@@ -1871,7 +1871,7 @@
         "label": "vault",
         "offset": 2,
         "slot": "655",
-        "type": "t_contract(Vault)9971"
+        "type": "t_contract(Vault)9991"
       },
       {
         "astId": 16374,
@@ -1960,7 +1960,7 @@
         "label": "bytes32",
         "numberOfBytes": "32"
       },
-      "t_contract(Vault)9971": {
+      "t_contract(Vault)9991": {
         "encoding": "inplace",
         "label": "contract Vault",
         "numberOfBytes": "20"
