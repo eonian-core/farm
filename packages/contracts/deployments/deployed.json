@@ -20931,6 +20931,25 @@
             {
               "inputs": [
                 {
+                  "internalType": "contract IVaultHook",
+                  "name": "hook",
+                  "type": "address"
+                }
+              ],
+              "name": "unregisterLifecycleHook",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "address",
                   "name": "newImplementation",
                   "type": "address"
@@ -22413,7 +22432,7 @@
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0x3c32f75b42d72664e5355F1a6Fac214e8145f935",
+          "address": "0x6C21b818A6A3af88faAe2160265df59031476828",
           "abi": [
             {
               "inputs": [
@@ -23791,7 +23810,7 @@
           ]
         },
         "Vault_Implementation": {
-          "address": "0x23aeeAD1cA5533049014bc795f5ad94Dd23C574d",
+          "address": "0x71732131eab501B1098d10EE29025F4547D6546D",
           "abi": [
             {
               "inputs": [
@@ -25810,6 +25829,25 @@
               ],
               "name": "transferOwnership",
               "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "contract IVaultHook",
+                  "name": "hook",
+                  "type": "address"
+                }
+              ],
+              "name": "unregisterLifecycleHook",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
               "stateMutability": "nonpayable",
               "type": "function"
             },
