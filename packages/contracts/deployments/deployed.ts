@@ -22413,7 +22413,7 @@ export default {
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0x3c32f75b42d72664e5355F1a6Fac214e8145f935",
+          "address": "0xEe8D480c9e404aE834cEC2ae5D4b1c54fd0dC1A9",
           "abi": [
             {
               "inputs": [
@@ -23791,7 +23791,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0x23aeeAD1cA5533049014bc795f5ad94Dd23C574d",
+          "address": "0x8F828C83b583f16ea2ffc6281EF2Bae1Ac48d622",
           "abi": [
             {
               "inputs": [
