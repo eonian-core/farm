@@ -14,6 +14,7 @@ import "./mocks/VaultFounderTokenMock.sol";
 
 import "contracts/IVault.sol";
 import "contracts/structures/PriceConverter.sol";
+import "contracts/automation/Job.sol";
 
 import "contracts/strategies/CTokenBaseStrategy.sol";
 
@@ -414,5 +415,26 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         assertEq(loss, 0);
         assertEq(profit, freed - outstandingDebt);
         assertEq(debtPayment, outstandingDebt);
+    }
+
+    function testSetMinimumTimeBetweenExecutions(uint256 time) public {
+        vm.assume(time > 1000);
+
+        assertEq(baseStrategy.minimumBetweenExecutions(), minReportInterval);
+
+        baseStrategy.setMinimumBetweenExecutions(time);
+
+        assertEq(baseStrategy.minimumBetweenExecutions(), time);
+    }
+
+    function testFailtSetMinimumTimeBetweenExecutions(uint256 time) public {
+        vm.assume(time <= 1000);
+        
+        assertEq(baseStrategy.minimumBetweenExecutions(), minReportInterval);
+
+        vm.expectRevert(TimeMinimumBetweenExecutionsIncorrect.selector);
+        baseStrategy.setMinimumBetweenExecutions(time);
+
+        assertEq(baseStrategy.minimumBetweenExecutions(), time);
     }
 }
