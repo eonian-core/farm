@@ -330,4 +330,10 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
         ERC4626Lifecycle.afterDeposit(assets, shares);
     }
+
+    /// @notice Removes the registered hook from the lifecycle.
+    /// @param hook the hook address to remove.
+    function unregisterLifecycleHook(IVaultHook hook) external onlyOwner returns (bool) {
+        return removeDepositHook(hook) || removeWithdrawHook(hook);
+    }
 }

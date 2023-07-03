@@ -90,4 +90,20 @@ contract VaultMock is Vault {
     function calculateLockedProfit() external view returns (uint256) {
         return _lockedProfit();
     }
+
+    function registerDepositHook(IVaultHook hook) public {
+        addDepositHook(hook);
+    }
+
+    function registerWithdrawHook(IVaultHook hook) public {
+        addWithdrawHook(hook);
+    }
+
+    function unregisterDepositHook(IVaultHook hook) public {
+        removeDepositHook(hook);
+    }
+
+    function unregisterWithdrawHook(IVaultHook hook) public {
+        removeWithdrawHook(hook);
+    }
 }

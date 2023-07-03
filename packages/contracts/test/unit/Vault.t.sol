@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 import "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
 import "./mocks/StrategyMock.sol";
+import {IVaultHookMock} from"./mocks/IVaultHookMock.sol";
 
 import "contracts/lending/Lender.sol";
 import "contracts/lending/StrategiesLender.sol";
@@ -1329,4 +1330,26 @@ contract VaultTest is TestWithERC1820Registry {
         // Check if Alice has a new vault founder token generated
     }
 
+    function testRevertWhenRemovingLifecycleHookFromNonOwnerAccount() public {
+        IVaultHookMock hook1 = new IVaultHookMock();
+        vault.registerDepositHook(hook1);
+
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+
+        vm.prank(culprit);
+        vault.unregisterLifecycleHook(hook1);
+    }
+
+    function testShouldRemoveLifecycleHook() public {
+        IVaultHookMock hook1 = new IVaultHookMock();
+        IVaultHookMock hook2 = new IVaultHookMock();
+        IVaultHookMock hook3 = new IVaultHookMock();
+
+        vault.registerDepositHook(hook1);
+        vault.registerWithdrawHook(hook2);
+
+        assertEq(vault.unregisterLifecycleHook(hook1), true);
+        assertEq(vault.unregisterLifecycleHook(hook2), true);
+        assertEq(vault.unregisterLifecycleHook(hook3), false);
+    }
 }
