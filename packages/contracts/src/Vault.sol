@@ -67,7 +67,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.2.1";
+        return "0.2.2";
     }
 
     // ------------------------------------------ Constructors ------------------------------------------
