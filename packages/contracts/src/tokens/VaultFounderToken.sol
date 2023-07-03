@@ -54,7 +54,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         uint256 nextTokenPriceMultiplier_,
         uint256 initialTokenPrice_
     ) public initializer {
-        __SafeUUPSUpgradeable_init_direct();
+        __SafeUUPSUpgradeable_init(); // owner init under the hood
         __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true); // __AccessControl_init inside
         __ReentrancyGuard_init();
         __RewardHolder_init_unchained(); // require __AccessControl_init

@@ -35,6 +35,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
     function testVaultMetadata() public {
         assertEq(token.symbol(), "EVFT");
         assertEq(token.name(), "Eonian Vault Founder Token");
+        assertEq(token.owner(), address(this));
     }
 
     function testMintToken() public {
