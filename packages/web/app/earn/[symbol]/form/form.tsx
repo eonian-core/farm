@@ -70,7 +70,7 @@ const Form: React.FC<Props> = ({ vault }) => {
   return (
     <div className={styles.container}>
       <Card variant="flat" className={styles.disclamer}>
-        <p>🛠 Alpha test application may display APY lower than actual.</p>
+        <p>🛠 Alpha test application may display inaccurate APY.</p>
       </Card>
       <Card variant="bordered">
         <FormHeader
