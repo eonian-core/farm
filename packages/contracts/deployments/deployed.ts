@@ -19882,6 +19882,25 @@ export default {
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
+              "name": "currentDebtRatio",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "debtRatio",
               "outputs": [
@@ -20834,44 +20853,6 @@ export default {
               "name": "setRewards",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyDebt",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyRatio",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -22496,7 +22477,7 @@ export default {
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0x655f5a8a844A185CbB62d653a7655Ed75fbF2f88",
+          "address": "0xB3519044B8935E8bFc74ceE8460BDFDA83e69E80",
           "abi": [
             {
               "inputs": [
@@ -23874,7 +23855,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xe9BF8462eA32893661bA3Ab1739ED3e0e68856f8",
+          "address": "0xB83F7df3D93Ff6Fc1AFa700B5B634d2413B26EB2",
           "abi": [
             {
               "inputs": [
@@ -24774,6 +24755,25 @@ export default {
             },
             {
               "inputs": [],
+              "name": "currentDebtRatio",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
               "name": "currentDebtRatio",
               "outputs": [
                 {
@@ -25738,44 +25738,6 @@ export default {
               "name": "setRewards",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyDebt",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyRatio",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
               "type": "function"
             },
             {
