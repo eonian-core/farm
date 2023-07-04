@@ -22,7 +22,7 @@ It creates some complexities in the setup, but it simplifies and speedup testing
 yarn test
 ```
 
-### Kkown issues
+### Known issues
 
 * This project contains two `remappings.txt` files. It is caused by monorepo structure and plugin/foundry limitations.
   The root `remappings.txt` file is used by the `solidity` plugin,

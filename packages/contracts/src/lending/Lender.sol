@@ -114,7 +114,7 @@ abstract contract Lender is
 
     /// @inheritdoc ILender
     function currentDebtRatio() external view override returns (uint256) {
-        return borrowersData[msg.sender].debt;
+        return borrowersData[msg.sender].debtRatio;
     }
 
     /// @inheritdoc ILender
