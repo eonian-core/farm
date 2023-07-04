@@ -22477,7 +22477,7 @@
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0xB3519044B8935E8bFc74ceE8460BDFDA83e69E80",
+          "address": "0x8BaAa0cacBE9b96d5f22E29796599D1ba442C1c2",
           "abi": [
             {
               "inputs": [
@@ -23855,7 +23855,7 @@
           ]
         },
         "Vault_Implementation": {
-          "address": "0xB83F7df3D93Ff6Fc1AFa700B5B634d2413B26EB2",
+          "address": "0xb1478261e83e33A732A9eA9CD7f0646AD8FB1B89",
           "abi": [
             {
               "inputs": [
