@@ -976,6 +976,63 @@ contract VaultTest is TestWithERC1820Registry {
         assertEq(underlying.balanceOf(alice), withdrawAmount);
     }
 
+    function testPartialWithdrawFromStrategies(
+        uint96 aliceAmount,
+        uint96 bobAmount,
+        uint96 partialWihthdrawnAmount
+    ) public {
+        vm.assume(aliceAmount > 0);
+        vm.assume(bobAmount > 0);
+        vm.assume(partialWihthdrawnAmount > 0 && partialWihthdrawnAmount < aliceAmount);
+
+        address vaultAddress = address(vault);
+        address strategyAddress = address(strategy);
+
+        depositToVault(alice, aliceAmount);
+        depositToVault(bob, bobAmount);
+
+        // Setup strategy and add some funds to it
+        vm.prank(strategyAddress);
+        underlying.increaseAllowance(vaultAddress, type(uint256).max);
+        vault.addStrategy(strategyAddress, MAX_BPS);
+        vm.prank(strategyAddress);
+        vault.reportPositiveDebtManagement(0, 0);
+
+        // Check that strategy recived all the funds after the report
+        _assertEqWithRoundingError(
+            underlying.balanceOf(strategyAddress),
+            aliceAmount + bobAmount
+        );
+        _assertEqWithRoundingError(vault.freeAssets(), 0);
+
+        assertEq(vault.currentDebt(strategyAddress), aliceAmount + bobAmount);
+        vm.prank(strategyAddress);
+        assertEq(vault.currentDebtRatio(), MAX_BPS);
+
+        assertEq(vault.maxWithdraw(alice), aliceAmount);
+        assertEq(vault.maxWithdraw(bob), bobAmount);
+
+        uint256 aliceSharesToReturn = vault.previewWithdraw(partialWihthdrawnAmount);
+        uint256 aliceSharesBalanceBefore = vault.balanceOf(alice);
+        // same for bob
+        uint256 bobUnderliyngBalanceInVault = vault.maxWithdraw(bob);
+        uint256 bobSharesBalanceBefore = vault.balanceOf(bob);
+
+        vm.prank(alice);
+        vault.withdraw(partialWihthdrawnAmount);
+
+        // Sometimes, if "aliceAmount" is small value, Alice still has 1 share
+        assertEq(vault.balanceOf(alice), aliceSharesBalanceBefore - aliceSharesToReturn);
+        assertEq(underlying.balanceOf(alice), partialWihthdrawnAmount);
+        // check bob
+        assertEq(vault.balanceOf(bob), bobSharesBalanceBefore);
+        assertEq(vault.maxWithdraw(bob), bobUnderliyngBalanceInVault);
+
+        assertEq(vault.currentDebt(strategyAddress), aliceAmount + bobAmount - partialWihthdrawnAmount);
+        vm.prank(strategyAddress);
+        assertEq(vault.currentDebtRatio(), MAX_BPS);
+    }
+
     function testWithdrawReentrance(uint192 withdraw) public {
         // Allow the vault to take funds from Alice
         vm.prank(alice);
@@ -1351,5 +1408,28 @@ contract VaultTest is TestWithERC1820Registry {
         assertEq(vault.unregisterLifecycleHook(hook1), true);
         assertEq(vault.unregisterLifecycleHook(hook2), true);
         assertEq(vault.unregisterLifecycleHook(hook3), false);
+    }
+
+    function depositToVault(address actor, uint256 amount) internal {
+        // Give the required funds to Actor
+        underlying.mint(actor, amount);
+        assertEq(underlying.balanceOf(actor), amount);
+
+        // Allow to vault to take the Actor's assets
+        vm.prank(actor);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        uint256 vaultBalanceBefore = underlying.balanceOf(address(vault));
+        uint256 actorBalanceBefore = underlying.balanceOf(actor);
+        uint256 actorVaultBalanceBefore = vault.balanceOf(actor);
+        uint256 actorUnderlyingVaultBalanceBefore = vault.maxWithdraw(actor);
+
+        // Actor deposits funds to the vault
+        vm.prank(actor);
+        vault.deposit(amount);
+        assertEq(underlying.balanceOf(address(vault)), actorBalanceBefore);
+        assertEq(underlying.balanceOf(address(vault)), vaultBalanceBefore + amount);
+        assertGt(vault.balanceOf(actor), actorVaultBalanceBefore);
+        assertEq(vault.maxWithdraw(actor), actorUnderlyingVaultBalanceBefore + amount);
     }
 }
