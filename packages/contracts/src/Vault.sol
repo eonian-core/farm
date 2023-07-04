@@ -147,13 +147,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
                 continue;
             }
 
-            // Withdraw the required amount of funds from the strategy
-            uint256 loss = IStrategy(strategy).withdraw(requiredAmount);
-
-            // If the strategy failed to return all of the requested funds, we need to reduce the strategy's debt ratio
-            if (loss > 0) {
-                _decreaseBorrowerCredibility(strategy, loss);
-            }
+            withdrawFromStrategy(IStrategy(strategy), requiredAmount);
         }
 
         // Revert if insufficient assets remain in the vault after withdrawal from all strategies

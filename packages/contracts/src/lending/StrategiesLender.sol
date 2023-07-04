@@ -145,6 +145,19 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
         emit StrategyRemoved(strategy, fromQueueOnly);
     }
 
+    /// @notice Withdraws funds from the strategy.
+    function withdrawFromStrategy(IStrategy strategy, uint256 requiredAmount) internal returns (uint256) {
+        // Withdraw the required amount of funds from the strategy
+        uint256 loss = strategy.withdraw(requiredAmount);
+
+        // If the strategy failed to return all of the requested funds, we need to reduce the strategy's debt ratio
+        if (loss > 0) {
+            _decreaseBorrowerCredibility(address(strategy), loss);
+        }
+
+        return loss;
+    }
+
     /// @notice Sets the withdrawal queue.
     /// @param queue a new queue that will replace the existing one.
     ///        Should contain only those elements that already present in the existing queue.
