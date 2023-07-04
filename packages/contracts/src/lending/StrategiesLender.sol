@@ -74,18 +74,6 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
         shutdown ? _pause() : _unpause();
     }
 
-    /// @notice Returns the current debt of the strategy.
-    /// @param strategy the strategy address.
-    function strategyDebt(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debt;
-    }
-
-    /// @notice Returns the debt ratio of the strategy.
-    /// @param strategy the strategy address.
-    function strategyRatio(address strategy) external view returns (uint256) {
-        return borrowersData[strategy].debtRatio;
-    }
-
     /// @notice Adds a new strategy to the vault.
     /// @param strategy a new strategy address.
     /// @param debtRatio a ratio that shows how much of the new strategy can take, relative to other strategies.

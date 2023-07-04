@@ -143,14 +143,14 @@ contract VaultTest is TestWithERC1820Registry {
 
         vault.addStrategy(strategyAddress, debtRatio);
         assertEq(vault.debtRatio(), debtRatio);
-        assertEq(vault.strategyRatio(strategyAddress), debtRatio);
+        assertEq(vault.currentDebtRatio(strategyAddress), debtRatio);
 
         vm.expectEmit(true, true, true, true);
         vault.emitStrategyRevokedEvent(strategyAddress);
 
         vault.revokeStrategy(strategyAddress);
         assertEq(vault.debtRatio(), 0);
-        assertEq(vault.strategyRatio(strategyAddress), 0);
+        assertEq(vault.currentDebtRatio(strategyAddress), 0);
     }
 
     function testRevertWhenRevokingStrategyFromNonOwnerAccount() public {

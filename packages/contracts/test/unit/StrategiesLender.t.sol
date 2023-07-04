@@ -80,7 +80,7 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
 
         lender.addStrategy(strategyAddress, debtRatio);
         assertEq(lender.debtRatio(), debtRatio);
-        assertEq(lender.strategyRatio(strategyAddress), debtRatio);
+        assertEq(lender.currentDebtRatio(strategyAddress), debtRatio);
         assertEq(lender.beforeStrategyRegisteredCalled(), 1);
 
         vm.expectEmit(true, true, true, true);
@@ -88,7 +88,7 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
 
         lender.revokeStrategy(strategyAddress);
         assertEq(lender.debtRatio(), 0);
-        assertEq(lender.strategyRatio(strategyAddress), 0);
+        assertEq(lender.currentDebtRatio(strategyAddress), 0);
         assertEq(lender.beforeStrategyRegisteredCalled(), 1);
     }
 

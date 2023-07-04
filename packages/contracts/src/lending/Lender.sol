@@ -114,7 +114,7 @@ abstract contract Lender is
 
     /// @inheritdoc ILender
     function currentDebtRatio() external view override returns (uint256) {
-        return borrowersData[msg.sender].debtRatio;
+        return currentDebtRatio(msg.sender);
     }
 
     /// @inheritdoc ILender
@@ -258,6 +258,11 @@ abstract contract Lender is
     /// @notice Returns the current debt that the strategy has.
     function currentDebt(address borrower) public view returns (uint256) {
         return borrowersData[borrower].debt;
+    }
+
+    /// @notice Returns the debt ratio of the borrower.
+    function currentDebtRatio(address borrower) public view returns (uint256) {
+        return borrowersData[borrower].debtRatio;
     }
 
     /// @notice Returns the activation status of the specified borrower.
