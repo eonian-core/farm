@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 
 import {Lender, BorrowerDoesNotExist} from "./Lender.sol";
 import {ILender} from "./ILender.sol";
@@ -45,6 +46,9 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
     /// @notice Event that should happen when the strategy has been returned to the withdrawal queue.
     /// @param strategy Address of the strategy contract.
     event StrategyReturnedToQueue(address indexed strategy);
+
+    /// @notice Event that should happen when tokens withdrawn from strategy.
+    event WinthdrawnFromStrategy(address indexed strategy, uint256 requiredAmount, uint256 withdrawnAmount, uint256 loss);
 
     modifier onlyOwnerOrStrategy(address strategy) {
         if (msg.sender != owner() && msg.sender != strategy) {
@@ -145,15 +149,52 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
         emit StrategyRemoved(strategy, fromQueueOnly);
     }
 
+    function _withdrawFromAllStrategies(uint256 assets) internal returns (uint256 totalLoss) {
+        for (uint256 i = 0; i < withdrawalQueue.length; i++) {
+            // If the vault already has the required amount of funds, we need to finish the withdrawal
+            uint256 vaultBalance = _freeAssets();
+            if (assets <= vaultBalance) {
+                // We withdrawn all what we need
+                break;
+            }
+
+            address strategy = withdrawalQueue[i];
+
+            // We can only withdraw the amount that the strategy has as debt,
+            // so that the strategy can work on the unreported (yet) funds it has earned
+            uint256 requiredAmount = MathUpgradeable.min(
+                assets - vaultBalance,
+                borrowersData[strategy].debt
+            );
+
+            // Skip this strategy is there is nothing to withdraw
+            if (requiredAmount == 0) {
+                continue;
+            }
+
+
+            totalLoss += withdrawFromStrategy(IStrategy(strategy), requiredAmount);
+        }
+    }
+
     /// @notice Withdraws funds from the strategy.
     function withdrawFromStrategy(IStrategy strategy, uint256 requiredAmount) internal returns (uint256) {
+        uint256 balanceBefore = _freeAssets();
         // Withdraw the required amount of funds from the strategy
         uint256 loss = strategy.withdraw(requiredAmount);
+        uint256 withdrawnAmount = _freeAssets() - balanceBefore;
 
         // If the strategy failed to return all of the requested funds, we need to reduce the strategy's debt ratio
         if (loss > 0) {
             _decreaseBorrowerCredibility(address(strategy), loss);
         }
+
+        // Reduce the Strategy's debt by the amount withdrawn ("realized returns")
+        // Normally this is changed during report, but in this case we need update it manually
+        // important to do it after _decreaseBorrowerCredibility, because it rely on old debt value
+        _decreaseDebt(address(strategy), withdrawnAmount);
+
+        emit WinthdrawnFromStrategy(address(strategy), requiredAmount, withdrawnAmount, loss);
 
         return loss;
     }

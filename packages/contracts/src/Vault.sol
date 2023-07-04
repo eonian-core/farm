@@ -126,29 +126,12 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
             return;
         }
 
-        for (uint256 i = 0; i < withdrawalQueue.length; i++) {
-            // If the vault already has the required amount of funds, we need to finish the withdrawal
-            uint256 vaultBalance = _freeAssets();
-            if (assets <= vaultBalance) {
-                break;
-            }
-
-            address strategy = withdrawalQueue[i];
-
-            // We can only withdraw the amount that the strategy has as debt,
-            // so that the strategy can work on the unreported (yet) funds it has earned
-            uint256 requiredAmount = MathUpgradeable.min(
-                assets - vaultBalance,
-                borrowersData[strategy].debt
-            );
-
-            // Skip this strategy is there is nothing to withdraw
-            if (requiredAmount == 0) {
-                continue;
-            }
-
-            withdrawFromStrategy(IStrategy(strategy), requiredAmount);
-        }
+        // returns losses from strategies,
+        // but we treat losses as total issue of all holders
+        // so we don't decrease amount which return to user
+        _withdrawFromAllStrategies(assets);
+        // as a result losses will be distributed between all holders
+        // we will track change in shares <-> assets ratio directly in graph
 
         // Revert if insufficient assets remain in the vault after withdrawal from all strategies
         if (_freeAssets() < assets) {

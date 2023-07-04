@@ -55,7 +55,7 @@ contract StrategyBorrowerMock is BaseStrategyMock {
             assetHolder.invest(freeBalance);
         }
 
-        emitAjustPositionCalled(outstandingDebt, freeBalance);
+        emit AdjustPositionCalled(outstandingDebt, freeBalance);
     }
 
     function _liquidatePosition(
@@ -66,7 +66,7 @@ contract StrategyBorrowerMock is BaseStrategyMock {
         uint256 potentialLoss = assets - toLiquidate;
 
         assetHolder.liquidate(toLiquidate);
-        emitLiquidatePositionCalled(toLiquidate, potentialLoss);
+        emit LiquidatePositionCalled(toLiquidate, potentialLoss);
         
         return (toLiquidate, potentialLoss);
     }
@@ -82,19 +82,6 @@ contract StrategyBorrowerMock is BaseStrategyMock {
 
     function name() external pure virtual override returns (string memory) {
         return "StrategyBorrowerMock";
-    }
-
-    function emitAjustPositionCalled(
-        uint256 outstandingDebt,
-        uint256 adjustedAmount
-    ) public {
-        emit AdjustPositionCalled(outstandingDebt, adjustedAmount);
-    }
-
-    function emitLiquidatePositionCalled(
-        uint256 liquidated, uint256 loss
-    ) public {
-        emit LiquidatePositionCalled(liquidated, loss);
     }
 
     function TEST_makeLoss(uint256 amount) public {

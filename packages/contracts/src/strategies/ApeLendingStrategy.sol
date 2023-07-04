@@ -282,6 +282,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
         uint256 freeBalance = assetBalance - outstandingDebt;
         if (freeBalance > 0) {
             uint256 result = cToken.mint(freeBalance);
+            // TODO: add event
             if (result > 0) {
                 revert MintError(result);
             }
@@ -298,9 +299,10 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
     {
         uint256 assetBalance = asset.balanceOf(address(this));
         if (assetBalance < assets) {
-            uint256 deposits = depositedBalance();
+            uint256 deposits = depositedBalance(); // balance of underliyng in CToken
             uint256 amountToRedeem = MathUpgradeable.min(deposits, assets);
             uint256 result = cToken.redeemUnderlying(amountToRedeem);
+            // TODO: add event
             if (result > 0) {
                 revert RedeemError(result);
             }
@@ -319,6 +321,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
     {
         uint256 amountToRedeem = depositedBalance();
         uint256 result = cToken.redeemUnderlying(amountToRedeem);
+        // TODO: add event
         if (result > 0) {
             revert RedeemError(result);
         }
