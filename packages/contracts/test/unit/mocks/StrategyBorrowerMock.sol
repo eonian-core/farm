@@ -87,6 +87,18 @@ contract StrategyBorrowerMock is BaseStrategyMock {
     function TEST_makeLoss(uint256 amount) public {
         assetHolder.burn(amount);
     }
+
+    function _harvest(
+        uint256 outstandingDebt
+    )
+        internal
+        override
+        returns (uint256 profit, uint256 loss, uint256 debtPayment)
+    {
+        emitHarvestCalled();
+        assetHolder.liquidate(outstandingDebt);
+        return (harvestProfit, harvestLoss, outstandingDebt);
+    }
 }
 
 contract AssetHolder {

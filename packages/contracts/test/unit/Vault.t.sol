@@ -977,10 +977,13 @@ contract VaultTest is TestWithERC1820Registry {
     }
 
     function testPartialWithdrawFromStrategies(
-        uint96 aliceAmount,
-        uint96 bobAmount,
-        uint96 partialWihthdrawnAmount
+        uint96 _aliceAmount,
+        uint96 _bobAmount,
+        uint96 _partialWihthdrawnAmount
     ) public {
+        uint256 aliceAmount = _aliceAmount;
+        uint256 bobAmount = _bobAmount;
+        uint256 partialWihthdrawnAmount = _partialWihthdrawnAmount;
         vm.assume(aliceAmount > 0);
         vm.assume(bobAmount > 0);
         vm.assume(partialWihthdrawnAmount > 0 && partialWihthdrawnAmount < aliceAmount);
@@ -1420,14 +1423,12 @@ contract VaultTest is TestWithERC1820Registry {
         underlying.increaseAllowance(address(vault), type(uint256).max);
 
         uint256 vaultBalanceBefore = underlying.balanceOf(address(vault));
-        uint256 actorBalanceBefore = underlying.balanceOf(actor);
         uint256 actorVaultBalanceBefore = vault.balanceOf(actor);
         uint256 actorUnderlyingVaultBalanceBefore = vault.maxWithdraw(actor);
 
         // Actor deposits funds to the vault
         vm.prank(actor);
         vault.deposit(amount);
-        assertEq(underlying.balanceOf(address(vault)), actorBalanceBefore);
         assertEq(underlying.balanceOf(address(vault)), vaultBalanceBefore + amount);
         assertGt(vault.balanceOf(actor), actorVaultBalanceBefore);
         assertEq(vault.maxWithdraw(actor), actorUnderlyingVaultBalanceBefore + amount);

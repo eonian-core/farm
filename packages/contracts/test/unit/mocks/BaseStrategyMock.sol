@@ -122,6 +122,7 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     )
         internal
         override
+        virtual
         returns (uint256 profit, uint256 loss, uint256 debtPayment)
     {
         emitHarvestCalled();

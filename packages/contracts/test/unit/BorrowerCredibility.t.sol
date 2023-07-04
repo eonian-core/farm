@@ -252,7 +252,7 @@ contract BorrowerCredibilityTest is TestWithERC1820Registry {
         vm.expectEmit(true, true, true, true);
         emit BorrowerDebtChanged(address(strategyB), _10_USDT, _10_USDT);
         vm.expectEmit(true, true, true, true);
-        emit WinthdrawnFromStrategy(address(strategyB), _60_USDT, _50_USDT, 0);
+        emit WinthdrawnFromStrategy(address(strategyB), _50_USDT, _50_USDT, 0);
         vm.prank(alice);
         vault.withdraw(_80_USDT);
         assertEq(underlying.balanceOf(alice), _80_USDT);
