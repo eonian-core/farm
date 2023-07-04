@@ -84,6 +84,31 @@ contract BorrowerCredibilityTest is TestWithERC1820Registry {
         vm.label(address(strategyA), "strategyB");
     }
 
+    /** Checks that the withdrawn from strategy should decrease total debt */
+    function testShouldDecreaseTotalDebtAfterBorrowerWithdrawn() public {
+        uint256 _120_USDT = 120 * 10 ** 18;
+        uint256 _60_USDT = 60 * 10 ** 18;
+
+        // Deposit some amount of funds to the vault on behalf of Alice.
+        depositToVault(alice, _120_USDT);
+        assertEq(vault.totalAssets(), _120_USDT);
+
+        // Initialize the strategy and connect it to the vault.
+        initAndHarvestStrategy(strategyA, _120_USDT, MAX_BPS);
+
+        // Alice wants to take back 50% of her funds.
+        expectLiquidation({strategy: strategyA, amount: _60_USDT, loss: 0});
+        vm.prank(alice);
+        vault.withdraw(_60_USDT);
+        assertEq(underlying.balanceOf(alice), _60_USDT);
+
+        // The debt of the strategy must be reduced by the withdrawal amount.
+        assertEq(vault.currentDebt(address(strategyA)), _60_USDT);
+
+        // Total debt should be decreased as well.
+        assertEq(vault.totalDebt(), _60_USDT);
+    }
+
     /**
         Checks that the strategy's creditworthiness is reduced if it was unable to provide the requested amount of funds when withdrawn.
     */
@@ -100,8 +125,8 @@ contract BorrowerCredibilityTest is TestWithERC1820Registry {
 
         // Initialize the strategies and add them to the vault.
         // Dividing the deposited amount in half for each strategy.
-        initializeStrategy(strategyA, _60_USDT, MAX_BPS / 2);
-        initializeStrategy(strategyB, _60_USDT, MAX_BPS / 2);
+        initAndHarvestStrategy(strategyA, _60_USDT, MAX_BPS / 2);
+        initAndHarvestStrategy(strategyB, _60_USDT, MAX_BPS / 2);
 
         // Loss occured, first strategy lost the half of its funds (25% of total Alice deposit).
         strategyA.TEST_makeLoss(_30_USDT);
@@ -140,7 +165,7 @@ contract BorrowerCredibilityTest is TestWithERC1820Registry {
         strategy.emitLiquidatePositionCalled(amount, loss);
     }
 
-    function initializeStrategy(
+    function initAndHarvestStrategy(
         StrategyBorrowerMock strategyMock,
         uint256 balance,
         uint256 ratio
