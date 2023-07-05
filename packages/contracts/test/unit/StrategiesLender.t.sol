@@ -292,5 +292,42 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
             assertEq(utilisation, expectedUtilisation);
         }
     }
+
+    function testSetBorrowerDebtRatio(
+        uint64 initialBorrowerDebtRatio,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(initialBorrowerDebtRatio <= MAX_BPS);
+        vm.assume(borrowerDebtRatio <= MAX_BPS);
+
+        lender.addStrategy(address(strategy), initialBorrowerDebtRatio);
+        assertEq(
+            lender.currentDebtRatio(address(strategy)),
+            initialBorrowerDebtRatio
+        );
+
+        lender.setBorrowerDebtRatio(address(strategy), borrowerDebtRatio);
+        assertEq(lender.currentDebtRatio(address(strategy)), borrowerDebtRatio);
+        assertEq(lender.debtRatio(), borrowerDebtRatio);
+    }
+
+    function testSetBorrowerDebtRatioFromNonOwnerAccount(
+        uint64 initialBorrowerDebtRatio,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(initialBorrowerDebtRatio <= MAX_BPS);
+        vm.assume(borrowerDebtRatio <= MAX_BPS);
+
+        lender.addStrategy(address(strategy), initialBorrowerDebtRatio);
+        assertEq(
+            lender.currentDebtRatio(address(strategy)),
+            initialBorrowerDebtRatio
+        );
+
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+
+        vm.prank(culprit);
+        lender.setBorrowerDebtRatio(address(strategy), borrowerDebtRatio);
+    }
     
 }

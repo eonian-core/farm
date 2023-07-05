@@ -210,6 +210,13 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
     function getQueueSize() external view returns (uint256) {
         return withdrawalQueue.length;
     }
+
+    /// @notice Sets the borrower's debt ratio. Will be reverted if the borrower doesn't exist or the total debt ratio is exceeded.
+    /// @dev In the case where you want to disable the borrower, you need to set its ratio to 0.
+    ///      Thus, the borrower's current debt becomes an outstanding debt, which he must repay to the lender.
+    function setBorrowerDebtRatio(address borrower, uint256 borrowerDebtRatio) external onlyOwner {
+        _setBorrowerDebtRatio(borrower, borrowerDebtRatio);
+    }
     
     /// @inheritdoc IStrategiesLender
     function interestRatePerBlock() public view returns (uint256, uint256) {
