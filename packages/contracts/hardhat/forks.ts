@@ -4,10 +4,14 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
   accounts: Record<string, string>;
 };
 
+const bscRpcUrl = process.env.BSC_MAINNET_RPC_URL;
+if(!bscRpcUrl)
+  throw new Error("Missing BSC_MAINNET_RPC_URL environment variable");
+
 /** Binance Smart Chain Mainnet */
 export const binanceSmartChainFork: ForkData = {
   // official BSC RPC unstable use unofficail instead
-  url: "https://bsc.getblock.io/beac5e27-711d-4570-abed-8ddb5dd41d9e/mainnet/",
+  url: bscRpcUrl,
   // do not use blockNumber for BSC,
   // hardhat or providers cannot correctly exchange non latest block data
   accounts: {
