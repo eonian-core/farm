@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-pragma solidity >=0.8.0;
+pragma solidity ^0.8.19;
 
-import "contracts/strategies/protocols/ICToken.sol";
+import {ERC20Mock} from "./ERC20Mock.sol";
+import {ICToken} from "contracts/strategies/protocols/ICToken.sol";
 
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract CTokenMock is ERC20, ICToken {
-    address internal _underlying;
+    ERC20Mock internal _underlying;
     uint8 internal _decimals;
 
     uint256 public exchangeRate;
@@ -17,12 +18,13 @@ contract CTokenMock is ERC20, ICToken {
     uint256 public exchangeRateCurrent;
     uint256 public accrueInterest;
 
-    constructor(address __underlying) ERC20("CToken", "CT") {
+    constructor(ERC20Mock __underlying) ERC20("CToken", "CT") {
         setUnderlying(__underlying);
         setDecimals(8);
+        setExchangeRate(1 * 1e18);
     }
 
-    function setUnderlying(address __underlying) public {
+    function setUnderlying(ERC20Mock __underlying) public {
         _underlying = __underlying;
     }
 
@@ -59,7 +61,7 @@ contract CTokenMock is ERC20, ICToken {
     }
 
     function underlying() external view returns (address) {
-        return _underlying;
+        return address(_underlying);
     }
 
     function transfer(address dst, uint256 amount)
@@ -174,13 +176,13 @@ contract CTokenMock is ERC20, ICToken {
 
     function mint(uint256 mintAmount) external override returns (uint256) {
         _mint(address(msg.sender), mintAmount);
-
+        _underlying.mint(address(this), mintAmount);
         return 0;
     }
 
     function burn(uint256 burnAmount) external returns (uint256) {
         _burn(address(msg.sender), burnAmount);
-
+        _underlying.burn(address(this), burnAmount);
         return 0;
     }
 
@@ -191,8 +193,10 @@ contract CTokenMock is ERC20, ICToken {
     }
 
     function redeemUnderlying(
-        uint256 /* redeemAmount */
-    ) external pure override returns (uint256) {
+        uint256 redeemAmount
+    ) external override returns (uint256) {
+        _burn(address(msg.sender), redeemAmount);
+        _underlying.transfer(msg.sender, redeemAmount);
         return 0;
     }
 

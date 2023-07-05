@@ -101,15 +101,8 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
     /// @inheritdoc BaseStrategy
     function estimatedTotalAssets() public view override returns (uint256) {
-        (, uint256 underliyngAmount) = depositedBalanceSnapshot();
-
-        return asset.balanceOf(address(this)) + underliyngAmount + _totalBananaBalanceInAsset();
-    }
-
-    /// @notice Returns current deposited balance (in asset).
-    /// @dev Unlike the snapshot function, this function recalculates the value of the deposit.
-    function depositedBalance() public returns (uint256) {
-        return cToken.balanceOfUnderlying(address(this));
+        (, uint256 underlyingAmount) = depositedBalanceSnapshot();
+        return asset.balanceOf(address(this)) + underlyingAmount + _totalBananaBalanceInAsset();
     }
 
     /// @notice This function makes a prediction on how much BANANA is accrued per block.
@@ -266,7 +259,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
         uint256 freeBalance = assetBalance - outstandingDebt;
         if (freeBalance > 0) {
-            depositInProtocol(freeBalance);
+            depositToProtocol(freeBalance);
         }
     }
 
@@ -280,12 +273,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
     {
         uint256 assetBalance = asset.balanceOf(address(this));
         if (assetBalance < assets) {
-            uint256 deposits = depositedBalance(); // balance of underliyng in CToken
-            uint256 amountToRedeem = MathUpgradeable.min(deposits, assets);
-
-            withdrawFromProtocol(amountToRedeem);
-
-            liquidatedAmount = amountToRedeem;
+            liquidatedAmount = withdrawFromProtocol(assets);
             loss = assets - liquidatedAmount;
         } else {
             liquidatedAmount = assets;
@@ -298,10 +286,6 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
         override
         returns (uint256 amountFreed)
     {
-        uint256 amountToRedeem = depositedBalance();
-
-        withdrawFromProtocol(amountToRedeem);
-
-        amountFreed = amountToRedeem;
+        amountFreed = withdrawFromProtocol(type(uint256).max);
     }
 }

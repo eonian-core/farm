@@ -1018,7 +1018,7 @@ contract VaultTest is TestWithERC1820Registry {
         uint256 aliceSharesToReturn = vault.previewWithdraw(partialWihthdrawnAmount);
         uint256 aliceSharesBalanceBefore = vault.balanceOf(alice);
         // same for bob
-        uint256 bobUnderliyngBalanceInVault = vault.maxWithdraw(bob);
+        uint256 bobUnderlyingBalanceInVault = vault.maxWithdraw(bob);
         uint256 bobSharesBalanceBefore = vault.balanceOf(bob);
 
         vm.prank(alice);
@@ -1029,7 +1029,7 @@ contract VaultTest is TestWithERC1820Registry {
         assertEq(underlying.balanceOf(alice), partialWihthdrawnAmount);
         // check bob
         assertEq(vault.balanceOf(bob), bobSharesBalanceBefore);
-        assertEq(vault.maxWithdraw(bob), bobUnderliyngBalanceInVault);
+        assertEq(vault.maxWithdraw(bob), bobUnderlyingBalanceInVault);
 
         assertEq(vault.currentDebt(strategyAddress), aliceAmount + bobAmount - partialWihthdrawnAmount);
         vm.prank(strategyAddress);

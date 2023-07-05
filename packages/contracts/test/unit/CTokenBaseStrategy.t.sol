@@ -81,7 +81,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         ops.setGelato(payable(alice));
         vm.label(address(ops), "ops");
 
-        cToken = new CTokenMock(address(underlying));
+        cToken = new CTokenMock(underlying);
         vm.label(address(cToken), "cToken");
 
         nativeTokenPriceFeed = new AggregatorV3Mock();
