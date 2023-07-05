@@ -106,4 +106,13 @@ contract VaultMock is Vault {
     function unregisterWithdrawHook(IVaultHook hook) public {
         removeWithdrawHook(hook);
     }
+
+    function increaseDebt(address borrower, uint256 amount) public {
+        super._increaseDebt(borrower, amount);
+    }
+
+    /// @notice Decreases given to borrower debt and total debt
+    function decreaseDebt(address borrower, uint256 amount) public {
+        super._decreaseDebt(borrower, amount);
+    }
 }

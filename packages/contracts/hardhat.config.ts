@@ -82,7 +82,7 @@ const config: HardhatUserConfig = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200,
+        runs: 5, // must be low to decrease result contract code size
       },
     },
   },

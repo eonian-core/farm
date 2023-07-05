@@ -81,7 +81,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         ops.setGelato(payable(alice));
         vm.label(address(ops), "ops");
 
-        cToken = new CTokenMock(address(underlying));
+        cToken = new CTokenMock(underlying);
         vm.label(address(cToken), "cToken");
 
         nativeTokenPriceFeed = new AggregatorV3Mock();
@@ -206,8 +206,21 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
 
     function testShouldReturnZeroTotalBananaAssetBalanceIfNoBanana() public {
         assertEq(strategy.currentBananaBalance(), 0);
-
     }
+
+    function testShouldCalculateDepositedBalanceFromSnapshot(
+        uint128 cTokenBalance,
+        uint32 exchangeRate
+    ) public {
+        vm.prank(address(strategy));
+        cToken.mint(cTokenBalance);
+        cToken.setExchangeRate(exchangeRate);
+
+        (uint256 shares, uint256 balance) = strategy.depositedBalanceSnapshot();
+        assertEq(shares, cTokenBalance);
+        assertEq(balance, (uint256(cTokenBalance) * exchangeRate) / 1e18);
+    }
+
 
     function testShouldClaimBanana() public {
         vm.expectEmit(true, true, true, true);

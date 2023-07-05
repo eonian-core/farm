@@ -71,6 +71,12 @@ abstract contract Lender is
         uint256 loss
     );
 
+    /// @notice Event that must occur when the borrower's debt ratio has changed
+    event BorrowerDebtRatioChanged(address indexed borrower, uint256 newDebtRatio, uint256 newTotalDebtRatio, uint256 loss);
+
+    /// @notice Event that must occur when the borrower's debt has changed
+    event BorrowerDebtChanged(address indexed borrower, uint256 newDebt, uint256 newTotalDebt);
+
     modifier onlyBorrowers() {
         if (borrowersData[msg.sender].activationTimestamp == 0) {
             revert CallerIsNotABorrower();
@@ -114,7 +120,7 @@ abstract contract Lender is
 
     /// @inheritdoc ILender
     function currentDebtRatio() external view override returns (uint256) {
-        return borrowersData[msg.sender].debt;
+        return currentDebtRatio(msg.sender);
     }
 
     /// @inheritdoc ILender
@@ -194,14 +200,12 @@ abstract contract Lender is
 
         // Take into account repaid debt, if any
         if (debtPayment > 0) {
-            borrowersData[borrower].debt -= debtPayment;
-            totalDebt -= debtPayment;
+            _decreaseDebt(borrower, debtPayment);
         }
 
         // Allocate some funds to the borrower if possible
         if (borrowerAvailableCredit > 0) {
-            borrowersData[borrower].debt += borrowerAvailableCredit;
-            totalDebt += borrowerAvailableCredit;
+            _increaseDebt(borrower, borrowerAvailableCredit);
         }
 
         // Now we need to compare the allocated funds to the borrower and his current free balance.
@@ -228,6 +232,22 @@ abstract contract Lender is
             fundsTaken,
             loss
         );
+    }
+
+    /// @notice Increases given to borrower debt and total debt
+    function _increaseDebt(address borrower, uint256 amount) internal {
+        borrowersData[borrower].debt += amount;
+        totalDebt += amount;
+
+        emit BorrowerDebtChanged(borrower, borrowersData[borrower].debt, totalDebt);
+    }
+
+    /// @notice Decreases given to borrower debt and total debt
+    function _decreaseDebt(address borrower, uint256 amount) internal {
+        borrowersData[borrower].debt -= amount;
+        totalDebt -= amount;
+
+        emit BorrowerDebtChanged(borrower, borrowersData[borrower].debt, totalDebt);
     }
 
     /// @notice Returns the unrealized amount of the lender's tokens (lender's contract balance)
@@ -258,6 +278,11 @@ abstract contract Lender is
     /// @notice Returns the current debt that the strategy has.
     function currentDebt(address borrower) public view returns (uint256) {
         return borrowersData[borrower].debt;
+    }
+
+    /// @notice Returns the debt ratio of the borrower.
+    function currentDebtRatio(address borrower) public view returns (uint256) {
+        return borrowersData[borrower].debtRatio;
     }
 
     /// @notice Returns the activation status of the specified borrower.
@@ -298,8 +323,9 @@ abstract contract Lender is
         }
 
         // Also, need to reduce the max amount of funds that can be taken by the borrower
-        borrowersData[borrower].debt -= loss;
-        totalDebt -= loss;
+        _decreaseDebt(borrower, loss);
+
+        emit BorrowerDebtRatioChanged(borrower, borrowersData[borrower].debtRatio, debtRatio, loss);
     }
 
     /// @notice See external implementation
@@ -315,8 +341,7 @@ abstract contract Lender is
 
         uint256 lenderDebtLimit = _debtLimit();
         uint256 lenderDebt = totalDebt;
-        uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio *
-            fundAssets()) / MAX_BPS;
+        uint256 borrowerDebtLimit = (borrowersData[borrower].debtRatio * fundAssets()) / MAX_BPS;
         uint256 borrowerDebt = borrowersData[borrower].debt;
 
         // There're no more funds for the borrower because he has outstanding debt or the lender's available funds have been exhausted
@@ -389,6 +414,7 @@ abstract contract Lender is
         );
 
         debtRatio += borrowerDebtRatio;
+        emit BorrowerDebtRatioChanged(borrower, borrowerDebtRatio, debtRatio, 0);
     }
 
     /// @notice Sets the borrower's debt ratio. Will be reverted if the borrower doesn't exist or the total debt ratio is exceeded.
@@ -410,6 +436,8 @@ abstract contract Lender is
                 MAX_BPS - (debtRatio - borrowerDebtRatio)
             );
         }
+
+        emit BorrowerDebtRatioChanged(borrower, borrowersData[borrower].debtRatio, debtRatio, 0);
     }
 
     /// @notice Deletes the borrower from the list

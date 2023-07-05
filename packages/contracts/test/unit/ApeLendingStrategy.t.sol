@@ -58,6 +58,9 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
     ApeLendingStrategyMock strategy;
 
+    event DepositedToProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
+    event WithdrawnFromProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
+
     function setUp() public {
         vm.label(rewards, "rewards");
         vm.label(alice, "alice");
@@ -84,7 +87,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         ops.setGelato(payable(alice));
         vm.label(address(ops), "ops");
 
-        cToken = new CTokenMock(address(underlying));
+        cToken = new CTokenMock(underlying);
         vm.label(address(cToken), "cToken");
 
         nativeTokenPriceFeed = new AggregatorV3Mock();
@@ -197,10 +200,12 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         uint128 cTokenBalance,
         uint32 exchangeRate
     ) public {
-        cToken.setBalanceSnapshot(cTokenBalance);
+        vm.prank(address(strategy));
+        cToken.mint(cTokenBalance);
         cToken.setExchangeRate(exchangeRate);
 
-        uint256 balance = strategy.depositedBalanceSnapshot();
+        (uint256 shares, uint256 balance) = strategy.depositedBalanceSnapshot();
+        assertEq(shares, cTokenBalance);
         assertEq(balance, (uint256(cTokenBalance) * exchangeRate) / 1e18);
     }
 
@@ -215,7 +220,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         uint32 exchangeRate
     ) public {
         cToken.setExchangeRate(exchangeRate);
-        cToken.setBalanceSnapshot(0);
+        vm.prank(address(strategy));
+        cToken.burn(cToken.balanceOf(address(strategy)));
 
         assertEq(strategy.estimatedAccruedBanana(), 0);
     }
@@ -224,7 +230,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         uint32 balance
     ) public {
         cToken.setExchangeRate(0);
-        cToken.setBalanceSnapshot(balance);
+        vm.prank(address(strategy));
+        cToken.mint(balance);
 
         assertEq(strategy.estimatedAccruedBanana(), 0);
     }
@@ -239,12 +246,6 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vm.assume(supplySpeed > 0 && supplySpeed < 4e16);
 
         cToken.setExchangeRate(exchangeRate);
-        cToken.setBalanceSnapshot(cTokenBalance);
-
-        uint256 totalSupply = 0;
-
-        vm.prank(address(this));
-        cToken.mint(totalSupply);
 
         rainMaker.setCompSupplySpeeds(supplySpeed);
 
@@ -259,6 +260,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) public returns (uint256) {
         vm.assume(exchangeRate > 0);
         vm.assume(cTokenBalance > 0);
+        vm.assume(totalSupply >= cTokenBalance);
         vm.assume(supplySpeed > 0 && supplySpeed < 4e16);
 
         // Simulate "vm.assume(totalSupply > 1e18)", avoiding "rejected too many inputs" error.
@@ -268,10 +270,11 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         }
 
         cToken.setExchangeRate(exchangeRate);
-        cToken.setBalanceSnapshot(cTokenBalance);
+        vm.prank(address(strategy));
+        cToken.mint(cTokenBalance);
 
         vm.prank(address(this));
-        cToken.mint(totalSupply);
+        cToken.mint(totalSupply - cTokenBalance);
 
         rainMaker.setCompSupplySpeeds(supplySpeed);
 
@@ -653,9 +656,17 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
         underlying.setForbiddenAddress(address(strategy));
 
+        uint256 cTokenBalanceBefore = cToken.balanceOf(address(strategy));
+
         strategy.adjustPosition(outstandingDebt);
+
+        assertEq(cToken.balanceOf(address(strategy)), cTokenBalanceBefore);
     }
 
+    /**
+        If the current balance of assets under the strategy's contract is less than the amount of debt that the strategy must repay,
+        then the strategy must liquidate its asset position.
+    */
     function testShouldLiquidatePositionIfBalanceLessThanDebt(
         uint128 outstandingDebt,
         uint128 assetBalance,
@@ -664,12 +675,40 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vm.assume(cTokenBalance > 1);
         vm.assume(assetBalance < outstandingDebt);
 
-        _setupHarvestData(assetBalance, cTokenBalance, 0);
+        // CToken balance is equal to CToken underlying balance (for testing purposes, see CTokenMock)
+        uint128 cTokenUnderlyingBalance = cTokenBalance;
+        _setupHarvestData(assetBalance, cTokenUnderlyingBalance, 0);
 
+        uint256 cTokenBalanceBefore = cToken.balanceOf(address(strategy));
+
+        uint256 amountToWithdraw = outstandingDebt - assetBalance;
+        uint256 expectedWithdrawn = MathUpgradeable.min(amountToWithdraw, cTokenUnderlyingBalance);
+
+        // Check if strategy's position liquidation was called
         vm.expectEmit(true, true, true, true);
-        strategy.emitLiquidatePositionCalled(outstandingDebt - assetBalance);
+        strategy.emitLiquidatePositionCalled(amountToWithdraw);
+
+        // Strategy should liquidate the position if the balance of assets on the strategy contract is lower than what the vault wants to withdraw.
+        if (assetBalance < amountToWithdraw) {
+            vm.expectEmit(true, true, true, true);
+            emit WithdrawnFromProtocol(
+                expectedWithdrawn,
+                cTokenBalanceBefore,
+                cTokenUnderlyingBalance,
+                cTokenBalanceBefore - expectedWithdrawn,
+                cTokenUnderlyingBalance - expectedWithdrawn
+            );
+        }
 
         strategy.adjustPosition(outstandingDebt);
+
+        if (assetBalance < amountToWithdraw) {
+            assertEq(underlying.balanceOf(address(strategy)), expectedWithdrawn + assetBalance);
+            assertEq(cToken.balanceOf(address(strategy)), cTokenUnderlyingBalance - expectedWithdrawn);
+        } else {
+            assertEq(underlying.balanceOf(address(strategy)), assetBalance);
+            assertEq(cToken.balanceOf(address(strategy)), cTokenBalance);
+        }
     }
 
     function testShouldMintCTokenIfBalanceGreaterThanDebt(
@@ -685,7 +724,12 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             abi.encodeCall(cToken.mint, assetBalance - outstandingDebt)
         );
 
+        vm.expectEmit(true, true, true, false);
+        emit DepositedToProtocol(assetBalance - outstandingDebt, 0, 0, 0, 0);
+
         strategy.adjustPosition(outstandingDebt);
+
+        assertEq(underlying.balanceOf(address(strategy)), assetBalance);
     }
 
     function testShouldNotLiquidatePositionIfHasSufficeBalance(
@@ -710,39 +754,19 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(assetBalance < assets);
 
-        _setupHarvestData(assetBalance, 0, 0);
-
-        vm.mockCall(
-            address(cToken),
-            abi.encodeWithSelector(cToken.balanceOfUnderlying.selector),
-            abi.encode(deposits)
-        );
-
-        uint256 amountToRedeem = MathUpgradeable.min(deposits, assets);
-        vm.expectCall(
-            address(cToken),
-            abi.encodeCall(cToken.redeemUnderlying, amountToRedeem)
-        );
+        _setupHarvestData(assetBalance, deposits, 0);
 
         (uint256 liquidatedAmount, uint256 loss) = strategy.liquidatePosition(
             assets
         );
 
+        uint256 amountToRedeem = MathUpgradeable.min(deposits, assets);
         assertEq(loss, assets - amountToRedeem);
         assertEq(liquidatedAmount, amountToRedeem);
     }
 
     function testShouldLiquidateAll(uint128 deposits) public {
-        vm.mockCall(
-            address(cToken),
-            abi.encodeWithSelector(cToken.balanceOfUnderlying.selector),
-            abi.encode(deposits)
-        );
-
-        vm.expectCall(
-            address(cToken),
-            abi.encodeCall(cToken.redeemUnderlying, deposits)
-        );
+        _setupHarvestData(0, deposits, 0);
 
         uint256 amountFreed = strategy.liquidateAllPositions();
         assertEq(amountFreed, deposits);
@@ -755,6 +779,9 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) internal {
         vm.prank(address(strategy));
         cToken.mint(cTokenBalance);
+
+        // CToken balance is equal to CToken underlying balance (for testing purposes, see CTokenMock)        
+        assertEq(cToken.balanceOfUnderlying(address(strategy)), cTokenBalance);
         assertEq(cToken.balanceOf(address(strategy)), cTokenBalance);
 
         underlying.mint(address(strategy), assetBalance);

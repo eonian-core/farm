@@ -80,7 +80,7 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
 
         lender.addStrategy(strategyAddress, debtRatio);
         assertEq(lender.debtRatio(), debtRatio);
-        assertEq(lender.strategyRatio(strategyAddress), debtRatio);
+        assertEq(lender.currentDebtRatio(strategyAddress), debtRatio);
         assertEq(lender.beforeStrategyRegisteredCalled(), 1);
 
         vm.expectEmit(true, true, true, true);
@@ -88,7 +88,7 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
 
         lender.revokeStrategy(strategyAddress);
         assertEq(lender.debtRatio(), 0);
-        assertEq(lender.strategyRatio(strategyAddress), 0);
+        assertEq(lender.currentDebtRatio(strategyAddress), 0);
         assertEq(lender.beforeStrategyRegisteredCalled(), 1);
     }
 
@@ -291,6 +291,43 @@ contract StrategiesLenderTest is TestWithERC1820Registry {
             assertEq(interest, expectedInterest);
             assertEq(utilisation, expectedUtilisation);
         }
+    }
+
+    function testSetBorrowerDebtRatio(
+        uint64 initialBorrowerDebtRatio,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(initialBorrowerDebtRatio <= MAX_BPS);
+        vm.assume(borrowerDebtRatio <= MAX_BPS);
+
+        lender.addStrategy(address(strategy), initialBorrowerDebtRatio);
+        assertEq(
+            lender.currentDebtRatio(address(strategy)),
+            initialBorrowerDebtRatio
+        );
+
+        lender.setBorrowerDebtRatio(address(strategy), borrowerDebtRatio);
+        assertEq(lender.currentDebtRatio(address(strategy)), borrowerDebtRatio);
+        assertEq(lender.debtRatio(), borrowerDebtRatio);
+    }
+
+    function testSetBorrowerDebtRatioFromNonOwnerAccount(
+        uint64 initialBorrowerDebtRatio,
+        uint64 borrowerDebtRatio
+    ) public {
+        vm.assume(initialBorrowerDebtRatio <= MAX_BPS);
+        vm.assume(borrowerDebtRatio <= MAX_BPS);
+
+        lender.addStrategy(address(strategy), initialBorrowerDebtRatio);
+        assertEq(
+            lender.currentDebtRatio(address(strategy)),
+            initialBorrowerDebtRatio
+        );
+
+        vm.expectRevert(bytes("Ownable: caller is not the owner"));
+
+        vm.prank(culprit);
+        lender.setBorrowerDebtRatio(address(strategy), borrowerDebtRatio);
     }
     
 }
