@@ -19,9 +19,6 @@ import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
 
 
-error MintError(uint256 code);
-error RedeemError(uint256 code);
-
 contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
     uint256 public constant SECONDS_PER_BLOCK = 3; // for BSC only
     uint256 public constant REWARD_ESTIMATION_ACCURACY = 90;
@@ -104,21 +101,9 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
     /// @inheritdoc BaseStrategy
     function estimatedTotalAssets() public view override returns (uint256) {
-        return
-            asset.balanceOf(address(this)) +
-            depositedBalanceSnapshot() +
-            _totalBananaBalanceInAsset();
-    }
+        (, uint256 underliyngAmount) = depositedBalanceSnapshot();
 
-    /// @notice Returns current deposited balance (in asset).
-    /// @dev The exchange rate is recalculated at the last time someone touched the cToken contract.
-    ///      Transactions are not performed too often on this contract, perhaps we should consider recalculating the rate ourselves.
-    function depositedBalanceSnapshot() public view returns (uint256) {
-        (, uint256 cTokenBalance, , uint256 exchangeRate) = cToken
-            .getAccountSnapshot(address(this));
-
-        // Since every ApeSwap's cToken has 8 decimals, we can leave 1e18 as constant here.
-        return (cTokenBalance * exchangeRate) / 1e18;
+        return asset.balanceOf(address(this)) + underliyngAmount + _totalBananaBalanceInAsset();
     }
 
     /// @notice Returns current deposited balance (in asset).
@@ -130,7 +115,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
     /// @notice This function makes a prediction on how much BANANA is accrued per block.
     /// @dev It is not completely accurate because it uses the current protocol balance to predict into the past.
     function _estimatedAccruedBananaPerBlock() internal view returns (uint256) {
-        uint256 _depositedBalance = depositedBalanceSnapshot();
+        (, uint256 _depositedBalance) = depositedBalanceSnapshot();
         if (_depositedBalance == 0) {
             return 0; // should be impossible to have 0 balance and positive comp accrued
         }
@@ -281,11 +266,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
         uint256 freeBalance = assetBalance - outstandingDebt;
         if (freeBalance > 0) {
-            uint256 result = cToken.mint(freeBalance);
-            // TODO: add event
-            if (result > 0) {
-                revert MintError(result);
-            }
+            depositInProtocol(freeBalance);
         }
     }
 
@@ -301,11 +282,9 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
         if (assetBalance < assets) {
             uint256 deposits = depositedBalance(); // balance of underliyng in CToken
             uint256 amountToRedeem = MathUpgradeable.min(deposits, assets);
-            uint256 result = cToken.redeemUnderlying(amountToRedeem);
-            // TODO: add event
-            if (result > 0) {
-                revert RedeemError(result);
-            }
+
+            withdrawFromProtocol(amountToRedeem);
+
             liquidatedAmount = amountToRedeem;
             loss = assets - liquidatedAmount;
         } else {
@@ -320,11 +299,9 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
         returns (uint256 amountFreed)
     {
         uint256 amountToRedeem = depositedBalance();
-        uint256 result = cToken.redeemUnderlying(amountToRedeem);
-        // TODO: add event
-        if (result > 0) {
-            revert RedeemError(result);
-        }
+
+        withdrawFromProtocol(amountToRedeem);
+
         amountFreed = amountToRedeem;
     }
 }

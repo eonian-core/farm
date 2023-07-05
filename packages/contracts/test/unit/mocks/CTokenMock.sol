@@ -9,7 +9,6 @@ contract CTokenMock is ERC20, ICToken {
     address internal _underlying;
     uint8 internal _decimals;
 
-    uint256 public balanceSnapshot;
     uint256 public exchangeRate;
 
     bool public blocksBased;
@@ -29,10 +28,6 @@ contract CTokenMock is ERC20, ICToken {
 
     function setDecimals(uint8 __decimals) public {
         _decimals = __decimals;
-    }
-
-    function setBalanceSnapshot(uint256 _balanceSnapshot) public {
-        balanceSnapshot = _balanceSnapshot;
     }
 
     function setExchangeRate(uint256 _exchangeRate) public {
@@ -120,7 +115,7 @@ contract CTokenMock is ERC20, ICToken {
     }
 
     function getAccountSnapshot(
-        address /* account */
+        address account
     )
         external
         view
@@ -132,7 +127,7 @@ contract CTokenMock is ERC20, ICToken {
             uint256
         )
     {
-        return (0, balanceSnapshot, 0, exchangeRate);
+        return (0, balanceOf(account), 0, exchangeRate);
     }
 
     function totalBorrowsCurrent() external pure override returns (uint256) {
@@ -179,6 +174,12 @@ contract CTokenMock is ERC20, ICToken {
 
     function mint(uint256 mintAmount) external override returns (uint256) {
         _mint(address(msg.sender), mintAmount);
+
+        return 0;
+    }
+
+    function burn(uint256 burnAmount) external returns (uint256) {
+        _burn(address(msg.sender), burnAmount);
 
         return 0;
     }
