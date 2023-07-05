@@ -20,6 +20,9 @@ on:
     paths:
       - "packages/contracts/**"
 
+env:
+  BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
+
 jobs:
   lint: 
     name: Lint contracts
