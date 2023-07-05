@@ -9997,6 +9997,43 @@ export default {
                 {
                   "indexed": false,
                   "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesAfter",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingAfter",
+                  "type": "uint256"
+                }
+              ],
+              "name": "DepositedToProtocol",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
                   "name": "estimatedWorkGas",
                   "type": "uint256"
                 }
@@ -10130,6 +10167,43 @@ export default {
                 }
               ],
               "name": "UpdatedProfitFactor",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesAfter",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingAfter",
+                  "type": "uint256"
+                }
+              ],
+              "name": "WithdrawnFromProtocol",
               "type": "event"
             },
             {
@@ -10407,6 +10481,11 @@ export default {
               "inputs": [],
               "name": "depositedBalanceSnapshot",
               "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
                 {
                   "internalType": "uint256",
                   "name": "",
@@ -10990,7 +11069,7 @@ export default {
           ]
         },
         "ApeLendingStrategy_Implementation": {
-          "address": "0xCC42f7d96aCC3317fAe574A036B2CE8AaEc24E76",
+          "address": "0x79B75435C1EDa3795A45FCD2228efa49E6f2c35A",
           "abi": [
             {
               "inputs": [
@@ -11119,6 +11198,43 @@ export default {
                 }
               ],
               "name": "DebtThresholdUpdated",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesAfter",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingAfter",
+                  "type": "uint256"
+                }
+              ],
+              "name": "DepositedToProtocol",
               "type": "event"
             },
             {
@@ -11273,6 +11389,43 @@ export default {
                 }
               ],
               "name": "Upgraded",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "amount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingBefore",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "sharesAfter",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "underlyingAfter",
+                  "type": "uint256"
+                }
+              ],
+              "name": "WithdrawnFromProtocol",
               "type": "event"
             },
             {
@@ -11550,6 +11703,11 @@ export default {
               "inputs": [],
               "name": "depositedBalanceSnapshot",
               "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                },
                 {
                   "internalType": "uint256",
                   "name": "",
@@ -12406,6 +12564,31 @@ export default {
                 {
                   "indexed": false,
                   "internalType": "uint256",
+                  "name": "newDebt",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newTotalDebt",
+                  "type": "uint256"
+                }
+              ],
+              "name": "BorrowerDebtChanged",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
                   "name": "debtPayment",
                   "type": "uint256"
                 },
@@ -12435,6 +12618,37 @@ export default {
                 }
               ],
               "name": "BorrowerDebtManagementReported",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newDebtRatio",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newTotalDebtRatio",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "loss",
+                  "type": "uint256"
+                }
+              ],
+              "name": "BorrowerDebtRatioChanged",
               "type": "event"
             },
             {
@@ -12770,6 +12984,37 @@ export default {
                 {
                   "indexed": true,
                   "internalType": "address",
+                  "name": "strategy",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "requiredAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "withdrawnAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "loss",
+                  "type": "uint256"
+                }
+              ],
+              "name": "WinthdrawnFromStrategy",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
                   "name": "caller",
                   "type": "address"
                 },
@@ -13088,6 +13333,25 @@ export default {
             },
             {
               "inputs": [],
+              "name": "currentDebtRatio",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
               "name": "currentDebtRatio",
               "outputs": [
                 {
@@ -13979,6 +14243,24 @@ export default {
             {
               "inputs": [
                 {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "borrowerDebtRatio",
+                  "type": "uint256"
+                }
+              ],
+              "name": "setBorrowerDebtRatio",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "bool",
                   "name": "shutdown",
                   "type": "bool"
@@ -14052,44 +14334,6 @@ export default {
               "name": "setRewards",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyDebt",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyRatio",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -15714,7 +15958,7 @@ export default {
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0x958CDb3eF5C2B2DeA240dF58E0CE8BE37592020C",
+          "address": "0x020ef70A9A43682f07abEB0507D0E916C0809684",
           "abi": [
             {
               "inputs": [
@@ -17092,7 +17336,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0xe262E21D8f65808ef9Ad13DFeCb4fe9EaB82e8DA",
+          "address": "0xBa5A4E2F9f68A2f6A0f79F0Be2e646d8f91521F3",
           "abi": [
             {
               "inputs": [
@@ -17297,6 +17541,31 @@ export default {
                 {
                   "indexed": false,
                   "internalType": "uint256",
+                  "name": "newDebt",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newTotalDebt",
+                  "type": "uint256"
+                }
+              ],
+              "name": "BorrowerDebtChanged",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
                   "name": "debtPayment",
                   "type": "uint256"
                 },
@@ -17326,6 +17595,37 @@ export default {
                 }
               ],
               "name": "BorrowerDebtManagementReported",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newDebtRatio",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "newTotalDebtRatio",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "loss",
+                  "type": "uint256"
+                }
+              ],
+              "name": "BorrowerDebtRatioChanged",
               "type": "event"
             },
             {
@@ -17674,6 +17974,37 @@ export default {
                 {
                   "indexed": true,
                   "internalType": "address",
+                  "name": "strategy",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "requiredAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "withdrawnAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "loss",
+                  "type": "uint256"
+                }
+              ],
+              "name": "WinthdrawnFromStrategy",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
                   "name": "caller",
                   "type": "address"
                 },
@@ -17992,6 +18323,25 @@ export default {
             },
             {
               "inputs": [],
+              "name": "currentDebtRatio",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                }
+              ],
               "name": "currentDebtRatio",
               "outputs": [
                 {
@@ -18883,6 +19233,24 @@ export default {
             {
               "inputs": [
                 {
+                  "internalType": "address",
+                  "name": "borrower",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "borrowerDebtRatio",
+                  "type": "uint256"
+                }
+              ],
+              "name": "setBorrowerDebtRatio",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "bool",
                   "name": "shutdown",
                   "type": "bool"
@@ -18956,44 +19324,6 @@ export default {
               "name": "setRewards",
               "outputs": [],
               "stateMutability": "nonpayable",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyDebt",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [
-                {
-                  "internalType": "address",
-                  "name": "strategy",
-                  "type": "address"
-                }
-              ],
-              "name": "strategyRatio",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
-                }
-              ],
-              "stateMutability": "view",
               "type": "function"
             },
             {
