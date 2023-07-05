@@ -117,7 +117,8 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     function depositedBalanceSnapshot() public view returns (uint256, uint256) {
         (, uint256 cTokenBalance, , uint256 exchangeRate) = cToken.getAccountSnapshot(address(this));
 
-        // Since every ApeSwap's cToken has 8 decimals, we can leave 1e18 as constant here.
+        // ApeSwap's cToken has 8 decimals and the exchange rate has 28 decimals (see why: https://docs.compound.finance/v2/ctokens/#exchange-rate).
+        // To convert cTokens to assets, we need to scale down the multiplication of these numbers by 1e18 to get underlying decimals (which are 18).
         return (cTokenBalance, (cTokenBalance * exchangeRate) / 1e18);
     }
 
