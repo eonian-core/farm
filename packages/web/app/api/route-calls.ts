@@ -1,7 +1,10 @@
 import { GetVaultsQuery, GetVaultsSymbolsQuery, Vault } from "./gql/graphql";
 import { ReadQueries } from "./route";
 
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3000/";
+const API_HOST =
+  process.env.NEXT_PUBLIC_API_HOST ||
+  "https://" + process.env.NEXT_PUBLIC_VERCEL_URL ||
+  "http://localhost:3000/";
 
 const CACHE_TTL_SECONDS: Record<ReadQueries, number> = {
   [ReadQueries.VAULTS_SYMBOLS]: 120,
