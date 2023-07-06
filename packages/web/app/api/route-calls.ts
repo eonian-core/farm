@@ -1,10 +1,9 @@
 import { GetVaultsQuery, GetVaultsSymbolsQuery, Vault } from "./gql/graphql";
 import { ReadQueries } from "./route";
 
-const API_HOST =
-  process.env.NEXT_PUBLIC_API_HOST ||
-  "https://" + process.env.NEXT_PUBLIC_VERCEL_URL ||
-  "http://localhost:3000/";
+const API_HOST = getHost();
+
+console.log('API_HOST', API_HOST);
 
 const CACHE_TTL_SECONDS: Record<ReadQueries, number> = {
   [ReadQueries.VAULTS_SYMBOLS]: 120,
@@ -65,4 +64,13 @@ async function makeReadRequest<T>(
   });
   const data = await response.json();
   return data as T;
+}
+
+function getHost() {
+  if (process.env.NEXT_PUBLIC_API_HOST) {
+    return process.env.NEXT_PUBLIC_API_HOST;
+  } else if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return "https://" + process.env.NEXT_PUBLIC_VERCEL_URL;
+  }
+  return "http://localhost:3000/";
 }
