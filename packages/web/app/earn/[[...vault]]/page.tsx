@@ -1,8 +1,11 @@
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getClient, getVaultBySymbol, getVaultsSymbols, Vault } from "../../api";
 import { ChainId } from "../../providers/wallet/wrappers/helpers";
 import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
+
+export const dynamic = "force-dynamic";
 
 interface RouteSegment {
   vault: [chainName: string, vaultSymbol: string] | [chainName: string];
@@ -37,9 +40,12 @@ export default async function Page({ params }: Params) {
     redirect("/earn/" + chainName + "/" + vaultSymbol);
   }
 
+  revalidatePath("/earn/[[...vault]]");
+
   const [chainName, vaultSymbol] = vaultRoute;
   const chainId = ChainId.getByName(chainName);
   const client = getClient(chainId);
+  await client.cache.reset();
   const { data } = await getVaultBySymbol(client, vaultSymbol);
 
   return <Form vault={data.vaults[0] as Vault} chainId={chainId} />;
