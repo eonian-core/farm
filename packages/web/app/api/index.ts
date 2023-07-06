@@ -1,5 +1,4 @@
-export * from "./apollo.provider";
-export * from "./queries";
-export { getGraphQLEndpoint } from "./endpoints";
+export * from "./apollo.rsc-client";
+export * from "./route-calls";
 
 export type { Vault, Token } from "./gql/graphql";

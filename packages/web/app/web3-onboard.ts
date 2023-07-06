@@ -1,7 +1,7 @@
 import type { InitOptions, ThemingMap } from "@web3-onboard/core/dist/types";
 import injectedModule from "@web3-onboard/injected-wallets";
 import walletConnectModule from "@web3-onboard/walletconnect";
-import { init } from "@web3-onboard/react";
+import init from "@web3-onboard/core";
 import { ChainId } from "./providers/wallet/wrappers/helpers";
 
 const theme: ThemingMap = {
