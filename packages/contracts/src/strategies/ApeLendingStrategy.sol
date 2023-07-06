@@ -231,12 +231,20 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
         profit = balance - debt;
         if (assetBalance < profit) {
+
+            // we need take funds from protocol
+            // to give Vault ability withdraw this profit on report
+            withdrawFromProtocol(profit - assetBalance);
+            // expect that assets balance grown from last call
+            assetBalance = asset.balanceOf(address(this));
+
             debtPayment = MathUpgradeable.min(
                 assetBalance,
                 outstandingDebt
             );
             profit = assetBalance - debtPayment;
 
+            // if profit will be not need, we will reinvest it back
             return (profit, loss, debtPayment);
         } 
         
