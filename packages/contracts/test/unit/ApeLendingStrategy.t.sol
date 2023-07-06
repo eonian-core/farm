@@ -573,12 +573,18 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
         uint256 loss;
         uint256 debtPayment;
+        uint256 expectAmountToredeem = profit - assetBalance;
+
+        vm.expectEmit(true, true, true, true);
+        emit WithdrawnFromProtocol(expectAmountToredeem, cTokenBalance, cTokenBalance, cTokenBalance - expectAmountToredeem, cTokenBalance - expectAmountToredeem);
         (profit, loss, debtPayment) = strategy.harvest(outstandingDebt);
 
-        uint256 expectedDebtPayment = Math.min(outstandingDebt, assetBalance);
+        uint256 expectedAssetsBalanceAfter = assetBalance + expectAmountToredeem;
+
+        uint256 expectedDebtPayment = Math.min(outstandingDebt, expectedAssetsBalanceAfter);
         assertEq(loss, 0);
         assertEq(debtPayment, expectedDebtPayment);
-        assertEq(profit, assetBalance - expectedDebtPayment);
+        assertEq(profit, expectedAssetsBalanceAfter - expectedDebtPayment);
     }
 
     function testHarvestWithProfitCaseWhenFreeAssetsGreaterThanProfitAndDebt(
