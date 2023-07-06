@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.9.2.tgz#60111a5d9db45b2e5cbb6231b0bb8d97e8659316"
   integrity sha512-0h+FrQDqe2Wn+IIGFkTCd4aAwTJ+7834Ek1COohCyV26AXhwQ7WQaz+4F/nLOeVl/3BtWHOHLPsq46V8YB46Eg==
 
-"@apollo/client@3.8.0-beta.5":
-  version "3.8.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.0-beta.5.tgz#82c10ba2544e531f350f34f05791d4b821b7e39a"
-  integrity sha512-8ULBWINWMBKe/yMingMQfhdRpOXTEauWC/vMXzEJ5DIcAudclPfmFZCjJsSyhU4Vg5lVzU5AOKi5g6v0AVkeCg==
+"@apollo/client@3.8.0-beta.6":
+  version "3.8.0-beta.6"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.0-beta.6.tgz#ad6b477a7285ec707f07e4428815de10280274fa"
+  integrity sha512-2kZMLz1Tt41t1kwaLtpNOaPXO0lGPGwXFnqa+3U5E3jLzkEKEF1MZ+NOOFcm6ZY832+6FZ13tP61PItZqDFCAw==
   dependencies:
     "@graphql-typed-document-node/core" "^3.1.1"
     "@wry/context" "^0.7.3"
