@@ -23,7 +23,7 @@ export const fetchVaultsSymbols = async (
 };
 
 /**
- * Gets the vailt by provided symbol.
+ * Gets the vault by provided symbol.
  * @param symbol The symbol of the vault.
  * @param chainName The name of the chain to which the request is made.
  * @returns The vault model.
