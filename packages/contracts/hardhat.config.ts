@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+dotenv.config(); // must be before all imports
 
 import { task } from "hardhat/config";
 import { HardhatUserConfig, NetworkUserConfig } from "hardhat/types/config";
@@ -18,8 +19,6 @@ import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 
 import "./hardhat/tasks/start-hardhat-node.ts";
 import { Address } from "@eonian/hardhat-deploy/types";
-
-dotenv.config();
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();
