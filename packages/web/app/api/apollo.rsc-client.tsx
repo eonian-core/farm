@@ -25,5 +25,9 @@ const clientGetters: Record<
   [ChainId.SEPOLIA]: registerClient(ChainId.SEPOLIA),
 };
 
-export const getClient = (chainId: Exclude<ChainId, ChainId.UNKNOWN>) =>
-  clientGetters[chainId]();
+export const getClient = (chainId: ChainId) => {
+  if (chainId === ChainId.UNKNOWN) {
+    throw new Error("Unknown chain id");
+  }
+  return clientGetters[chainId]();
+};

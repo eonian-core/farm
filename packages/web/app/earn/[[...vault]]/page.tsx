@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { fetchVault, fetchVaultsSymbols } from "../../api";
+import { getClient, getVaultBySymbol, getVaultsSymbols, Vault } from "../../api";
 import { ChainId } from "../../providers/wallet/wrappers/helpers";
 import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
@@ -17,10 +17,11 @@ interface Params {
  * FIXME: For the alpha release, we can only use the default chain (BSC).
  */
 export async function generateStaticParams(): Promise<RouteSegment[]> {
-  const chainName = getDefaultChainName();
-  const symbols = await fetchVaultsSymbols(chainName);
-  return symbols.map((vaultSymbol) => {
-    return { vault: [chainName, vaultSymbol] };
+  const chainId = ChainId.parse(defaultChain.id);
+  const client = getClient(chainId);
+  const { data } = await getVaultsSymbols(client);
+  return data.vaults.map(({ symbol }) => {
+    return { vault: [ChainId.getName(chainId).toLowerCase(), symbol] };
   });
 }
 
@@ -37,13 +38,9 @@ export default async function Page({ params }: Params) {
   }
 
   const [chainName, vaultSymbol] = vaultRoute;
-  const vault = await fetchVault(vaultSymbol, chainName);
+  const chainId = ChainId.getByName(chainName);
+  const client = getClient(chainId);
+  const { data } = await getVaultBySymbol(client, vaultSymbol);
 
-  return <Form vault={vault} chainId={ChainId.getByName(chainName)} />;
-}
-
-function getDefaultChainName(): string {
-  const chainId = ChainId.parse(defaultChain.id);
-  const chainName = ChainId.getName(chainId);
-  return chainName.toLowerCase();
+  return <Form vault={data.vaults[0] as Vault} chainId={chainId} />;
 }
