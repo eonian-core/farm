@@ -1224,7 +1224,7 @@ export default {
           ]
         },
         "ApeLendingStrategy_Implementation": {
-          "address": "0x00443D9AE197085E5AFFbe93120F344020C7943C",
+          "address": "0x79B75435C1EDa3795A45FCD2228efa49E6f2c35A",
           "abi": [
             {
               "inputs": [
@@ -3140,6 +3140,37 @@ export default {
                   "indexed": true,
                   "internalType": "address",
                   "name": "strategy",
+                  "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "requiredAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "withdrawnAmount",
+                  "type": "uint256"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "uint256",
+                  "name": "loss",
+                  "type": "uint256"
+                }
+              ],
+              "name": "WinthdrawnFromStrategy",
+              "type": "event"
+            },
+            {
+              "anonymous": false,
+              "inputs": [
+                {
+                  "indexed": true,
+                  "internalType": "address",
+                  "name": "caller",
                   "type": "address"
                 },
                 {
@@ -6113,7 +6144,7 @@ export default {
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0xB705feBB947748CFfA0909693d6747ae23b220dA",
+          "address": "0x020ef70A9A43682f07abEB0507D0E916C0809684",
           "abi": [
             {
               "inputs": [
@@ -7491,7 +7522,7 @@ export default {
           ]
         },
         "Vault_Implementation": {
-          "address": "0x07F45777c413Dd3F95373bA86eE7989D2390D291",
+          "address": "0xBa5A4E2F9f68A2f6A0f79F0Be2e646d8f91521F3",
           "abi": [
             {
               "inputs": [

@@ -12,6 +12,7 @@ env:
   SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
   BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
   HARDHAT_NETWORK: bsc_mainnet_staging
+  BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
 jobs:
   deploy: 
