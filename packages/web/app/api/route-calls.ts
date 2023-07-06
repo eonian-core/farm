@@ -1,7 +1,7 @@
 import { GetVaultsQuery, GetVaultsSymbolsQuery, Vault } from "./gql/graphql";
 import { ReadQueries } from "./route";
 
-const endpoint = process.env.API_HOST || "http://localhost:3000/";
+const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3000/";
 
 const CACHE_TTL_SECONDS: Record<ReadQueries, number> = {
   [ReadQueries.VAULTS_SYMBOLS]: 120,
@@ -55,7 +55,7 @@ async function makeReadRequest<T>(
     chain: chainName,
     ...params,
   });
-  const url = new URL("/api", endpoint);
+  const url = new URL("/api", API_HOST);
   const input = url.href + "?" + searchParams.toString();
   const response = await fetch(input, {
     next: { revalidate: CACHE_TTL_SECONDS[query] },
