@@ -52,24 +52,6 @@ jobs:
           cd packages/contracts
           yarn hardhat deploy
 
-      # Allow etherscan to index the contracts and prevent failures
-      - name: Wait for 10 seconds
-        run: sleep 10s
-        shell: bash
-
-      - name: Publish code on Etherscan
-        env:
-          SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
-        run: |-
-          cd packages/contracts
-          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
-      
-      # Working not on all blockchains, BSC for example
-      - name: Publish code on Sourcify
-        run: |-
-          cd packages/contracts
-          yarn hardhat sourcify
-
       # Usefull for automated scripts
       - name: Export deployments to JSON config
         run: |-
@@ -88,6 +70,32 @@ jobs:
           default_author: github_actions
           message: 'Deployed contracts to Preview / Sepolia Testnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+
+  publish-source-code:
+    name: Publish Source Code
+    runs-on: ubuntu-latest
+    # Etherscan unstable and can fail, 
+    # need publish code separatly from deploy to save deployed contracts
+    needs: deploy
+
+    steps:
+      # Allow etherscan to index the contracts and prevent failures
+      - name: Wait for 10 seconds
+        run: sleep 10s
+        shell: bash
+
+      - name: Publish code on Etherscan
+        env:
+          SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
+        run: |-
+          cd packages/contracts
+          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
+      
+      # Working not on all blockchains, BSC for example
+      - name: Publish code on Sourcify
+        run: |-
+          cd packages/contracts
+          yarn hardhat sourcify
 
   gas-usage:
     name: Check Gas usage
