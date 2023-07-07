@@ -79,6 +79,27 @@ jobs:
     needs: deploy
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
       # Allow etherscan to index the contracts and prevent failures
       - name: Wait for 10 seconds
         run: sleep 10s
