@@ -15,12 +15,12 @@ interface Props {
 
 export default function Providers({ children }: Props) {
   return (
-    <Provider store={store}>
-      <WalletWrapperProvider>
-        <AuthProvider>
-          <NextThemeProvider>{children}</NextThemeProvider>
-        </AuthProvider>
-      </WalletWrapperProvider>
-    </Provider>
+    <NextThemeProvider>
+      <Provider store={store}>
+        <WalletWrapperProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </WalletWrapperProvider>
+      </Provider>
+    </NextThemeProvider>
   );
 }
