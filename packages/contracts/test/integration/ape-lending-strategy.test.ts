@@ -73,6 +73,8 @@ describe("Ape Lending Strategy", function () {
     strategy = await deployStrategy({ signer: owner, vault, asset });
     hre.tracer.nameTags[strategy.address] = "Strategy";
 
+    await resetBalance(strategy.address, { tokens: [cToken] });
+
     assetToken = await getToken(asset, owner);
   }
 
@@ -209,20 +211,20 @@ describe("Ape Lending Strategy", function () {
     expect(await vault.balanceOf(rewards)).to.be.equal(0);
 
     // Make sure that the holders have some amount of BUSD (e.g., >300)
-    const min = 300n * 10n ** 18n;
+    const min = 3000n * 5n * (10n ** 18n);
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(min);
 
     // Make N deposits and reports
     for (let i = 0; i < 5; i++) {
-      const depositAmount = 3000n * 10n ** 18n;
+      const depositAmount = 3000n * (10n ** 18n);
       await deposit(holderA, depositAmount);
 
       await strategy.work();
       await warp(minReportInterval);
     }
 
-    // Wait 10 days to accumulate the interest
-    await warp(10 * 60 * 60 * 24);
+    // Wait 1 day to accumulate the interest
+    await warp(60 * 60 * 24);
 
     await strategy.work();
 
