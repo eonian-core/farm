@@ -15,7 +15,7 @@ import { ToastContainerWrapperDynamic } from "./components";
 
 const roboto = Roboto({
   subsets: ["latin", "cyrillic"],
-  weight: ["300", "400"],
+  weight: ["300", "400", "500", "700"],
   display: "block", // force to show font anyway
 });
 
@@ -78,4 +78,3 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
 };
-
