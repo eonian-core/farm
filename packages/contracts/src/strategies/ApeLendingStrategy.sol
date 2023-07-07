@@ -231,21 +231,8 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
         profit = balance - debt;
         if (assetBalance < profit) {
-
-            // we need take funds from protocol
-            // to give Vault ability withdraw this profit on report
-            withdrawFromProtocol(profit - assetBalance);
-            // expect that assets balance grown from last call
-            assetBalance = asset.balanceOf(address(this));
-
-            debtPayment = MathUpgradeable.min(
-                assetBalance,
-                outstandingDebt
-            );
-            profit = assetBalance - debtPayment;
-
             // if profit will be not need, we will reinvest it back
-            return (profit, loss, debtPayment);
+            return _prepareFreeFundForLender(profit - assetBalance, outstandingDebt);
         } 
         
         if (assetBalance > profit + outstandingDebt) {
@@ -255,6 +242,30 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
         } 
         
         debtPayment = assetBalance - profit;
+        return (profit, loss, debtPayment);
+    }
+
+    function _prepareFreeFundForLender(uint256 needWithdraw, uint256 outstandingDebt) 
+        internal 
+        returns (
+            uint256 profit,
+            uint256 loss,
+            uint256 debtPayment
+        ) 
+    {
+        // we need take funds from protocol
+        // to give Vault ability withdraw this profit on report
+        withdrawFromProtocol(needWithdraw);
+        // expect that assets balance grown from last call
+        uint256 assetBalance = asset.balanceOf(address(this));
+
+        debtPayment = MathUpgradeable.min(
+            assetBalance,
+            outstandingDebt
+        );
+        profit = assetBalance - debtPayment;
+
+        // if profit will be not need, we will reinvest it back
         return (profit, loss, debtPayment);
     }
 
