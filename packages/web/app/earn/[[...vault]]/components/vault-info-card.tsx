@@ -65,8 +65,6 @@ export const VaultInfoCard: React.FC<Props> = ({
     return yearlyReward - currentYearlyReward;
   }, [yearlyReward, currentYearlyReward]);
 
-  console.log("depositInAYear, total, currentDeposit, value\n", depositInAYear, total, currentDeposit, value)
-
   return (
     <Card.Body className={className}>
       <header className={styles.apyInfo}>
