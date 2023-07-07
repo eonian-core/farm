@@ -42,7 +42,7 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.4.0";
+        return "0.4.2";
     }
 
     // ------------------------------------------ Constructors ------------------------------------------
@@ -223,23 +223,51 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
 
         uint256 debt = lender.currentDebt();
 
-        if (balance > debt) {
-            profit = balance - debt;
-            if (assetBalance < profit) {
-                debtPayment = MathUpgradeable.min(
-                    assetBalance,
-                    outstandingDebt
-                );
-                profit = assetBalance - debtPayment;
-            } else if (assetBalance > profit + outstandingDebt) {
-                debtPayment = outstandingDebt;
-            } else {
-                debtPayment = assetBalance - profit;
-            }
-        } else {
+        if (balance <= debt) {        
             loss = debt - balance;
             debtPayment = MathUpgradeable.min(assetBalance, outstandingDebt);
+            return (profit, loss, debtPayment);
         }
+
+        profit = balance - debt;
+        if (assetBalance < profit) {
+            // if profit will be not need, we will reinvest it back
+            return _prepareFreeFunds(profit - assetBalance, outstandingDebt);
+        } 
+        
+        if (assetBalance > profit + outstandingDebt) {
+            debtPayment = outstandingDebt;
+
+            return (profit, loss, debtPayment);
+        } 
+        
+        debtPayment = assetBalance - profit;
+        return (profit, loss, debtPayment);
+    }
+
+    /// Withdraw some funds from protocol to give Vault ability to withdraw them on report
+    function _prepareFreeFunds(uint256 needWithdraw, uint256 outstandingDebt) 
+        internal 
+        returns (
+            uint256 profit,
+            uint256 loss,
+            uint256 debtPayment
+        ) 
+    {
+        // we need take funds from protocol
+        // to give Vault ability withdraw this profit on report
+        withdrawFromProtocol(needWithdraw);
+        // expect that assets balance grown from last call
+        uint256 assetBalance = asset.balanceOf(address(this));
+
+        debtPayment = MathUpgradeable.min(
+            assetBalance,
+            outstandingDebt
+        );
+        profit = assetBalance - debtPayment;
+
+        // if profit will be not need, we will reinvest it back
+        return (profit, loss, debtPayment);
     }
 
     /// @inheritdoc BaseStrategy

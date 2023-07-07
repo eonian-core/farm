@@ -22,12 +22,14 @@ import {
   FormActionStep,
 } from "../../../store/slices/vaultActionSlice";
 import { getActiveStepSelector } from "../../../store";
+import { ChainId } from "../../../providers/wallet/wrappers/helpers";
 
 interface Props {
   vault: Vault;
+  chainId: ChainId;
 }
 
-const Form: React.FC<Props> = ({ vault }) => {
+const Form: React.FC<Props> = ({ vault, chainId }) => {
   const { wallet, status } = useWalletWrapperContext();
 
   const refetechVaultUserData = useVaultUserInfo(vault, {
@@ -43,8 +45,8 @@ const Form: React.FC<Props> = ({ vault }) => {
   );
 
   const [value, displayValue, handleValueChange] = useInputValue();
-  const [currentBalance, walletBalance, vaultBalance] = useBalance(formAction);
-  const vaultChain = useVaultChain();
+  const [currentBalance, vaultBalance] = useBalance(formAction);
+  const vaultChain = useVaultChain(chainId);
   const hasPendingTransactions = useHasPendingTransactions();
   const executeTransaction = useExecuteTransaction();
 
@@ -58,8 +60,11 @@ const Form: React.FC<Props> = ({ vault }) => {
 
       // Refresh wallet balance & vault deposit after the transaction executed.
       refetechVaultUserData!();
+
+      // Reset form input
+      handleValueChange(0n);
     },
-    [executeTransaction, refetechVaultUserData, vault, value]
+    [executeTransaction, refetechVaultUserData, handleValueChange, vault, value]
   );
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
@@ -148,12 +153,11 @@ function useHasPendingTransactions() {
   return activeStep !== null && activeStep !== FormActionStep.DONE;
 }
 
-// TODO: Refactor this logic. Temporarily (for alpha test) we use only one chain, later we will have multiple supported chains.
-function useVaultChain() {
+function useVaultChain(chainId: ChainId) {
   const { chains } = useWalletWrapperContext();
   return React.useMemo(() => {
-    return chains.find((chain) => chain.isDefault)!;
-  }, [chains]);
+    return chains.find((chain) => chain.id === chainId)!;
+  }, [chains, chainId]);
 }
 
 export default Form;

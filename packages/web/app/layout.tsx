@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Roboto } from "next/font/google";
 
 import "./globals.scss";
+import "react-toastify/dist/ReactToastify.min.css";
 
 import Providers from "./providers/providers";
 import Footer from "./components/footer/footer";
@@ -78,4 +79,3 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
 };
-
