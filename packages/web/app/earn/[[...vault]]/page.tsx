@@ -1,5 +1,11 @@
 import { redirect } from "next/navigation";
-import { getClient, getVaultBySymbol, getVaultsSymbols, Vault } from "../../api";
+import NextError from "next/error";
+import {
+  getClient,
+  getVaultBySymbol,
+  getVaultsSymbols,
+  Vault,
+} from "../../api";
 import { ChainId } from "../../providers/wallet/wrappers/helpers";
 import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
@@ -43,6 +49,5 @@ export default async function Page({ params }: Params) {
   const chainId = ChainId.getByName(chainName);
   const client = getClient(chainId);
   const { data } = await getVaultBySymbol(client, vaultSymbol);
-
   return <Form vault={data.vaults[0] as Vault} chainId={chainId} />;
 }
