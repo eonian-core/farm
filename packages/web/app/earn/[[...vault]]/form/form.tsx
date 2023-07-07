@@ -45,7 +45,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
   );
 
   const [value, displayValue, handleValueChange] = useInputValue();
-  const [currentBalance, vaultBalance] = useBalance(formAction);
+  const balance = useBalance();
   const vaultChain = useVaultChain(chainId);
   const hasPendingTransactions = useHasPendingTransactions();
   const executeTransaction = useExecuteTransaction();
@@ -88,7 +88,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
         <VaultInfoCard
           className={styles.fragment}
           value={value}
-          currentDeposit={vaultBalance}
+          currentDeposit={balance.inVault}
           vault={vault}
           formAction={formAction}
         />
@@ -98,7 +98,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
         <Card.Body className={styles.fragment}>
           <PercentButtonGroup
             inputValue={value}
-            maxValue={currentBalance}
+            maxValue={formAction === FormAction.DEPOSIT ? balance.inWallet : balance.inVault}
             onValueChange={handleValueChange}
             disabled={hasPendingTransactions}
           />
@@ -106,7 +106,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
             assetSymbol={vault.asset.symbol}
             decimals={vault.asset.decimals}
             value={displayValue}
-            balance={currentBalance}
+            balance={formAction === FormAction.DEPOSIT ? balance.inWallet : balance.inVault}
             onChange={handleValueChange}
             isLoading={!isFormReady}
             disabled={hasPendingTransactions}
@@ -132,19 +132,20 @@ function useInputValue() {
   return useNumberInputValue(0n, assetDecimals);
 }
 
-function useBalance(
-  action: FormAction
-): [current: bigint, wallet: bigint, vault: bigint] {
+export interface Balance {
+  inWallet: bigint;
+  inVault: bigint;
+}
+
+function useBalance(): Balance {
   const { walletBalanceBN, vaultBalanceBN } = useAppSelector(
     (state) => state.vaultUser
   );
   const wallet = BigInt(walletBalanceBN);
   const vault = BigInt(vaultBalanceBN);
-  switch (action) {
-    case FormAction.DEPOSIT:
-      return [wallet, wallet, vault];
-    case FormAction.WITHDRAW:
-      return [vault, wallet, vault];
+  return {
+    inWallet: wallet,
+    inVault: vault,
   }
 }
 
