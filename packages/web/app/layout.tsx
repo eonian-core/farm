@@ -78,4 +78,3 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
 };
-
