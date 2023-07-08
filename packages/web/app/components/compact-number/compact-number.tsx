@@ -28,7 +28,7 @@ const CompactNumber: React.FC<Props> = ({
   className,
   children,
   childrenAtStart,
-  tooltipContent,
+  tooltipContent = (value) => value,
 }) => {
   const locale = useAppSelector((state) => state.locale.current);
 
@@ -40,12 +40,8 @@ const CompactNumber: React.FC<Props> = ({
   });
 
   const accurateValue = toStringNumberFromDecimals(value, decimals);
-  const content =
-    typeof tooltipContent === "function"
-      ? tooltipContent(accurateValue)
-      : accurateValue;
   return (
-    <Tooltip className={className} content={content}>
+    <Tooltip className={className} content={tooltipContent(accurateValue)}>
       {childrenAtStart && children}
       <span>{formattedValue}</span>
       {!childrenAtStart && children}
