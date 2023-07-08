@@ -49,6 +49,7 @@ const FormInput: React.FC<Props> = ({
           balance={balance}
           isLoading={isLoading}
           decimals={decimals}
+          assetSymbol={assetSymbol}
         />
       }
       onChange={handleInputValueChange}
@@ -62,19 +63,23 @@ function InputRightContent({
   balance,
   isLoading,
   decimals,
-}: Pick<Props, "balance" | "isLoading" | "decimals">) {
+  assetSymbol,
+}: Pick<Props, "balance" | "isLoading" | "decimals" | "assetSymbol">) {
   if (isLoading) {
     return <Loading className={styles.loading} size="sm" />;
   }
   return (
     <span className={styles.balance}>
-      Balance:&nbsp;
       <CompactNumber
         value={balance}
         decimals={decimals}
         fractionDigits={2}
         fractionPartView={FractionPartView.CUT}
-      />
+        tooltipContent={(value) => `${value} ${assetSymbol}`}
+        childrenAtStart
+      >
+        Balance:&nbsp;
+      </CompactNumber>
     </span>
   );
 }

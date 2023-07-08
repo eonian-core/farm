@@ -24,7 +24,9 @@ const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
     id: ChainId.toHex(ChainId.BSC_MAINNET),
     token: "BNB",
     label: "BSC Mainnet",
-    rpcUrl: process.env.NEXT_PUBLIC_BSC_MAINNET_RPC_URL || "https://bsc-dataseed1.binance.org/", // fallback to public in case of issues
+    rpcUrl:
+      process.env.NEXT_PUBLIC_BSC_MAINNET_RPC_URL ||
+      "https://bsc-dataseed1.binance.org/", // fallback to public in case of issues
   },
 };
 
@@ -81,4 +83,5 @@ function getWallets(): InitOptions["wallets"] {
   return wallets;
 }
 
-export const defaultChain = chains[ChainId.BSC_MAINNET]!;
+export const defaultChain =
+  chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!;
