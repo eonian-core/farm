@@ -75,11 +75,11 @@ export const VaultInfoCard: React.FC<Props> = ({
           <ul>
             <li>
               <h5>Yearly reward</h5>
-              {renderInfoNumber(yearlyReward)}
+              <InfoNumber value={yearlyReward} />
             </li>
             <li>
               <h5>Deposit in a year</h5>
-              {renderInfoNumber(depositInAYear)}
+              <InfoNumber value={depositInAYear} />
             </li>
           </ul>
         </Card.Body>
@@ -87,11 +87,11 @@ export const VaultInfoCard: React.FC<Props> = ({
     </Card.Body>
   );
 
-  function renderInfoNumber(value: bigint) {
+  function InfoNumber(props: { value: bigint }) {
     return (
       <div className={styles.infoNumberWrapper}>
         <CompactNumber
-          value={value}
+          value={props.value}
           decimals={vault.asset.decimals}
           threshold={threshold}
           fractionDigits={2}
