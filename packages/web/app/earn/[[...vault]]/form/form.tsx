@@ -44,8 +44,12 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
     FormAction.DEPOSIT
   );
 
-  const [value, displayValue, handleValueChange] = useInputValue();
-  const balance = useBalance();
+  const [value, displayValue, handleValueChange] = useInputValue(vault);
+  
+  const balances = useBalance();
+  const formBalance =
+    formAction === FormAction.DEPOSIT ? balances.inWallet : balances.inVault;
+
   const vaultChain = useVaultChain(chainId);
   const hasPendingTransactions = useHasPendingTransactions();
   const executeTransaction = useExecuteTransaction();
@@ -88,7 +92,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
         <VaultInfoCard
           className={styles.fragment}
           value={value}
-          currentDeposit={balance.inVault}
+          currentDeposit={balances.inVault}
           vault={vault}
           formAction={formAction}
         />
@@ -98,7 +102,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
         <Card.Body className={styles.fragment}>
           <PercentButtonGroup
             inputValue={value}
-            maxValue={formAction === FormAction.DEPOSIT ? balance.inWallet : balance.inVault}
+            maxValue={formBalance}
             onValueChange={handleValueChange}
             disabled={hasPendingTransactions}
           />
@@ -106,7 +110,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
             assetSymbol={vault.asset.symbol}
             decimals={vault.asset.decimals}
             value={displayValue}
-            balance={formAction === FormAction.DEPOSIT ? balance.inWallet : balance.inVault}
+            balance={formBalance}
             onChange={handleValueChange}
             isLoading={!isFormReady}
             disabled={hasPendingTransactions}
@@ -127,9 +131,8 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
   );
 };
 
-function useInputValue() {
-  const { assetDecimals } = useAppSelector((state) => state.vaultUser);
-  return useNumberInputValue(0n, assetDecimals);
+function useInputValue(vault: Vault) {
+  return useNumberInputValue(0n, vault.asset.decimals);
 }
 
 export interface Balance {

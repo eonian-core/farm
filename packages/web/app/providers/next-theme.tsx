@@ -33,7 +33,6 @@ const darkTheme = createTheme({
       darkSolidHover: "var(--color-dark-700)",
       darkSolidContrast: "var(--color-text-300)",
       darkShadow: "var(--color-dark-500)",
-
       backgroundContrast: "var(--color-dark-500)",
     },
   },

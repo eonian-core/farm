@@ -7,12 +7,16 @@ import {
 import { Tooltip } from "@nextui-org/react";
 import { toStringNumberFromDecimals } from "../../shared";
 
-interface Props extends Omit<React.HTMLProps<HTMLSpanElement>, "value"> {
+interface Props {
   value: bigint;
   decimals: number;
   threshold?: bigint;
   fractionDigits?: number;
   fractionPartView?: FractionPartView;
+  className?: string;
+  children?: React.ReactNode;
+  childrenAtStart?: boolean;
+  tooltipContent?: (value: string) => React.ReactNode;
 }
 
 const CompactNumber: React.FC<Props> = ({
@@ -21,7 +25,10 @@ const CompactNumber: React.FC<Props> = ({
   threshold,
   fractionDigits,
   fractionPartView,
-  ...restProps
+  className,
+  children,
+  childrenAtStart,
+  tooltipContent,
 }) => {
   const locale = useAppSelector((state) => state.locale.current);
 
@@ -32,9 +39,16 @@ const CompactNumber: React.FC<Props> = ({
     locale,
   });
 
+  const accurateValue = toStringNumberFromDecimals(value, decimals);
+  const content =
+    typeof tooltipContent === "function"
+      ? tooltipContent(accurateValue)
+      : accurateValue;
   return (
-    <Tooltip content={toStringNumberFromDecimals(value, decimals)}>
-      <span {...restProps}>{formattedValue}</span>
+    <Tooltip className={className} content={content}>
+      {childrenAtStart && children}
+      <span>{formattedValue}</span>
+      {!childrenAtStart && children}
     </Tooltip>
   );
 };
