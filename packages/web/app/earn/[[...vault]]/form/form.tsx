@@ -45,7 +45,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
   );
 
   const [value, displayValue, handleValueChange] = useInputValue(vault);
-  
+
   const balances = useBalance();
   const formBalance =
     formAction === FormAction.DEPOSIT ? balances.inWallet : balances.inVault;
@@ -60,13 +60,14 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
       await refetechVaultUserData!();
 
       // Execute Deposit/Withdraw transaction
-      await executeTransaction(formAction, vault, value);
+      const success = await executeTransaction(formAction, vault, value);
+      if (success) {
+        // Refresh wallet balance & vault deposit after the transaction executed.
+        refetechVaultUserData!();
 
-      // Refresh wallet balance & vault deposit after the transaction executed.
-      refetechVaultUserData!();
-
-      // Reset form input
-      handleValueChange(0n);
+        // Reset form input
+        handleValueChange(0n);
+      }
     },
     [executeTransaction, refetechVaultUserData, handleValueChange, vault, value]
   );
@@ -149,7 +150,7 @@ function useBalance(): Balance {
   return {
     inWallet: wallet,
     inVault: vault,
-  }
+  };
 }
 
 function useHasPendingTransactions() {
