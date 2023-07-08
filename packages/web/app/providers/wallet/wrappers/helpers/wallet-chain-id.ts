@@ -18,7 +18,7 @@ export namespace ChainId {
     return index < 0 ? ChainId.UNKNOWN : (chainId as ChainId);
   }
 
-  export function getByName(value: string | null): ChainId {
+  export function getByName(value: string | null | undefined): ChainId {
     value ??= '';
     value = value.toUpperCase();
     return value in ChainId ? ChainId[value as any] as unknown as ChainId : ChainId.UNKNOWN;
