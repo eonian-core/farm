@@ -6,7 +6,11 @@ import { BlockchainType } from "../hardhat.config";
  */
 const func = deployOrUpgrade({
   contract: "VaultFounderToken",
-  chains: [BlockchainType.Mainnet, BlockchainType.Local],
+  chains: [
+    BlockchainType.Mainnet,
+    BlockchainType.Testnet,
+    BlockchainType.Local,
+  ],
   tags: ["asset:USDT"],
   dependencies: ["Vault"],
   getArgs: () => [
