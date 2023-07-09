@@ -17,7 +17,6 @@ export function useWithdrawTransaction() {
 
     dispatch(prepareVaultAction({ action, vault, amount }));
 
-    // Execute "deposit" transaction if approve has been granted.
     await send(withdraw, {
       vaultAddress: vault.address,
       amount,

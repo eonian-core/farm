@@ -21,8 +21,8 @@ export function useWriteTransactionSender() {
   const send = async <T, U extends unknown>(
     fn: FN<T, U>,
     params: U
-  ): Promise<T | null> => {
-    let result: T | null;
+  ): Promise<T> => {
+    let result: T;
     try {
       const signer = await provider!.getSigner();
       const wait = await fn(signer, params);
@@ -31,7 +31,7 @@ export function useWriteTransactionSender() {
       dispatch(goToNextActionStep());
     } catch (error) {
       dispatch(failVaultAction(error as Error));
-      return null;
+      throw error;
     }
     return result;
   };

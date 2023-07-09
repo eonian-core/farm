@@ -19697,7 +19697,7 @@
       "chainId": "11155111",
       "contracts": {
         "Vault": {
-          "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
+          "address": "0x70a3C15F551261eA5EB6fD37a75BD9d4af3a8855",
           "abi": [
             {
               "anonymous": false,
@@ -21989,7 +21989,7 @@
           ]
         },
         "VaultFounderToken": {
-          "address": "0xFEb2A14bc4e5f1AA1C40b98da467331B30e9a023",
+          "address": "0xDa9c5da6ea67DB104df3b74B9B995930Da76816e",
           "abi": [
             {
               "anonymous": false,
@@ -23306,7 +23306,7 @@
           ]
         },
         "VaultFounderToken_Implementation": {
-          "address": "0xbCc9d2113a10DCbd5bE83b976a42168aD73Bf74C",
+          "address": "0x3B2AD691A5ef3D9E7fd8fea2AFC99b22301B2b5d",
           "abi": [
             {
               "inputs": [
@@ -24610,7 +24610,7 @@
           ]
         },
         "VaultFounderToken_Proxy": {
-          "address": "0xFEb2A14bc4e5f1AA1C40b98da467331B30e9a023",
+          "address": "0xDa9c5da6ea67DB104df3b74B9B995930Da76816e",
           "abi": [
             {
               "inputs": [
@@ -24684,7 +24684,7 @@
           ]
         },
         "Vault_Implementation": {
-          "address": "0x7892A421Dd3Fc2410bf8251D2d9d210110786Ee2",
+          "address": "0x72bFfb4b2beDf748F6d09A1461806697727cDD5a",
           "abi": [
             {
               "inputs": [
@@ -26963,7 +26963,7 @@
           ]
         },
         "Vault_Proxy": {
-          "address": "0x9CF03106c5542932113574efCD38BaE5F3de204a",
+          "address": "0x70a3C15F551261eA5EB6fD37a75BD9d4af3a8855",
           "abi": [
             {
               "inputs": [

@@ -75,39 +75,35 @@ export const VaultInfoCard: React.FC<Props> = ({
           <ul>
             <li>
               <h5>Yearly reward</h5>
-              <div>
-                <span>
-                  <CompactNumber
-                    value={yearlyReward}
-                    decimals={vault.asset.decimals}
-                    threshold={threshold}
-                    fractionDigits={2}
-                  />
-                  {assetSymbol}
-                </span>
-                <ProfitChangeIndicator profitChange={profitChange} />
-              </div>
+              <InfoNumber value={yearlyReward} />
             </li>
             <li>
               <h5>Deposit in a year</h5>
-              <div>
-                <span>
-                  <CompactNumber
-                    value={depositInAYear}
-                    decimals={vault.asset.decimals}
-                    threshold={threshold}
-                    fractionDigits={2}
-                  />
-                  {assetSymbol}
-                </span>
-                <ProfitChangeIndicator profitChange={profitChange} />
-              </div>
+              <InfoNumber value={depositInAYear} />
             </li>
           </ul>
         </Card.Body>
       </Card>
     </Card.Body>
   );
+
+  function InfoNumber(props: { value: bigint }) {
+    return (
+      <div className={styles.infoNumberWrapper}>
+        <CompactNumber
+          value={props.value}
+          decimals={vault.asset.decimals}
+          threshold={threshold}
+          fractionDigits={2}
+          className={styles.infoNumber}
+          tooltipContent={(value) => `${value} ${assetSymbol}`}
+        >
+          <span className={styles.asset}>{assetSymbol}</span>
+          <ProfitChangeIndicator profitChange={profitChange} />
+        </CompactNumber>
+      </div>
+    );
+  }
 };
 
 function ProfitChangeIndicator({ profitChange }: { profitChange: bigint }) {

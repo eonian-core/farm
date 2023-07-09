@@ -10,7 +10,7 @@ export const useNumberInputValue = (
 ): [bigint, string, (value: string | bigint) => void] => {
   const [value, setValue] = React.useState(defaultValue);
   const [displayValue, setDisplayValue] = React.useState(
-    toStringNumberFromDecimals(value, decimals)
+    bigIntToString(value, decimals)
   );
 
   const handleValueChange = React.useCallback(
@@ -53,7 +53,14 @@ export function parseBigIntValue(
   value: bigint,
   decimals: number
 ): ValueParseResult | null {
-  return [value, toStringNumberFromDecimals(value, decimals)];
+  return [value, bigIntToString(value, decimals)];
+}
+
+/**
+ * Converts the big integer to number (in string representation) and removes empty fraction part.
+ */
+function bigIntToString(value: bigint, decimals: number): string {
+  return toStringNumberFromDecimals(value, decimals).replace(/\.0$/, "");
 }
 
 function normalizeValue(value: string | number): string {

@@ -18,18 +18,31 @@ export function useExecuteTransaction() {
 
   const validateTransaction = useValidateTransaction();
 
-  const execute = async (action: FormAction, vault: Vault, amount: bigint) => {
+  const execute = async (
+    action: FormAction,
+    vault: Vault,
+    amount: bigint
+  ): Promise<boolean> => {
     const isValid = validateTransaction(action, vault, amount);
     if (!isValid) {
-      return dispatch(stopVaultAction());
+      dispatch(stopVaultAction());
+      return false;
     }
 
-    switch (action) {
-      case FormAction.DEPOSIT:
-        return await executeDepositTransaction(vault, amount);
-      case FormAction.WITHDRAW:
-        return await executeWithdrawTransaction(vault, amount);
+    try {
+      switch (action) {
+        case FormAction.DEPOSIT:
+          await executeDepositTransaction(vault, amount);
+          break;
+        case FormAction.WITHDRAW:
+          await executeWithdrawTransaction(vault, amount);
+          break;
+      }
+    } catch (e) {
+      console.warn(e);
+      return false;
     }
+    return true;
   };
 
   return React.useCallback(execute, [
