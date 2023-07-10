@@ -65,9 +65,9 @@ function InputRightContent({
   decimals,
   assetSymbol,
 }: Pick<Props, "balance" | "isLoading" | "decimals" | "assetSymbol">) {
-  if (isLoading) {
+  if (isLoading) 
     return <Loading className={styles.loading} size="sm" />;
-  }
+  
   return (
     <span className={styles.balance}>
       <CompactNumber

@@ -29,13 +29,13 @@ export const ParallaxContainer = ({ children, className, fadeIn }: ParallaxConta
     const isInView = useInView(ref, { once, amount })
 
     if (fadeIn) 
-        return (
+        {return (
             <FadeInBody {...fadeIn} ref={ref} className={clsx(styles.container, className)} isInView={isInView}>
                 <ScrollYContext.Provider value={scrollYProgress}>
                     {children}
                 </ScrollYContext.Provider>
             </FadeInBody>
-        )
+        )}
     
 
     return <div ref={ref} className={clsx(styles.container, className)}>

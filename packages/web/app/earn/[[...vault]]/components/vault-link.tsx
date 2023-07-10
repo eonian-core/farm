@@ -32,7 +32,8 @@ export function VaultLink({ vault, chainId }: Props) {
   );
 }
 
-export const VaultLinkContent = ({vault}: {vault: Vault}) => 
+export const VaultLinkContent = ({vault}: {vault: Vault}) => (
   <Tooltip content={`${vault.name} (${vault.symbol})`}>
     Vault Smart Contract
   </Tooltip>
+)

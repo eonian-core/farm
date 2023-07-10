@@ -39,9 +39,7 @@ const darkTheme = createTheme({
 });
 
 const NextThemeProvider = ({ children }: Props) => {
-  useServerInsertedHTML(() => {
-    return <>{CssBaseline.flush()}</>;
-  });
+  useServerInsertedHTML(() => <>{CssBaseline.flush()}</>);
 
   // For some reason "useServerInsertedHTML" inserts NextUI styles several times (To <head /> and <body />),
   // what breaks the element styles. We can find these <style /> elements and remove one of them.

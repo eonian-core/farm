@@ -28,9 +28,7 @@ export async function generateStaticParams(): Promise<RouteSegment[]> {
   const chainId = ChainId.parse(defaultChain.id);
   const client = getClient(chainId);
   const { data } = await getVaultsSymbols(client);
-  return data.vaults.map(({ symbol }) => {
-    return { vault: [ChainId.getName(chainId).toLowerCase(), symbol] };
-  });
+  return data.vaults.map(({ symbol }) => ({ vault: [ChainId.getName(chainId).toLowerCase(), symbol] }));
 }
 
 export default async function Page({ params }: Params) {

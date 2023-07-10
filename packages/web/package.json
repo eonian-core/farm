@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "next lint --fix",
     "storybook": "storybook dev -p 6006 --quiet --no-open",
     "build:storybook": "storybook build",
     "serve:storybook": "serve ./storybook-static",

@@ -32,9 +32,9 @@ const list: Array<ResourceItem> = [
 
 export const Resources = () => {
   // if at least one feautre is enabled, the footer resources will be shown
-  if (!list.length) {
+  if (!list.length) 
     return null;
-  }
+  
 
   return (
     <div className={styles.linksSection}>

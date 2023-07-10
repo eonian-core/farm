@@ -49,12 +49,10 @@ export const getMulticallAddress = (id: ChainId): string => {
   }
 };
 
-export const getDummyChain = (id: ChainId, iconSize: number): Chain => {
-  return {
+export const getDummyChain = (id: ChainId, iconSize: number): Chain => ({
     id,
     icon: getChainIcon(ChainId.UNKNOWN, iconSize),
     isSupported: false,
     isDefault: false,
     multicallAddress: getMulticallAddress(ChainId.UNKNOWN),
-  };
-};
+  });

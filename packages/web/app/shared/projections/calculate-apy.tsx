@@ -3,13 +3,11 @@ import { Vault } from "../../api";
 export const calculateVaultAPY = (
   vault: Vault,
   blocksPerDay = 28800
-): number => {
-  return calculateAPY(
+): number => calculateAPY(
     vault.rates[0].perBlock,
     vault.asset.decimals,
     blocksPerDay
   );
-};
 
 export const calculateAPY = (
   interestRatePerBlock: bigint | number,

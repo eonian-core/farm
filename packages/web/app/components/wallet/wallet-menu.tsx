@@ -106,13 +106,11 @@ const WalletMenu: React.FC<Props> = ({ children }) => {
         {children}
       </Dropdown.Button>
       <Dropdown.Menu onAction={handleMenuClick}>
-        {menuItems.map(({ key, text, ...restProps }) => {
-          return (
+        {menuItems.map(({ key, text, ...restProps }) => (
             <Dropdown.Item key={key} {...restProps}>
               {text}
             </Dropdown.Item>
-          );
-        })}
+          ))}
       </Dropdown.Menu>
     </Dropdown>
   );

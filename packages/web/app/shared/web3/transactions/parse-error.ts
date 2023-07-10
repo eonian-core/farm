@@ -6,21 +6,21 @@ export enum TransactionErrorSeverity {
 }
 
 export function parseError(error: unknown): [string, TransactionErrorSeverity] {
-  if (ethers.isError(error, "ACTION_REJECTED")) {
+  if (ethers.isError(error, "ACTION_REJECTED")) 
     return parseActionRejectionError(error);
-  }
+  
 
-  if (ethers.isError(error, "CALL_EXCEPTION")) {
+  if (ethers.isError(error, "CALL_EXCEPTION")) 
     return parseCallExceptionError(error);
-  }
+  
 
-  if (ethers.isError(error, "UNSUPPORTED_OPERATION")) {
+  if (ethers.isError(error, "UNSUPPORTED_OPERATION")) 
     return parseUnsupportedOperationError(error);
-  }
+  
 
-  if (error instanceof Error) {
+  if (error instanceof Error) 
     return [error.message, TransactionErrorSeverity.ERROR];
-  }
+  
 
   return [JSON.stringify(error), TransactionErrorSeverity.ERROR];
 }

@@ -7,14 +7,11 @@ import Features, { ImageProps } from "../features/features";
 import citySrc from "./assets/sci-fi-city-near-to-sea.png";
 
 
-const SafeInvestments: React.FC<React.PropsWithChildren> = ({ children }) => {
-
-  return (
+const SafeInvestments: React.FC<React.PropsWithChildren> = ({ children }) => (
     <Features image={CityPic} right className={styles.safeInvestments}>
       {children}
     </Features>
   );
-};
 
 const CityPic = ({className}: ImageProps) =>
   <div className={clsx(className, styles.image)}>

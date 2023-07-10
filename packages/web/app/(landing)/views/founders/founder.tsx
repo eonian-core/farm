@@ -19,8 +19,7 @@ const avatars: Record<string, StaticImageData> = {
   artem: AvatarArtem,
 };
 
-const Founder: React.FC<Props> = ({ children, name }) => {
-  return (
+const Founder: React.FC<Props> = ({ children, name }) => (
     <li className={styles.container}>
       <div className={styles.avatar}>
         <Image src={avatars[name]} alt="avatar" placeholder="blur" />
@@ -28,6 +27,5 @@ const Founder: React.FC<Props> = ({ children, name }) => {
       {children}
     </li>
   );
-};
 
 export default Founder;

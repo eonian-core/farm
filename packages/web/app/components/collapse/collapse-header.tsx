@@ -14,9 +14,9 @@ export const ColalapseHeader = ({ children }: ColalapseHeaderProps) => {
 
     // set id if not set
     useEffect(() => {
-        if (typeof id === 'string' && id !== collapseId) {
+        if (typeof id === 'string' && id !== collapseId) 
             setCollapseId(id);
-        }
+        
     }, [collapseId, id, setCollapseId]);
     
 

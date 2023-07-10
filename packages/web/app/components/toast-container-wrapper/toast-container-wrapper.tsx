@@ -13,17 +13,17 @@ const ToastContainerWrapper = () => {
 
   React.useEffect(() => {
     const navElement = window.document.getElementById("navigation");
-    if (!navElement) {
+    if (!navElement) 
       return;
-    }
+    
     const { height } = navElement.getBoundingClientRect();
     setNavHeight(height);
   }, [height]);
 
   const toastTopOffset = React.useMemo(() => {
-    if (width < MOBILE_SCREEN) {
+    if (width < MOBILE_SCREEN) 
         return 0;
-    }
+    
     return navHeight;
   }, [width, navHeight]);
 

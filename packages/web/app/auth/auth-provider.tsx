@@ -50,9 +50,9 @@ export const useLoginWhenNotAuthenticated = () => {
 
   useEffect(() => {
 
-    if(!isLoading && !isAuthenticated) {
+    if(!isLoading && !isAuthenticated) 
       loginWithRedirect();
-    }
+    
 
   }, [isAuthenticated, isLoading, loginWithRedirect])
 }

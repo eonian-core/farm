@@ -16,9 +16,9 @@ const PageLoaderTop = () => {
 
   React.useEffect(() => {
     const { current: loader } = ref;
-    if (!loader) {
+    if (!loader) 
       return;
-    }
+    
     const loaderProgress = [
       { width: "0", opacity: 0.5 },
       { width: "20vw", opacity: 0.9, offset: 0.1 },
@@ -35,9 +35,9 @@ const PageLoaderTop = () => {
   }, []);
 
   React.useEffect(() => {
-    if (!pageLoading || !animation) {
+    if (!pageLoading || !animation) 
       return;
-    }
+    
 
     const isLoadingInitiated = pageLoading !== pathname;
     const wasRedirected = pathname === pageLoading + "/" + param;

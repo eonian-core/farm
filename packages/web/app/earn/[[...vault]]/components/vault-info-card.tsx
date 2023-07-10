@@ -30,9 +30,7 @@ export const VaultInfoCard: React.FC<Props> = ({
 }) => {
   const { symbol: assetSymbol } = vault.asset;
 
-  const threshold = React.useMemo(() => {
-    return BigInt(1e6) * 10n ** BigInt(vault.asset.decimals);
-  }, [vault.asset.decimals]);
+  const threshold = React.useMemo(() => BigInt(1e6) * 10n ** BigInt(vault.asset.decimals), [vault.asset.decimals]);
 
   const [apyPercents, apy, apyD] = React.useMemo(() => {
     const bps = 1e6;
@@ -49,21 +47,13 @@ export const VaultInfoCard: React.FC<Props> = ({
     }
   }, [currentDeposit, value, formAction]);
 
-  const currentYearlyReward = React.useMemo(() => {
-    return (currentDeposit * apy) / apyD;
-  }, [currentDeposit, apy, apyD]);
+  const currentYearlyReward = React.useMemo(() => (currentDeposit * apy) / apyD, [currentDeposit, apy, apyD]);
 
-  const yearlyReward = React.useMemo(() => {
-    return (total * apy) / apyD;
-  }, [total, apy, apyD]);
+  const yearlyReward = React.useMemo(() => (total * apy) / apyD, [total, apy, apyD]);
 
-  const depositInAYear = React.useMemo(() => {
-    return total + yearlyReward;
-  }, [total, yearlyReward]);
+  const depositInAYear = React.useMemo(() => total + yearlyReward, [total, yearlyReward]);
 
-  const profitChange = React.useMemo(() => {
-    return yearlyReward - currentYearlyReward;
-  }, [yearlyReward, currentYearlyReward]);
+  const profitChange = React.useMemo(() => yearlyReward - currentYearlyReward, [yearlyReward, currentYearlyReward]);
 
   return (
     <Card.Body className={className}>
@@ -112,9 +102,9 @@ function ProfitChangeIndicator({ profitChange }: { profitChange: bigint }) {
     [profitChange]
   );
 
-  if (!profitChange) {
+  if (!profitChange) 
     return null;
-  }
+  
 
   const className = clsx({
     [styles.positiveChange]: profitChange > 0n,
