@@ -24,6 +24,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
       authorizationParams={{
         redirect_uri: returnTo
       }}
+      cacheLocation='localstorage'
+      useRefreshTokens={true}
     >
       <AuthenticateOnOpen>
         {children}
