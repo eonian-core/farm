@@ -34,9 +34,9 @@ const FormButton: React.FC<Props> = ({
       case WalletStatus.CONNECTING:
         return "Connecting to a wallet...";
       case WalletStatus.CONNECTED: {
-        if (isOnDifferentChain) {
+        if (isOnDifferentChain) 
           return `Switch to ${vaultChain.name}`;
-        }
+        
         return formAction === FormAction.DEPOSIT ? "Deposit" : "Withdraw";
       }
     }
@@ -47,9 +47,9 @@ const FormButton: React.FC<Props> = ({
       case WalletStatus.NOT_CONNECTED:
         return connect();
       case WalletStatus.CONNECTED: {
-        if (isOnDifferentChain) {
+        if (isOnDifferentChain) 
           return setCurrentChain(vaultChain.id);
-        }
+        
         return onSubmit(formAction);
       }
     }

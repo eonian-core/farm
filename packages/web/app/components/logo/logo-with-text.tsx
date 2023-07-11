@@ -4,8 +4,7 @@ import styles from "./logo-with-text.module.scss";
 
 import { InternalLink } from "../links/links";
 
-const LogoWithText = () => {
-  return (
+const LogoWithText = () => (
     <InternalLink
       href="/"
       className={styles.logo}
@@ -15,6 +14,5 @@ const LogoWithText = () => {
       <span className={styles.name}>Eonian</span>
     </InternalLink>
   );
-};
 
 export default LogoWithText;

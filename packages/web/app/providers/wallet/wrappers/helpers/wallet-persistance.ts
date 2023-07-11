@@ -12,9 +12,7 @@ class WalletPersistance {
     localStorage.removeItem(WALLET_LOCAL_STORAGE_KEY);
   };
 
-  getWalletLabel = (): string | null => {
-    return localStorage.getItem(WALLET_LOCAL_STORAGE_KEY);
-  };
+  getWalletLabel = (): string | null => localStorage.getItem(WALLET_LOCAL_STORAGE_KEY);
 
   saveLastActiveChain = (chainId: ChainId) => {
     localStorage.setItem(CHAIN_LOCAL_STORAGE_KEY, chainId.toString());

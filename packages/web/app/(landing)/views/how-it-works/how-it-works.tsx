@@ -37,9 +37,9 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
   );
 
   React.useEffect(() => {
-    if (!isInView) {
+    if (!isInView) 
       return;
-    }
+    
     
     const interval = window.setInterval(() => {
       const index = stepLabels.indexOf(activeStep) + 1;
@@ -67,9 +67,9 @@ function useStepLabels(children: React.ReactNode): string[] {
 
 function extractStepLabels(children: React.ReactNode): string[] {
   const elements = React.Children.toArray(children) as React.ReactElement[];
-  if (!Array.isArray(elements) || !elements.length) {
+  if (!Array.isArray(elements) || !elements.length) 
     return [];
-  }
+  
 
   const result = [];
   for (const { props } of elements) {

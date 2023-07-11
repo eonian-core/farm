@@ -24,6 +24,8 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
       authorizationParams={{
         redirect_uri: returnTo
       }}
+      cacheLocation='localstorage'
+      useRefreshTokens={true}
     >
       <AuthenticateOnOpen>
         {children}
@@ -35,18 +37,22 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
 
 /** Allow open page only for authenticated users */
 export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren): JSX.Element => {
-  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
-
-  useEffect(() => {
-
-    if(!isLoading && !isAuthenticated) {
-      loginWithRedirect();
-    }
-
-  }, [isAuthenticated, isLoading, loginWithRedirect])
+  useLoginWhenNotAuthenticated();
 
   // Imposible to show Loader on (isLoading || !isAuthenticated)
   // it breaks web3 onboarding, and then imposible to connect any wallet
 
   return <>{children}</>;
+}
+
+export const useLoginWhenNotAuthenticated = () => {
+  const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
+
+  useEffect(() => {
+
+    if(!isLoading && !isAuthenticated) 
+      loginWithRedirect();
+    
+
+  }, [isAuthenticated, isLoading, loginWithRedirect])
 }

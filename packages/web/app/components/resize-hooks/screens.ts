@@ -11,9 +11,9 @@ export const ULTRA_WIDE_SCREEN = 1536; // or TV
 /** Return true if current screen is smaller or equal given size, or undefined if rendered on server */
 export const useIsScreenSmallerOrEqual = (size: number): boolean | undefined => {
     const { width } = useWindowSize();
-    if (!width) {
+    if (!width) 
         return undefined;
-    }
+    
 
     return width <= size;
 };

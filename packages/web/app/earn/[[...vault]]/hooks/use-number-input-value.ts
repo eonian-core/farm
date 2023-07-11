@@ -19,9 +19,9 @@ export const useNumberInputValue = (
       const values = isBigInt
         ? parseBigIntValue(value, decimals)
         : parseValue(value, decimals);
-      if (!values) {
+      if (!values) 
         return;
-      }
+      
 
       const [newValue, displayValue] = values;
       setDisplayValue(displayValue);
@@ -41,9 +41,9 @@ export function parseValue(
 ): ValueParseResult | null {
   const newValue = normalizeValue(value);
   const isValid = validate(newValue, decimals);
-  if (!isValid) {
+  if (!isValid) 
     return null;
-  }
+  
   const numberValue = parseFloat(newValue);
   const isNumber = !isNaN(numberValue);
   return [isNumber ? toBigIntWithDecimals(newValue, decimals) : 0n, newValue];
@@ -70,18 +70,16 @@ function normalizeValue(value: string | number): string {
 }
 
 function validate(value: string, decimals: number): boolean {
-  if (!value) {
+  if (!value) 
     return true;
-  }
+  
 
   const validators = [
     validateNumber,
     validateRange,
     validateFractionPartLength,
   ];
-  return validators.every((validator) => {
-    return validator(value, decimals);
-  });
+  return validators.every((validator) => validator(value, decimals));
 }
 
 function validateNumber(value: string) {
@@ -107,9 +105,9 @@ function validateRange(value: string, decimals: number) {
  */
 function validateFractionPartLength(value: string, decimals: number) {
   const parts = value.split(".");
-  if (parts.length !== 2) {
+  if (parts.length !== 2) 
     return true;
-  }
+  
   const [, fractionPart] = parts;
   return !fractionPart.endsWith("0") || fractionPart.length <= decimals;
 }

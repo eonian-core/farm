@@ -29,9 +29,9 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
     const activeIndex = steps.indexOf(activeStep);
     const currentIndex = steps.indexOf(stepLabel);
     const distance = Math.abs(activeIndex - currentIndex);
-    if (distance <= 1) {
+    if (distance <= 1) 
       return 1.0;
-    }
+    
     const fadeStep = 0.3;
     return Math.max(1.0 - fadeStep * distance, 0);
   }, [stepLabel, steps, activeStep]);
@@ -42,12 +42,12 @@ const FlowSliderItem: React.FC<FlowSliderItemProps> = ({
       opacity: distanceOpacity,
     } as CSSProperties;
     const hasOffset = isActive && activeRelativeOffsetY != null;
-    if (hasOffset) {
+    if (hasOffset) 
       styles["transform"] = `translateY(${activeRelativeOffsetY}px)`;
-    }
-    if (numberColor) {
+    
+    if (numberColor) 
       (styles as any)["--card-number-color"] = numberColor;
-    }
+    
     return styles;
   }, [isActive, activeRelativeOffsetY, numberColor, distanceOpacity]);
 
@@ -95,9 +95,9 @@ function useRelativeOffsetY<T extends HTMLElement>(
     const { current: element } = ref;
     const parent = element?.parentElement;
     const diagram = document.getElementById("flow-diagram");
-    if (!element || !parent || !diagram) {
+    if (!element || !parent || !diagram) 
       return;
-    }
+    
     const { height } = element.getBoundingClientRect();
     const { height: parentHeight, y: parentY } = parent.getBoundingClientRect();
     const { y: diagramY } = diagram.getBoundingClientRect();

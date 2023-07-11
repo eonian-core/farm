@@ -27,8 +27,7 @@ const meta: Meta<typeof StableProfit> = {
 
 export default meta;
 
-const Template: StoryFn<typeof StableProfit> = (props) => {
-  return (
+const Template: StoryFn<typeof StableProfit> = (props) => (
     <StableProfit {...props}>
       <H2>Stable and High Yield</H2>
       <p>
@@ -72,7 +71,6 @@ const Template: StoryFn<typeof StableProfit> = (props) => {
       </ul>
     </StableProfit>
   );
-};
 
 export const Default = Template.bind({});
 Default.args = {};

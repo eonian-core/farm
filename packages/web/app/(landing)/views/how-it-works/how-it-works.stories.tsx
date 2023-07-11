@@ -33,8 +33,7 @@ const meta: Meta<typeof HowItWorks> = {
 
 export default meta;
 
-const Template: StoryFn<typeof HowItWorks> = (props) => {
-  return (
+const Template: StoryFn<typeof HowItWorks> = (props) => (
     <HowItWorks {...props}>
       <FlowDiagramContextListener />
       <FlowSlider>
@@ -74,7 +73,6 @@ const Template: StoryFn<typeof HowItWorks> = (props) => {
       </FlowSlider>
     </HowItWorks>
   );
-};
 
 export const Default = Template.bind({});
 Default.args = {};

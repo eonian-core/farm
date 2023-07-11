@@ -30,13 +30,11 @@ const WalletNetworkSelector = () => {
         selectedKeys={[String(chain!.id)]}
         onSelectionChange={handleSelectionChanged}
       >
-        {chains.map((chain) => {
-          return (
+        {chains.map((chain) => (
             <Dropdown.Item key={chain.id} icon={chain.icon}>
               {chain.name}
             </Dropdown.Item>
-          );
-        })}
+          ))}
       </Dropdown.Menu>
     </Dropdown>
   );

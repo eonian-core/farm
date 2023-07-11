@@ -63,13 +63,13 @@ export const FadeInWrapper = ({
   // Possible to pass wrapper component through props
   // but it in some situations breaks react refs on mobile
   let WrapperTag: ForwardRefComponent<any, any>;
-  if (isList) {
+  if (isList) 
     WrapperTag = motion.ul;
-  } else if (isSection) {
+   else if (isSection) 
     WrapperTag = motion.section;
-  } else {
+   else 
     WrapperTag = motion.div;
-  }
+  
 
   return (
     <WrapperTag ref={ref} className={className}>

@@ -2,9 +2,7 @@ import { useMemo } from "react";
 import { childToString } from "./children-to-string";
 
 /** Memoized verion of toId */
-export const useToId = (slug?: string) => {
-    return useMemo(() => toId(slug), [slug]);
-}
+export const useToId = (slug?: string) => useMemo(() => toId(slug), [slug])
 
 /** Memoized version of toId based on children content */
 export const useContentToId = (children?: React.ReactNode) => useMemo(() => {
@@ -14,9 +12,9 @@ export const useContentToId = (children?: React.ReactNode) => useMemo(() => {
 
 /** Make text html id friendly */
 export const toId = (slug?: string) => {
-    if (typeof slug !== 'string') {
+    if (typeof slug !== 'string') 
         return undefined;
-    }
+    
 
     const resutl = slug
         .trim()

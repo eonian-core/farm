@@ -160,9 +160,7 @@ function useHasPendingTransactions() {
 
 function useVaultChain(chainId: ChainId) {
   const { chains } = useWalletWrapperContext();
-  return React.useMemo(() => {
-    return chains.find((chain) => chain.id === chainId)!;
-  }, [chains, chainId]);
+  return React.useMemo(() => chains.find((chain) => chain.id === chainId)!, [chains, chainId]);
 }
 
 export default Form;

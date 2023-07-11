@@ -56,43 +56,33 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
   const [{ chains: onboardChains, connectedChain }, setOnboardChain] =
     useSetChainOptions;
 
-  const wallet = React.useMemo(() => {
-    return W3O.getWallet(onboardWallet);
-  }, [onboardWallet]);
+  const wallet = React.useMemo(() => W3O.getWallet(onboardWallet), [onboardWallet]);
 
   const isWalletConnected = !!wallet;
 
-  const status = React.useMemo(() => {
-    return W3O.getStatus(isWalletConnected, connecting);
-  }, [isWalletConnected, connecting]);
+  const status = React.useMemo(() => W3O.getStatus(isWalletConnected, connecting), [isWalletConnected, connecting]);
 
-  const chains = React.useMemo(() => {
-    return W3O.getAvailableChains(
+  const chains = React.useMemo(() => W3O.getAvailableChains(
       onboardChains.length === 0 ? [defaultChain as W3OChain] : onboardChains
-    );
-  }, [onboardChains]);
+    ), [onboardChains]);
 
-  const chain = React.useMemo(() => {
-    return W3O.getCurrentChain(chains, connectedChain?.id);
-  }, [connectedChain?.id, chains]);
+  const chain = React.useMemo(() => W3O.getCurrentChain(chains, connectedChain?.id), [connectedChain?.id, chains]);
 
-  const provider = React.useMemo(() => {
-    return onboardWallet?.provider
+  const provider = React.useMemo(() => onboardWallet?.provider
       ? W3O.getProvider(onboardWallet?.provider)
-      : null;
-  }, [onboardWallet?.provider]);
+      : null, [onboardWallet?.provider]);
 
   const connect = React.useCallback(async () => {
     const success = await W3O.connect(onboardConnect);
-    if (success) {
+    if (success) 
       await W3O.autoSelectProperChain(chain, chains, setOnboardChain);
-    }
+    
   }, [chain, chains, onboardConnect, setOnboardChain]);
 
   const disconnect = React.useCallback(async () => {
-    if (wallet) {
+    if (wallet) 
       await W3O.disconnect(wallet.label, onboardDisconnect);
-    }
+    
   }, [onboardDisconnect, wallet]);
 
   const setCurrentChain = React.useCallback(
@@ -125,14 +115,12 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
   );
 };
 
-export const WalletWrapperProvider: React.FC<Props> = ({ children }) => {
-  return (
+export const WalletWrapperProvider: React.FC<Props> = ({ children }) => (
     <Web3OnboardProvider web3Onboard={web3Onboard}>
       <WalletWrapperImplementationProvider>
         {children}
       </WalletWrapperImplementationProvider>
     </Web3OnboardProvider>
   );
-};
 
 export const useWalletWrapperContext = () => useContext(WalletWrapperContext);

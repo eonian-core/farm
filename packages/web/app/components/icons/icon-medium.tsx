@@ -5,8 +5,7 @@ interface Props {
   height?: string | number;
 }
 
-const IconMedium: React.FC<Props> = ({ width = 16, height = 16 }) => {
-  return (
+const IconMedium: React.FC<Props> = ({ width = 16, height = 16 }) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 -55 256 256"
@@ -19,6 +18,5 @@ const IconMedium: React.FC<Props> = ({ width = 16, height = 16 }) => {
       ></path>
     </svg>
   );
-};
 
 export default IconMedium;

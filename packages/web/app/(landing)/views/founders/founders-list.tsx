@@ -7,9 +7,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-const FoundersList: React.FC<Props> = ({ children }) => {
-
-  return (
+const FoundersList: React.FC<Props> = ({ children }) => (
     <ul className={styles.container}>
       <FadeInChildList
         initialDelay={0.3}
@@ -18,6 +16,5 @@ const FoundersList: React.FC<Props> = ({ children }) => {
       </FadeInChildList>
     </ul>
   );
-};
 
 export default FoundersList;

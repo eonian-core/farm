@@ -28,9 +28,9 @@ const cachedIcons: Record<string, string> = {};
  */
 export const getWallet = (onboardWallet: WalletState | null): Wallet | null => {
   const account = onboardWallet?.accounts?.[0];
-  if (!account) {
+  if (!account) 
     return null;
-  }
+  
 
   return {
     label: onboardWallet.label,
@@ -47,13 +47,13 @@ export const getStatus = (
   isConnected: boolean,
   isConnecting: boolean
 ): WalletStatus => {
-  if (isConnected) {
+  if (isConnected) 
     return WalletStatus.CONNECTED;
-  } else if (isConnecting) {
+   else if (isConnecting) 
     return WalletStatus.CONNECTING;
-  } else {
+   else 
     return WalletStatus.NOT_CONNECTED;
-  }
+  
 };
 
 /**
@@ -62,8 +62,7 @@ export const getStatus = (
  */
 export const getAvailableChains = (
   onboardChains: ChainArgs[0]["chains"]
-): Chain[] => {
-  return onboardChains.map((chain) => {
+): Chain[] => onboardChains.map((chain) => {
     const id = ChainId.parse(chain.id);
     return {
       id,
@@ -74,7 +73,6 @@ export const getAvailableChains = (
       multicallAddress: getMulticallAddress(id),
     };
   });
-};
 
 /**
  * Finds and returns the currently active chain.
@@ -84,9 +82,9 @@ export const getCurrentChain = (
   chains: Chain[],
   chainId?: string
 ): Chain | null => {
-  if (!chainId) {
+  if (!chainId) 
     return null;
-  }
+  
   const id = ChainId.parse(chainId);
   return chains.find((chain) => chain.id === id) ?? getDummyChain(id, iconSize);
 };
@@ -95,9 +93,7 @@ export const getCurrentChain = (
  * Returns ethers provider.
  * @param provider - The web3-onboard's provider.
  */
-export const getProvider = (provider: EIP1193Provider): ethers.BrowserProvider => {
-  return new ethers.BrowserProvider(provider, "any");
-};
+export const getProvider = (provider: EIP1193Provider): ethers.BrowserProvider => new ethers.BrowserProvider(provider, "any");
 
 /**
  * Opens the model with wallet options.
@@ -109,9 +105,9 @@ export const connect = async (
   try {
     const [wallet] = await onboardConnect();
     const walletLabel = wallet?.label;
-    if (!walletLabel) {
+    if (!walletLabel) 
       return false;
-    }
+    
     WalletPersistance.saveWalletLabel(walletLabel);
   } catch (e) {
     return false;
@@ -130,9 +126,9 @@ export const autoSelectProperChain = async (
   setOnboardChain: ChainArgs[1]
 ) => {
   // Skip if the current active chain is supported.
-  if (chain?.isSupported) {
+  if (chain?.isSupported) 
     return;
-  }
+  
   const lastActiveChainId = WalletPersistance.getLastActiveChain();
   const chainId =
     lastActiveChainId !== ChainId.UNKNOWN
@@ -150,15 +146,15 @@ export const reconnect = async (
 ): Promise<void> => {
   // Do not reconnect if there is no information about the last connected wallet
   const walletLabel = WalletPersistance.getWalletLabel();
-  if (!walletLabel) {
+  if (!walletLabel) 
     return;
-  }
+  
 
   // Do not try to connect to the wallet if the user is not logged in.
   const isLoggedIn = await isLoggedInWallet(walletLabel);
-  if (!isLoggedIn) {
+  if (!isLoggedIn) 
     return;
-  }
+  
 
   await onboardConnect({
     autoSelect: { label: walletLabel, disableModals: true },
@@ -172,9 +168,9 @@ export const disconnect = async (
   walletLabel: string | null,
   onboardDisconnect: (wallet: DisconnectOptions) => Promise<WalletState[]>
 ): Promise<void> => {
-  if (walletLabel) {
+  if (walletLabel) 
     await onboardDisconnect({ label: walletLabel });
-  }
+  
   WalletPersistance.removeWalletlabel();
 };
 
@@ -187,24 +183,24 @@ export const setCurrentChain = async (
   setOnboardChain: ChainArgs[1]
 ): Promise<void> => {
   const success = await setOnboardChain({ chainId: ChainId.toHex(chainId) });
-  if (success) {
+  if (success) 
     WalletPersistance.saveLastActiveChain(chainId);
-  }
+  
 };
 
 const getWalletIconSrc = (iconContent: string) => {
   const cachedIconSrc = cachedIcons[iconContent];
-  if (cachedIconSrc) {
+  if (cachedIconSrc) 
     return cachedIconSrc;
-  }
+  
   const svg = new Blob([iconContent], { type: "image/svg+xml" });
   return (cachedIcons[iconContent] = URL.createObjectURL(svg));
 };
 
 export const getDefaultChain = (chains: Chain[]): Chain => {
   const chain = chains.find((chain) => chain.isDefault);
-  if (!chain) {
+  if (!chain) 
     throw new Error("There must be at least one default chain");
-  }
+  
   return chain;
 };
