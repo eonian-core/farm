@@ -67,8 +67,7 @@ export const FadeInBody = React.forwardRef<HTMLDivElement, FadeInBodyProps>(({
     fadeUpInitial = '30%',
     fadeHorizontal = false,
     fadeHorizontalInitial = '30%'
-}, ref) => {
-    return <motion.div
+}, ref) => <motion.div
         ref={ref}
         className={className}
         initial={{ opacity: 0, scale: zoomIn ? zoomInInitial : 1, y: fadeUp ? fadeUpInitial : 0, x: fadeHorizontal ? fadeHorizontalInitial : 0 }}
@@ -80,7 +79,6 @@ export const FadeInBody = React.forwardRef<HTMLDivElement, FadeInBodyProps>(({
         }}
     >
         {children}
-    </motion.div>
-})
+    </motion.div>)
 
 FadeInBody.displayName = 'FadeInBody'

@@ -1,7 +1,6 @@
 import React from "react";
 
-const IconBNB = (props: React.SVGProps<SVGSVGElement>) => {
-  return (
+const IconBNB = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       version="1.1"
@@ -20,6 +19,5 @@ const IconBNB = (props: React.SVGProps<SVGSVGElement>) => {
       </g>
     </svg>
   );
-};
 
 export default IconBNB;

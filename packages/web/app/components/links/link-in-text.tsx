@@ -4,6 +4,4 @@ import styles from './links.module.scss';
 import { WrapperLink } from "./wrapper-link";
 
 /** Link which can be usede in text */
-export const LinkInText = ({...props}: LinkWithIconProps) => {
-    return <WrapperLink className={styles.linkInText} {...props} />
-}
+export const LinkInText = ({...props}: LinkWithIconProps) => <WrapperLink className={styles.linkInText} {...props} />

@@ -11,15 +11,13 @@ export function useValidateTransaction() {
     (state) => state.vaultUser
   );
   return React.useCallback(
-    (action: FormAction, vault: Vault, amount: bigint) => {
-      return validateAndShowToast(action, {
+    (action: FormAction, vault: Vault, amount: bigint) => validateAndShowToast(action, {
         vault,
         amount,
         assetDecimals,
         walletBalance: BigInt(walletBalanceBN),
         vaultBalance: BigInt(vaultBalanceBN),
-      });
-    },
+      }),
     [walletBalanceBN, vaultBalanceBN, assetDecimals]
   );
 }
@@ -57,9 +55,9 @@ function validate(action: FormAction, data: ValidationData) {
 
 function validateWithdraw(data: ValidationData) {
   const { amount, vault, vaultBalance, assetDecimals } = data;
-  if (amount <= 0) {
+  if (amount <= 0) 
     throw new Error("Please enter an amount greater than 0 to continue.");
-  }
+  
 
   const assetSymbol = vault.asset.symbol;
   if (amount > vaultBalance) {
@@ -72,9 +70,9 @@ function validateWithdraw(data: ValidationData) {
 
 function validateDeposit(data: ValidationData) {
   const { amount, vault, walletBalance, assetDecimals } = data;
-  if (amount <= 0) {
+  if (amount <= 0) 
     throw new Error("Please enter an amount greater than 0 to continue.");
-  }
+  
 
   const assetSymbol = vault.asset.symbol;
   if (amount > walletBalance) {
@@ -89,11 +87,11 @@ const validationToastId = "validation-toast-id";
 
 function showToast(content: string) {
   const isToastActive = toast.isActive(validationToastId);
-  if (isToastActive) {
+  if (isToastActive) 
     toast.update(validationToastId, { render: content });
-  } else {
+   else 
     toast.warning(content, { toastId: validationToastId });
-  }
+  
 }
 
 function hideToast() {

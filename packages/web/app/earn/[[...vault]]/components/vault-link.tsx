@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import { Tooltip } from "@nextui-org/react";
 import { Vault } from "../../../api";
 import IconExternal from "../../../components/icons/icon-external";
 import ExternalLink from "../../../components/links/external-link";
@@ -14,11 +16,10 @@ interface Props {
 }
 
 export function VaultLink({ vault, chainId }: Props) {
-  const text = `${vault.name} (${vault.symbol})`;
   const href = getChainExplorer(chainId);
-  if (!href) {
-    return <>{text}</>;
-  }
+  if (!href) 
+    return <VaultLinkContent vault={vault} />;
+  
   return (
     <ExternalLink
       className={styles.vaultLink}
@@ -26,7 +27,13 @@ export function VaultLink({ vault, chainId }: Props) {
       iconAtEnd
       href={href + "address/" + vault.address}
     >
-      {text}
+      <VaultLinkContent vault={vault} />
     </ExternalLink>
   );
 }
+
+export const VaultLinkContent = ({vault}: {vault: Vault}) => (
+  <Tooltip content={`${vault.name} (${vault.symbol})`}>
+    Vault Smart Contract
+  </Tooltip>
+)

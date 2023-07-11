@@ -73,9 +73,9 @@ function ToastImage() {
   const { wallet } = useWalletWrapperContext();
   const { isTransactionActive } = useAppSelector((state) => state.vaultAction);
 
-  if (isTransactionActive) {
+  if (isTransactionActive) 
     return <Loading className={styles.image} size="md" />;
-  }
+  
 
   const size = 32; // Same size as <Loading /> component has.
   return (
@@ -91,6 +91,4 @@ function ToastImage() {
   );
 }
 
-export const createVaultActionToast = () => {
-  return <VaultActionToast />;
-};
+export const createVaultActionToast = () => <VaultActionToast />;

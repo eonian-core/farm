@@ -63,9 +63,7 @@ const vaultActionSlice = createSlice({
   name: "vaultAction",
   initialState,
   reducers: {
-    resetState: () => {
-      return initialState;
-    },
+    resetState: () => initialState,
     initVaultAction: (state, action: PayloadAction<PrepareActionPayload>) => {
       const {
         action: newAction,
@@ -94,9 +92,9 @@ const vaultActionSlice = createSlice({
     goToNextActionStep: (state) => {
       const { error, activeAction, steps, completedSteps } = state;
 
-      if (!activeAction || !!error) {
+      if (!activeAction || !!error) 
         return initialState;
-      }
+      
 
       state.isTransactionActive = false;
       const nextActionStep = steps[completedSteps.length];

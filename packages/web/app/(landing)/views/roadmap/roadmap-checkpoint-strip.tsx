@@ -88,18 +88,18 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
 
   public prepareAnimation(moveTo: number) {
     const { current: strip } = this.ref;
-    if (!strip) {
+    if (!strip) 
       return;
-    }
+    
     this.currentX = +this.regExp.exec(strip.style.transform)![1];
     this.targetX = this.getOffset(moveTo);
   }
 
   public animate = (progress: number) => {
     const { current: strip } = this.ref;
-    if (!strip) {
+    if (!strip) 
       return;
-    }
+    
     const x = this.currentX + (this.targetX - this.currentX) * progress;
     strip.style.transform = `translateX(${x}px)`;
   };

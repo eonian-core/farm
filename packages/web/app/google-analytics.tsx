@@ -32,9 +32,9 @@ export default function GoogleAnalytics({
   const _gaMeasurementId =
     process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? gaMeasurementId;
 
-  if (!_gaMeasurementId) {
+  if (!_gaMeasurementId) 
     return null;
-  }
+  
 
   return (
     <>

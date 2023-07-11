@@ -19,9 +19,9 @@ const FlowSlider: React.FC<Props> = ({ children }) => {
 
   useOnResizeEffect(() => {
     const { current: container } = ref;
-    if (!container) {
+    if (!container) 
       return;
-    }
+    
     const { width: containerWidth } = container.getBoundingClientRect();
     const visibleOnScreen = Math.max(
       Math.floor(containerWidth / HIW_ITEM_WIDTH),
@@ -37,9 +37,9 @@ const FlowSlider: React.FC<Props> = ({ children }) => {
   React.useEffect(() => {
     const { current: container } = ref;
     const itemElement = document.getElementById(activeStep);
-    if (!container || !itemElement) {
+    if (!container || !itemElement) 
       return;
-    }
+    
     const index = steps.indexOf(activeStep);
     const translateN =
       visibleSteps >= 3

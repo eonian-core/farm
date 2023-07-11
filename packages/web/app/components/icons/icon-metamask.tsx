@@ -2,8 +2,7 @@ import React from "react";
 
 import styles from "./icon-metamask.module.scss";
 
-const IconMetamask = (props: React.SVGProps<SVGSVGElement>) => {
-  return (
+const IconMetamask = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       x="0"
@@ -85,6 +84,5 @@ const IconMetamask = (props: React.SVGProps<SVGSVGElement>) => {
       />
     </svg>
   );
-};
 
 export default IconMetamask;

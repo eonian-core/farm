@@ -34,9 +34,9 @@ export const formatNumberCompactWithThreshold = (
   } = params ?? {};
   const stringNumber = toStringNumberFromDecimals(value, decimals);
 
-  if (threshold > 0n && value > threshold) {
+  if (threshold > 0n && value > threshold) 
     return formatNumberCompact(parseFloat(stringNumber), locale);
-  }
+  
 
   if (stringNumber.replace(/\.0$/, "").includes(".") && fractionDigits > 0) {
     const index = stringNumber.indexOf(".");
@@ -47,19 +47,19 @@ export const formatNumberCompactWithThreshold = (
       case FractionPartView.GREATER_SIGN:
         return lengthDifference > 0 ? ">" + capped : stringNumber;
       case FractionPartView.DOTS: {
-        if (lengthDifference > 1) {
+        if (lengthDifference > 1) 
           return capped + ".." + stringNumber.slice(-1);
-        }
+        
         // The length difference is 1 digit only, so we can return source value in this case.
-        if (lengthDifference === 1) {
+        if (lengthDifference === 1) 
           return stringNumber;
-        }
+        
         return capped;
       }
       case FractionPartView.CUT: {
-        if (lengthDifference === 0) {
+        if (lengthDifference === 0) 
           return stringNumber;
-        }
+        
         const [integerPart, fractionPart] = String(stringNumber).split(".");
         const digits = Math.min(fractionPart.length, fractionDigits);
         return integerPart + "." + fractionPart.slice(0, digits);

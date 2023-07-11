@@ -3,14 +3,12 @@ import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rs
 import { ChainId } from "../providers/wallet/wrappers/helpers";
 import { getGraphQLEndpoint } from "./endpoints";
 
-const makeClientFactory = (chainId: ChainId) => () => {
-  return new ApolloClient({
+const makeClientFactory = (chainId: ChainId) => () => new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
       uri: getGraphQLEndpoint(chainId),
     }),
   });
-};
 
 const registerClient = (chainId: ChainId) => {
   const clientMaker = makeClientFactory(chainId);
@@ -26,8 +24,8 @@ const clientGetters: Record<
 };
 
 export const getClient = (chainId: ChainId) => {
-  if (chainId === ChainId.UNKNOWN) {
+  if (chainId === ChainId.UNKNOWN) 
     throw new Error("Unknown chain id");
-  }
+  
   return clientGetters[chainId]();
 };

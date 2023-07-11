@@ -34,12 +34,12 @@ function getBNBChainEndpoint(chainEnvironment: ChainEnvironment): string {
 
 export function getChainEnvironment(): ChainEnvironment {
   const environment = process.env.NEXT_PUBLIC_ENVIRONMENT;
-  if (!environment) {
+  if (!environment) 
     return ChainEnvironment.DEVELOPMENT;
-  }
+  
   const isExist = Object.values<string>(ChainEnvironment).includes(environment);
-  if (!isExist) {
+  if (!isExist) 
     throw new Error("Unknown chain environment");
-  }
+  
   return ChainEnvironment[environment as keyof typeof ChainEnvironment];
 }

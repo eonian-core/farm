@@ -27,8 +27,7 @@ const meta: Meta<typeof SafeInvestments> = {
 
 export default meta;
 
-const Template: StoryFn<typeof SafeInvestments> = (props) => {
-  return (
+const Template: StoryFn<typeof SafeInvestments> = (props) => (
     <SafeInvestments {...props}>
       <H2>Safe Investments</H2>
       <p>
@@ -69,7 +68,6 @@ const Template: StoryFn<typeof SafeInvestments> = (props) => {
       </ul>
     </SafeInvestments>
   );
-};
 
 export const Default = Template.bind({});
 Default.args = {};
