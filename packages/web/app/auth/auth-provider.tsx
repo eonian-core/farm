@@ -2,7 +2,6 @@
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 import { useEffect } from 'react';
-import { getTopLevelPath } from './path';
 
 export const isInBrowser = () => typeof window !== "undefined";
 export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === "true" && isInBrowser();
@@ -15,21 +14,19 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
   }
 
   console.log('Authentication is enabled');
-  const returnTo = getTopLevelPath(window.location.href);
 
   return (
     <Auth0Provider
       domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
       clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
       authorizationParams={{
-        redirect_uri: returnTo
+        redirect_uri: window.location.protocol + "//" + window.location.host,
+        audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE!,
       }}
-      cacheLocation='localstorage'
+      cacheLocation="localstorage"
       useRefreshTokens={true}
     >
-      <AuthenticateOnOpen>
-        {children}
-      </AuthenticateOnOpen>
+      <AuthenticateOnOpen>{children}</AuthenticateOnOpen>
     </Auth0Provider>
   );
 };
