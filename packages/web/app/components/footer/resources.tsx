@@ -17,6 +17,12 @@ const list: Array<ResourceItem> = [
   { href: "/security", label: "Security", isEnabled: features.showSecurity },
   { href: "/earn", label: "Earn", isEnabled: features.showEarn },
   {
+    href: "https://leovs09.notion.site/465899d944244e9cb55e5dea502efd47",
+    label: "Docs",
+    isEnabled: features.showDocs,
+    external: true,
+  },
+  {
     href: "https://leovs09.notion.site/Privacy-Policy-3ab03daeee044cabac8b27753c464743",
     label: "Privacy Policy",
     isEnabled: features.showPrivacyPolicy,
