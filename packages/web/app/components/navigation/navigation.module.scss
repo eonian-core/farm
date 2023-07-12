@@ -191,13 +191,14 @@
         opacity: 1;
         transform: scale(50);
         transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+        transition-property: transform, opacity;
     }
 
     .menuItem {
         opacity: 1;
         transform: translateY(0) translateX(0);
-        transition: 0.5s all;
-        transition-delay: 0.5s;
+        transition: all 0.5s linear 0.5s;
+        transition-property: transform, opacity;
     }
 }
 
@@ -235,12 +236,14 @@
     ul:before {
         transform: scale(0.1);
         transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+        transition-property: transform, opacity;
     }
 
     .menuItem {
         opacity: 0;
         transform: translateY(-0.5rem) translateX(0);
-        transition: 0.5s all;
+        transition: all 0.5s linear;
+        transition-property: transform, opacity;
     }
 }
 
