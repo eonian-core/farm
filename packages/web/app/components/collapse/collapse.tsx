@@ -1,84 +1,41 @@
-import styles from "./collapse.module.scss";
-import React, { RefObject, useCallback, useEffect, useRef, useState } from "react";
-import clsx from "clsx";
+import React from "react";
 import { useLocationHash } from "./use-location-hash";
+import { Collapse as NextUICollapse } from "@nextui-org/react";
+import { useToId } from "../heading/to-id";
 
-interface CollapseProp {
-  /** Need for correct tab order */
-  index: number;
+import styles from "./collapse.module.scss";
+
+interface Props {
+  title: string;
+  expanded: boolean;
   children: React.ReactNode;
-  /** Set open at start */
-  open: boolean;
-}
+};
 
-export interface CollapseContextState {
-  isOpen: boolean;
-  onHeaderClick: () => void
-  /** Id which can be used by anchor link to navigate to collapse */
-  id: string | null;
-  /** Allow header to say which id belongs to the collapse */
-  setCollapseId: (id: string) => void;
-}
+export default function Collapse({ title, expanded, children }: Props) {
+  const [isExpanded, setIsExpanded] = React.useState(expanded);
 
-const CollapseContext = React.createContext<CollapseContextState>({
-  isOpen: false,
-  onHeaderClick: () => {},
-  id: null,
-  setCollapseId: () => {},
-});
+  const id = useToId(title);
+  const hash = useLocationHash();
 
-export const useCollapseContext = () => React.useContext(CollapseContext);
+  const ref = React.useRef<HTMLDivElement>(null);
 
-export default function Collapse({ index = 0, children, open }: CollapseProp) {
-  const { isOpen, setIsOpen, toggleOpen } = useIsOpen(open);
-
-  const [id, setId] = useState<string | null>(null)
-  const hash = useLocationHash()
-
-  // for scrollIntoView
-  const ref = useRef<HTMLDivElement>(null);
-  
-  // open collapse if hash matches id
-  // react only when hash or id changes
-  useEffect(() => {
-    if(typeof hash !== 'string' || typeof id !== 'string') 
-      return
-
+  React.useEffect(() => {
+    if (typeof hash !== "string" || typeof id !== "string") return;
     if (id === hash) {
-      setIsOpen(true)
-      scrollIntoView(ref)
+      setIsExpanded(true);
+      scrollIntoView(ref);
     }
-    
-    // important to react only when hash or id changes
-    // prevent accidential opening or scroll on re-render
-  }, [hash, id])
+  }, [hash, id]);
 
   return (
-    <div className={styles.container} ref={ref}>
-      <div
-        tabIndex={index}
-        className={clsx("collapse-arrow rounded-box collapse border border-base-300 bg-base-100", {
-          'collapse-open': isOpen,
-          'collapse-close': !isOpen
-        })}
-      >
-        <CollapseContext.Provider value={{ 
-            isOpen, onHeaderClick: toggleOpen, 
-            id, setCollapseId: setId 
-            }} >
-          {children}
-        </CollapseContext.Provider>
-      </div>
+    <div id={id} ref={ref} className={styles.container}>
+      <NextUICollapse expanded={isExpanded} shadow title={title}>
+        {children}
+      </NextUICollapse>
     </div>
   );
 }
 
-const useIsOpen = (open: boolean) => {
-  const [isOpen, setIsOpen] = useState(open);
-  const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
-  return { isOpen, setIsOpen, toggleOpen };
-}
-
-export const scrollIntoView = (ref: RefObject<HTMLDivElement>) => {
+export const scrollIntoView = (ref: React.RefObject<HTMLDivElement>) => {
   ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 }

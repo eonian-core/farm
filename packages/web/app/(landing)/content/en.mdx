@@ -4,9 +4,16 @@
     We build passive investment strategies <Mbr>that cares about your money.</Mbr>
 
     <HeroButtonGroup>
-        <HeroButton href="/earn" bold icon={<UsdtIcon />}>
-            Earn USDT
-        </HeroButton>
+        {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE === "true" && 
+            <HeroButton href="/earn" bold icon={<UsdtIcon />}>
+                Earn USDT
+            </HeroButton>
+        }
+        {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE !== "true" && 
+            <HeroButton href="https://tally.so/r/wvMzJv" icon={<IconRobot />}>
+                Join the Waitlist
+            </HeroButton>
+        }
         <HeroButton href="https://discord.gg/8mcUPPYJmj" bordered icon={<IconDiscord />}>
             Join Discord
         </HeroButton>
@@ -130,17 +137,16 @@
 <InDevelopment>
     ## Future of Investments is Coming
 
-    We're currently in the pre-alpha stage of our innovative protocol, and we're excited to invite you to join us on this journey.
+    We're currently in the alpha stage of our innovative protocol, and we're excited to invite you to join us on this journey.
     Your feedback and suggestions will play a crucial role in shaping the direction of our project.
     Together, we can build something truly great! We can make the future of investment simple and accessible for all.
 
-    <Card href={'https://rhetor.ai/EJF0BYU7'}>
+    <Card href="https://tally.so/r/wvMzJv">
         ### Join us
 
         Secure your spot on our waitlist for the closed alpha test and gain access to exclusive benefits, including Vault Founders Tokens!
-        Influence our development by participating in brief product research powered by our cutting-edge AI, designed to create a personalized and seamless experience for you.
 
-        <Target>AI Product Manager</Target>
+        <Target>Join the Waitlist</Target>
     </Card>
 
 </InDevelopment>
@@ -208,15 +214,16 @@
             and the strategies that currently exist.
         </RoadmapCheckpoint>
 
-        <RoadmapCheckpoint href="https://leovs09.notion.site/Alpha-Test-8b4a25a4538c4685a260873c5fed5b3e">
-            ### Eonian Protocol Alpha Test
+        <RoadmapCheckpoint href="https://leovs09.notion.site/Alpha-Test-8b4a25a4538c4685a260873c5fed5b3e" completed>
+            ### Eonian Protocol Alpha Test Launched
             
             <RoadmapDate>July 3, 2023</RoadmapDate>
 
-            During the closed alpha test, we aim to identify our protocol's critical bugs and potential issues. 
-            We'll start with an automated investment strategy for a single stablecoin. 
-            Then, as we prioritize careful development, we'll gradually introduce advanced strategies to boost APY.
-            We'll offer exclusive benefits to reward alpha testers for their help! 
+            We have released the alpha version of our protocol.
+            We started with an automated investment strategy for a single stablecoin.
+            Then, as we prioritize careful development, we will gradually introduce advanced strategies to boost APY.
+            During the closed alpha test, we aim to identify critical bugs and potential issues in our protocol.
+            We will offer exclusive benefits to reward alpha testers for their help!
         </RoadmapCheckpoint>
 
         <RoadmapCheckpoint href="https://leovs09.notion.site/Closed-Beta-Test-f131f9748bd64c49922a7ece64909c5d">
@@ -261,21 +268,11 @@
     ## Founders
 
     <FoundersList>
-        <Founder name="yuriy">
-
-            ### Yuriy Glebov
-            CEO
-            <ul>
-                <li><ExternalLink href="https://www.linkedin.com/in/%D1%8E%D1%80%D0%B8%D0%B9-%D0%B3%D0%BB%D0%B5%D0%B1%D0%BE%D0%B2-400a131bb/" icon={<IconLinkedIn />} /></li>
-                <li><ExternalLink href="https://twitter.com/YuraGlebov95" icon={<IconTwitter />} /></li>
-            </ul>
-
-        </Founder>
 
         <Founder name="vladislav">
 
             ### Vladislav Goncharov
-            CTO
+            CEO
             <ul>
                 <li><ExternalLink href="https://www.linkedin.com/in/%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D1%81%D0%BB%D0%B0%D0%B2-%D0%B3%D0%BE%D0%BD%D1%87%D0%B0%D1%80%D0%BE%D0%B2-399b55135/" icon={<IconLinkedIn />} /></li>
                 <li><ExternalLink href="https://twitter.com/LeoVS09" icon={<IconTwitter />} /></li>
@@ -296,7 +293,7 @@
         <Founder name="sergey">
 
             ### Sergey Solovyev
-            Head of Engineering
+            CTO
             <ul>
                 <li><ExternalLink href="https://www.linkedin.com/in/sergey-solovyev-0a9783183/" icon={<IconLinkedIn />} /></li>
                 <li><ExternalLink href="https://twitter.com/solovyev_sm" icon={<IconTwitter />} /></li>

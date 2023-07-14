@@ -2,160 +2,135 @@
 @import "../../components/styles/appear.animation.scss";
 
 .contacts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  font-size: var(--font-size-800);
+
+  ul {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+  }
 
-    position: relative;
+  li {
+    margin-top: 0;
+    margin-bottom: var(--margin-400);
 
-    font-size: var(--font-size-800);
-
-    ul {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        
+    svg {
+      width: var(--font-size-800);
+      height: var(--font-size-800);
     }
-
-    li {
-        margin-top: 0;
-        margin-bottom: var(--margin-400);
-
-        svg {
-            width: var(--font-size-800);
-            height: var(--font-size-800);
-        }
-    }
+  }
 }
 
 .otherLanguagesCollapse {
-    @extend .contacts;
+  @extend .contacts;
 
-    min-height: calc(var(--font-size-800) * 10);
+  min-height: calc(var(--font-size-800) * 10);
 
-    justify-content: flex-start;
-    margin-top: var(--margin-100);
+  justify-content: flex-start;
+  margin-top: var(--margin-100);
 }
 
-
-.otherLanguagesHighLevelList {
-    margin-top: var(--margin-200);
-
-    animation: appearFrom09 0.3s ease-out;;
-    width: 100%;
-
-    h5 {
-        text-transform: capitalize;
-        margin-bottom: var(--margin-100);
-        font-weight: var(--font-bold);
-        color: var(--color-text-300);
-    }
-
+.otherLanguagesLink {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--nextui--dropdownItemHeight);
 }
 
 .otherLanguagesTrigger {
-    font-size: var(--font-size-600);
-    font-weight: var(--font-normal);
-    margin-top: 0;
+  font-size: var(--font-size-600);
+  font-weight: var(--font-normal);
+  margin-top: 0;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 
+  cursor: pointer;
+
+  position: relative;
+
+  button {
+    margin-left: var(--margin-50);
+    margin-top: var(--margin-100);
     cursor: pointer;
+    background-color: transparent;
+    background-image: none;
+    box-sizing: border-box;
+    border: 0 solid #e4e4e7;
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
 
-    position: relative;
-    // left: -0.6rem;
-
-    button {
-        margin-left: var(--margin-50);
-        margin-top: var(--margin-100);
-        cursor: pointer;
-        background-color: transparent;
-        background-image: none;
-        box-sizing: border-box;
-        border: 0 solid #e4e4e7;
-        font-family: inherit;
-        font-size: 100%;
-        font-weight: inherit;
-        line-height: inherit;
-        color: inherit;
-    }
-
-    &:hover {
-        color: var(--color-text-400);
-    }
-
-
+  &:hover {
+    color: var(--color-text-400);
+  }
 }
 
-
 @media (max-width: $screen-desktop) {
+  .contacts,
+  .otherLanguagesCollapse {
+    font-size: var(--font-size-600);
 
-    .contacts, .otherLanguagesCollapse {
-        font-size: var(--font-size-600);
-        
-
-        li svg {
-            width: var(--font-size-700);
-            height: var(--font-size-700);
-        }
+    li svg {
+      width: var(--font-size-700);
+      height: var(--font-size-700);
     }
+  }
 
-    .otherLanguagesTrigger {
-        font-size: var(--font-size-500);
-        position: initial;
-    }
+  .otherLanguagesTrigger {
+    font-size: var(--font-size-500);
+    position: initial;
+  }
 }
 
 @media (max-width: $screen-mobile) {
-    .contacts, .otherLanguagesCollapse {
-        font-size: var(--font-size-500);
-        line-height: var(--line-height-500);
+  .contacts,
+  .otherLanguagesCollapse {
+    font-size: var(--font-size-500);
+    line-height: var(--line-height-500);
 
-        li svg {
-            width: var(--font-size-700);
-            height: var(--font-size-700);
-        }
+    li svg {
+      width: var(--font-size-700);
+      height: var(--font-size-700);
     }
+  }
 
-    .otherLanguagesCollapse {
-        min-height: calc(var(--font-size-800) * 5);
+  .otherLanguagesCollapse {
+    min-height: calc(var(--font-size-800) * 5);
+  }
+
+  .contacts {
+    margin-top: var(--margin-500);
+  }
+
+  .contacts {
+    ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: var(--width-gap);
+      row-gap: var(--margin-500);
+
+      li {
+        margin-bottom: 0;
+      }
     }
+  }
 
-    .contacts {
-        margin-top: var(--margin-500);
-    }
-
-    .contacts, .otherLanguagesHighLevelList {
-
-        ul {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-gap: var(--width-gap);
-            row-gap: var(--margin-500);            
-
-            li {
-                margin-bottom: 0;
-            }
-        }
-        
-    }
-
-    ul.otherLanguagesHighLevelList {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-
-    .otherLanguagesTrigger {
-        font-size: var(--font-size-400);
-        position: initial;
-    }
-
+  .otherLanguagesTrigger {
+    font-size: var(--font-size-400);
+    position: initial;
+  }
 }
