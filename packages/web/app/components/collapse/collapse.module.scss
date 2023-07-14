@@ -1,30 +1,8 @@
-@import "../../screen.scss";
-
 .container {
-  margin: var(--margin-300);
-  width: 100%;
-  
+  color: var(--color-text-300);
 
-  h3 {
-    color: var(--color-text-400);
-    cursor: pointer;
-    padding-left: var(--padding-500);
-    
-    &::after {
-      right: var(--padding-600) !important; // remove it after switch from daisy-ui
-    }
-  }
-
-
-  h4, p, li {
-    color: var(--color-text-300);
-    line-height: var(--line-height-600);
-    font-size: var(--font-size-600);
-  }
-
-  h4 {
-    font-weight: bold;
-    padding: var(--padding-300) var(--padding-300) var(--padding-100);
+  & + & {
+    margin-top: var(--margin-400);
   }
 
   p, ul {
@@ -38,39 +16,10 @@
 
   li {
     list-style-type: circle;
-
   }
 
-}
-
-@media (max-width: $screen-mobile) {
-
-  .container {
-
-    h3 {
-      padding-left: var(--padding-400);
-      font-size: var(--font-size-600);
-
-      &::after {
-        right: var(--padding-500) !important; // remove it after switch from daisy-ui
-      }
-    }
-
-    p, li, h4 {
-      line-height: var(--line-height-500);
-      font-size: var(--font-size-500);
-    }
-
-    p, ul {
-      padding: 0 var(--padding-100) var(--padding-300);
-    }
-
-    ul {
-      padding-left: var(--padding-500);
-    }
-
-    h4 {
-      padding: 0 var(--padding-100) var(--padding-100);
-    }
+  h4 {
+    font-weight: var(--font-bold);
+    padding: var(--padding-300) var(--padding-300) var(--padding-100);
   }
 }

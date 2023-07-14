@@ -9,6 +9,7 @@ import {
 import { ChainId } from "../../providers/wallet/wrappers/helpers";
 import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
+import { showEarn } from "../../features";
 
 export const revalidate = 10;
 
@@ -33,6 +34,9 @@ export async function generateStaticParams(): Promise<RouteSegment[]> {
 
 export default async function Page({ params }: Params) {
   const { vault: vaultRoute = [] } = params;
+
+  if (!showEarn)
+    redirect("/");
 
   // If the route is not complete (e.g. complete route: "/earn/bsc_mainnet/eonUSDT"),
   // we should redirect the user to the first vault in the default chain.
