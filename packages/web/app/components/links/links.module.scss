@@ -1,48 +1,56 @@
 .baseLink {
-    color: var(--color-text-400);
-    text-decoration: none;
+  color: var(--color-text-400);
+  text-decoration: none;
 
-    // Not contain font size for easy reusing
+  // Not contain font size for easy reusing
 
-    &:hover {
-        color: var(--color-text-200);
-    }
+  &:hover {
+    color: var(--color-text-200);
+  }
 
-    &:active {
-        color: var(--color-text-100);
-    }
+  &:active {
+    color: var(--color-text-100);
+  }
 }
 
 .internalLink {
-    @extend .baseLink;
+  @extend .baseLink;
 }
 
 .externalLink {
-    @extend .baseLink;
+  @extend .baseLink;
 }
 
 .linkWithIcon {
-    @extend .baseLink;
+  @extend .baseLink;
 
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+
+  .icon {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    margin-right: var(--margin-100);
+  }
 
-    .icon {
-        margin-right: var(--margin-100);
-    }
+  .iconEnd {
+    margin-right: 0;
+    margin-left: var(--margin-100);
+  }
 }
 
 .onlyIcon {
-    .icon {
-        margin-right: 0;
-    }
+  .icon {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .onlyText {
-    display: inline;
+  display: inline;
 }
 
 .linkInText {
-    text-decoration: underline;
+  text-decoration: underline;
 }

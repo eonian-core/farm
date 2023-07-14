@@ -12,11 +12,16 @@ on:
   pull_request:
     branches:
       - main
+      - staging
+      - development
     types:
       - opened
       - synchronize
     paths:
       - "packages/contracts/**"
+
+env:
+  BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
 jobs:
   lint: 

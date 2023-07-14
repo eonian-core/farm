@@ -2,5 +2,9 @@
   "extends": [
     "next/core-web-vitals",
     "plugin:storybook/recommended"
-  ]
+  ],
+  "rules": {
+    "curly": ["error", "multi-or-nest"],
+    "arrow-body-style": ["error", "as-needed"]
+  }
 }

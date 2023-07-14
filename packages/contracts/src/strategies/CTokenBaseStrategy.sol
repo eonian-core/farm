@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
@@ -13,6 +14,8 @@ import {IStrategiesLender} from "../lending/IStrategiesLender.sol";
 
 error IncompatibleCTokenContract();
 error UnsupportedDecimals();
+error MintError(uint256 code);
+error RedeemError(uint256 code);
 
 /** Base for implementation of strategy on top of CToken (Compound-like market)  */
 abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
@@ -25,7 +28,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     IERC20Upgradeable public compToken;
 
     /** Required for mapping of interest rate calculated per second to rate calculated per block */
-    uint256 public secondPerBlock = 3;
+    uint256 public secondPerBlock;
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new
@@ -33,6 +36,12 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
     uint256[50] private __gap;
+
+    /** Emitted when assets are moved to the protocol */
+    event DepositedToProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
+
+    /** Emitted when assets are moved from the protocol */
+    event WithdrawnFromProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
 
     // ------------------------------------------ Constructors ------------------------------------------
 
@@ -57,12 +66,13 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
             _nativeTokenPriceFeed,
             _assetPriceFeed,
             address(0)
-        ); // ownable under the hood
+        ); // Ownable is under the hood
 
         __CTokenBaseStrategyinit_unchained(_cToken, _rainMaker, _compToken);
     }
 
     function __CTokenBaseStrategyinit_unchained(ICToken _cToken, IRainMaker _rainMaker, IERC20Upgradeable _compToken) internal onlyInitializing {
+        secondPerBlock = 3; // 3.01 seconds avarage for BSC
         cToken = _cToken;
         rainMaker = _rainMaker;
         compToken = _compToken;
@@ -95,8 +105,59 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         return supplyRatePerBlock();
     }
 
-    // ------------------------------------------ Pass interest related methods from cToken ------------------------------------------
-    // Methods must be overridden by the strategy contract if they change interest rate model
+    /// @notice Returns current deposited balance (in asset).
+    /// @dev Unlike the snapshot function, this function recalculates the value of the deposit.
+    function depositedBalance() public returns (uint256) {
+        return cToken.balanceOfUnderlying(address(this));
+    }
+
+    /// @notice Returns current deposited balance (in shares, in asset).
+    /// @dev The exchange rate is recalculated at the last time someone touched the cToken contract.
+    ///      Transactions are not performed too often on this contract, perhaps we should consider recalculating the rate ourselves.
+    function depositedBalanceSnapshot() public view returns (uint256, uint256) {
+        (, uint256 cTokenBalance, , uint256 exchangeRate) = cToken.getAccountSnapshot(address(this));
+
+        // ApeSwap's cToken has 8 decimals and the exchange rate has 28 decimals (see why: https://docs.compound.finance/v2/ctokens/#exchange-rate).
+        // To convert cTokens to assets, we need to scale down the multiplication of these numbers by 1e18 to get underlying decimals (which are 18).
+        return (cTokenBalance, (cTokenBalance * exchangeRate) / 1e18);
+    }
+
+    /// @notice Deposits the assets into the protocol.
+    /// @param amount Amount to deposit
+    function depositToProtocol(uint256 amount) internal {
+        (uint256 sharesBefore, uint256 underlyingBefore) = depositedBalanceSnapshot();
+
+        uint256 result = cToken.mint(amount);
+        if (result > 0) {
+            revert MintError(result);
+        }
+
+        (uint256 sharesAfter, uint256 underlyingAfter) = depositedBalanceSnapshot();
+        emit DepositedToProtocol(amount, sharesBefore, underlyingBefore, sharesAfter, underlyingAfter);
+    }
+
+    /// @notice Takes the assets out of the protocol.
+    /// @param amount Amount to withdraw
+    /// @return The amount that has been withdrawn.
+    function withdrawFromProtocol(uint256 amount) internal returns (uint256) {
+        (uint256 sharesBefore,) = depositedBalanceSnapshot();
+
+        uint256 deposits = depositedBalance();
+        uint256 amountToRedeem = MathUpgradeable.min(deposits, amount);
+        uint256 result = cToken.redeemUnderlying(amountToRedeem);
+        if (result > 0) {
+            revert RedeemError(result);
+        }
+
+        (uint256 sharesAfter, uint256 underlyingAfter) = depositedBalanceSnapshot();
+        emit WithdrawnFromProtocol(amountToRedeem, sharesBefore, deposits, sharesAfter, underlyingAfter);
+
+        return amountToRedeem;
+    }
+
+
+    // ------------------------------------------ Pass interest-related methods from cToken ------------------------------------------
+    // Methods must be overridden by the strategy contract if they change the interest rate model
 
     /// @inheritdoc ICInterestRate
     function borrowRatePerBlock() public view returns (uint256) {
@@ -105,7 +166,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         }
 
         // in this case "PerBlock" actually means "PerSecond"
-        return cToken.borrowRatePerBlock() / secondPerBlock;
+        return cToken.borrowRatePerBlock() * secondPerBlock;
     }
 
     /// @inheritdoc ICInterestRate
@@ -115,7 +176,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         }
 
         // in this case "PerBlock" actually means "PerSecond"
-        return cToken.supplyRatePerBlock() / secondPerBlock;
+        return cToken.supplyRatePerBlock() * secondPerBlock;
     }
 
     /// @inheritdoc ICInterestRate

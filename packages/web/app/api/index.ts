@@ -1,4 +1,4 @@
-export * from "./apollo.client";
-export * from "./get-vaults.query";
+export * from "./apollo.rsc-client";
+export * from "./queries";
 
-
+export type { Vault, Token } from "./gql/graphql";

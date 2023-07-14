@@ -8,8 +8,7 @@ interface Props extends React.SVGProps<SVGSVGElement> {
 const IconRobot: React.FC<Props> = ({
     size = 16,
     ...restProps
-}) => {
-    return (
+}) => (
         <svg 
             viewBox="0 0 48 48" 
             fill="currentColor" 
@@ -28,6 +27,5 @@ const IconRobot: React.FC<Props> = ({
         </svg>
 
     );
-};
 
 export default IconRobot;

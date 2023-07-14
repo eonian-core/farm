@@ -9,9 +9,9 @@ dataSources:
     name: Vault
     network: bsc
     source:
-      address: "0xa3923Fa94c7332e2561E88290B884419dca9E23C"
+      address: "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878"
       abi: Vault
-      startBlock: 28907512
+      startBlock: 29618633
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

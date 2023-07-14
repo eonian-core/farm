@@ -1,12 +1,47 @@
 import { Metadata } from "next";
-import Root from "./root";
+import { Roboto } from "next/font/google";
+
+import "./globals.scss";
+import "react-toastify/dist/ReactToastify.min.css";
+
+import Providers from "./providers/providers";
+import Footer from "./components/footer/footer";
+import Navigation from "./components/navigation/navigation";
+import PageLoaderTop from "./components/page-loading-top/page-loader-top";
+import SlidingFooter from "./components/sliding-footer/sliding-footer";
+import GoogleAnalytics from "./google-analytics";
+import { store } from "./store/store";
+import { setLocale } from "./store/slices/localeSlice";
+import { ToastContainerWrapperDynamic } from "./components";
+
+const roboto = Roboto({
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500", "700"],
+  display: "block", // force to show font anyway
+});
 
 export interface RootLayoutProps {
   children: React.ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  return <Root>{children}</Root>;
+  const locale = "en";
+
+  store.dispatch(setLocale(locale));
+
+  return (
+    <html lang={locale}>
+      <GoogleAnalytics />
+      <body className={roboto.className}>
+        <Providers locale={locale}>
+          <PageLoaderTop />
+          <Navigation />
+          <ToastContainerWrapperDynamic />
+          <SlidingFooter footer={<Footer />}>{children}</SlidingFooter>
+        </Providers>
+      </body>
+    </html>
+  );
 }
 
 export const metadata: Metadata = {
@@ -43,15 +78,4 @@ export const metadata: Metadata = {
     },
   },
   manifest: "/site.webmanifest",
-};
-
-export const overrideMetadata = (title: string, description: string): Metadata => {
-  return {
-    title,
-    description,
-    openGraph: {
-      description,
-      title,
-    },
-  };
 };

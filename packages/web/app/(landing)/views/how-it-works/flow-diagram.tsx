@@ -178,9 +178,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private handleTransition = (event: TransitionEvent) => {
     const { type, propertyName } = event;
-    if (["transform", "left"].indexOf(propertyName) < 0) {
+    if (["transform", "left"].indexOf(propertyName) < 0) 
       return;
-    }
+    
 
     type === "transitionstart"
       ? this.debouncedRedrawLink(null)
@@ -189,9 +189,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private handleResize = () => {
     const { current: container } = this.ref;
-    if (!container) {
+    if (!container) 
       return;
-    }
+    
     const { width } = container.getBoundingClientRect();
     const { isMobileDisplay, isDesktopDisplay } = this.state;
 
@@ -210,9 +210,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private drawSVG() {
     const { current: container } = this.ref;
-    if (!container) {
+    if (!container) 
       return;
-    }
+    
 
     this.resetSVG();
 
@@ -431,9 +431,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     this.setupPointAnimation(pointGroup);
 
     this.addMouseHoverEvent(pointGroup, (isHovered) => {
-      if (this.activeStepPoint === label) {
+      if (this.activeStepPoint === label) 
         return;
-      }
+      
       pointGroup.remember(isHovered ? "runAnimation" : "reverseAnimation")();
     });
 
@@ -443,14 +443,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   public selectPoint = (label: string) => {
-    if (this.activeStepPoint === label) {
+    if (this.activeStepPoint === label) 
       return;
-    }
+    
 
     const group = this.getPointGroup(label);
-    if (!group) {
+    if (!group) 
       return;
-    }
+    
 
     this.activeStepPointGroup?.remember("reverseAnimation")?.();
 
@@ -466,9 +466,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   private createLinkToCard(label: string) {
     const cardElement = document.getElementById(label);
     const pointGroup = this.getPointGroup(label);
-    if (!cardElement || !pointGroup) {
+    if (!cardElement || !pointGroup) 
       return;
-    }
+    
     const { link } = this.params.points;
     const color = pointGroup.attr("data-color");
     const group = this.activeStepPointLinkGroup;
@@ -520,9 +520,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         `A 1 1 0 0 1 ${endX} ${fY - step * 2}`,
         `L ${endX} ${endY}`,
       ];
-    } else if (endX === startX) {
+    } else if (endX === startX) 
       path = [`M ${startX} ${startY} V ${endY}`];
-    } else {
+     else {
       path = [
         `M ${startX} ${startY}`,
         `V ${fY}`,
@@ -584,9 +584,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   private iteratePaths(group: G, callback: (path: Path) => void) {
     const paths = group.children();
     for (const path of paths) {
-      if (path.type !== "path") {
+      if (path.type !== "path") 
         continue;
-      }
+      
       callback(path as Path);
     }
   }
@@ -628,16 +628,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     element: T | null,
     duration = HIW_ANIMATION_DURATION,
     delay = 0
-  ): T & Runner => {
-    return element?.animate(duration, delay, "absolute") as unknown as T &
+  ): T & Runner => element?.animate(duration, delay, "absolute") as unknown as T &
       Runner;
-  };
 
   private getPath(group: G): Path | null {
     const element = group.get(0);
-    if (element?.type === "path") {
+    if (element?.type === "path") 
       return element as Path;
-    }
+    
     return null;
   }
 }

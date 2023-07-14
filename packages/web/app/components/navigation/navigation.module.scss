@@ -18,19 +18,24 @@
     }
 }
 
-.navigation {
-    height: var(--navigation-height);
-    position: absolute;
+
+.fixedBody {
+    position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
+}
 
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.navigation {
+  height: var(--navigation-height);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
 
-
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content {
@@ -41,9 +46,7 @@
     animation: appearWithDelay 1s ease-in;
 
     display: grid;
-    grid-template-columns: var(--width-300) 1fr var(--width-300);
-
-    max-width: var(--max-width);
+    grid-template-columns: 1fr 2fr 1fr;
 }
 
 .topBarList {
@@ -91,16 +94,23 @@
     }
 }
 
+.right,
 .logo {
     height: 100%;
-    max-width: var(--width-300);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.logo {
     margin-left: 0;
     margin-right: auto;
+}
 
-
+.right {
+    margin-right: 0;
+    margin-left: auto;
+    padding: 0 var(--padding-500);
 }
 
 .menuWrapper {
@@ -181,13 +191,14 @@
         opacity: 1;
         transform: scale(50);
         transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+        transition-property: transform, opacity;
     }
 
     .menuItem {
         opacity: 1;
         transform: translateY(0) translateX(0);
-        transition: 0.5s all;
-        transition-delay: 0.5s;
+        transition: all 0.5s linear 0.5s;
+        transition-property: transform, opacity;
     }
 }
 
@@ -225,12 +236,14 @@
     ul:before {
         transform: scale(0.1);
         transition: all 1s cubic-bezier(0.65, 0, 0.35, 1);
+        transition-property: transform, opacity;
     }
 
     .menuItem {
         opacity: 0;
         transform: translateY(-0.5rem) translateX(0);
-        transition: 0.5s all;
+        transition: all 0.5s linear;
+        transition-property: transform, opacity;
     }
 }
 
@@ -257,7 +270,7 @@
 
 @media (max-width: $screen-tablet) {
     .content {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 3fr;
     }
 
     .menuWrapper {
@@ -268,12 +281,16 @@
         display: none;
     }
 
-    .menuList {
-        font-size: var(--font-size-1120);
-        font-weight: var(--font-black);
-        line-height: var(--line-height-1120);
-        padding-top: var(--padding-800);
-    }
+  .menuList {
+    font-size: var(--font-size-1120);
+    font-weight: var(--font-black);
+    line-height: var(--line-height-1120);
+    padding-top: var(--padding-800);
+  }
+
+  .right {
+    padding: 0;
+  }
 }
 
 @media (max-width: $screen-mobile) {

@@ -3,6 +3,13 @@
 .wrapper {
     width: 40vw;
     max-width: var(--width-600);
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        vertical-align: middle;
+    }
 }
 
 .painting {

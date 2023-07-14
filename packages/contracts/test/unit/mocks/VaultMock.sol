@@ -8,7 +8,8 @@ contract VaultMock is Vault {
         address underlying,
         address rewards,
         uint256 fee,
-        uint256 lockedProfitReleaseDuration
+        uint256 lockedProfitReleaseDuration,
+        uint256 _foundersRewardFee
     ) Vault(false) {
         initialize(
             underlying,
@@ -17,7 +18,8 @@ contract VaultMock is Vault {
             lockedProfitReleaseDuration,
             "",
             "",
-            new address[](0)
+            new address[](0),
+            _foundersRewardFee
         );
     }
 
@@ -87,5 +89,30 @@ contract VaultMock is Vault {
 
     function calculateLockedProfit() external view returns (uint256) {
         return _lockedProfit();
+    }
+
+    function registerDepositHook(IVaultHook hook) public {
+        addDepositHook(hook);
+    }
+
+    function registerWithdrawHook(IVaultHook hook) public {
+        addWithdrawHook(hook);
+    }
+
+    function unregisterDepositHook(IVaultHook hook) public {
+        removeDepositHook(hook);
+    }
+
+    function unregisterWithdrawHook(IVaultHook hook) public {
+        removeWithdrawHook(hook);
+    }
+
+    function increaseDebt(address borrower, uint256 amount) public {
+        super._increaseDebt(borrower, amount);
+    }
+
+    /// @notice Decreases given to borrower debt and total debt
+    function decreaseDebt(address borrower, uint256 amount) public {
+        super._decreaseDebt(borrower, amount);
     }
 }

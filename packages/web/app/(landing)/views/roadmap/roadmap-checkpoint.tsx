@@ -18,12 +18,7 @@ const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({
   
   return (
     <a
-      className={clsx(
-        styles.container,
-        "relative h-full px-4",
-        { "px-10": isCentered },
-        { "cursor-pointer": href }
-      )}
+      className={clsx(styles.container, { [styles.pointer]: !!href })}
       style={{ width: `${width}px` }}
       href={href}
       target="_blank"
@@ -33,7 +28,7 @@ const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({
 
         {children}
         
-        <div className={clsx(styles.pin, { hidden: isCentered })} />
+        <div className={clsx(styles.pin, { [styles.hidden]: isCentered })} />
         
         <div
           className={clsx(styles.point, {

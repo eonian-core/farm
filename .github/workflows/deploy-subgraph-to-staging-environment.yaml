@@ -1,0 +1,44 @@
+name: Deploy Subgraph to Staging Environment
+
+on:
+  push:
+    branches:
+      - staging
+    paths:
+      - "packages/subgraph/**"
+
+jobs:
+  deploy: 
+    name: Deploy Subgraph
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+      
+      - name: Build subgraph
+        run: |-
+          cd packages/subgraph
+          yarn build
+
+      - name: Deploy subgraph
+        env:
+          SUBGRAPH_ACCESS_TOKEN: ${{ secrets.SUBGRAPH_BSC_STAGING_ACCESS_KEY }}
+        # Use warapper for yarn deploy command to highlight step failure
+        run: |-
+          cd packages/subgraph
+          output=$(yarn graph deploy --product hosted-service eonian-core/eonian-bsc-staging ./deploy/environments/eonian-bsc-staging.yaml --access-token $SUBGRAPH_ACCESS_TOKEN 2>&1); echo "$output"; if echo "$output" | grep -q "UNCAUGHT EXCEPTION"; then exit 1; fi
+

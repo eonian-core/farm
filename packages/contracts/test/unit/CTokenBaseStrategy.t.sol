@@ -21,6 +21,7 @@ import "./mocks/CTokenBaseStrategyMock.sol";
 import "contracts/strategies/CTokenBaseStrategy.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 
 contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     address private constant BANANA = 0x603c7f932ED1fc6575303D8Fb018fDCBb0f39a95;
@@ -32,6 +33,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
 
     ERC20Mock underlying;
     VaultMock vault;
+    VaultFounderTokenMock vaultFounderToken;
     OpsMock ops;
     CTokenMock cToken;
 
@@ -41,6 +43,7 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
 
     uint256 defaultFee = 1000;
     uint256 defaultLPRRate = 10**18;
+    uint256 defaultFounderFee = 100;
 
     uint256 minReportInterval = 3600;
     bool isPrepaid = false;
@@ -65,15 +68,20 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
         vm.label(address(vault), "vault");
+
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
+        vaultFounderToken.setVault(vault);
+        vault.setFounders(address(vaultFounderToken));
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
         vm.label(address(ops), "ops");
 
-        cToken = new CTokenMock(address(underlying));
+        cToken = new CTokenMock(underlying);
         vm.label(address(cToken), "cToken");
 
         nativeTokenPriceFeed = new AggregatorV3Mock();
@@ -152,8 +160,12 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
             address(underlying),
             rewards,
             defaultFee,
-            defaultLPRRate
+            defaultLPRRate,
+            defaultFounderFee
         );
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
+        vaultFounderToken.setVault(vault);
+        vault.setFounders(address(vaultFounderToken));
 
         vm.expectRevert(IncompatibleCTokenContract.selector);
         strategy = new CTokenBaseStrategyMock(
@@ -194,8 +206,21 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
 
     function testShouldReturnZeroTotalBananaAssetBalanceIfNoBanana() public {
         assertEq(strategy.currentBananaBalance(), 0);
-
     }
+
+    function testShouldCalculateDepositedBalanceFromSnapshot(
+        uint128 cTokenBalance,
+        uint32 exchangeRate
+    ) public {
+        vm.prank(address(strategy));
+        cToken.mint(cTokenBalance);
+        cToken.setExchangeRate(exchangeRate);
+
+        (uint256 shares, uint256 balance) = strategy.depositedBalanceSnapshot();
+        assertEq(shares, cTokenBalance);
+        assertEq(balance, (uint256(cTokenBalance) * exchangeRate) / 1e18);
+    }
+
 
     function testShouldClaimBanana() public {
         vm.expectEmit(true, true, true, true);
@@ -207,45 +232,48 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
     // test interestRatePerBlock
     function testShouldReturnCorrectInterestRatePerBlock(
         bool _blocksBased,
-        uint256 interestRatePerBlock
+        uint128 _interestRatePerBlock
     ) public {
+        uint256 interestRatePerBlock = _interestRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setSupplyRatePerBlock(interestRatePerBlock);
 
         if (_blocksBased) {
             assertEq(strategy.interestRatePerBlock(), interestRatePerBlock);
         } else {
-            assertEq(strategy.interestRatePerBlock(), interestRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.interestRatePerBlock(), interestRatePerBlock * strategy.secondPerBlock());
         }
     }
 
     // test borrowRatePerBlock
     function testShouldReturnCorrectBorrowRatePerBlock(
         bool _blocksBased,
-        uint256 borrowRatePerBlock
+        uint128 _borrowRatePerBlock
     ) public {
+        uint256 borrowRatePerBlock = _borrowRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setBorrowRatePerBlock(borrowRatePerBlock);
 
         if (_blocksBased) {
             assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock);
         } else {
-            assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.borrowRatePerBlock(), borrowRatePerBlock * strategy.secondPerBlock());
         }
     }
 
     // test supplyRatePerBlock
     function testShouldReturnCorrectSupplyRatePerBlock(
         bool _blocksBased,
-        uint256 supplyRatePerBlock
+        uint128 _supplyRatePerBlock
     ) public {
+        uint256 supplyRatePerBlock = _supplyRatePerBlock;
         cToken.setBlocksBased(_blocksBased);
         cToken.setSupplyRatePerBlock(supplyRatePerBlock);
 
         if (_blocksBased) {
             assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock);
         } else {
-            assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock / strategy.secondPerBlock());
+            assertEq(strategy.supplyRatePerBlock(), supplyRatePerBlock * strategy.secondPerBlock());
         }
     }
 

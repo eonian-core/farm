@@ -1,30 +1,25 @@
+"use client";
+
 import styles from "./navigation.module.scss";
 import LogoWithText from "../logo/logo-with-text";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
-import { TOP_ELELEMENT_ID } from "../links/useScrollToTop";
 import Menu from "./menu";
 import { links, mobileLinks, NavigationItem } from "./links";
+import ConnectWallet from "../wallet/connect-wallet";
+import { showEarn } from "../../features";
 
-
-// TODO: highlight or cross out link for current page
-
-export interface NavigationProps {
-  onStateChange?: (isOpen: boolean) => void;
-}
-
-export default function Navigation({ onStateChange }: NavigationProps) {
-
+export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = useCallback(() => setIsOpen(!isOpen), [isOpen]);
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
-    onStateChange && onStateChange(isOpen);
-  }, [isOpen, onStateChange]);
+    window.document.body.classList.toggle(styles.fixedBody, isOpen);
+  }, [isOpen]);
 
   return (
-    <nav className={styles.navigation} id={TOP_ELELEMENT_ID}>
+    <nav className={styles.navigation} id="navigation">
       <div className={styles.content}>
         <div className={styles.logo}>
           <LogoWithText />
@@ -34,24 +29,28 @@ export default function Navigation({ onStateChange }: NavigationProps) {
           <MenuItemList links={links} onClick={closeMenu} />
         </ul>
 
-        <Menu isOpen={isOpen} toggleMenu={toggleMenu}>
-          <MenuItemList links={mobileLinks} onClick={closeMenu} />
-        </Menu>
-
+        <div className={styles.right}>
+          {showEarn && <ConnectWallet />}
+          <Menu isOpen={isOpen} toggleMenu={toggleMenu}>
+            <MenuItemList links={mobileLinks} onClick={closeMenu} />
+          </Menu>
+        </div>
       </div>
     </nav>
   );
 }
 
 export interface MenuItemListProps {
-  links: Array<NavigationItem>
-  onClick: () => void
+  links: Array<NavigationItem>;
+  onClick: () => void;
 }
 
 export const MenuItemList = ({ links, onClick }: MenuItemListProps) => (
   <>
     {links.map(({ href, label }) => (
-      <MenuItem key={href} href={href} onClick={onClick}>{label}</MenuItem>
+      <MenuItem key={href} href={href} onClick={onClick}>
+        {label}
+      </MenuItem>
     ))}
   </>
-)
+);

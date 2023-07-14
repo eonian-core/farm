@@ -6,17 +6,14 @@ export interface RoadmapContainerProps {
     children: React.ReactNode;
 }
 
-export const RoadmapContainer = ({ children }: RoadmapContainerProps) => {
-
-    return (
+export const RoadmapContainer = ({ children }: RoadmapContainerProps) => (
         <FadeIn 
-            className={clsx("flex min-h-fit w-full flex-col justify-center overflow-hidden sm:items-center", styles.roadmapContainer)}
+            className={clsx(styles.roadmapContainer)}
             amount={0.3}
             fadeUpInitial="10%"
         >
             {children}
         </FadeIn>
     )
-}
 
 export default RoadmapContainer;

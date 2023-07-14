@@ -51,7 +51,7 @@ export const H3 = ({ children, id }: HeaderProps) => {
             className={`${styles.header3} ${inter.className}`}
         >
             {children}
-            {isExternalLink && <IconExternal size={12} className="ml-1 inline" />}
+            {isExternalLink && <IconExternal size={12} className={styles.iconExternal} />}
         </h3>
     )
 }

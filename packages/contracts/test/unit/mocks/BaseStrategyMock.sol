@@ -13,7 +13,7 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     uint256 public harvestProfit = 0;
     uint256 public harvestLoss = 0;
     uint256 public override interestRatePerBlock;
-    
+
     uint256 private _liquidateAllPositionsReturn = 0;
     uint256 private _estimatedTotalAssets = 0;
 
@@ -64,11 +64,11 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         return _canWork();
     }
 
-    function name() external pure override returns (string memory) {
+    function name() external pure virtual override returns (string memory) {
         return "BaseStrategyMock";
     }
 
-    function estimatedTotalAssets() public view override returns (uint256) {
+    function estimatedTotalAssets() public virtual view override returns (uint256) {
         return _estimatedTotalAssets;
     }
 
@@ -100,57 +100,52 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         emit UpdatedProfitFactor(profitFactor);
     }
 
-    function _harvestAfterShutdown(uint256 outstandingDebt)
+    function _harvestAfterShutdown(
+        uint256 outstandingDebt
+    )
         internal
         override
-        returns (
-            uint256 profit,
-            uint256 loss,
-            uint256 debtPayment
-        )
+        returns (uint256 profit, uint256 loss, uint256 debtPayment)
     {
         emitHarvestAfterShutdownCalled();
         return super._harvestAfterShutdown(outstandingDebt);
     }
 
-    function harvestAfterShutdown(uint256 outstandingDebt)
-        public
-        returns (
-            uint256 profit,
-            uint256 loss,
-            uint256 debtPayment
-        )
-    {
+    function harvestAfterShutdown(
+        uint256 outstandingDebt
+    ) public returns (uint256 profit, uint256 loss, uint256 debtPayment) {
         return _harvestAfterShutdown(outstandingDebt);
     }
 
-    function _harvest(uint256 outstandingDebt)
+    function _harvest(
+        uint256 outstandingDebt
+    )
         internal
         override
-        returns (
-            uint256 profit,
-            uint256 loss,
-            uint256 debtPayment
-        )
+        virtual
+        returns (uint256 profit, uint256 loss, uint256 debtPayment)
     {
         emitHarvestCalled();
         return (harvestProfit, harvestLoss, outstandingDebt);
     }
 
-    function checkGasPriceAgainstProfit(uint256 profit)
-        external
-        view
-        returns (bool)
-    {
+    function checkGasPriceAgainstProfit(
+        uint256 profit
+    ) external view returns (bool) {
         return _checkGasPriceAgainstProfit(profit);
     }
 
-    function _adjustPosition(uint256 outstandingDebt) internal override {
+    function _adjustPosition(
+        uint256 outstandingDebt
+    ) internal virtual override {
         emitAjustPositionCalled(outstandingDebt);
     }
 
-    function _liquidatePosition(uint256 assets)
+    function _liquidatePosition(
+        uint256 assets
+    )
         internal
+        virtual
         override
         returns (uint256 liquidatedAmount, uint256 loss)
     {
@@ -160,7 +155,7 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
 
     function _liquidateAllPositions()
         internal
-        view
+        virtual
         override
         returns (uint256 amountFreed)
     {
