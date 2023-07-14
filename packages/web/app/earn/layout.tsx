@@ -2,7 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 
 import styles from "./layout.module.scss";
-import { overrideMetadata } from "../../meta";
+import { overrideMetadata } from "../meta";
 
 export default function EarnLayout({ children }: React.PropsWithChildren) {
   return <main className={styles.main}>{children}</main>;

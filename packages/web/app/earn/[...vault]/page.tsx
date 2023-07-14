@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import NextError from "next/error";
 import {
   getClient,
   getVaultBySymbol,
@@ -34,14 +33,8 @@ export async function generateStaticParams(): Promise<RouteSegment[]> {
 export default async function Page({ params }: Params) {
   const { vault: vaultRoute = [] } = params;
 
-  // If the route is not complete (e.g. complete route: "/earn/bsc_mainnet/eonUSDT"),
-  // we should redirect the user to the first vault in the default chain.
-  if (vaultRoute.length != 2) {
-    const segment = await generateStaticParams();
-    const [{ vault }] = segment;
-    const [chainName, vaultSymbol] = vault;
-    redirect("/earn/" + chainName + "/" + vaultSymbol);
-  }
+  if (vaultRoute.length != 2)
+    redirect("/earn/");
 
   const [chainName, vaultSymbol] = vaultRoute;
   const chainId = ChainId.getByName(chainName);

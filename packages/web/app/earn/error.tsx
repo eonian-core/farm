@@ -1,6 +1,6 @@
 "use client";
 
-import IconWarning from "../../components/icons/icon-warning";
+import IconWarning from "../components/icons/icon-warning";
 import styles from "./layout.module.scss";
 
 export default function Error({ error }: { error: Error }) {
