@@ -51,7 +51,7 @@
   resolved "https://registry.yarnpkg.com/@auth0/auth0-spa-js/-/auth0-spa-js-2.0.8.tgz#42a8e5aad043e66dbba2a8fadc086a46bf0d021f"
   integrity sha512-qCgWZS58S69WCg2ybd+SDiaw3ahBVJ4/tSFWMtIpc//Fq8kRHGwMOmgpNKVAFrpHG0ck2oWFGrpylxoto8Z0mA==
 
-"@babel/runtime@^7.12.1", "@babel/runtime@^7.13.10", "@babel/runtime@^7.20.1", "@babel/runtime@^7.20.7", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.12.1", "@babel/runtime@^7.20.1", "@babel/runtime@^7.20.7", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.5.tgz#8564dd588182ce0047d55d7a75e93921107b57ec"
   integrity sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==
@@ -1140,97 +1140,6 @@
     open "^9.1.0"
     picocolors "^1.0.0"
     tslib "^2.5.0"
-
-"@radix-ui/primitive@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/primitive/-/primitive-1.0.1.tgz#e46f9958b35d10e9f6dc71c497305c22e3e55dbd"
-  integrity sha512-yQ8oGX2GVsEYMWGxcovu1uGWPCxV5BFfeeYxqPmuAzUyLT9qmaMXSAhXpb0WrspIeqYzdJpkh2vHModJPgRIaw==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-
-"@radix-ui/react-collapsible@^1.0.2":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-collapsible/-/react-collapsible-1.0.3.tgz#df0e22e7a025439f13f62d4e4a9e92c4a0df5b81"
-  integrity sha512-UBmVDkmR6IvDsloHVN+3rtx4Mi5TFvylYXpluuv0f37dtaz3H99bp8No0LGXRigVpl3UAT4l9j6bIchh42S/Gg==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/primitive" "1.0.1"
-    "@radix-ui/react-compose-refs" "1.0.1"
-    "@radix-ui/react-context" "1.0.1"
-    "@radix-ui/react-id" "1.0.1"
-    "@radix-ui/react-presence" "1.0.1"
-    "@radix-ui/react-primitive" "1.0.3"
-    "@radix-ui/react-use-controllable-state" "1.0.1"
-    "@radix-ui/react-use-layout-effect" "1.0.1"
-
-"@radix-ui/react-compose-refs@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-compose-refs/-/react-compose-refs-1.0.1.tgz#7ed868b66946aa6030e580b1ffca386dd4d21989"
-  integrity sha512-fDSBgd44FKHa1FRMU59qBMPFcl2PZE+2nmqunj+BWFyYYjnhIDWL2ItDs3rrbJDQOtzt5nIebLCQc4QRfz6LJw==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-
-"@radix-ui/react-context@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-context/-/react-context-1.0.1.tgz#fe46e67c96b240de59187dcb7a1a50ce3e2ec00c"
-  integrity sha512-ebbrdFoYTcuZ0v4wG5tedGnp9tzcV8awzsxYph7gXUyvnNLuTIcCk1q17JEbnVhXAKG9oX3KtchwiMIAYp9NLg==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-
-"@radix-ui/react-id@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-id/-/react-id-1.0.1.tgz#73cdc181f650e4df24f0b6a5b7aa426b912c88c0"
-  integrity sha512-tI7sT/kqYp8p96yGWY1OAnLHrqDgzHefRBKQ2YAkBS5ja7QLcZ9Z/uY7bEjPUatf8RomoXM8/1sMj1IJaE5UzQ==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-use-layout-effect" "1.0.1"
-
-"@radix-ui/react-presence@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-presence/-/react-presence-1.0.1.tgz#491990ba913b8e2a5db1b06b203cb24b5cdef9ba"
-  integrity sha512-UXLW4UAbIY5ZjcvzjfRFo5gxva8QirC9hF7wRE4U5gz+TP0DbRk+//qyuAQ1McDxBt1xNMBTaciFGvEmJvAZCg==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-compose-refs" "1.0.1"
-    "@radix-ui/react-use-layout-effect" "1.0.1"
-
-"@radix-ui/react-primitive@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-primitive/-/react-primitive-1.0.3.tgz#d49ea0f3f0b2fe3ab1cb5667eb03e8b843b914d0"
-  integrity sha512-yi58uVyoAcK/Nq1inRY56ZSjKypBNKTa/1mcL8qdl6oJeEaDbOldlzrGn7P6Q3Id5d+SYNGc5AJgc4vGhjs5+g==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-slot" "1.0.2"
-
-"@radix-ui/react-slot@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-slot/-/react-slot-1.0.2.tgz#a9ff4423eade67f501ffb32ec22064bc9d3099ab"
-  integrity sha512-YeTpuq4deV+6DusvVUW4ivBgnkHwECUu0BiN43L5UCDFgdhsRUWAghhTF5MbvNTPzmiFOx90asDSUjWuCNapwg==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-compose-refs" "1.0.1"
-
-"@radix-ui/react-use-callback-ref@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-callback-ref/-/react-use-callback-ref-1.0.1.tgz#f4bb1f27f2023c984e6534317ebc411fc181107a"
-  integrity sha512-D94LjX4Sp0xJFVaoQOd3OO9k7tpBYNOXdVhkltUbGv2Qb9OXdrg/CpsjlZv7ia14Sylv398LswWBVVu5nqKzAQ==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-
-"@radix-ui/react-use-controllable-state@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-controllable-state/-/react-use-controllable-state-1.0.1.tgz#ecd2ced34e6330caf89a82854aa2f77e07440286"
-  integrity sha512-Svl5GY5FQeN758fWKrjM6Qb7asvXeiZltlT4U2gVfl8Gx5UAv2sMR0LWo8yhsIZh2oQ0eFdZ59aoOOMV7b47VA==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-use-callback-ref" "1.0.1"
-
-"@radix-ui/react-use-layout-effect@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-use-layout-effect/-/react-use-layout-effect-1.0.1.tgz#be8c7bc809b0c8934acf6657b577daf948a75399"
-  integrity sha512-v/5RegiJWYdoCvMnITBkNNx6bCj20fiaJnWtRkU18yITptraXjffz5Qbn05uOiQnOvi+dbkznkoaMltz1GnszQ==
-  dependencies:
-    "@babel/runtime" "^7.13.10"
 
 "@react-aria/button@3.6.2":
   version "3.6.2"
@@ -6126,14 +6035,14 @@ scrypt-js@3.0.1:
   integrity sha512-cdwTTnqPu0Hyvf5in5asVdZocVDTNRmR7XEcJuIzMjJeSHybHl7vpB66AzwTaIg6CLSbtjcxc8fqcySfnTkccA==
 
 semver@^6.3.0:
-  version "6.3.0"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
-  integrity sha512-b39TBaTSfV6yBrapU89p5fKekE2m/NwnDocOVruQFS1/veMgdzuPcnOM34M6CwxW8jH/lxEa5rBoDeUwu5HHTw==
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.1.tgz#556d2ef8689146e46dcea4bfdd095f3434dffcb4"
+  integrity sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==
 
 semver@^7.3.7:
-  version "7.5.3"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.3.tgz#161ce8c2c6b4b3bdca6caadc9fa3317a4c4fe88e"
-  integrity sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==
+  version "7.5.4"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.4.tgz#483986ec4ed38e1c6c48c34894a9182dbff68a6e"
+  integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==
   dependencies:
     lru-cache "^6.0.0"
 
