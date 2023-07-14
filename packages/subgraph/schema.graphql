@@ -170,7 +170,7 @@ type RewardAPY @entity(immutable: false) @regularPolling {
   decimals: Int!
 
   " Dayly interest rate, represented as percentage scaled by 10^decimals "
-  dayly: BigInt!
+  daily: BigInt!
 
   " Weekly interest rate, represented as percentage scaled by 10^decimals "
   weekly: BigInt!

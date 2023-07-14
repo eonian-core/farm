@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import RoadmapCheckpoint from "./roadmap-checkpoint";
+import styles from "./roadmap-checkpoint.module.scss";
 
 export interface RoadmapCheckpointProps {
   completed: boolean;
@@ -53,7 +53,7 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
     return (
       <div
         ref={this.ref}
-        className="absolute inset-y-0 flex flex-row"
+        className={styles.strip}
         style={{
           padding: `2rem ${this.halfPeakWidth}px ${wavePeakHeight}px ${this.halfPeakWidth}px`,
           transform: `translateX(${this.getOffset(startAt)}px)`,
@@ -88,18 +88,18 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
 
   public prepareAnimation(moveTo: number) {
     const { current: strip } = this.ref;
-    if (!strip) {
+    if (!strip) 
       return;
-    }
+    
     this.currentX = +this.regExp.exec(strip.style.transform)![1];
     this.targetX = this.getOffset(moveTo);
   }
 
   public animate = (progress: number) => {
     const { current: strip } = this.ref;
-    if (!strip) {
+    if (!strip) 
       return;
-    }
+    
     const x = this.currentX + (this.targetX - this.currentX) * progress;
     strip.style.transform = `translateX(${x}px)`;
   };

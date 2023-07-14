@@ -1,6 +1,6 @@
 # Web application
 
-This is Eonian Farm UI dApp.
+This is Eonian Farm yield aggregator UI dApp.
 
 ## Requirements
 

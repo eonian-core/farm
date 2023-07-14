@@ -1,7 +1,7 @@
 import {  Bytes,  BigInt } from "@graphprotocol/graph-ts";
 import {  RewardAPY } from "../../generated/schema"
 import {WithLogger} from '../logger'
-import { MAX_BPS, BLOCKS_PER_DAY, BLOCKS_PER_WEEK, BLOCKS_PER_MONTH, BLOCKS_PER_YEAR, toApy } from "./apy-calculations";
+import { INTEREST_RATE_DECIMALS, BLOCKS_PER_DAY, BLOCKS_PER_WEEK, BLOCKS_PER_MONTH, BLOCKS_PER_YEAR, toApy } from "./apy-calculations";
 
 export interface IRewardApyService {
     createOrUpdate(id: Bytes, interestRatePerBlock: BigInt): RewardAPY;
@@ -18,11 +18,11 @@ export class RewardApyService extends WithLogger implements IRewardApyService {
         if(!entity) {
             this.logger.info("Creating new APY entity for {}", [id.toString()])
             entity = new RewardAPY(id);
-            entity.decimals = MAX_BPS;
+            entity.decimals = INTEREST_RATE_DECIMALS;
         }
 
         this.logger.info("Filling APY entity for {}", [id.toString()])
-        entity.dayly = toApy(interestRatePerBlock, BLOCKS_PER_DAY);
+        entity.daily = toApy(interestRatePerBlock, BLOCKS_PER_DAY);
         entity.weekly = toApy(interestRatePerBlock, BLOCKS_PER_WEEK);
         entity.monthly = toApy(interestRatePerBlock, BLOCKS_PER_MONTH);
         entity.yearly = toApy(interestRatePerBlock, BLOCKS_PER_YEAR);

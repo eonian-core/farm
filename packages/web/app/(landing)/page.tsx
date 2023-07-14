@@ -35,6 +35,7 @@ import Card, { Target } from "../components/card/card";
 import Founders from "./views/founders/founders";
 import FoundersList from "./views/founders/founders-list";
 import Founder from "./views/founders/founder";
+import IconCoin, { CoinIcon } from "../components/icons/icon-coin";
 
 const components = {
   Card,
@@ -69,6 +70,7 @@ const components = {
   SafeInvestments,
   Features,
   ul: FeaturesList,
+  UsdtIcon: () => <IconCoin symbol={CoinIcon.USDT} width={18} height={18} />,
 };
 
 export default function Home() {

@@ -7,8 +7,7 @@ interface Props extends React.SVGProps<SVGSVGElement> {
 const IconExternal: React.FC<Props> = ({
   size = 16,
   ...restProps
-}) => {
-  return (
+}) => (
     <svg
       viewBox="0 0 24 24"
       fill="currentColor"
@@ -21,6 +20,5 @@ const IconExternal: React.FC<Props> = ({
       <path d="M19 19H5V5h7l-2-2H5c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2v-5l-2-2v7z" />
     </svg>
   );
-};
 
 export default IconExternal;

@@ -120,20 +120,17 @@
       --title-gradient: linear-gradient(
         to bottom right, var(--color-text-300) 35%, var(--color-text-400) 50%, var(--color-text-200) 55%);
 
-    // Background
-
-      --color-background-start: hsl(180, 4%, 14%);
-      --color-background-end: hsl(200, 4%, 10%);
-      --color-background-highlight: hsl(180, 7%, 17%);
-      --color-neutral-background-gradient: linear-gradient(
-        to bottom,
-        var(--color-background-start),
-        var(--color-background-end)
-      ) var(--color-background-start);
-
-      --color-primary-gradient-start: hsl(341, 67%, 50%);
-      --color-primary-gradient: linear-gradient(to bottom right, var(--color-primary-gradient-start), hsl(270, 35%, 50%), hsl(229, 80%, 66%), hsl(256, 77%, 60%));
-      --color-accent-background-gradient: linear-gradient(to bottom right, #f79533, #f37055, #ef4e7b, #ff00cc, #a166ab, #333399, #5073b8, #2657eb, #2657eb);
+    // Dark
+      --color-dark-100: hsl(210, 2%, 58%);
+      --color-dark-200: hsl(200, 1%, 42%);
+      --color-dark-300: hsl(195, 2%, 35%);
+      --color-dark-400: hsl(200, 3%, 23%);
+      --color-dark-450: hsl(200, 3%, 23%);
+      --color-dark-500: hsl(200, 6%, 10%);
+      --color-dark-600: hsl(210, 5%, 9%);
+      --color-dark-700: hsl(210, 6%, 7%);
+      --color-dark-800: hsl(210, 8%, 5%);
+      --color-dark-900: hsl(180, 8%, 3%);
 
     // Primary
       --color-primary-50: hsl(226, 100%, 97%);
@@ -146,6 +143,7 @@
       --color-primary-700: hsl(245, 58%, 51%);
       --color-primary-800: hsl(244, 55%, 41%);
       --color-primary-900: hsl(242, 47%, 34%);
+      --color-primary-1000: hsl(242, 49%, 25%);
 
       --primary-glow: linear-gradient(
         to bottom right,
@@ -157,16 +155,33 @@
       );
 
     // Secondary
-      --color-secondary-50: hsl(289, 100%, 98%);
-      --color-secondary-100: hsl(287, 100%, 95%);
-      --color-secondary-200: hsl(288, 96%, 91%);
-      --color-secondary-300: hsl(291, 93%, 83%);
-      --color-secondary-400: hsl(292, 91%, 73%);
-      --color-secondary-500: hsl(292, 84%, 61%); // Default color
-      --color-secondary-600: hsl(293, 69%, 49%);
-      --color-secondary-700: hsl(295, 72%, 40%);
-      --color-secondary-800: hsl(295, 70%, 33%);
-      --color-secondary-900: hsl(297, 64%, 28%);
+      --color-secondary-50: hsl(340, 69%, 97%);
+      --color-secondary-100: hsl(341, 66%, 94%);
+      --color-secondary-200: hsl(341, 67%, 83%);
+      --color-secondary-300: hsl(341, 67%, 72%);
+      --color-secondary-400: hsl(341, 67%, 61%);
+      --color-secondary-500: hsl(341, 67%, 50%); // Default color
+      --color-secondary-600: hsl(341, 67%, 39%);
+      --color-secondary-700: hsl(341, 67%, 28%);
+      --color-secondary-800: hsl(341, 67%, 17%);
+      --color-secondary-900: hsl(341, 66%, 6%);
+
+
+    // Background
+
+      --color-background-start: hsl(180, 4%, 14%);
+      --color-background-end: var(--color-dark-500);
+      --color-background-highlight: hsl(180, 7%, 17%);
+      --color-neutral-background-gradient: linear-gradient(
+        to bottom,
+        var(--color-background-start),
+        var(--color-background-end)
+      ) var(--color-background-start);
+
+      --color-primary-gradient-start: var(--color-secondary-500);
+      --color-primary-gradient: linear-gradient(to bottom right, var(--color-primary-gradient-start), hsl(270, 35%, 50%), hsl(229, 80%, 66%), hsl(256, 77%, 60%));
+      --color-accent-background-gradient: linear-gradient(to bottom right, #f79533, #f37055, #ef4e7b, #ff00cc, #a166ab, #333399, #5073b8, #2657eb, #2657eb);
+
     
     // Neutral
       --color-neutral-50: hsl(0, 0%, 98%);
@@ -253,6 +268,7 @@
     --margin-1200: 20rem;
 
   // padding
+    --padding-50: 0.25rem;
     --padding-100: 0.5rem;
     --padding-200: 0.75rem;
     --padding-250: 0.875rem;
@@ -262,6 +278,7 @@
     --padding-500: 2rem;
     --padding-600: 2.5rem;
     --padding-700: 3rem;
+    --padding-750: 3.5rem;
     --padding-800: 6rem;
     --padding-900: 10rem;
     --padding-1000: 14rem;
@@ -290,6 +307,8 @@
   // height
     --navigation-height: 5rem;
     --indicator-height: 1.5rem;
+    
+    --header-800: 24rem;
 
   // border radius
     --border-radius-300: 3px;
@@ -327,4 +346,8 @@ a {
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+}
+
+ul {
+  list-style-type: none;
 }

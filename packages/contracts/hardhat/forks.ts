@@ -4,14 +4,18 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
   accounts: Record<string, string>;
 };
 
+const bscRpcUrl = process.env.BSC_MAINNET_RPC_URL;
+if(!bscRpcUrl)
+  throw new Error("Missing BSC_MAINNET_RPC_URL environment variable");
+
 /** Binance Smart Chain Mainnet */
 export const binanceSmartChainFork: ForkData = {
   // official BSC RPC unstable use unofficail instead
-  url: "https://bsc.getblock.io/beac5e27-711d-4570-abed-8ddb5dd41d9e/mainnet/",
+  url: bscRpcUrl,
   // do not use blockNumber for BSC,
   // hardhat or providers cannot correctly exchange non latest block data
   accounts: {
-    holderA: "0xe2fc31f816a9b94326492132018c3aecc4a93ae1", // Holder (Binance Hot Wallet)
+    holderA: "0x8894e0a0c962cb723c1976a4421c95949be2d4e3", // Holder (Binance: Hot Wallet 6)
     holderB: "0x3c783c21a0383057d128bae431894a5c19f9cf06", // Holder (Binance Hot Wallet 8)
     ops: "0x527a819db1eb0e34426297b03bae11F2f8B3A19E", // Gelato ops
   },

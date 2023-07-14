@@ -50,7 +50,7 @@ export const deployOrUpgrade = ({
   const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const {
       network,
-      deployments: { deploy },
+      deployments: { deploy, get: getDeployment },
     } = hre;
     const { accounts } = await extractContext(hre);
 
@@ -60,6 +60,8 @@ export const deployOrUpgrade = ({
     );
 
     const { deployer } = accounts;
+
+    const isUpdate = await isDeployedBefore(contract, getDeployment);
 
     const result = await deploy(contract, {
       from: deployer,
@@ -85,7 +87,10 @@ export const deployOrUpgrade = ({
       },
     });
 
-    await afterDeploy?.(hre, result, deployedContracts);
+    // trigger only on first deploy
+    if (!isUpdate) {
+      await afterDeploy?.(hre, result, deployedContracts);
+    }
   };
 
   func.tags = [contract, ...chains, ...tags];
@@ -95,6 +100,23 @@ export const deployOrUpgrade = ({
   func.dependencies = dependencies;
 
   return func;
+};
+
+type GetDeployement = (name: string) => Promise<Deployment>;
+
+export const isDeployedBefore = async (
+  contract: string,
+  getDeployment: GetDeployement
+): Promise<boolean> => {
+  try {
+    const oldDeployment = await getDeployment(contract);
+    console.log("Old deployment found for", contract, oldDeployment);
+
+    return !!oldDeployment?.implementation;
+  } catch (e) {
+    console.warn("Probably wasan't deployed before", e);
+    return false;
+  }
 };
 
 export interface Context {

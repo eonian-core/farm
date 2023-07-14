@@ -67,11 +67,11 @@ export default class WavePainter {
 
     const startX = this.moveToInitPosition();
 
-    if (this.useQuadraticCurvePaint) {
+    if (this.useQuadraticCurvePaint) 
       this.drawWaveWithQuadraticCurve(startX);
-    } else {
+     else 
       this.drawWaveWithLines(startX);
-    }
+    
 
     this.ctx.filter = this.blur ? `blur(${this.blur}px)` : "none";
     this.ctx.strokeStyle = this.waveGradient ?? this.color;
@@ -101,9 +101,9 @@ export default class WavePainter {
   }
 
   private drawWaveWithLines(startX: number) {
-    for (let x = startX; x >= 0; x -= this.stepX) {
+    for (let x = startX; x >= 0; x -= this.stepX) 
       this.drawLineTo(x);
-    }
+    
   }
 
   private drawQuadraticCurveTo(x: number) {
@@ -116,16 +116,16 @@ export default class WavePainter {
   }
 
   private drawWaveWithQuadraticCurve(startX: number) {
-    for (let x = startX; x >= 0; x -= this.stepX) {
+    for (let x = startX; x >= 0; x -= this.stepX) 
       this.drawQuadraticCurveTo(x);
-    }
+    
   }
 
   private setupWaveGradient() {
     if (this.peakColor) {
-      if (typeof this.color !== "string") {
+      if (typeof this.color !== "string") 
         throw new Error("Color is not a string");
-      }
+      
       const { width } = this.canvas;
       const deltaY = (this.lineWidth + this.scaleY) / 2;
       this.waveGradient = this.ctx.createLinearGradient(
@@ -136,9 +136,9 @@ export default class WavePainter {
       );
       this.waveGradient.addColorStop(0, this.peakColor);
       this.waveGradient.addColorStop(1, this.color);
-    } else {
+    } else 
       this.waveGradient = undefined;
-    }
+    
   }
 
   /* Getters */

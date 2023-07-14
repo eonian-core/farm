@@ -1,0 +1,67 @@
+@import "../../../screen.scss";
+
+.container {
+  width: 470px;
+  padding: var(--padding-200);
+  position: relative;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: 2rem;
+    left: 3rem;
+    height: calc(100% - 5rem);
+    width: calc(100% - 2 * 3rem);
+    z-index: -1;
+
+    background: var(--color-accent-background-gradient);
+    border-radius: calc(2 * var(--border-radius-400));
+    background-size: 300% 300%;
+    mix-blend-mode: screen;
+    filter: blur(3rem);
+    transition: transform 0.2s ease;
+    opacity: 0.5;
+  }
+
+  &:focus-within:before, &:hover:before {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: $screen-mobile) {
+    width: 100%;
+  }
+
+  @media (max-width: $screen-small-mobile) {
+    padding: var(--padding-100);
+  }
+
+  h4 {
+    text-align: center;
+    margin: var(--margin-200);
+  }
+}
+
+.fragment {
+  padding: var(--padding-400);
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.disclamer {
+  margin-bottom: var(--margin-100) !important;
+  // inset shadow
+  border-radius: var(--border-radius-300);
+
+  p {
+    font-size: var(--font-size-300);
+    color: var(--color-text-400);
+    text-align: center;
+
+    padding: var(--padding-200);
+  }
+
+}

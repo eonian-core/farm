@@ -9,3 +9,6 @@ solc = '0.8.19'
 
 # Some tests rely on a non-zero timestamp
 block_timestamp = 200000
+
+[fuzz]
+max_test_rejects = 131072 # default value too low for part of the tests

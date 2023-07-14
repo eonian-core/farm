@@ -11,9 +11,9 @@ export default class PageIntersectionObserver<T extends HTMLElement> {
 
   private callback: IntersectionObserverCallback = (entries) => {
     for (const { target, isIntersecting } of entries) {
-      if (target !== this.ref.current) {
+      if (target !== this.ref.current) 
         continue;
-      }
+      
       this.intersectCallback(isIntersecting);
     }
   };
@@ -22,9 +22,9 @@ export default class PageIntersectionObserver<T extends HTMLElement> {
     this.destroy();
 
     const { current: node } = this.ref;
-    if (!node) {
+    if (!node) 
       return;
-    }
+    
 
     const options: IntersectionObserverInit = {
       root: this.root,

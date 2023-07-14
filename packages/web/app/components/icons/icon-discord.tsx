@@ -5,8 +5,7 @@ interface Props {
   height?: string | number;
 }
 
-const IconDiscord: React.FC<Props> = ({ width = 16, height = 16 }) => {
-  return (
+const IconDiscord: React.FC<Props> = ({ width = 16, height = 16 }) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 640 512"
@@ -19,6 +18,5 @@ const IconDiscord: React.FC<Props> = ({ width = 16, height = 16 }) => {
       />
     </svg>
   );
-};
 
 export default IconDiscord;

@@ -5,8 +5,7 @@ interface Props extends React.SVGProps<SVGSVGElement> {
   size: string | number;
 }
 
-const Spinner: React.FC<Props> = ({ size, className, ...restProps }) => {
-  return (
+const Spinner: React.FC<Props> = ({ size, className, ...restProps }) => (
     <svg
       width={size}
       height={size}
@@ -28,6 +27,5 @@ const Spinner: React.FC<Props> = ({ size, className, ...restProps }) => {
       />
     </svg>
   );
-};
 
 export default Spinner;

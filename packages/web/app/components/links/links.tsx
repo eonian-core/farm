@@ -4,8 +4,8 @@ import Link, { LinkProps as NextLinkProps } from "next/link";
 import React, { useCallback } from "react";
 import clsx from "clsx";
 import styles from "./links.module.scss";
-import useScrollToTop from "./useScrollToTop";
-import { usePageTransitionContext } from "../../store/page-transition-context";
+import { useAppDispatch } from "../../store/hooks";
+import { setPageLoading } from "../../store/slices/navigationSlice";
 
 export type BaseLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -23,6 +23,7 @@ export type LinkWithIconProps = BaseLinkProps & {
   children?: React.ReactNode;
   /** Class name for icon */
   iconClassName?: string;
+  iconAtEnd?: boolean;
 };
 
 /** Link which can contain optional icon */
@@ -31,25 +32,38 @@ export const LinkWithIcon = ({
   className,
   icon,
   children,
+  iconAtEnd,
   iconClassName,
   ...props
-}: LinkWithIconProps) => (
-  <Link
-    href={href}
-    className={clsx(
-      styles.linkWithIcon,
-      {
-        [styles.onlyIcon]: !children,
-        [styles.onlyText]: !icon,
-      },
-      className
-    )}
-    {...props}
-  >
-    {icon && <span className={clsx(styles.icon, iconClassName)}>{icon}</span>}
-    {children}
-  </Link>
-);
+}: LinkWithIconProps) => {
+  const iconElement = icon && (
+    <span
+      className={clsx(styles.icon, iconClassName, {
+        [styles.iconEnd]: iconAtEnd,
+      })}
+    >
+      {icon}
+    </span>
+  );
+  return (
+    <Link
+      href={href}
+      className={clsx(
+        styles.linkWithIcon,
+        {
+          [styles.onlyIcon]: !children,
+          [styles.onlyText]: !icon,
+        },
+        className
+      )}
+      {...props}
+    >
+      {!iconAtEnd && iconElement}
+      {children}
+      {iconAtEnd && iconElement}
+    </Link>
+  );
+};
 
 /** Link used for navigation between pages **inside** application */
 export const InternalLink = ({
@@ -58,18 +72,16 @@ export const InternalLink = ({
   onClick,
   ...props
 }: LinkWithIconProps) => {
-  const [onRouteChange] = useScrollToTop();
-  const [pageLoading, setPageLoading] = usePageTransitionContext();
+  const dispatch = useAppDispatch();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (onClick) {
-        onClick(e);
-      }
-      href && setPageLoading(href.toString());
-      onRouteChange();
+      onClick?.(e);
+      if (!e.defaultPrevented) 
+        dispatch(setPageLoading(href.toString()));
+      
     },
-    [onClick, onRouteChange, href, setPageLoading]
+    [onClick, dispatch, href]
   );
 
   return (

@@ -286,6 +286,13 @@ abstract contract BaseStrategy is
         IERC20Upgradeable(token).safeApprove(spender, type(uint256).max);
     }
 
+    /// @notice Set minimum time between executions.
+    /// @param time - required time which must pass between executions of the job in seconds.
+    /// Set in hours to prevent block timestamp vulnerability
+    function setMinimumBetweenExecutions(uint256 time) public onlyOwner {
+        _setMinimumBetweenExecutions(time);
+    }
+
     /// @notice Estimates the total amount of strategy funds (including those invested in the base protocol).
     function estimatedTotalAssets() public view virtual returns (uint256);
 

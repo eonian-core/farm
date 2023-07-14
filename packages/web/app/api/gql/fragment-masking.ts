@@ -1,4 +1,4 @@
-import { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';
+import type { ResultOf, DocumentTypeDecoration,  } from '@graphql-typed-document-node/core';
 
 
 export type FragmentType<TDocumentType extends DocumentTypeDecoration<any, any>> = TDocumentType extends DocumentTypeDecoration<

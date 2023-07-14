@@ -11,7 +11,8 @@ on:
 env:
   SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
   BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
-  HARDHAT_NETWORK: bsc_mainnet_dev
+  HARDHAT_NETWORK: bsc_mainnet_staging
+  BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
 jobs:
   deploy: 
@@ -47,24 +48,6 @@ jobs:
           cd packages/contracts
           yarn hardhat deploy
 
-      # Allow etherscan to index the contracts and prevent failures
-      - name: Wait for 10 seconds
-        run: sleep 10s
-        shell: bash
-
-      - name: Publish code on Etherscan
-        env:
-          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_STAGE_PRIVATE_KEY }}
-        run: |-
-          cd packages/contracts
-          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
-      
-      # Working not on all blockchains, BSC for example
-      - name: Publish code on Sourcify
-        run: |-
-          cd packages/contracts
-          yarn hardhat sourcify
-
       # Usefull for automated scripts
       - name: Export deployments to JSON config
         run: |-
@@ -83,3 +66,50 @@ jobs:
           default_author: github_actions
           message: 'Deployed contracts to Staging environment in BSC Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+
+  publish-source-code:
+    name: Publish Source Code
+    runs-on: ubuntu-latest
+    # Etherscan unstable and can fail, 
+    # need publish code separatly from deploy to save deployed contracts
+    needs: deploy
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+      
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      # Allow etherscan to index the contracts and prevent failures
+      - name: Wait for 10 seconds
+        run: sleep 10s
+        shell: bash
+
+      - name: Publish code on Etherscan
+        env:
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_STAGE_PRIVATE_KEY }}
+        run: |-
+          cd packages/contracts
+          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
+      
+      # Working not on all blockchains, BSC for example
+      - name: Publish code on Sourcify
+        run: |-
+          cd packages/contracts
+          yarn hardhat sourcify

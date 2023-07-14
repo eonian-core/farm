@@ -1,0 +1,19 @@
+[
+  {
+    "id": "0x70a3C15F551261eA5EB6fD37a75BD9d4af3a8855",
+    "address": "0x70a3C15F551261eA5EB6fD37a75BD9d4af3a8855",
+    "name": "Eonian USDT Vault Shares",
+    "symbol": "eonUSDT",
+    "asset": {
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 18,
+      "address": "0x6175a8471C2122f778445e7E07A164250a19E661"
+    },
+    "rates": [
+      {
+        "perBlock": "3879921105"
+      }
+    ]
+  }
+]

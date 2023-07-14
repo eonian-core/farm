@@ -24,6 +24,7 @@ const func = deployOrUpgrade({
     "Eonian USDT Vault Shares", // name
     "eonUSDT", // symbol
     [], // defaultOperators
+    100, // vault founder tokens fee 1%
   ],
 });
 
