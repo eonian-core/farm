@@ -4,9 +4,16 @@
     We build passive investment strategies <Mbr>that cares about your money.</Mbr>
 
     <HeroButtonGroup>
-        <HeroButton href="/earn" bold icon={<UsdtIcon />}>
-            Earn USDT
-        </HeroButton>
+        {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE === "true" && 
+            <HeroButton href="/earn" bold icon={<UsdtIcon />}>
+                Earn USDT
+            </HeroButton>
+        }
+        {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE !== "true" && 
+            <HeroButton href="https://tally.so/r/wvMzJv" icon={<IconRobot />}>
+                Join the Waitlist
+            </HeroButton>
+        }
         <HeroButton href="https://discord.gg/8mcUPPYJmj" bordered icon={<IconDiscord />}>
             Join Discord
         </HeroButton>

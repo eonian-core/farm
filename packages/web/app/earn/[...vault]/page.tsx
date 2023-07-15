@@ -8,6 +8,7 @@ import {
 import { ChainId } from "../../providers/wallet/wrappers/helpers";
 import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
+import { showEarn } from "../../features";
 
 export const revalidate = 10;
 
