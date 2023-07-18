@@ -54,17 +54,17 @@ export const getMulticallAddress = (id: ChainId): string => {
  * @param id - Chain id
  * @returns String URL or null
  */
-export const getRPCEndpoint = (id: ChainId): string | null => {
+export const getRPCEndpoint = (id: ChainId): string | undefined => {
   switch (id) {
     case ChainId.SEPOLIA:
-      return process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL || null;
+      return process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL;
     case ChainId.BSC_MAINNET:
       return (
         process.env.NEXT_PUBLIC_BSC_MAINNET_RPC_URL ||
         "https://bsc-dataseed1.binance.org/"
       );
     case ChainId.UNKNOWN:
-      return null;
+      return undefined;
   }
 };
 

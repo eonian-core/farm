@@ -18,20 +18,22 @@ const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
     id: ChainId.toHex(ChainId.SEPOLIA),
     token: "SepoliaETH",
     label: "Sepolia - Testnet",
-    rpcUrl: getRPCEndpoint(ChainId.SEPOLIA)!,
+    rpcUrl: getRPCEndpoint(ChainId.SEPOLIA),
   },
   [ChainId.BSC_MAINNET]: {
     id: ChainId.toHex(ChainId.BSC_MAINNET),
     token: "BNB",
     label: "BSC Mainnet",
-    rpcUrl: getRPCEndpoint(ChainId.BSC_MAINNET)!,
+    rpcUrl: getRPCEndpoint(ChainId.BSC_MAINNET),
   },
 };
+
+const supportedChains = Object.values(chains).filter((chain) => !!chain.rpcUrl);
 
 export default init({
   theme,
   wallets: getWallets(),
-  chains: Object.values(chains),
+  chains: supportedChains,
   accountCenter: {
     desktop: {
       enabled: false,
@@ -81,7 +83,9 @@ function getWallets(): InitOptions["wallets"] {
   return wallets;
 }
 
-export const supportedChainsIds = Object.keys(chains).map(ChainId.parse);
+export const supportedChainsIds = supportedChains.map((chain) =>
+  ChainId.parse(chain.id)
+);
 
 export const defaultChain =
   chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!;
