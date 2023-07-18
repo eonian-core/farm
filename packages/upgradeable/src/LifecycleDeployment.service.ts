@@ -33,38 +33,44 @@ export interface DeploymentsService {
     isDeployed: (name: string) => Promise<boolean>;
 }
 
-export class LifecycleDeploymentService {
+export abstract class LifecycleDeploymentService {
 
     constructor(
         readonly deployments: DeploymentsService,
-        readonly args: DeployArgs
     ) {}
 
     async deploy(){
-        const isDeployedBefore = await this.deployments.isDeployed(this.args.name);
+        const dependencies = await this.onResolveDependencies();
+        const args = await this.onResolveArgs(dependencies);
 
-        const result = await this.onDeploy();
+        const isDeployedBefore = await this.deployments.isDeployed(args.name);
 
-        if (isDeployedBefore) {
+        const result = await this.onDeploy(args);
+
+        if (!isDeployedBefore) {
             await this.afterDeploy(result);
         } else {
             await this.afterUpgrade(result);
         }
     }
 
-    async onDeploy(): Promise<DeployResult> {
-        return this.deployments.deploy(this.args);
+    async onDeploy(args: DeployArgs): Promise<DeployResult> {
+        return this.deployments.deploy(args);
     }
+
+    abstract onResolveDependencies(): Promise<Array<Deployment>>
+
+    abstract onResolveArgs(dependencies: Array<Deployment>): Promise<DeployArgs> 
 
     /** 
      * Hook which will be run after deploy
      * @param deployResult Result of deploy function
      * */
-    async afterDeploy(deployResult: DeployResult): Promise<void> {}
+    abstract afterDeploy(deployResult: DeployResult): Promise<void>
 
     /**
      * Hook which will be run after upgrade
      * @param deployResult Result of deploy function
      * */
-    async afterUpgrade(deployResult: DeployResult): Promise<void> {}
+    abstract afterUpgrade(deployResult: DeployResult): Promise<void>
 }
