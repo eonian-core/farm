@@ -49,10 +49,29 @@ export const getMulticallAddress = (id: ChainId): string => {
   }
 };
 
+/**
+ * Returns RPC URL endpoint for specific chain id.
+ * @param id - Chain id
+ * @returns String URL or null
+ */
+export const getRPCEndpoint = (id: ChainId): string | null => {
+  switch (id) {
+    case ChainId.SEPOLIA:
+      return process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL || null;
+    case ChainId.BSC_MAINNET:
+      return (
+        process.env.NEXT_PUBLIC_BSC_MAINNET_RPC_URL ||
+        "https://bsc-dataseed1.binance.org/"
+      );
+    case ChainId.UNKNOWN:
+      return null;
+  }
+};
+
 export const getDummyChain = (id: ChainId, iconSize: number): Chain => ({
-    id,
-    icon: getChainIcon(ChainId.UNKNOWN, iconSize),
-    isSupported: false,
-    isDefault: false,
-    multicallAddress: getMulticallAddress(ChainId.UNKNOWN),
-  });
+  id,
+  icon: getChainIcon(ChainId.UNKNOWN, iconSize),
+  isSupported: false,
+  isDefault: false,
+  multicallAddress: getMulticallAddress(ChainId.UNKNOWN),
+});

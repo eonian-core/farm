@@ -1,1 +1,1 @@
-export * from './table-container';
+export * from './vault-list';

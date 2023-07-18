@@ -10,6 +10,8 @@ import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
 import { showEarn } from "../../features";
 
+import styles from './page.module.scss';
+
 export const revalidate = 10;
 
 interface RouteSegment {
@@ -34,6 +36,9 @@ export async function generateStaticParams(): Promise<RouteSegment[]> {
 export default async function Page({ params }: Params) {
   const { vault: vaultRoute = [] } = params;
 
+  if (!showEarn)
+    redirect("/");
+
   if (vaultRoute.length != 2)
     redirect("/earn/");
 
@@ -41,5 +46,9 @@ export default async function Page({ params }: Params) {
   const chainId = ChainId.getByName(chainName);
   const client = getClient(chainId);
   const { data } = await getVaultBySymbol(client, vaultSymbol);
-  return <Form vault={data.vaults[0] as Vault} chainId={chainId} />;
+  return (
+    <div className={styles.page}>
+      <Form vault={data.vaults[0] as Vault} chainId={chainId} />
+    </div>
+  );
 }

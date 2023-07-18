@@ -16,6 +16,7 @@ interface Props {
   className?: string;
   children?: React.ReactNode;
   childrenAtStart?: boolean;
+  hideTooltip?: boolean;
   tooltipContent?: (value: string) => React.ReactNode;
 }
 
@@ -28,6 +29,7 @@ const CompactNumber: React.FC<Props> = ({
   className,
   children,
   childrenAtStart,
+  hideTooltip,
   tooltipContent = (value) => value,
 }) => {
   const locale = useAppSelector((state) => state.locale.current);
@@ -40,11 +42,19 @@ const CompactNumber: React.FC<Props> = ({
   });
 
   const accurateValue = toStringNumberFromDecimals(value, decimals);
-  return (
-    <Tooltip className={className} content={tooltipContent(accurateValue)}>
+  const content = (
+    <>
       {childrenAtStart && children}
       <span>{formattedValue}</span>
       {!childrenAtStart && children}
+    </>
+  );
+
+  return hideTooltip ? (
+    content
+  ) : (
+    <Tooltip className={className} content={tooltipContent(accurateValue)}>
+      {content}
     </Tooltip>
   );
 };

@@ -4,6 +4,8 @@
     "address": "0x70a3C15F551261eA5EB6fD37a75BD9d4af3a8855",
     "name": "Eonian USDT Vault Shares",
     "symbol": "eonUSDT",
+    "totalAssets": "16980816851730721545",
+    "totalDebt": "14880138121013926518",
     "asset": {
       "name": "Tether USD",
       "symbol": "USDT",

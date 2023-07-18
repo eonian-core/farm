@@ -2,7 +2,7 @@ import type { InitOptions, ThemingMap } from "@web3-onboard/core/dist/types";
 import injectedModule from "@web3-onboard/injected-wallets";
 import walletConnectModule from "@web3-onboard/walletconnect";
 import init from "@web3-onboard/core";
-import { ChainId } from "./providers/wallet/wrappers/helpers";
+import { ChainId, getRPCEndpoint } from "./providers/wallet/wrappers/helpers";
 
 const theme: ThemingMap = {
   "--w3o-background-color": "var(--color-background-start)",
@@ -18,15 +18,13 @@ const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
     id: ChainId.toHex(ChainId.SEPOLIA),
     token: "SepoliaETH",
     label: "Sepolia - Testnet",
-    rpcUrl: process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL,
+    rpcUrl: getRPCEndpoint(ChainId.SEPOLIA)!,
   },
   [ChainId.BSC_MAINNET]: {
     id: ChainId.toHex(ChainId.BSC_MAINNET),
     token: "BNB",
     label: "BSC Mainnet",
-    rpcUrl:
-      process.env.NEXT_PUBLIC_BSC_MAINNET_RPC_URL ||
-      "https://bsc-dataseed1.binance.org/", // fallback to public in case of issues
+    rpcUrl: getRPCEndpoint(ChainId.BSC_MAINNET)!,
   },
 };
 
@@ -82,6 +80,8 @@ function getWallets(): InitOptions["wallets"] {
   }
   return wallets;
 }
+
+export const supportedChainsIds = Object.keys(chains).map(ChainId.parse);
 
 export const defaultChain =
   chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!;
