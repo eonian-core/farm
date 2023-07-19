@@ -12,22 +12,22 @@ export interface DeployConfig extends BaseDeploymentConfig {
 export type SkipFunction = (hre: HardhatRuntimeEnvironment) => Promise<boolean>;
 
 /** Dependency injection container */
-export interface DependenciesContainer<Config extends DeployConfig, Deployment extends BaseDeploymentService> {
-    resolve: (config: Config, hre: HardhatRuntimeEnvironment, serviceClass: Newable<Deployment>) => Promise<Deployment>;
+export interface IDependenciesContainer<Config extends DeployConfig, Deployment extends BaseDeploymentService> {
+    resolve: (serviceClass: Newable<Deployment>, config: Config, hre: HardhatRuntimeEnvironment) => Promise<Deployment>;
 }
 
 /** Factory used to create deploy function which can be later executed for deploy */
 export class DeploymentFactory<Config extends DeployConfig, Deployment extends BaseDeploymentService> {
 
     constructor(
-        readonly container: DependenciesContainer<Config, Deployment>
+        readonly container: IDependenciesContainer<Config, Deployment>
     ) {}
 
     build(config: Config, serviceClass: Newable<Deployment>): DeployFunction {
         const container = this.container;
 
         const func: DeployFunction = async function (hre)  {
-            const service = await container.resolve(config, hre, serviceClass);
+            const service = await container.resolve(serviceClass, config, hre);
 
             service.deploy();
         };

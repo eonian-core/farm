@@ -4,18 +4,18 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   DeployConfig,
   SkipFunction,
-  DependenciesContainer,
+  IDependenciesContainer,
   DeploymentFactory,
 } from "../DeploymentFactory";
 
 describe("DeploymentFactory", () => {
-  let containerMock: DependenciesContainer<DeployConfig, BaseDeploymentService>;
+  let containerMock: IDependenciesContainer<DeployConfig, BaseDeploymentService>;
   let deploymentFactory: DeploymentFactory<DeployConfig, BaseDeploymentService>;
 
   beforeEach(() => {
     containerMock = {
       resolve: jest.fn(),
-    } as DependenciesContainer<DeployConfig, BaseDeploymentService>;
+    } as IDependenciesContainer<DeployConfig, BaseDeploymentService>;
     deploymentFactory = new DeploymentFactory(containerMock);
   });
 
