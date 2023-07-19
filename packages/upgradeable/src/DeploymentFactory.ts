@@ -29,7 +29,7 @@ export class DeploymentFactory<Config extends DeployConfig, Deployment extends B
         const func: DeployFunction = async function (hre)  {
             const service = await container.resolve(serviceClass, config, hre);
 
-            service.deploy();
+            await service.deploy();
         };
 
         func.tags = [config.contract, ...config.chains, ...config.tags];

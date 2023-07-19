@@ -112,7 +112,7 @@ describe("BaseDeploymentService", () => {
         dependencies
       });
       expect(result).toEqual<DeployArgs>({
-        name: "TestContract/Tag1/Tag2",
+        name: "TestContract|Tag1|Tag2",
         contract: "TestContract",
         deployer,
         owner: deployer,
@@ -127,7 +127,7 @@ describe("BaseDeploymentService", () => {
     it("should return the correct contract name", () => {
       const result = baseDeploymentService.generateContractName();
 
-      expect(result).toBe("TestContract/Tag1/Tag2");
+      expect(result).toBe("TestContract|Tag1|Tag2");
     });
   });
 

@@ -52,7 +52,7 @@ export class DeploymentsAdapter implements DeploymentsService {
         try {
             return await this.hre.deployments.get(name);
         } catch (e) {
-            this.logger.log("Probably wasn't deployed before", e)
+            this.logger.warn("Probably wasn't deployed before", e)
         }
     }
 

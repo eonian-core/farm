@@ -16,6 +16,7 @@ describe("DeploymentsAdapter", () => {
     } as any as HardhatRuntimeEnvironment;
     loggerMock = {
       log: jest.fn(),
+      warn: jest.fn(),
     } as any;
     deploymentsAdapter = new DeploymentsAdapter(hreMock, loggerMock);
   });
@@ -116,7 +117,7 @@ describe("DeploymentsAdapter", () => {
         "NonExistentContract"
       );
       expect(result).toBeUndefined();
-      expect(loggerMock.log).toHaveBeenCalledWith(
+      expect(loggerMock.warn).toHaveBeenCalledWith(
         "Probably wasn't deployed before",
         expect.any(Error)
       );

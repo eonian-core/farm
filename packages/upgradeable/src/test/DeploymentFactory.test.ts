@@ -1,6 +1,5 @@
-import { DeployFunction } from "@eonian/hardhat-deploy/types";
-import { BaseDeploymentConfig, BaseDeploymentService } from "../BaseDeployment.service";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
+import { BaseDeploymentService } from "../BaseDeployment.service";
+import type { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   DeployConfig,
   SkipFunction,
@@ -11,12 +10,21 @@ import {
 describe("DeploymentFactory", () => {
   let containerMock: IDependenciesContainer<DeployConfig, BaseDeploymentService>;
   let deploymentFactory: DeploymentFactory<DeployConfig, BaseDeploymentService>;
+  let deployMock = jest.fn()
+
+  class TestDeploymentService {
+    async deploy(): Promise<void> {
+      return deployMock()
+    }
+  }
 
   beforeEach(() => {
     containerMock = {
-      resolve: jest.fn(),
+      resolve: jest.fn(() => new TestDeploymentService() as any),
     } as IDependenciesContainer<DeployConfig, BaseDeploymentService>;
     deploymentFactory = new DeploymentFactory(containerMock);
+
+    deployMock = jest.fn()
   });
 
   describe("build", () => {
@@ -26,7 +34,7 @@ describe("DeploymentFactory", () => {
         tags: ["Tag1", "Tag2"],
         chains: ["chain1", "chain2"],
       };
-      const serviceClass = BaseDeploymentService;
+      const serviceClass = TestDeploymentService as any;
 
       const deployFunction = deploymentFactory.build(config, serviceClass);
 
@@ -54,6 +62,15 @@ describe("DeploymentFactory", () => {
             }
         }
       } as any)).toBe(true)
+
+      expect(containerMock.resolve).not.toBeCalled();
+      expect(deployMock).not.toBeCalled()
+
+      const hre = { test: 1 } as any as HardhatRuntimeEnvironment
+      await deployFunction(hre);
+
+      expect(containerMock.resolve).toBeCalledWith(serviceClass, config, hre);
+      expect(deployMock).toBeCalled()
     });
   });
 
