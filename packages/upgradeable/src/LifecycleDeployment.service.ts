@@ -2,6 +2,7 @@ import {
     Deployment,
     DeployResult,
 } from "@eonian/hardhat-deploy/types";
+import { Logger } from "./logger/Logger";
   
 export interface DeployArgs {
     /** Name of artifact to deploy, will be used to reference contract in dependencies */
@@ -39,19 +40,25 @@ export abstract class LifecycleDeploymentService {
 
     constructor(
         readonly deployments: DeploymentsService,
+        readonly logger: Logger
     ) {}
 
     async deploy(){
         const dependencies = await this.onResolveDependencies();
+        this.logger.debug('Resolved dependencies', dependencies)
         const args = await this.onResolveArgs(dependencies);
+        this.logger.log('Resolved deployment args', args)
 
         const isDeployedBefore = await this.deployments.isDeployed(args.name);
 
         const result = await this.onDeploy(args);
+        this.logger.debug('Deployed contract', result)
 
         if (!isDeployedBefore) {
+            this.logger.log("Contract wasn't deployed before, run afterDeploy hook")
             await this.afterDeploy(result);
         } else {
+            this.logger.log("Contract was deployed before, run afterUpgrade hook")
             await this.afterUpgrade(result);
         }
     }
@@ -62,6 +69,7 @@ export abstract class LifecycleDeploymentService {
 
     abstract onResolveDependencies(): Promise<Array<Deployment>>
 
+    /** Resolve arguments for deployment contract */
     abstract onResolveArgs(dependencies: Array<Deployment>): Promise<DeployArgs> 
 
     /** 

@@ -11,4 +11,8 @@ export class Logger {
         // TODO: Add Warn method
         this.hre.deployments.log('[WARN]', ...args);
     }
+
+    debug(...args: any[]) {
+        this.hre.deployments.log('[DEBUG]', ...args);
+    }
 }

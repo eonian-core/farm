@@ -1,6 +1,7 @@
 
 import { DeployResult, Deployment } from '@eonian/hardhat-deploy/types';
-import { DeployArgs, LifecycleDeploymentService, DeploymentsService } from './LifecycleDeployment.service';
+import { DeployArgs, LifecycleDeploymentService, DeploymentsService } from '../LifecycleDeployment.service';
+import { Logger } from '../logger/Logger';
 
 describe(LifecycleDeploymentService.name, () => {
     let dependencies: Deployment[];
@@ -12,6 +13,7 @@ describe(LifecycleDeploymentService.name, () => {
     let afterDeployMock: jest.Mock;
     let afterUpgradeMock: jest.Mock;
     let deployments: DeploymentsService;
+    let logger: Logger;
     let args: DeployArgs;
     let service: LifecycleDeploymentService;
 
@@ -47,7 +49,10 @@ describe(LifecycleDeploymentService.name, () => {
         onResolveArgsMock = jest.fn(() => args);
         afterDeployMock = jest.fn();
         afterUpgradeMock = jest.fn();
-        service = new TestImplmenetation(deployments);
+
+        logger = { log: jest.fn(), warn: jest.fn(), debug: jest.fn() } as any;
+
+        service = new TestImplmenetation(deployments, logger);
     });
 
     afterEach(() => {
