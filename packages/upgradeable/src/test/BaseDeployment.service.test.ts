@@ -12,6 +12,8 @@ import {
   AccountsService,
   BaseDeploymentConfig,
   BaseDeploymentService,
+  EnvironmentService,
+  Stage,
 } from "../BaseDeployment.service";
 
 describe("BaseDeploymentService", () => {
@@ -20,6 +22,7 @@ describe("BaseDeploymentService", () => {
   let accountsServiceMock: AccountsService;
   let deploymentsServiceMock: DeploymentsService;
   let loggerMock: Logger;
+  let enironmentMock: EnvironmentService;
   let baseDeploymentService: BaseDeploymentService;
 
   beforeEach(() => {
@@ -36,10 +39,14 @@ describe("BaseDeploymentService", () => {
     } as AccountsService;
     deploymentsServiceMock = {} as DeploymentsService;
     loggerMock = {} as Logger;
+    enironmentMock = {
+        getStage: jest.fn(async () => Stage.Development),
+    } as EnvironmentService;
     baseDeploymentService = new BaseDeploymentService(
       config,
       dependenciesServiceMock,
       accountsServiceMock,
+      enironmentMock,
       deploymentsServiceMock,
       loggerMock
     );
@@ -54,6 +61,7 @@ describe("BaseDeploymentService", () => {
           config,
           dependenciesServiceMock,
           accountsServiceMock,
+          enironmentMock,
           deploymentsServiceMock,
           loggerMock
         );
@@ -98,10 +106,11 @@ describe("BaseDeploymentService", () => {
       const result = await baseDeploymentService.onResolveArgs(dependencies);
 
       expect(accountsServiceMock.get).toHaveBeenCalled();
-      expect(baseDeploymentService.onResolveInitArgs).toHaveBeenCalledWith(
+      expect(baseDeploymentService.onResolveInitArgs).toHaveBeenCalledWith({
         accounts,
+        stage: Stage.Development,
         dependencies
-      );
+      });
       expect(result).toEqual<DeployArgs>({
         name: "TestContract/Tag1/Tag2",
         contract: "TestContract",
@@ -129,10 +138,11 @@ describe("BaseDeploymentService", () => {
       };
       const dependencies: Deployment[] = [];
 
-      const result = await baseDeploymentService.onResolveInitArgs(
+      const result = await baseDeploymentService.onResolveInitArgs({
         accounts,
+        stage: Stage.Production,
         dependencies
-      );
+      });
 
       expect(result).toEqual([]);
     });

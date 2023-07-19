@@ -30,53 +30,76 @@ export interface BaseDeploymentConfig {
     dependencies?: string[];
 }
 
+/** Stage to which contracts is deployed, allow create multiple protocol stages on one blockchain */
+export enum Stage {
+    Development = "development",
+    Staging = "staging",
+    Production = "production",
+}
+
+export interface EnvironmentService {
+    getStage: () => Promise<Stage>
+}
+
+export interface BaseInitArgs {
+    accounts: NamedAccounts, 
+    stage: Stage, 
+    dependencies: Deployment[]
+}
+
+/** Service which must be used as bases for all deployments */
 export class BaseDeploymentService extends LifecycleDeploymentService {
 
     constructor(
         readonly config: BaseDeploymentConfig,
         readonly dependencies: DependenciesService,
         readonly accounts: AccountsService,
+        readonly environment: EnvironmentService,
         deployments: DeploymentsService,
         logger: Logger,
-    ){
+    ) {
         super(deployments, logger);
 
-        if(config.tags.length < 1){
+        if (config.tags.length < 1) {
             throw new Error(`Contract must have at least one tag`);
         }
     }
 
     onResolveDependencies(): Promise<Deployment[]> {
-        const {dependencies = []} = this.config
+        const { dependencies = [] } = this.config
 
         return this.dependencies.resolve(dependencies);
     }
 
+    generateContractName() {
+        const { contract, tags } = this.config;
+        return [contract, ...tags].join('/');
+    }
+
     async onResolveArgs(dependencies: Deployment[]): Promise<DeployArgs> {
         const accounts = await this.accounts.get();
-        const {deployer} = accounts;
-        
+        const { deployer } = accounts;
+
         return {
             name: this.generateContractName(),
             contract: this.config.contract,
             deployer,
             owner: deployer, // TODO: allow to override owner
             init: {
-                args: await this.onResolveInitArgs(accounts, dependencies),
+                args: await this.onResolveInitArgs({
+                    accounts, 
+                    stage: await this.environment.getStage(), 
+                    dependencies
+                }),
             }
         }
     }
 
-    generateContractName(){
-        const {contract, tags} = this.config;
-        return [contract, ...tags].join('/');
-    }
-
     /** Allow to override init method args, will be passed only one time */
-    async onResolveInitArgs(accounts: NamedAccounts, dependencies: Deployment[]): Promise<Array<any>> {
+    async onResolveInitArgs(args: BaseInitArgs): Promise<Array<any>> {
         return [];
     }
-    
+
     async afterDeploy(deployResult: DeployResult): Promise<void> {
         // can be overriden
     }
