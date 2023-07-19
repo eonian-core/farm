@@ -20,8 +20,8 @@ describe("DeploymentsAdapter", () => {
   describe("deploy", () => {
     it("should deploy a contract with the provided arguments", async () => {
       const deployArgs: DeployArgs = {
-        name: "TestContract",
-        contract: "TestContract.sol",
+        name: "TestContract-1",
+        contract: "TestContract",
         deployer: "0x123",
         owner: "0x456",
         init: { args: ["arg1", "arg2"] },
@@ -37,8 +37,8 @@ describe("DeploymentsAdapter", () => {
 
       const deployResult = await deploymentsAdapter.deploy(deployArgs);
 
-      expect(hreMock.deployments.deploy).toHaveBeenCalledWith("TestContract", {
-        contract: "TestContract.sol",
+      expect(hreMock.deployments.deploy).toHaveBeenCalledWith("TestContract-1", {
+        contract: "TestContract",
         from: "0x123",
         log: true,
         gasLimit: 4000000,
@@ -58,6 +58,30 @@ describe("DeploymentsAdapter", () => {
         },
       });
       expect(deployResult).toEqual(expectedDeployResult);
+    });
+
+    it("should throw exception if contract and name the same", async () => {
+      const deployArgs: DeployArgs = {
+        name: "TestContract",
+        contract: "TestContract",
+        deployer: "0x123",
+        owner: "0x456",
+        init: { args: ["arg1", "arg2"] },
+      };
+
+      const expectedDeployResult: DeployResult = {
+        'test': 1
+      } as any;
+
+      hreMock.deployments = {
+        deploy: jest.fn().mockResolvedValue(expectedDeployResult),
+      } as any;
+
+      const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs))
+        .toThrowError(`Contract name and artifact name cannot be the same: ${deployArgs.name}`);
+
+      expect(hreMock.deployments.deploy).not.toHaveBeenCalled();
+      expect(deployResult).toBeUndefined();
     });
   });
 

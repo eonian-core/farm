@@ -19,6 +19,10 @@ export class DeploymentsAdapter implements DeploymentsService {
         owner,
         init: { args },
     }: DeployArgs): Promise<DeployResult> {
+        if(name === contract) {
+            throw new Error(`Contract name and artifact name cannot be the same: ${name}`)
+        }
+        
         return this.hre.deployments.deploy(name, {
             contract,
             from: deployer,
