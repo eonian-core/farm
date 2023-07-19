@@ -13,6 +13,8 @@ export class Logger {
     }
 
     debug(...args: any[]) {
-        this.hre.deployments.log('[DEBUG]', ...args);
+        if(process.env.DEBUG === 'true') {
+            this.hre.deployments.log('[DEBUG]', ...args);
+        }
     }
 }
