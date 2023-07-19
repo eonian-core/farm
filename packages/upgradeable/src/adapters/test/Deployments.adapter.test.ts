@@ -10,7 +10,10 @@ describe("DeploymentsAdapter", () => {
   let deploymentsAdapter: DeploymentsService;
 
   beforeEach(() => {
-    hreMock = {} as HardhatRuntimeEnvironment;
+    hreMock = {
+      getChainId: jest.fn(async () => 'test-123'),
+      deployments: { getNetworkName: jest.fn(async () => 'test-netowork') },
+    } as any as HardhatRuntimeEnvironment;
     loggerMock = {
       log: jest.fn(),
     } as any;
@@ -32,6 +35,7 @@ describe("DeploymentsAdapter", () => {
       } as any;
 
       hreMock.deployments = {
+        ...hreMock.deployments,
         deploy: jest.fn().mockResolvedValue(expectedDeployResult),
       } as any;
 
@@ -78,7 +82,7 @@ describe("DeploymentsAdapter", () => {
       } as any;
 
       const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs))
-        .toThrowError(`Contract name and artifact name cannot be the same: ${deployArgs.name}`);
+        .rejects.toEqual(new Error(`Contract name and artifact name cannot be the same: ${deployArgs.name}`));
 
       expect(hreMock.deployments.deploy).not.toHaveBeenCalled();
       expect(deployResult).toBeUndefined();

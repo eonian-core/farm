@@ -12,7 +12,7 @@ export class DeploymentsAdapter implements DeploymentsService {
         readonly logger: Logger
     ) { }
 
-    deploy({
+    async deploy({
         name,
         contract,
         deployer,
@@ -22,7 +22,10 @@ export class DeploymentsAdapter implements DeploymentsService {
         if(name === contract) {
             throw new Error(`Contract name and artifact name cannot be the same: ${name}`)
         }
-        
+
+        const {getChainId, deployments: {getNetworkName} } = this.hre
+        this.logger.log(`Deploying ${name} to network ${await getNetworkName()} with chainId ${await getChainId()}`);
+
         return this.hre.deployments.deploy(name, {
             contract,
             from: deployer,
