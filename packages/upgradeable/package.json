@@ -11,7 +11,8 @@
     "clear": "rm -rf dist",
     "dev": "concurrently -c \"auto\" \"yarn:test:watch\" \"yarn:build:watch\"",
     "build": "yarn clear && microbundle",
-    "build:watch": "microbundle watch"
+    "build:watch": "microbundle watch",
+    "postinstall": "yarn build"
   },
   "source": "./src/index.ts",
   "exports": {    
