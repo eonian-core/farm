@@ -73,7 +73,7 @@ export class BaseDeploymentService extends LifecycleDeploymentService {
 
     generateContractName() {
         const { contract, tags } = this.config;
-        return [contract, ...tags].join('/');
+        return [contract, ...tags].join('|'); // hardhat-deploy disallow to use "/" or ":" in contract names
     }
 
     async onResolveArgs(dependencies: Deployment[]): Promise<DeployArgs> {

@@ -8,18 +8,19 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
+    "clear": "rm -rf dist",
     "dev": "concurrently -c \"auto\" \"yarn:test:watch\" \"yarn:build:watch\"",
-    "build": "microbundle",
+    "build": "yarn clear && microbundle",
     "build:watch": "microbundle watch"
   },
-  "source": "src/index.ts",
-  "exports": {
-    "require": "./dist/index.cjs",      
-    "default": "./dist/index.modern.js" 
+  "source": "./src/index.ts",
+  "exports": {    
+    "default": "./dist/index.js" 
   },
   "main": "./dist/index.js",
   "module": "./dist/index.module.js",
   "unpkg": "./dist/index.umd.js",
+  "types": "./dist/index.d.ts",
   "devDependencies": {
     "@eonian/hardhat-deploy": "0.11.30",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",

@@ -10,7 +10,10 @@ const func = deployOrUpgrade({
   contract: "ApeLendingStrategy",
   dependencies: ["Vault"],
   // Not possible to deploy on testnet, have wide range of thrid party protocols-dependencies
-  chains: [BlockchainType.Mainnet, BlockchainType.Local],
+  chains: [
+    BlockchainType.Mainnet, 
+    // BlockchainType.Local
+  ],
   tags: ["asset:USDT"],
   getArgs: ({
     accounts: {

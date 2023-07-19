@@ -11,7 +11,7 @@ const func = deployOrUpgrade({
   chains: [
     BlockchainType.Mainnet,
     BlockchainType.Testnet,
-    BlockchainType.Local,
+    // BlockchainType.Local,
   ],
   tags: ["asset:USDT"],
   getArgs: ({ accounts: { USDT, treasury }, stage }) => [
