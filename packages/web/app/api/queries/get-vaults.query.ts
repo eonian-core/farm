@@ -17,7 +17,8 @@ const GetVaults = gql`
       address
       name
       symbol
-      decimals
+      decimals,
+      totalDebt
     }
   }
 `;

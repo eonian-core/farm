@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import NextError from "next/error";
 import {
   getClient,
   getVaultBySymbol,
@@ -10,6 +9,8 @@ import { ChainId } from "../../providers/wallet/wrappers/helpers";
 import { defaultChain } from "../../web3-onboard";
 import Form from "./form/form";
 import { showEarn } from "../../features";
+
+import styles from './page.module.scss';
 
 export const revalidate = 10;
 
@@ -38,18 +39,16 @@ export default async function Page({ params }: Params) {
   if (!showEarn)
     redirect("/");
 
-  // If the route is not complete (e.g. complete route: "/earn/bsc_mainnet/eonUSDT"),
-  // we should redirect the user to the first vault in the default chain.
-  if (vaultRoute.length != 2) {
-    const segment = await generateStaticParams();
-    const [{ vault }] = segment;
-    const [chainName, vaultSymbol] = vault;
-    redirect("/earn/" + chainName + "/" + vaultSymbol);
-  }
+  if (vaultRoute.length != 2)
+    redirect("/earn/");
 
   const [chainName, vaultSymbol] = vaultRoute;
   const chainId = ChainId.getByName(chainName);
   const client = getClient(chainId);
   const { data } = await getVaultBySymbol(client, vaultSymbol);
-  return <Form vault={data.vaults[0] as Vault} chainId={chainId} />;
+  return (
+    <div className={styles.page}>
+      <Form vault={data.vaults[0] as Vault} chainId={chainId} />
+    </div>
+  );
 }

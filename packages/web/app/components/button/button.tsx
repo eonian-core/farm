@@ -3,8 +3,8 @@ import React from "react";
 import styles from "./button.module.scss";
 import clsx from "clsx";
 
-export interface Props {
-  size?: "md" | "lg";
+export interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'size' | 'type'> {
+  size?: "sm" | "md" | "lg";
   bordered?: boolean;
   gradient?: boolean;
   dark?: boolean;
@@ -21,6 +21,7 @@ const Button: React.FC<Props> = ({
   wide = false,
   icon,
   children,
+  ...restProps
 }) => {
   const classes = clsx(styles.button, styles[size], {
     [styles["bordered"]]: bordered,
@@ -30,7 +31,7 @@ const Button: React.FC<Props> = ({
     [styles["wide"]]: wide,
   });
   return (
-    <button className={classes}>
+    <button className={classes} {...restProps}>
       {children}
       {icon}
     </button>
