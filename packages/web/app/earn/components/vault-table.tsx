@@ -3,7 +3,10 @@ import clsx from "clsx";
 import React from "react";
 import { Vault } from "../../api";
 import { InternalLink } from "../../components/links/links";
-import { ScreenName, useScreenName } from "../../components/resize-hooks/screens";
+import {
+  ScreenName,
+  useScreenName,
+} from "../../components/resize-hooks/screens";
 import {
   VaultAPYCell,
   VaultNameCell,
@@ -22,13 +25,21 @@ interface Props {
 interface Column {
   name: string;
   render: (vault: Vault, index: number) => React.ReactNode;
-  align?: "start" | "center";
+  align: "left" | "center";
   moveLinkBack?: boolean;
 }
 
 const COLUMNS: Column[] = [
-  { name: "#", render: (vault, index) => <VaultIndexCell index={index} /> },
-  { name: "Vault", render: (vault) => <VaultNameCell vault={vault} /> },
+  {
+    name: "#",
+    render: (vault, index) => <VaultIndexCell index={index} />,
+    align: "left",
+  },
+  {
+    name: "Vault",
+    render: (vault) => <VaultNameCell vault={vault} />,
+    align: "left",
+  },
   {
     name: "APY",
     render: (vault) => <VaultAPYCell vault={vault} />,
@@ -51,48 +62,45 @@ const COLUMNS: Column[] = [
 export function VaultTable({ vaults, chainName }: Props) {
   const columns = useColumns();
   return (
-    <Table
-      selectionMode="single"
-      disallowEmptySelection
-      selectedKeys={[]}
-      css={{ background: "$dark" }}
-      className={styles.table}
-      shadow
-    >
-      <Table.Header columns={columns}>
-        {(column) => (
-          <Table.Column
-            css={{ paddingRight: "var(--nextui-space-5)" }}
-            align={column.align}
-            key={column.name}
-          >
-            {column.name}
-          </Table.Column>
-        )}
-      </Table.Header>
-      <Table.Body items={vaults}>
-        {(vault) => renderVaultRow(vault, columns)}
-      </Table.Body>
-    </Table>
+    <div className={styles.wrapper}>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            {columns.map((column) => (
+              <th key={column.name} className={styles[column.align]}>
+                {column.name}
+              </th>
+            ))}
+          </tr>
+          <tr className={styles.divider} />
+        </thead>
+        <tbody>
+          {vaults.map((vault, index) => (
+            <VaultRow
+              key={vault.address}
+              vault={vault}
+              index={index}
+              columns={columns}
+            />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 
-  function renderVaultRow(vault: Vault, columns: Column[]) {
-    const vaultIndex = vaults.indexOf(vault);
+  function VaultRow(props: { vault: Vault; index: number; columns: Column[] }) {
+    const { vault, index, columns } = props;
     return (
-      <Table.Row key={vault.address}>
-        {(key) => {
-          const columnIdx = columns.findIndex(({ name }) => name === key);
-          const column = columns[columnIdx];
-          return (
-            <Table.Cell css={{ cursor: "pointer", textAlign: column.align }}>
-              <LinkOverlay vault={vault} moveBack={column.moveLinkBack} />
-              <div className={styles.cell} onClick={clickLinkUnderneath}>
-                {column.render(vault, vaultIndex)}
-              </div>
-            </Table.Cell>
-          );
-        }}
-      </Table.Row>
+      <tr key={vault.address}>
+        {columns.map((column) => (
+          <td key={column.name} className={styles[column.align]}>
+            <LinkOverlay vault={vault} moveBack={column.moveLinkBack} />
+            <div className={styles.cell} onClick={clickLinkUnderneath}>
+              {column.render(vault, index)}
+            </div>
+          </td>
+        ))}
+      </tr>
     );
   }
 
