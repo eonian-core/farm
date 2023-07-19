@@ -4,8 +4,10 @@ import {
 } from "@eonian/hardhat-deploy/types";
   
 export interface DeployArgs {
-    /** Name of contract to deploy */
+    /** Name of artifact to deploy, will be used to reference contract in dependencies */
     name: string;
+    /** Name of contract in code or ABI, which must be deployed */
+    contract: string;
     /** Address of deploy account */
     deployer: string;
     /** Address of owner of contract, used to make upgrade calls */

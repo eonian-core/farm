@@ -39,6 +39,7 @@ describe(LifecycleDeploymentService.name, () => {
         deployments = { deploy: deployMock, get: getMock, isDeployed: isDeployedMock };
         args = {
             name: 'TestContract',
+            contract: '0xabc',
             deployer: '0x123',
             owner: '0x456',
             init: { args: ['arg1', 'arg2'] },
