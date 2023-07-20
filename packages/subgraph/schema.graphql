@@ -181,16 +181,16 @@ type RewardAPY @entity(immutable: false) @regularPolling {
   " Decimals of the APY values, mainly "
   decimals: Int!
 
-  " Dayly interest rate, represented as percentage scaled by 10^decimals "
+  " Daily interest rate, represented as percentage "
   daily: BigInt!
 
-  " Weekly interest rate, represented as percentage scaled by 10^decimals "
+  " Weekly interest rate, represented as percentage "
   weekly: BigInt!
 
-  " Monthly interest rate, represented as percentage scaled by 10^decimals "
+  " Monthly interest rate, represented as percentage "
   monthly: BigInt!
 
-  " Yearly interest rate, represented as percentage scaled by 10^decimals "
+  " Yearly interest rate, represented as percentage "
   yearly: BigInt!
 }
 
