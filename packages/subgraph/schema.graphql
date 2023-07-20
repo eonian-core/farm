@@ -31,41 +31,53 @@ type Vault @entity(immutable: false) @regularPolling {
 
   """
   The total amount of shares in vault.
-  @dev decimals adjustment from decumals feild
+  @dev Requires decimals adjustment by token "decimals" field.
   """
   totalSupply: BigInt!
 
   """
-  Amount of tokens that all borrowers have taken
-  @dev decimals adjustment from token decumals feild
+  Amount of tokens that all borrowers have taken.
+  @dev Requires decimals adjustment by token "decimals" field.
   """
   totalDebt: BigInt!
+
+  """
+  Amount of tokens that the Vault has (minus the locked profit).
+  @dev Requires decimals adjustment by token "decimals" field.
+  """
+  totalAssets: BigInt!
+
+  """
+  Total amount of tokens that the Vault has (including locked profit).
+  @dev Requires decimals adjustment by token "decimals" field.
+  """
+  fundAssets: BigInt!
   
   """
-  BPS points used to make adjustments for percentage-like fields for Vault and Lender
-  @dev actually hold Int but Lender use uint256, to not cause overflow use BigInt
+  BPS points used to make adjustments for percentage-like fields for Vault and Lender.
+  @dev is actually stored Int, but the lender uses uint256 so as not to cause an overflow, use BigInt.
   """
   maxBps: BigInt!
 
   """
-  Debt ratio for the Lender across all borrowers
-  @dev decimals adjustment from maxBps feild
+  Debt ratio for the Lender across all borrowers.
+  @dev Requires decimals adjustment by "maxBps" field.
   """
   debtRatio: BigInt!
 
   """
-  Total utilisation rate for the Vault across all strategies
-  @dev decimals adjustment from maxBps feild
+  Total utilisation rate for the Vault across all strategies.
+  @dev Requires decimals adjustment by "maxBps" field.
   """
   totalUtilisationRate: BigInt!
 
   """
-  Last time a report occurred by any borrower
+  Last time a report occurred by any borrower.
   """
   lastReportTimestamp: BigInt!
 
   """ 
-  All interest rates / fees allowed in the market. Interest rate should be in APY percentage 
+  All interest rates / fees allowed in the market. Interest rate should be in APY percentage.
   """
   rates: [InterestRate!]!
 

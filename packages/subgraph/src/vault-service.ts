@@ -60,6 +60,9 @@ export class VaultService extends WithLogger {
         entity.totalSupply = vault.totalSupply()
 
         entity.totalDebt = vault.totalDebt();
+        entity.totalAssets = vault.totalAssets();
+        entity.fundAssets = vault.fundAssets();
+
         entity.maxBps = vault.MAX_BPS();
         entity.debtRatio = vault.debtRatio()
         entity.lastReportTimestamp = vault.lastReportTimestamp();

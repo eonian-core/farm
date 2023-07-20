@@ -69,6 +69,8 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "decimals", "18")
             assert.fieldEquals("Vault", vaultAddress, "totalSupply", "100000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "totalDebt", "50000000000000000000")
+            assert.fieldEquals("Vault", vaultAddress, "totalAssets", "60000000000000000000")
+            assert.fieldEquals("Vault", vaultAddress, "fundAssets", "70000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
             assert.fieldEquals("Vault", vaultAddress, "debtRatio", "5000")
             assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "123");
@@ -101,6 +103,10 @@ describe("VaultService", () => {
             mockViewFunction(defaultAddress, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('200000000000000000000'))])
             // Mock the contract call for getting the totalDebt
             mockViewFunction(defaultAddress, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('80000000000000000000'))])
+            // Mock the contract call for getting the totalAssets
+            mockViewFunction(defaultAddress, "totalAssets", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('90000000000000000000'))])
+            // Mock the contract call for getting the fundAssets
+            mockViewFunction(defaultAddress, "fundAssets", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('100000000000000000000'))])
             // Mock the contract call for getting the debtRatio
             mockViewFunction(defaultAddress, "debtRatio", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(9000))])
             // Mock the contract call for getting the lastReportTimestamp
@@ -129,6 +135,8 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "decimals", "18") // shuldnt be updated
             assert.fieldEquals("Vault", vaultAddress, "totalSupply", "200000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "totalDebt", "80000000000000000000")
+            assert.fieldEquals("Vault", vaultAddress, "totalAssets", "90000000000000000000")
+            assert.fieldEquals("Vault", vaultAddress, "fundAssets", "100000000000000000000")
             assert.fieldEquals("Vault", vaultAddress, "maxBps", "10000")
             assert.fieldEquals("Vault", vaultAddress, "debtRatio", "9000")
             assert.fieldEquals("Vault", vaultAddress, "lastReportTimestamp", "234");
