@@ -40,14 +40,14 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
 
-      # Need for deploy scripts
-      - name: Link packages
-        run: yarn bootstrap
-
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      # Need for deploy scripts
+      - name: Link packages
+        run: yarn bootstrap
 
       - name: Deploy Protocol
         env:
