@@ -21,6 +21,7 @@ export class DependenciesContainer<Config extends DeployConfig, Deployment exten
             dependenciesService,
             accounts,
             enironment,
+            hre,
             deployments,
             logger
         )
