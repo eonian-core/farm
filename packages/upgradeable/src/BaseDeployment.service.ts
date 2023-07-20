@@ -2,6 +2,7 @@ import { DeployResult, Deployment } from "@eonian/hardhat-deploy/types";
 import { Address } from "@eonian/hardhat-deploy/types";
 import { DeployArgs, DeploymentsService, LifecycleDeploymentService } from "./LifecycleDeployment.service";
 import { Logger } from "./logger/Logger";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 export interface DependenciesService {
     resolve: (names: Array<string>) => Promise<Deployment[]>;
@@ -55,10 +56,11 @@ export class BaseDeploymentService extends LifecycleDeploymentService {
         readonly dependencies: DependenciesService,
         readonly accounts: AccountsService,
         readonly environment: EnvironmentService,
+        hre: HardhatRuntimeEnvironment,
         deployments: DeploymentsService,
         logger: Logger,
     ) {
-        super(deployments, logger);
+        super(hre, deployments, logger);
 
         if (config.tags.length < 1) {
             throw new Error(`Contract must have at least one tag`);
@@ -100,11 +102,11 @@ export class BaseDeploymentService extends LifecycleDeploymentService {
         return [];
     }
 
-    async afterDeploy(deployResult: DeployResult): Promise<void> {
+    async afterDeploy(deployResult: DeployResult, dependencies: Array<Deployment>): Promise<void> {
         // can be overriden
     }
 
-    async afterUpgrade(deployResult: DeployResult): Promise<void> {
+    async afterUpgrade(deployResult: DeployResult, dependencies: Array<Deployment>): Promise<void> {
         // can be overriden
     }
 }

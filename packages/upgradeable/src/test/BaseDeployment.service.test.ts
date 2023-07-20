@@ -15,6 +15,7 @@ import {
   EnvironmentService,
   Stage,
 } from "../BaseDeployment.service";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 describe("BaseDeploymentService", () => {
   let config: BaseDeploymentConfig;
@@ -24,6 +25,7 @@ describe("BaseDeploymentService", () => {
   let loggerMock: Logger;
   let enironmentMock: EnvironmentService;
   let baseDeploymentService: BaseDeploymentService;
+  let hreMock: HardhatRuntimeEnvironment;
 
   beforeEach(() => {
     config = {
@@ -42,11 +44,13 @@ describe("BaseDeploymentService", () => {
     enironmentMock = {
         getStage: jest.fn(async () => Stage.Development),
     } as EnvironmentService;
+    hreMock = {} as HardhatRuntimeEnvironment;
     baseDeploymentService = new BaseDeploymentService(
       config,
       dependenciesServiceMock,
       accountsServiceMock,
       enironmentMock,
+      hreMock,
       deploymentsServiceMock,
       loggerMock
     );
@@ -62,6 +66,7 @@ describe("BaseDeploymentService", () => {
           dependenciesServiceMock,
           accountsServiceMock,
           enironmentMock,
+          hreMock,
           deploymentsServiceMock,
           loggerMock
         );
@@ -155,7 +160,7 @@ describe("BaseDeploymentService", () => {
       } as any;
 
       await expect(
-        baseDeploymentService.afterDeploy(deployResult)
+        baseDeploymentService.afterDeploy(deployResult, [])
       ).resolves.not.toThrow();
     });
   });
@@ -167,7 +172,7 @@ describe("BaseDeploymentService", () => {
       } as any;
 
       await expect(
-        baseDeploymentService.afterUpgrade(deployResult)
+        baseDeploymentService.afterUpgrade(deployResult, [])
       ).resolves.not.toThrow();
     });
   });

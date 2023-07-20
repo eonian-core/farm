@@ -3,6 +3,7 @@ import {
     DeployResult,
 } from "@eonian/hardhat-deploy/types";
 import { Logger } from "./logger/Logger";
+import { HardhatRuntimeEnvironment } from "hardhat/types";
   
 export interface DeployArgs {
     /** Name of artifact to deploy, will be used to reference contract in dependencies */
@@ -39,6 +40,7 @@ export interface DeploymentsService {
 export abstract class LifecycleDeploymentService {
 
     constructor(
+        readonly hre: HardhatRuntimeEnvironment,
         readonly deployments: DeploymentsService,
         readonly logger: Logger
     ) {}
@@ -56,10 +58,10 @@ export abstract class LifecycleDeploymentService {
 
         if (!isDeployedBefore) {
             this.logger.log("Contract wasn't deployed before, run afterDeploy hook")
-            await this.afterDeploy(result);
+            await this.afterDeploy(result, dependencies);
         } else {
             this.logger.log("Contract was deployed before, run afterUpgrade hook")
-            await this.afterUpgrade(result);
+            await this.afterUpgrade(result, dependencies);
         }
     }
 
@@ -76,11 +78,11 @@ export abstract class LifecycleDeploymentService {
      * Hook which will be run after deploy
      * @param deployResult Result of deploy function
      * */
-    abstract afterDeploy(deployResult: DeployResult): Promise<void>
+    abstract afterDeploy(deployResult: DeployResult, dependencies: Array<Deployment>): Promise<void>
 
     /**
      * Hook which will be run after upgrade
      * @param deployResult Result of deploy function
      * */
-    abstract afterUpgrade(deployResult: DeployResult): Promise<void>
+    abstract afterUpgrade(deployResult: DeployResult, dependencies: Array<Deployment>): Promise<void>
 }
