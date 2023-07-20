@@ -22,10 +22,12 @@ export class RewardApyService extends WithLogger implements IRewardApyService {
         }
 
         this.logger.info("Filling APY entity for {}", [id.toString()])
-        entity.daily = toAPY(interestRatePerBlock, entity.decimals).div(BigInt.fromI64(365));
-        entity.weekly = toAPY(interestRatePerBlock, entity.decimals).div(BigInt.fromI64(52));
-        entity.monthly = toAPY(interestRatePerBlock, entity.decimals).div(BigInt.fromI64(12));
-        entity.yearly = toAPY(interestRatePerBlock, entity.decimals);
+
+        const apy = toAPY(interestRatePerBlock, entity.decimals);
+        entity.daily = apy.div(BigInt.fromI64(365));
+        entity.weekly = apy.div(BigInt.fromI64(52));
+        entity.monthly = apy.div(BigInt.fromI64(12));
+        entity.yearly = apy;
 
         entity.save()
 
