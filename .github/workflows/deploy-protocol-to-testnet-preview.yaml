@@ -40,6 +40,10 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
 
+      # Need for deploy scripts
+      - name: Link packages
+        run: yarn bootstrap
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
@@ -94,9 +98,6 @@ jobs:
 
       - name: Install dependencies
         run: yarn --ignore-scripts
-
-      - name: Link packages
-        run: yarn bootstrap
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
