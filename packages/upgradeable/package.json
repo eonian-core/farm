@@ -10,9 +10,10 @@
     "test:watch": "jest --watch",
     "clear": "rm -rf dist",
     "dev": "concurrently -c \"auto\" \"yarn:test:watch\" \"yarn:build:watch\"",
-    "build": "yarn clear && microbundle",
+    "rebuild": "yarn clear && yarn build",
+    "build": "microbundle",
     "build:watch": "microbundle watch",
-    "postinstall": "yarn build"
+    "prepublish": "yarn build"
   },
   "source": "./src/index.ts",
   "exports": {    
