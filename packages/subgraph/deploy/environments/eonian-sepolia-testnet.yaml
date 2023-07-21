@@ -44,6 +44,8 @@ dataSources:
           file: ../../abis/VaultImplementation.json
         - name: ERC20
           file: ../../abis/ERC20.json
+        - name: ChainLinkPriceFeed
+          file: ../../abis/ChainLinkPriceFeed.json
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged
