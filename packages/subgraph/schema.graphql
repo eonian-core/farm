@@ -117,7 +117,10 @@ type Token @entity(immutable: true) { # when will have price metric which requir
   """
   decimals: Int!
 
-  # TODO: add token price, base https://github.com/messari/subgraphs/blob/master/subgraphs/arrakis-finance/src/prices/README.md
+  """
+  The price of the token.
+  """
+  price: BigInt!
 }
 
 enum InterestRateType {

@@ -340,6 +340,19 @@ export class Token extends Entity {
   set decimals(value: i32) {
     this.set("decimals", Value.fromI32(value));
   }
+
+  get price(): BigInt {
+    let value = this.get("price");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set price(value: BigInt) {
+    this.set("price", Value.fromBigInt(value));
+  }
 }
 
 export class InterestRate extends Entity {

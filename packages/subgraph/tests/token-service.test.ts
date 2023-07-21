@@ -6,7 +6,6 @@ import {
     beforeEach,
     afterAll,
     beforeAll,
-    afterEach,
 } from "matchstick-as/assembly/index"
 import { Address, ethereum } from "@graphprotocol/graph-ts"
 import { MockLogger, mockViewFunction } from "./mocking"
@@ -15,7 +14,9 @@ import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
 import { mockTokenContract } from "./mock-token";
 
-const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+const tokenAddress = Address.fromString(
+  "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+);
 const tokenAddressStr = tokenAddress.toHexString()
 
 
