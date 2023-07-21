@@ -14,7 +14,9 @@ import { MockLogger, mockViewFunction } from "./mocking";
 import { createUpgradedEvent } from "./vault-utils";
 import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
-import { mockPriceFeed, mockTokenContract } from "./mock-token";
+import { mockTokenContract } from "./mock-token";
+import { PriceService } from "../src/price/price-service";
+import { mockPriceFeed } from "./mock-price";
 
 const tokenAddress = Address.fromString(
   "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
@@ -22,7 +24,7 @@ const tokenAddress = Address.fromString(
 
 let implementationAddress: Address;
 let event: ethereum.Event;
-let service: TokenService;
+let service: PriceService;
 
 describe("TokenService (Price Feed)", () => {
   beforeEach(() => {
@@ -36,14 +38,14 @@ describe("TokenService (Price Feed)", () => {
     event = createUpgradedEvent(implementationAddress);
     const ctx = new Context(event, "test");
     const logger = new MockLogger();
-    service = new TokenService(ctx, logger);
+    service = new PriceService(ctx, logger);
   });
 
   afterEach(() => {
     clearStore();
   });
 
-  test("should create Token with price (BSC)", () => {
+  test("should create price (BSC)", () => {
     dataSourceMock.setNetwork("bsc");
 
     const USDT_PRICE_FEED = Address.fromString(
@@ -51,13 +53,12 @@ describe("TokenService (Price Feed)", () => {
     );
     mockPriceFeed(USDT_PRICE_FEED);
 
-    const token = service.getOrCreateToken(tokenAddress);
-    assert.stringEquals(token.symbol, "USDT");
-
-    assert.bigIntEquals(token.price, BigInt.fromI64(256));
+    const price = service.createOrUpdate("USDT", tokenAddress);
+    assert.i32Equals(price.decimals, 8);
+    assert.bigIntEquals(price.value, BigInt.fromI64(256));
   });
 
-  test("should create Token with price (Sepolia)", () => {
+  test("should create price (Sepolia)", () => {
     dataSourceMock.setNetwork("sepolia");
 
     const USDT_PRICE_FEED = Address.fromString(
@@ -65,13 +66,12 @@ describe("TokenService (Price Feed)", () => {
     );
     mockPriceFeed(USDT_PRICE_FEED);
 
-    const token = service.getOrCreateToken(tokenAddress);
-    assert.stringEquals(token.symbol, "USDT");
-
-    assert.bigIntEquals(token.price, BigInt.fromI64(256));
+    const price = service.createOrUpdate("USDT", tokenAddress);
+    assert.i32Equals(price.decimals, 8);
+    assert.bigIntEquals(price.value, BigInt.fromI64(256));
   });
 
-  test("should create Token with 0 price if network is not supported", () => {
+  test("should create price with 0 value if network is not supported", () => {
     dataSourceMock.setNetwork("unknown");
 
     const USDT_PRICE_FEED = Address.fromString(
@@ -79,13 +79,12 @@ describe("TokenService (Price Feed)", () => {
     );
     mockPriceFeed(USDT_PRICE_FEED);
 
-    const token = service.getOrCreateToken(tokenAddress);
-    assert.stringEquals(token.symbol, "USDT");
-
-    assert.bigIntEquals(token.price, BigInt.zero());
+    const price = service.createOrUpdate("USDT", tokenAddress);
+    assert.i32Equals(price.decimals, 0);
+    assert.bigIntEquals(price.value, BigInt.zero());
   });
 
-  test("should create Token with 0 price if token is not supported", () => {
+  test("should create price with 0 value if token is not supported", () => {
     dataSourceMock.setNetwork("bsc");
 
     const USDT_PRICE_FEED = Address.fromString(
@@ -93,17 +92,12 @@ describe("TokenService (Price Feed)", () => {
     );
     mockPriceFeed(USDT_PRICE_FEED);
 
-    mockViewFunction(tokenAddress, "symbol", "string", [
-      ethereum.Value.fromString("UNSUPPORTED_SYMBOL"),
-    ]);
-
-    const token = service.getOrCreateToken(tokenAddress);
-    assert.stringEquals(token.symbol, "UNSUPPORTED_SYMBOL");
-
-    assert.bigIntEquals(token.price, BigInt.zero());
+    const price = service.createOrUpdate("UNSUPPORTED_SYMBOL", tokenAddress);
+    assert.i32Equals(price.decimals, 0);
+    assert.bigIntEquals(price.value, BigInt.zero());
   });
   
-  test("should create Token with 0 price if token is a vault share", () => {
+  test("should create price with 0 value if token is a vault share", () => {
     dataSourceMock.setNetwork("bsc");
     dataSourceMock.setAddress(tokenAddress.toHexString());
 
@@ -112,9 +106,8 @@ describe("TokenService (Price Feed)", () => {
     );
     mockPriceFeed(USDT_PRICE_FEED);
 
-    const token = service.getOrCreateToken(tokenAddress);
-    assert.stringEquals(token.symbol, "USDT");
-
-    assert.bigIntEquals(token.price, BigInt.zero());
+    const price = service.createOrUpdate("USDT", tokenAddress);
+    assert.i32Equals(price.decimals, 0);
+    assert.bigIntEquals(price.value, BigInt.zero());
   });
 });

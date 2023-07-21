@@ -120,7 +120,24 @@ type Token @entity(immutable: true) { # when will have price metric which requir
   """
   The price of the token.
   """
-  price: BigInt!
+  price: Price!
+}
+
+type Price @entity(immutable: false) @regularPolling {
+  """
+  The ID of the price (same as Token ID).
+  """
+  id: Bytes!
+  
+  """
+  The actual price of the token (scaled up to "decimals").
+  """
+  value: BigInt!
+
+  """
+  The decimals of the "value".
+  """
+  decimals: Int
 }
 
 enum InterestRateType {

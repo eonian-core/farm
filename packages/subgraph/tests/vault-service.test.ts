@@ -9,7 +9,7 @@ import {
     afterEach,
     beforeEach,
 } from "matchstick-as/assembly/index"
-import { Address, ethereum, BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { Address, ethereum, BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 import { createUpgradedEvent } from "./vault-utils";
 import { VaultService } from "../src/vault-service";
 import { MockLogger, defaultAddress, mockViewFunction } from "./mocking";
@@ -19,10 +19,13 @@ import { mockTokenContract } from "./mock-token";
 import { tokenAddress, mockVaultContract, vaultAddress, tokenAddressStr } from "./mock-vault";
 import { IInterestRateService } from "../src/interest-rate/interest-rate-service";
 import { MockInterestRateService } from "./mock-interest-rate";
+import { IPriceService } from "../src/price/price-service";
+import { MockPriceSerivce } from "./mock-price";
 
 let implementationAddress: Address
 let event: ethereum.Event
 let tokenService: TokenService
+let priceService: IPriceService
 let interestService: IInterestRateService
 let service: VaultService
 
@@ -38,7 +41,8 @@ describe("VaultService", () => {
         event = createUpgradedEvent(implementationAddress)
         const ctx = new Context(event, 'test')
         const logger = new MockLogger()
-        tokenService = new TokenService(ctx, logger)
+        priceService = new MockPriceSerivce()
+        tokenService = new TokenService(ctx, logger, priceService);
         interestService = new MockInterestRateService()
         
         service = new VaultService(ctx, logger, tokenService, interestService)
