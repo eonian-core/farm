@@ -53,7 +53,7 @@ describe("TokenService (Price Feed)", () => {
 
       const price = service.createOrUpdate(symbol, tokenAddress);
       assert.i32Equals(price.decimals, 8);
-      assert.bigIntEquals(price.value, BigInt.fromI64(256));
+      assert.bigIntEquals(price.value, BigInt.fromI64(250000000));
     });
   });
 
@@ -67,7 +67,7 @@ describe("TokenService (Price Feed)", () => {
 
     const price = service.createOrUpdate("USDT", tokenAddress);
     assert.i32Equals(price.decimals, 8);
-    assert.bigIntEquals(price.value, BigInt.fromI64(256));
+    assert.bigIntEquals(price.value, BigInt.fromI64(250000000));
   });
 
   test("should create price with 0 value if network is not supported", () => {

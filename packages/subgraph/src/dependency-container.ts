@@ -24,6 +24,6 @@ export class DependencyContainer {
         this.tokenService = new TokenService(this.context, this.logger, this.priceService);
         this.rewardApyService = new RewardApyService(this.context, this.logger);
         this.interestRateService = new InterestRateService(this.context, this.logger, this.rewardApyService);
-        this.vaultService = new VaultService(this.context, this.logger, this.tokenService, this.interestRateService)
+        this.vaultService = new VaultService(this.context, this.logger, this.priceService, this.tokenService, this.interestRateService)
     }
 }

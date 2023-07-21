@@ -8,6 +8,7 @@ import {
     createMockedFunction,
     afterEach,
     beforeEach,
+    dataSourceMock,
 } from "matchstick-as/assembly/index"
 import { Address, ethereum, BigInt, Bytes, log } from "@graphprotocol/graph-ts"
 import { createUpgradedEvent } from "./vault-utils";
@@ -19,8 +20,12 @@ import { mockTokenContract } from "./mock-token";
 import { tokenAddress, mockVaultContract, vaultAddress, tokenAddressStr } from "./mock-vault";
 import { IInterestRateService } from "../src/interest-rate/interest-rate-service";
 import { MockInterestRateService } from "./mock-interest-rate";
-import { IPriceService } from "../src/price/price-service";
-import { MockPriceSerivce } from "./mock-price";
+import { IPriceService, PriceService } from "../src/price/price-service";
+import { mockPriceFeed, MockPriceSerivce } from "./mock-price";
+
+const USDT_PRICE_FEED = Address.fromString(
+  "0xB97Ad0E74fa7d920791E90258A6E2085088b4320"
+);
 
 let implementationAddress: Address
 let event: ethereum.Event
@@ -41,11 +46,10 @@ describe("VaultService", () => {
         event = createUpgradedEvent(implementationAddress)
         const ctx = new Context(event, 'test')
         const logger = new MockLogger()
-        priceService = new MockPriceSerivce()
+        priceService = new PriceService(ctx, logger);
         tokenService = new TokenService(ctx, logger, priceService);
         interestService = new MockInterestRateService()
-        
-        service = new VaultService(ctx, logger, tokenService, interestService)
+        service = new VaultService(ctx, logger, priceService, tokenService, interestService)
     })
 
     afterAll(() => {
@@ -54,6 +58,8 @@ describe("VaultService", () => {
 
     describe("createOrUpdateVault", () => {
         beforeAll(() => {
+            dataSourceMock.setNetwork("bsc");
+            mockPriceFeed(USDT_PRICE_FEED);
             mockVaultContract(defaultAddress)
         })
 
@@ -81,7 +87,11 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "asset", tokenAddressStr);
             assert.fieldEquals("Vault", vaultAddress, "totalUtilisationRate", "555");
             assert.fieldEquals("Vault", vaultAddress, "rates", "[" + Bytes.fromHexString(vaultAddress + "-LENDER-VARIABLE-321").toHexString() + "]");
-        
+            
+            // (2.5 * (1e8) * 70000000000000000000) / 1e18 = 17500000000
+            assert.fieldEquals("Vault", vaultAddress, "fundAssetsUSD", "17500000000");
+
+
             assert.entityCount("Token", 2)
 
             assert.fieldEquals("Token", vaultAddress, "name", "USDT Vault")
@@ -148,6 +158,9 @@ describe("VaultService", () => {
             assert.fieldEquals("Vault", vaultAddress, "totalUtilisationRate", "666");
             assert.fieldEquals("Vault", vaultAddress, "rates", "[" + Bytes.fromHexString(vaultAddress + "-LENDER-VARIABLE-444").toHexString() + "]");
 
+            // (2.5 * (1e8) * 100000000000000000000) / 1e18 = 25000000000
+            assert.fieldEquals("Vault", vaultAddress, "fundAssetsUSD", "25000000000");
+            
             assert.entityCount("Token", 2)
 
             // shuldnt be updated

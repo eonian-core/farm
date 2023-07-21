@@ -17,7 +17,7 @@ export function mockPriceFeed(priceFeed: Address): void {
     "uint80,int256,uint256,uint256,uint80",
     [
       ethereum.Value.fromI32(0),
-      ethereum.Value.fromI32(256),
+      ethereum.Value.fromI32(250000000 as i32), // 2.5 * 1e8
       ethereum.Value.fromI32(0),
       ethereum.Value.fromI32(0),
       ethereum.Value.fromI32(0),

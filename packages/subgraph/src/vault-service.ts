@@ -1,18 +1,19 @@
-import { Address, Bytes, BigInt, log, BigDecimal, ethereum } from "@graphprotocol/graph-ts";
+import { Address, Bytes, BigInt } from "@graphprotocol/graph-ts";
 import { Vault } from "../generated/Vault/Vault"
-import { Vault as VaultEntity, Token } from "../generated/schema"
-import {ILogger, Logger, WithLogger} from './logger'
+import { Vault as VaultEntity } from "../generated/schema"
+import {ILogger, WithLogger} from './logger'
 import { TokenService } from "./token-service";
+import { IPriceService } from "./price/price-service";
 import { Context } from "./Context";
 import { toId } from "./types/id";
 import { IInterestRateService } from "./interest-rate/interest-rate-service";
 import { InterestRateSide, InterestRateType } from "./interest-rate/types";
 
-
 export class VaultService extends WithLogger {
     constructor(
         ctx: Context, 
-        logger: ILogger, 
+        logger: ILogger,
+        public priceService: IPriceService,
         public tokenService: TokenService, 
         public interestService: IInterestRateService
     ) {
@@ -62,6 +63,7 @@ export class VaultService extends WithLogger {
         entity.totalDebt = vault.totalDebt();
         entity.totalAssets = vault.totalAssets();
         entity.fundAssets = vault.fundAssets();
+        entity.fundAssetsUSD = this.toUSD(entity.fundAssets, asset.value);
 
         entity.maxBps = vault.MAX_BPS();
         entity.debtRatio = vault.debtRatio()
@@ -78,6 +80,13 @@ export class VaultService extends WithLogger {
         ).id];
 
         entity.save()
+    }
+
+    toUSD(value: BigInt, tokenContractAddress: Address): BigInt {
+        const token = this.tokenService.getOrCreateToken(tokenContractAddress);
+        const price = this.priceService.createOrUpdate(token.symbol, tokenContractAddress);
+        const mantissa = BigInt.fromI64(10).pow(token.decimals as i8);
+        return value.times(price.value).div(mantissa);
     }
 }
 

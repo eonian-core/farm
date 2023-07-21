@@ -52,6 +52,12 @@ type Vault @entity(immutable: false) @regularPolling {
   @dev Requires decimals adjustment by token "decimals" field.
   """
   fundAssets: BigInt!
+
+  """
+  Price in USD of all tokens that the Vault has (including locked profit).
+  @dev Requires decimals adjustment by price "decimals" field.
+  """
+  fundAssetsUSD: BigInt!
   
   """
   BPS points used to make adjustments for percentage-like fields for Vault and Lender.
