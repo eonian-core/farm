@@ -1,9 +1,17 @@
 import { Address, TypedMap } from "@graphprotocol/graph-ts";
 
-const BNB_ADDRESSES = new TypedMap<string, Address>();
+export const BNB_ADDRESSES = new TypedMap<string, Address>();
 BNB_ADDRESSES.set(
   "USDT",
   Address.fromString("0xB97Ad0E74fa7d920791E90258A6E2085088b4320")
+);
+BNB_ADDRESSES.set(
+  "BUSD",
+  Address.fromString("0xcBb98864Ef56E9042e7d2efef76141f15731B82f")
+);
+BNB_ADDRESSES.set(
+  "USDC",
+  Address.fromString("0x51597f405303C4377E36123cBc172b13269EA163")
 );
 
 const SEPOLIA_ADDRESSES = new TypedMap<string, Address>();
