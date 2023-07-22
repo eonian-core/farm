@@ -8,12 +8,12 @@ import {
   dataSourceMock,
 } from "matchstick-as/assembly/index";
 import { Address, BigInt, ethereum } from "@graphprotocol/graph-ts";
-import { MockLogger } from "./mocking";
+import { MockLogger, mockViewFunction } from "./mocking";
 import { createUpgradedEvent } from "./vault-utils";
 import { Context } from "../src/Context";
 import { mockTokenContract } from "./mock-token";
 import { PriceService } from "../src/price/price-service";
-import { mockPriceFeed } from "./mock-price";
+import { mockPriceFeed, mockPriceValue } from "./mock-price";
 import { BNB_ADDRESSES } from "../src/price/price-feeds";
 
 const tokenAddress = Address.fromString(
@@ -55,7 +55,27 @@ describe("TokenService (Price Feed)", () => {
       assert.i32Equals(price.decimals, 8);
       assert.bigIntEquals(price.value, BigInt.fromI64(250000000));
     });
+
+    assert.entityCount("Price", BNB_ADDRESSES.entries.length);
   });
+
+  test("should update price (BSC)", () => {
+    BNB_ADDRESSES.entries.forEach((value) => {
+      const symbol = value.key;
+      const address = value.value;
+
+      mockPriceValue(address, 1234567890);
+      mockViewFunction(address, "decimals", "uint8", [
+        ethereum.Value.fromI32(16),
+      ]);
+
+      const price = service.createOrUpdate(symbol, tokenAddress);
+      assert.i32Equals(price.decimals, 16);
+      assert.bigIntEquals(price.value, BigInt.fromI64(1234567890));
+    });
+
+    assert.entityCount("Price", BNB_ADDRESSES.entries.length);
+  })
 
   test("should create price (Sepolia)", () => {
     dataSourceMock.setNetwork("sepolia");

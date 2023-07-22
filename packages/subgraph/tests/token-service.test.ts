@@ -7,13 +7,13 @@ import {
     afterAll,
     beforeAll,
 } from "matchstick-as/assembly/index"
-import { Address, ethereum, log } from "@graphprotocol/graph-ts"
+import { Address, Bytes, ethereum, log } from "@graphprotocol/graph-ts"
 import { MockLogger, mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
 import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
 import { mockTokenContract } from "./mock-token";
-import { IPriceService, PriceService } from "../src/price/price-service";
+import { IPriceService } from "../src/price/price-service";
 import { MockPriceSerivce } from "./mock-price";
 
 const tokenAddress = Address.fromString(
@@ -39,7 +39,7 @@ describe("TokenService", () => {
         event = createUpgradedEvent(implementationAddress)
         const ctx = new Context(event, 'test')
         const logger = new MockLogger()
-        priceService = new PriceService(ctx, logger);
+        priceService = new MockPriceSerivce();
         service = new TokenService(ctx, logger, priceService);
     })
 
@@ -62,6 +62,9 @@ describe("TokenService", () => {
             assert.fieldEquals("Token", tokenAddressStr, "name", "USD Tether")
             assert.fieldEquals("Token", tokenAddressStr, "symbol", "USDT")
             assert.fieldEquals("Token", tokenAddressStr, "decimals", "18")
+
+            // Check that price object is correctly linked with its parent.
+            assert.fieldEquals("Token", tokenAddressStr, "price", Bytes.fromUTF8('USDT-' + tokenAddressStr + "-price").toHexString());
         })
 
         test("should get Token", () => {
@@ -78,6 +81,9 @@ describe("TokenService", () => {
             assert.stringEquals(token.name, "USD Tether")
             assert.stringEquals(token.symbol, "USDT")
             assert.i32Equals(token.decimals, 18)
+
+            // Check that price object is correctly linked with its parent.
+            assert.fieldEquals("Token", tokenAddressStr, "price", Bytes.fromUTF8('USDT-' + tokenAddressStr + "-price").toHexString());
 
             assert.entityCount("Token", 1)
 
