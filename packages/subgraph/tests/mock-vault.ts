@@ -20,6 +20,10 @@ export function mockVaultContract(vault: Address): void {
   mockViewFunction(vault, "totalSupply", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('100000000000000000000'))])
   // Mock the contract call for getting the totalDebt
   mockViewFunction(vault, "totalDebt", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('50000000000000000000'))])
+  // Mock the contract call for getting the totalAssets
+  mockViewFunction(vault, "totalAssets", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('60000000000000000000'))])
+  // Mock the contract call for getting the fundAssets
+  mockViewFunction(vault, "fundAssets", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromString('70000000000000000000'))])
   // Mock the contract call for getting the MAX_BPS
   mockViewFunction(vault, "MAX_BPS", "uint256", [ethereum.Value.fromSignedBigInt(BigInt.fromI64(10000))])
   // Mock the contract call for getting the debtRatio

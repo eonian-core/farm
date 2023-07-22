@@ -10,6 +10,7 @@ files:
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
+        ChainLinkPriceFeed: ../../abis/ChainLinkPriceFeed.json
       eventHandlers:
         file: ../../src/event-handlers.ts
 
@@ -24,6 +25,7 @@ files:
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
+        ChainLinkPriceFeed: ../../abis/ChainLinkPriceFeed.json
       eventHandlers:
         file: ../../src/event-handlers.ts
 
@@ -38,6 +40,7 @@ files:
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
+        ChainLinkPriceFeed: ../../abis/ChainLinkPriceFeed.json
       eventHandlers:
         file: ../../src/event-handlers.ts
 
@@ -54,5 +57,6 @@ files:
       abis:
         Vault: ./abis/VaultImplementation.json
         ERC20: ./abis/ERC20.json
+        ChainLinkPriceFeed: ./abis/ChainLinkPriceFeed.json
       eventHandlers:
         file: ./src/event-handlers.ts

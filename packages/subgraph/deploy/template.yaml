@@ -44,6 +44,8 @@ dataSources:
           file: {{ abis.Vault }}
         - name: ERC20
           file: {{ abis.ERC20 }}
+        - name: ChainLinkPriceFeed
+          file: {{ abis.ChainLinkPriceFeed }}
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged
