@@ -151,6 +151,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         );
         baseStrategy.callWork();
 
+        // loss less than debt and lossRation so should allow to finalize loss
         baseStrategy.setHarvestProfit(0);
         baseStrategy.setHarvestLoss(1e8);
         vm.expectCall(
@@ -448,5 +449,106 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         baseStrategy.setMinimumBetweenExecutions(time);
 
         assertEq(baseStrategy.minimumBetweenExecutions(), minReportInterval);
+    }
+
+    function testHealthCheckPass() public {
+        uint256 _120_USDT = 120 * 10 ** 18;
+
+        // Give the required funds to Actor
+        underlying.mint(alice, _120_USDT);
+        assertEq(underlying.balanceOf(alice), _120_USDT);
+
+        // Allow to vault to take the Actor's assets
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Actor deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(_120_USDT);
+
+        vm.mockCall(
+            address(vault),
+            abi.encodeWithSelector(vault.reportNegativeDebtManagement.selector),
+            abi.encode()
+        );
+        vm.expectEmit(true, true, true, true);
+        // should allow strategy to collect profit
+        baseStrategy.emitHealthCheckTriggered(0);
+
+        baseStrategy.callWork();
+    }
+
+    function testHealthCheckTriggerAcceptableLossFallback() public {
+        uint256 _120_USDT = 120 * 10 ** 18;
+
+        // Give the required funds to Actor
+        underlying.mint(alice, _120_USDT);
+        assertEq(underlying.balanceOf(alice), _120_USDT);
+
+        // Allow to vault to take the Actor's assets
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Actor deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(_120_USDT);
+
+        // distribute funds to strategy
+        baseStrategy.setHarvestLoss(0);
+        baseStrategy.callWork();
+
+        baseStrategy.setHarvestProfit(0);
+        // loss should be less then debt ratio threshold(15%)
+        baseStrategy.setHarvestLoss(_120_USDT / 100);
+
+        vm.mockCall(
+            address(vault),
+            abi.encodeWithSelector(vault.reportNegativeDebtManagement.selector),
+            abi.encode()
+        );
+
+        vm.expectEmit(true, true, true, true);
+        // report loss but not stop strategy
+        baseStrategy.emitHealthCheckTriggered(1);
+
+        baseStrategy.callWork();
+    }
+
+    function testHealthCheckTriggerFailedAndToBeShutdown() public {
+        uint256 _120_USDT = 120 * 10 ** 18;
+
+        // Give the required funds to Actor
+        underlying.mint(alice, _120_USDT);
+        assertEq(underlying.balanceOf(alice), _120_USDT);
+
+        // Allow to vault to take the Actor's assets
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Actor deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(_120_USDT);
+
+        // distribute funds to strategy
+        baseStrategy.setHarvestLoss(0);
+        baseStrategy.callWork();
+
+        baseStrategy.setHarvestProfit(0);
+        // loss should be greater then debt ratio threshold(15%)
+        baseStrategy.setHarvestLoss(_120_USDT * 2);
+
+        vm.mockCall(
+            address(vault),
+            abi.encodeWithSelector(vault.reportNegativeDebtManagement.selector),
+            abi.encode()
+        );
+
+        vm.expectEmit(true, true, true, true);
+        // report loss but not stop strategy
+        baseStrategy.emitHealthCheckTriggered(2);
+        vm.expectEmit(true, true, true, true);
+        vault.emitStrategyRevokedEvent(address(baseStrategy));
+
+        baseStrategy.callWork();
     }
 }

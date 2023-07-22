@@ -9,19 +9,19 @@ contract HealthCheckerMock is HealthChecker, SafeInitializableMock {
     event HealthCheckPerformed();
 
     constructor(IHealthCheck healthCheck) initializer {
-        __HealthChecker_init(address(healthCheck));
+        __HealthChecker_init(address(healthCheck), 1_500);
     }
 
     function performHealthCheckExternal() external {
-        performHealthCheck(address(0), 0, 0, 0, 0, 0);
+        performHealthCheck(address(0), 0, 0, 0, 0, 0, 0);
     }
 }
 
 contract HealthCheck is IHealthCheck {
-    bool success = false;
+    uint8 private result = 2;
 
-    function setSuccess(bool _success) external {
-        success = _success;
+    function setResult(uint8 _result) external {
+        result = _result;
     }
 
     function check(
@@ -30,8 +30,9 @@ contract HealthCheck is IHealthCheck {
         uint256, /* loss */
         uint256, /* debtPayment */
         uint256, /* debtOutstanding */
-        uint256 /* totalDebt */
-    ) external view override returns (bool) {
-        return success;
+        uint256, /* totalDebt */
+        uint256 /*gasCost*/
+    ) external view override returns (uint8) {
+        return result;
     }
 }

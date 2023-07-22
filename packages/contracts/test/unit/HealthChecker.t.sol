@@ -56,7 +56,7 @@ contract HealthCheckerTest is Test {
         healthChecker.setHealthCheck(address(0));
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0, 0))
         );
         healthChecker.performHealthCheckExternal();
     }
@@ -65,7 +65,7 @@ contract HealthCheckerTest is Test {
         healthChecker.setHealthCheckEnabled(false);
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0, 0))
         );
         healthChecker.performHealthCheckExternal();
     }
@@ -77,21 +77,21 @@ contract HealthCheckerTest is Test {
     }
 
     function testShouldPerformHealthCheck() public {
-        healthCheck.setSuccess(true);
+        healthCheck.setResult(0);
 
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0, 0))
         );
         healthChecker.performHealthCheckExternal();
     }
 
     function testShouldRevertIfHealthCheckIsUnsuccessful() public {
-        healthCheck.setSuccess(false);
+        healthCheck.setResult(2);
 
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0, 0))
         );
 
         vm.expectRevert(HealthCheckFailed.selector);

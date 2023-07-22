@@ -87,9 +87,10 @@ abstract contract BaseStrategy is
         bool _isPrepaid,
         AggregatorV3Interface __nativeTokenPriceFeed,
         AggregatorV3Interface __assetPriceFeed,
-        address _healthCheck
+        address _healthCheck,
+        uint256 _shutdownLossRatio
     ) internal onlyInitializing {
-        __HealthChecker_init(_healthCheck); // ownable under the hood
+        __HealthChecker_init(_healthCheck, _shutdownLossRatio); // ownable under the hood
         __Pausable_init();
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 
@@ -158,13 +159,15 @@ abstract contract BaseStrategy is
         _adjustPosition(outstandingDebt);
 
         uint256 totalDebt = lender.currentDebt();
+        uint256 gasPrice = _gasPriceUSD() * estimatedWorkGas;
         performHealthCheck(
             address(this),
             profit,
             loss,
             debtPayment,
             outstandingDebt,
-            totalDebt
+            totalDebt,
+            gasPrice
         );
 
         emit Harvested(profit, loss, debtPayment, outstandingDebt);
@@ -220,7 +223,7 @@ abstract contract BaseStrategy is
     }
 
     /// @notice Shutdown the strategy and revoke it form the lender.
-    function shutdown() external nonReentrant onlyOwner { // need check nonReentrant to avoid cyclic call
+    function shutdown() public nonReentrant onlyOwner { // need check nonReentrant to avoid cyclic call
         _pause();
         lender.revokeStrategy(address(this));
     }
@@ -324,4 +327,9 @@ abstract contract BaseStrategy is
         internal
         virtual
         returns (uint256 amountFreed);
+
+    /// @dev Fallback function that is called when the health check fails.
+    function healthCheckFallback() internal virtual override{
+        shutdown();
+    }
 }

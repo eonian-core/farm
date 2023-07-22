@@ -3,6 +3,7 @@ pragma solidity >=0.8.0;
 
 import "contracts/strategies/BaseStrategy.sol";
 import "./SafeInitializableMock.sol";
+import "./VaultMock.sol";
 
 contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     event HarvestCalled();
@@ -34,7 +35,8 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
             _isPrepaid,
             __nativeTokenPriceFeed,
             __assetPriceFeed,
-            address(0)
+            address(0),
+            1_500
         );
     }
 
@@ -98,6 +100,10 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
 
     function emitUpdatedProfitFactor(uint256 profitFactor) public {
         emit UpdatedProfitFactor(profitFactor);
+    }
+
+    function emitHealthCheckTriggered(uint8 result) public {
+        emit HealthCheckTriggered(result);
     }
 
     function _harvestAfterShutdown(

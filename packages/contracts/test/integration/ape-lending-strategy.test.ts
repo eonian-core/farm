@@ -296,7 +296,8 @@ describe("Ape Lending Strategy", function () {
       nativePriceFeed,
       assetPriceFeed,
       minReportInterval, // Min report interval
-      true // Job is prepaid
+      true, // Job is prepaid
+      1_500 // 15% threshold to shut down strategy
     );
     await tx.wait();
 
