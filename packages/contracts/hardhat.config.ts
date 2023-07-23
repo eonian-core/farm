@@ -18,6 +18,7 @@ import "@nomicfoundation/hardhat-foundry";
 import {getTokenBySymbol, ChainSymobls} from '@eonian/upgradeable'
 
 import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
+import { providers, ProvidersContracts } from "./hardhat/providers";
 
 import "./hardhat/tasks/start-hardhat-node.ts";
 import { Address } from "@eonian/hardhat-deploy/types";
@@ -167,6 +168,7 @@ const config: HardhatUserConfig = {
       etherium_mainnet: "0xB3f5503f93d5Ef84b06993a1975B9D21B962892F",
     },
     USDT: {
+      // TODO: need refactor this copy-paste, but using some calculations can make code less understandable
       bsc_mainnet_dev: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address,
       bsc_mainnet_staging: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address,
       bsc_mainnet_prod: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address,
@@ -193,26 +195,26 @@ const config: HardhatUserConfig = {
       bsc_mainnet_prod: 0,
       default: 0,
     },
-    // https://bscscan.com/address/0xdbfd516d42743ca3f1c555311f7846095d85f6fd#code
+   
     apeSwap__cUSDT: {
-      bsc_mainnet_dev: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd",
-      bsc_mainnet_staging: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd",
-      bsc_mainnet_prod: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd",
-      default: "0xdBFd516D42743CA3f1C555311F7846095D85F6Fd", // will use bsc address as default for hardhat network
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDT],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDT],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDT],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDT], // will use bsc address as default for hardhat network
     },
-    // https://data.chain.link/bsc/mainnet/crypto-usd/bnb-usd
+    
     chainlink__BNB_USD_feed: {
-      bsc_mainnet_dev: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
-      bsc_mainnet_staging: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
-      bsc_mainnet_prod: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee",
-      default: "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee", // will use bsc address as default for hardhat network
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed], // will use bsc address as default for hardhat network
     },
-    // https://data.chain.link/bsc/mainnet/crypto-usd/usdt-usd
+    
     chainlink__USDT_USD_feed: {
-      bsc_mainnet_dev: "0xb97ad0e74fa7d920791e90258a6e2085088b4320",
-      bsc_mainnet_staging: "0xb97ad0e74fa7d920791e90258a6e2085088b4320",
-      bsc_mainnet_prod: "0xb97ad0e74fa7d920791e90258a6e2085088b4320",
-      default: "0xb97ad0e74fa7d920791e90258a6e2085088b4320", // will use bsc address as default for hardhat network
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed], // will use bsc address as default for hardhat network
     },
   },
   paths: {
