@@ -6,8 +6,6 @@ on:
       - main
       - staging
       - development
-    paths:
-      - "packages/upgradeable/**"
   
   pull_request:
     branches:
@@ -15,8 +13,6 @@ on:
     types:
       - opened
       - synchronize
-    paths:
-      - "packages/upgradeable/**"
 
 jobs:
   test:
