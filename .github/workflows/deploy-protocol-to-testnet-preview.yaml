@@ -45,7 +45,7 @@ jobs:
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
-      # Need for deploy scripts
+      # Need for hardhat scripts
       - name: Link packages
         run: yarn bootstrap
 
@@ -104,6 +104,10 @@ jobs:
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn bootstrap
+
       # Allow etherscan to index the contracts and prevent failures
       - name: Wait for 10 seconds
         run: sleep 10s
@@ -149,6 +153,10 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn bootstrap
 
       - name: Report gas usage in tests
         run: |-
