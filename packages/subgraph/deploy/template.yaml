@@ -4,13 +4,14 @@ repository: https://github.com/eonian-core/farm
 schema:
   file: {{ schema }}
 dataSources:
+  {{#each vaults}}
   - kind: ethereum
     name: Vault
-    network: {{ network }}
+    network: {{ @root.network }}
     source:
-      address: {{{ vault.address }}}
+      address: {{{ this.address }}}
       abi: Vault
-      startBlock: {{ vault.startBlock }}
+      startBlock: {{ this.startBlock }}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -41,11 +42,11 @@ dataSources:
         - Withdraw
       abis:
         - name: Vault
-          file: {{ abis.Vault }}
+          file: {{ @root.abis.Vault }}
         - name: ERC20
-          file: {{ abis.ERC20 }}
+          file: {{ @root.abis.ERC20 }}
         - name: ChainLinkPriceFeed
-          file: {{ abis.ChainLinkPriceFeed }}
+          file: {{ @root.abis.ChainLinkPriceFeed }}
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged
@@ -92,4 +93,5 @@ dataSources:
           handler: handleUpgraded
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: {{ eventHandlers.file }}
+      file: {{ @root.eventHandlers.file }}
+  {{/each}}
