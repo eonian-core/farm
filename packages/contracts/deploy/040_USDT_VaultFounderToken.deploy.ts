@@ -18,12 +18,14 @@ export const config: DeployConfig = {
 }
 
 export class VaultFounderTokenDeployment extends BaseDeploymentService {
-  async onResolveInitArgs({}) {
+  async onResolveInitArgs({dependencies: [vault]}: BaseInitArgs): Promise<Array<any>> {
     return [
       100, // maxCountTokens
       12_000, // nextTokenPriceMultiplier
       200, // initialTokenPrice
-      // TODO: add setting token name, symbol and vault during deploy
+      "Eonian USDT Vault Founder Token", // name
+      "eonUSDT.VFT", // symbol
+      vault
     ]
   }
 
@@ -35,10 +37,6 @@ export class VaultFounderTokenDeployment extends BaseDeploymentService {
     const txVault = await Vault.setFounders(VaultFounderToken.address);
     const resultAddingVaultFounderToken = await txVault.wait();
     this.logger.log("VaultFounderToken added to vault", resultAddingVaultFounderToken);
-
-    const txVaultFounderToken = await VaultFounderToken.setVault(Vault.address);
-    const resultAddingVault = await txVaultFounderToken.wait();
-    this.logger.log("Vault added to VaultFounderToken", resultAddingVault);
   }
 }
 

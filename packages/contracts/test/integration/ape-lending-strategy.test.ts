@@ -64,6 +64,7 @@ describe("Ape Lending Strategy", function () {
       nextTokenPriceMultiplier: 1200,
       initialTokenPrice: 200,
       signer: owner,
+      vault: vault.address,
     });
     vault.setFounders(vaultFounderToken.address);
     vaultFounderToken.setVault(vault.address);

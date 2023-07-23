@@ -69,7 +69,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         underlying = new ERC20Mock("Mock Token", "TKN");
         vm.label(address(underlying), "underlying");
 
-        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200, vault);
 
         vault = new VaultMock(
             address(underlying),
@@ -78,7 +78,6 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             defaultLPRRate,
             defaultFounderFee
         );
-        vaultFounderToken.setVault(vault);
         vault.setFounders(address(vaultFounderToken));
 
         vm.label(address(vault), "vault");
