@@ -19,9 +19,6 @@ on:
 env:
   BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
-env:
-  BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
-
 jobs:
   lint: 
     name: Lint contracts
