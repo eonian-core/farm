@@ -1,9 +1,9 @@
 import { generateVaultDeployment } from "../hardhat/deployments/Vault.deployment";
 
 /**
- * Deploy USDT Vault contract
+ * Deploy BUSD Vault contract
  */
 export default generateVaultDeployment({
-  asset: 'USDT'
+  asset: 'BUSD'
 })
 
