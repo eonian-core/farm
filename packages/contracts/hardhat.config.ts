@@ -15,6 +15,8 @@ import "hardhat-docgen";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-foundry";
 
+import {getTokenBySymbol, ChainSymobls} from '@eonian/upgradeable'
+
 import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 
 import "./hardhat/tasks/start-hardhat-node.ts";
@@ -165,11 +167,25 @@ const config: HardhatUserConfig = {
       etherium_mainnet: "0xB3f5503f93d5Ef84b06993a1975B9D21B962892F",
     },
     USDT: {
-      bsc_mainnet_dev: "0x55d398326f99059fF775485246999027B3197955",
-      bsc_mainnet_staging: "0x55d398326f99059fF775485246999027B3197955",
-      bsc_mainnet_prod: "0x55d398326f99059fF775485246999027B3197955",
+      bsc_mainnet_dev: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address,
+      bsc_mainnet_staging: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address,
+      bsc_mainnet_prod: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address,
       sepolia: "0x6175a8471C2122f778445e7E07A164250a19E661",
-      default: "0x55d398326f99059fF775485246999027B3197955", // will use bsc address as default for hardhat network
+      default: getTokenBySymbol(ChainSymobls.BSC, 'USDT').address, // will use bsc address as default for hardhat network
+    },
+    USDC: {
+      bsc_mainnet_dev: getTokenBySymbol(ChainSymobls.BSC, 'USDC').address,
+      bsc_mainnet_staging: getTokenBySymbol(ChainSymobls.BSC, 'USDC').address,
+      bsc_mainnet_prod: getTokenBySymbol(ChainSymobls.BSC, 'USDC').address,
+      sepolia: "0x6175a8471C2122f778445e7E07A164250a19E661",
+      default: getTokenBySymbol(ChainSymobls.BSC, 'USDC').address, // will use bsc address as default for hardhat network
+    },
+    BUSD: {
+      bsc_mainnet_dev: getTokenBySymbol(ChainSymobls.BSC, 'BUSD').address,
+      bsc_mainnet_staging: getTokenBySymbol(ChainSymobls.BSC, 'BUSD').address,
+      bsc_mainnet_prod: getTokenBySymbol(ChainSymobls.BSC, 'BUSD').address,
+      sepolia: "0x6175a8471C2122f778445e7E07A164250a19E661",
+      default: getTokenBySymbol(ChainSymobls.BSC, 'BUSD').address, // will use bsc address as default for hardhat network
     },
     treasury: {
       bsc_mainnet_dev: 0,
