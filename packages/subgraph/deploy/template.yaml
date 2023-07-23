@@ -6,7 +6,7 @@ schema:
 dataSources:
   {{#each vaults}}
   - kind: ethereum
-    name: Vault
+    name: {{ this.name }}
     network: {{ @root.network }}
     source:
       address: {{{ this.address }}}

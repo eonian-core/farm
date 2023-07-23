@@ -5,7 +5,7 @@ schema:
   file: ../../schema.graphql
 dataSources:
   - kind: ethereum
-    name: Vault
+    name: USDT Vault
     network: sepolia
     source:
       address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
@@ -94,7 +94,7 @@ dataSources:
           handler: handleWithdraw
       file: ../../src/event-handlers.ts
   - kind: ethereum
-    name: Vault
+    name: USDC Vault
     network: sepolia
     source:
       address: "0xaEAc5252d56a57fE5F3208B4B56a9B99d05047aF"
@@ -183,7 +183,7 @@ dataSources:
           handler: handleWithdraw
       file: ../../src/event-handlers.ts
   - kind: ethereum
-    name: Vault
+    name: BUSD Vault
     network: sepolia
     source:
       address: "0xF4017645775b592Abe0801420eADd17E3585184c"
