@@ -202,6 +202,20 @@ const config: HardhatUserConfig = {
       bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDT],
       default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDT], // will use bsc address as default for hardhat network
     },
+
+    apeSwap__cUSDC: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDC],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDC],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDC],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cUSDC], // will use bsc address as default for hardhat network
+    },
+
+    apeSwap__cBUSD: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBUSD],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBUSD],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBUSD],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBUSD], // will use bsc address as default for hardhat network
+    },
     
     chainlink__BNB_USD_feed: {
       bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed],
@@ -215,6 +229,20 @@ const config: HardhatUserConfig = {
       bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed],
       bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed],
       default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDT_USD_feed], // will use bsc address as default for hardhat network
+    },
+
+    chainlink__USDC_USD_feed: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDC_USD_feed],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDC_USD_feed],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDC_USD_feed],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__USDC_USD_feed], // will use bsc address as default for hardhat network
+    },
+
+    chainlink__BUSD_USD_feed: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed], // will use bsc address as default for hardhat network
     },
   },
   paths: {
