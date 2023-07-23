@@ -1,0 +1,21 @@
+.input {
+  width: auto;
+
+  input {
+    margin: auto !important;
+  }
+}
+
+.balance,
+.loading {
+  padding: 0 var(--padding-200);
+}
+
+.balance {
+  font-size: var(--font-size-300);
+  color: var(--color-text-300);
+  white-space: nowrap;
+
+  display: flex;
+  align-items: center;
+}

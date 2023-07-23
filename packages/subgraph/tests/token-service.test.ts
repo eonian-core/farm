@@ -6,21 +6,25 @@ import {
     beforeEach,
     afterAll,
     beforeAll,
-    afterEach,
 } from "matchstick-as/assembly/index"
-import { Address, ethereum } from "@graphprotocol/graph-ts"
+import { Address, Bytes, ethereum, log } from "@graphprotocol/graph-ts"
 import { MockLogger, mockViewFunction } from "./mocking"
 import { createUpgradedEvent } from "./vault-utils";
 import { TokenService } from "../src/token-service";
 import { Context } from "../src/Context";
 import { mockTokenContract } from "./mock-token";
+import { IPriceService } from "../src/price/price-service";
+import { MockPriceSerivce } from "./mock-price";
 
-const tokenAddress = Address.fromString("0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+const tokenAddress = Address.fromString(
+  "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+);
 const tokenAddressStr = tokenAddress.toHexString()
 
 
 let implementationAddress: Address
 let event: ethereum.Event
+let priceService: IPriceService
 let service: TokenService
 
 describe("TokenService", () => {
@@ -35,7 +39,8 @@ describe("TokenService", () => {
         event = createUpgradedEvent(implementationAddress)
         const ctx = new Context(event, 'test')
         const logger = new MockLogger()
-        service = new TokenService(ctx, logger)
+        priceService = new MockPriceSerivce();
+        service = new TokenService(ctx, logger, priceService);
     })
 
     afterAll(() => {
@@ -57,6 +62,9 @@ describe("TokenService", () => {
             assert.fieldEquals("Token", tokenAddressStr, "name", "USD Tether")
             assert.fieldEquals("Token", tokenAddressStr, "symbol", "USDT")
             assert.fieldEquals("Token", tokenAddressStr, "decimals", "18")
+
+            // Check that price object is correctly linked with its parent.
+            assert.fieldEquals("Token", tokenAddressStr, "price", Bytes.fromUTF8('USDT-' + tokenAddressStr + "-price").toHexString());
         })
 
         test("should get Token", () => {
@@ -73,6 +81,9 @@ describe("TokenService", () => {
             assert.stringEquals(token.name, "USD Tether")
             assert.stringEquals(token.symbol, "USDT")
             assert.i32Equals(token.decimals, 18)
+
+            // Check that price object is correctly linked with its parent.
+            assert.fieldEquals("Token", tokenAddressStr, "price", Bytes.fromUTF8('USDT-' + tokenAddressStr + "-price").toHexString());
 
             assert.entityCount("Token", 1)
 
