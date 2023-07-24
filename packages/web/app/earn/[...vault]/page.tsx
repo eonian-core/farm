@@ -30,7 +30,6 @@ interface Params {
 export async function generateStaticParams(): Promise<RouteSegment[]> {
   const chainId = ChainId.parse(defaultChain.id);
   const client = getClient(chainId);
-  console.log('getGraphQLEndpoint', getGraphQLEndpoint(chainId));
   const { data } = await getVaultsSymbols(client);
   return data.vaults.map(({ symbol }) => ({ vault: [ChainId.getName(chainId).toLowerCase(), symbol] }));
 }
