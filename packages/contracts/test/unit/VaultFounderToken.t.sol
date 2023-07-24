@@ -6,7 +6,7 @@ import  "forge-std/Test.sol";
 import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
 import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
-import {VaultFounderTokenMock} from "./mocks/VaultFounderTokenMock.sol";
+import "./mocks/VaultFounderTokenMock.sol";
 import {VaultMock} from "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
 
@@ -29,14 +29,14 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         vm.label(carl, "Carl");
 
         //create a new instance of Founder token contact before each test run
-        token = new VaultFounderTokenMock(3, 12_000, 200);
+        token = new VaultFounderTokenMock(3, 12_000, 200, Vault(address(this)));
         token.grantRole(token.BALANCE_UPDATER_ROLE(), address(this));
         token.grantRole(token.MINTER_ROLE(), address(this));
     }
 
     function testVaultMetadata() public {
-        assertEq(token.symbol(), "EVFT");
-        assertEq(token.name(), "Eonian Vault Founder Token");
+        assertEq(token.symbol(), "VFT");
+        assertEq(token.name(), "Vault Founder Token");
         assertEq(token.owner(), address(this));
     }
 
@@ -207,9 +207,13 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         );
         vault.setFounders(address(token));
         assertEq(vault.founders(), address(token));
+
+        assertEq(address(token.vault()), address(this));
+        token.setVault(vault);
+        assertEq(address(token.vault()), address(vault));
     }
 
-    function testSetVaultFailWithoutPermission() public {
+    function testSetVaultFailWithoutPermissionOnVaultSide() public {
         ERC20Mock underlying = new ERC20Mock("Mock Token", "TKN");
         uint256 defaultFee = 1000;
         uint256 defaultLPRRate = 10**18;
@@ -231,6 +235,35 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         ));
         vm.prank(alice);
         vault.setFounders(address(token));
+    }
+
+    function testSetVaultFailWithoutPermissionOnFounderSide() public {
+        ERC20Mock underlying = new ERC20Mock("Mock Token", "TKN");
+        uint256 defaultFee = 1000;
+        uint256 defaultLPRRate = 10**18;
+        uint256 defaultFounderFee = 100;
+
+        VaultMock vault = new VaultMock(
+            address(underlying),
+            rewards,
+            defaultFee,
+            defaultLPRRate,
+            defaultFounderFee
+        );
+        vault.setFounders(address(token));
+        assertEq(vault.founders(), address(token));
+
+        assertEq(address(token.vault()), address(this));
+
+        vm.expectRevert(abi.encodePacked(
+            string(
+                abi.encodePacked(
+                    "AccessControl: account 0x4cceba2d7d2b4fdce4304d3e09a1fea9fbeb1528 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000"
+                )
+            )
+        ));
+        vm.prank(alice);
+        token.setVault(vault);
     }
 
 }

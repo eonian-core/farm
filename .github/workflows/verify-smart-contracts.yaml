@@ -6,8 +6,6 @@ on:
       - main
       - staging
       - development
-    paths:
-      - "packages/contracts/**"
   
   pull_request:
     branches:
@@ -17,8 +15,6 @@ on:
     types:
       - opened
       - synchronize
-    paths:
-      - "packages/contracts/**"
 
 env:
   BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
@@ -74,6 +70,10 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn bootstrap
 
       - name: Run tests (foundry)
         run: |-

@@ -6,7 +6,7 @@ schema:
   file: ../../schema.graphql
 dataSources:
   - kind: ethereum
-    name: Vault
+    name: USDT Vault
     network: bsc
     source:
       address: "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878"
