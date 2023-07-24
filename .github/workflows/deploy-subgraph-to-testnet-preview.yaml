@@ -16,7 +16,8 @@ jobs:
   deploy: 
     name: Deploy Subgraph
     runs-on: ubuntu-latest
-
+    environment: preview
+    
     steps:
       - uses: actions/checkout@v3
         with:
