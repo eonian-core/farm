@@ -15,7 +15,7 @@ import "hardhat-docgen";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-foundry";
 
-import {getTokenBySymbol, ChainSymobls} from '@eonian/upgradeable'
+import { getTokenBySymbol, ChainSymobls } from '@eonian/upgradeable'
 
 import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 import { providers, ProvidersContracts } from "./hardhat/providers";
