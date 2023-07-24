@@ -1,4 +1,4 @@
-name: Deploy Protocol to Development Environment
+name: Deploy Protocol to Mainnet
 
 on:
   push:
