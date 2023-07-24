@@ -9,6 +9,12 @@ export enum ChainEnvironment {
 
 export function getGraphQLEndpoint(chainId: ChainId): string {
   const chainEnvironment = getChainEnvironment();
+  console.log(
+    chainId,
+    chainEnvironment,
+    typeof process.env.NEXT_PUBLIC_GRAPH_URL,
+    process.env.NEXT_PUBLIC_GRAPH_URL
+  );
   switch (chainId) {
     case ChainId.BSC_MAINNET:
       return getBNBChainEndpoint(chainEnvironment);

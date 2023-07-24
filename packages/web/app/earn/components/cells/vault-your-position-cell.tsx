@@ -5,6 +5,7 @@ import Button from "../../../components/button/button";
 import IconWarning from "../../../components/icons/icon-warning";
 import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
 import { WalletStatus } from "../../../providers/wallet/wrappers/types";
+import { toUSDValue } from "../../../shared";
 import { useAppSelector } from "../../../store/hooks";
 import { CellWithCurrency } from "./cell-with-currency";
 
@@ -43,11 +44,14 @@ function Content({ vault }: Props) {
   const { vaultBalances } = useAppSelector((state) => state.positionInfo);
   const { symbol: assetSymbol, decimals } = vault.asset;
   const balance = vaultBalances[vault.address] ?? 0n;
+  const { value: price, decimals: priceDecimals } = vault.asset.price;
   return (
     <CellWithCurrency
       value={balance}
-      symbol={assetSymbol}
       decimals={decimals}
+      valueUSD={toUSDValue(balance, decimals, price)}
+      decimalsUSD={priceDecimals!}
+      symbol={assetSymbol}
     />
   );
 }

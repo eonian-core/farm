@@ -6,7 +6,7 @@ const config: CodegenConfig = {
     "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-development",
   documents: "app/**/*.{ts,tsx}",
   generates: {
-    "schema.graphql": {
+    "apollo/schema.graphql": {
       plugins: ["schema-ast"],
     },
     "app/api/gql/": {

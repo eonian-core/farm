@@ -13,6 +13,7 @@ export default async function Page() {
   if (!showEarn) redirect("/");
 
   const vaultsByChain = await fetchVaults();
+    console.log(vaultsByChain);
   return (
     <div className={styles.page}>
       <VaultList vaultsByChain={vaultsByChain} />
