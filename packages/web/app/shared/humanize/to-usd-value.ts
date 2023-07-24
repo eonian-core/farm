@@ -4,5 +4,5 @@ export function toUSDValue(
   price: bigint
 ): bigint {
   const mantissa = 10n ** BigInt(decimals);
-  return (amount * BigInt(price)) / mantissa;
+  return (amount * price) / mantissa;
 }
