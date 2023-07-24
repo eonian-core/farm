@@ -102,10 +102,4 @@ For faster runs of your tests and scripts, consider skipping ts-node's type chec
 
 ## Deployed Contracts
 
-### Ethereum Ropstein Testnet
-
-<https://ropsten.etherscan.io/>
-
-* "DefaultProxyAdmin" (tx: 0xe544ba74d5b06d17edf33789a11e9edfa31f3411ddce9b53b2171a15334fe5f5)...: deployed at 0x57a77442EF932e7a0E76D7ceeCCce136F0143FE7 with 643983 gas
-* "SimpleGelatoJob_Implementation" (tx: 0xd47da4eafa32e287ea52dd76d1f3178a53cb5f9c92c56c314fbde69308d38282)...: deployed at 0xc3e8AD67C9B1EB8A764B4Df71b366EFdf1c1B959 with 1871453 gas
-* "SimpleGelatoJob_Proxy" (tx: 0xc8ccb5bfde620aefd6eed5aa66e57e18cef57ac9f5e5137f732d5104ed1bd566)...: deployed at 0x8984C79185996220B71D06C0DEFEBCEC62fe33fC with 871149 gas
+Deployed contracts addresses can be found in [deployments/deployed.ts](./deployments/deployed.ts) file.
