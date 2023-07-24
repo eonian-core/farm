@@ -11,12 +11,13 @@ on:
     paths:
       - "packages/contracts/**"
 
-# TODO: Switch to Github environments
+
 env:
   SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
   BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
 jobs:
+  # TODO: use common job to decrease copy-paste
   deploy: 
     name: Deploy Protocol
     runs-on: ubuntu-latest
