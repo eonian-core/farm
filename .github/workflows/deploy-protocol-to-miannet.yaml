@@ -3,15 +3,15 @@ name: Deploy Protocol to Development Environment
 on:
   push:
     branches:
+      - staging
       - development
     paths:
       - "packages/contracts/**"
 
-# TODO: Switch to Github environments
 env:
   SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
   BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
-  HARDHAT_NETWORK: bsc_mainnet_dev
+  HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
   BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
 jobs:
@@ -41,9 +41,13 @@ jobs:
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn bootstrap
+
       - name: Deploy Protocol
         env:
-          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_DEV_PRIVATE_KEY }}
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
           yarn hardhat deploy
@@ -103,7 +107,7 @@ jobs:
 
       - name: Publish code on Etherscan
         env:
-          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_DEV_PRIVATE_KEY }}
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
           yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
