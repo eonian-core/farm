@@ -14,7 +14,7 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  */
 const documents = {
     "\n  query VaultBySymbol($symbol: String!) {\n    vaults(where: { symbol: $symbol }) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals\n    }\n  }\n": types.VaultBySymbolDocument,
-    "\n  query GetVaults {\n    vaults(orderBy: name, orderDirection: asc) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals\n    }\n  }\n": types.GetVaultsDocument,
+    "\n  query GetVaults {\n    vaults(orderBy: name, orderDirection: asc) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals,\n      totalDebt\n    }\n  }\n": types.GetVaultsDocument,
     "\n  query GetVaultsSymbols {\n    vaults(orderBy: name, orderDirection: asc) {\n      symbol\n    }\n  }\n": types.GetVaultsSymbolsDocument,
 };
 
@@ -39,7 +39,7 @@ export function graphql(source: "\n  query VaultBySymbol($symbol: String!) {\n  
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetVaults {\n    vaults(orderBy: name, orderDirection: asc) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals\n    }\n  }\n"): (typeof documents)["\n  query GetVaults {\n    vaults(orderBy: name, orderDirection: asc) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals\n    }\n  }\n"];
+export function graphql(source: "\n  query GetVaults {\n    vaults(orderBy: name, orderDirection: asc) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals,\n      totalDebt\n    }\n  }\n"): (typeof documents)["\n  query GetVaults {\n    vaults(orderBy: name, orderDirection: asc) {\n      asset {\n        address\n        name\n        symbol\n        decimals\n      }\n      rates(first: 1, where: { side: LENDER }) {\n        perBlock\n      }\n      address\n      name\n      symbol\n      decimals,\n      totalDebt\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

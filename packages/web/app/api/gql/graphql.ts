@@ -12,9 +12,13 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  BigDecimal: string;
   BigInt: bigint;
   Bytes: string;
-  /** 8 bytes signed integer */
+  /**
+   * 8 bytes signed integer
+   *
+   */
   Int8: number;
 };
 
@@ -987,41 +991,43 @@ export enum Initialized_OrderBy {
  * However, fixed term lending protocols can have multiple rates with
  * different duration/maturity per market. You can append a counter
  * to the IDs to differentiate.
+ *
  */
 export type InterestRate = {
   __typename?: 'InterestRate';
-  /** The interest rate recalculated to APY terms per different time periods */
+  /**  The interest rate recalculated to APY terms per different time periods  */
   apy: RewardApy;
-  /** Duration of the loan in days. Only applies to fixed term lending (e.g. Notional) */
+  /**  Duration of the loan in days. Only applies to fixed term lending (e.g. Notional)  */
   duration?: Maybe<Scalars['Int']>;
-  /** { Market ID }-{ Interest rate side }-{ Interest rate type } */
+  /**  { Market ID }-{ Interest rate side }-{ Interest rate type }  */
   id: Scalars['Bytes'];
-  /** Maturity of the loan in block height. Only applies to fixed term lending (e.g. Notional) */
+  /**  Maturity of the loan in block height. Only applies to fixed term lending (e.g. Notional)  */
   maturityBlock?: Maybe<Scalars['BigInt']>;
   /**
    * Interest rate per block scaled by 10^18
    * @dev decimals hardcoded on lower levels
+   *
    */
   perBlock: Scalars['BigInt'];
-  /** The party the interest is paid to / received from */
+  /**  The party the interest is paid to / received from  */
   side: InterestRateSide;
-  /** The type of interest rate (e.g. stable, fixed, variable, etc) */
+  /**  The type of interest rate (e.g. stable, fixed, variable, etc)  */
   type: InterestRateType;
 };
 
 export enum InterestRateSide {
-  /** Interest rate paid by borrowers */
+  /**  Interest rate paid by borrowers  */
   Borrower = 'BORROWER',
-  /** Interest rate accrued by lenders */
+  /**  Interest rate accrued by lenders  */
   Lender = 'LENDER'
 }
 
 export enum InterestRateType {
-  /** Fixed interest rate (e.g. Notional) */
+  /**  Fixed interest rate (e.g. Notional)  */
   Fixed = 'FIXED',
-  /** Stable interest rate (e.g. Aave) */
+  /**  Stable interest rate (e.g. Aave)  */
   Stable = 'STABLE',
-  /** Variable interest rate (e.g. Compound) */
+  /**  Variable interest rate (e.g. Compound)  */
   Variable = 'VARIABLE'
 }
 
@@ -1453,6 +1459,64 @@ export enum Paused_OrderBy {
   TransactionHash = 'transactionHash'
 }
 
+export type Price = {
+  __typename?: 'Price';
+  /**
+   * The decimals of the "value".
+   *
+   */
+  decimals?: Maybe<Scalars['Int']>;
+  /**
+   * The ID of the price (same as Token ID).
+   *
+   */
+  id: Scalars['Bytes'];
+  /**
+   * The actual price of the token (scaled up to "decimals").
+   *
+   */
+  value: Scalars['BigInt'];
+};
+
+export type Price_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Price_Filter>>>;
+  decimals?: InputMaybe<Scalars['Int']>;
+  decimals_gt?: InputMaybe<Scalars['Int']>;
+  decimals_gte?: InputMaybe<Scalars['Int']>;
+  decimals_in?: InputMaybe<Array<Scalars['Int']>>;
+  decimals_lt?: InputMaybe<Scalars['Int']>;
+  decimals_lte?: InputMaybe<Scalars['Int']>;
+  decimals_not?: InputMaybe<Scalars['Int']>;
+  decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  id?: InputMaybe<Scalars['Bytes']>;
+  id_contains?: InputMaybe<Scalars['Bytes']>;
+  id_gt?: InputMaybe<Scalars['Bytes']>;
+  id_gte?: InputMaybe<Scalars['Bytes']>;
+  id_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  id_lt?: InputMaybe<Scalars['Bytes']>;
+  id_lte?: InputMaybe<Scalars['Bytes']>;
+  id_not?: InputMaybe<Scalars['Bytes']>;
+  id_not_contains?: InputMaybe<Scalars['Bytes']>;
+  id_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  or?: InputMaybe<Array<InputMaybe<Price_Filter>>>;
+  value?: InputMaybe<Scalars['BigInt']>;
+  value_gt?: InputMaybe<Scalars['BigInt']>;
+  value_gte?: InputMaybe<Scalars['BigInt']>;
+  value_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  value_lt?: InputMaybe<Scalars['BigInt']>;
+  value_lte?: InputMaybe<Scalars['BigInt']>;
+  value_not?: InputMaybe<Scalars['BigInt']>;
+  value_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+};
+
+export enum Price_OrderBy {
+  Decimals = 'decimals',
+  Id = 'id',
+  Value = 'value'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** Access to subgraph metadata */
@@ -1489,6 +1553,8 @@ export type Query = {
   ownershipTransferreds: Array<OwnershipTransferred>;
   paused?: Maybe<Paused>;
   pauseds: Array<Paused>;
+  price?: Maybe<Price>;
+  prices: Array<Price>;
   revokedOperator?: Maybe<RevokedOperator>;
   revokedOperators: Array<RevokedOperator>;
   rewardAPY?: Maybe<RewardApy>;
@@ -1811,6 +1877,24 @@ export type QueryPausedsArgs = {
 };
 
 
+export type QueryPriceArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryPricesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Price_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Price_Filter>;
+};
+
+
 export type QueryRevokedOperatorArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
@@ -2126,20 +2210,20 @@ export enum RevokedOperator_OrderBy {
   TransactionHash = 'transactionHash'
 }
 
-/** The interest rate recalculated to APY terms per different time periods */
+/**  The interest rate recalculated to APY terms per different time periods  */
 export type RewardApy = {
   __typename?: 'RewardAPY';
-  /** Dayly interest rate, represented as percentage scaled by 10^decimals */
+  /**  Daily interest rate, represented as percentage scaled by 10^decimals  */
   daily: Scalars['BigInt'];
-  /** Decimals of the APY values, mainly */
+  /**  Decimals of the APY values, mainly  */
   decimals: Scalars['Int'];
-  /** { InterestRate.id } */
+  /**  { InterestRate.id }  */
   id: Scalars['Bytes'];
-  /** Monthly interest rate, represented as percentage scaled by 10^decimals */
+  /**  Monthly interest rate, represented as percentage scaled by 10^decimals  */
   monthly: Scalars['BigInt'];
-  /** Weekly interest rate, represented as percentage scaled by 10^decimals */
+  /**  Weekly interest rate, represented as percentage scaled by 10^decimals  */
   weekly: Scalars['BigInt'];
-  /** Yearly interest rate, represented as percentage scaled by 10^decimals */
+  /**  Yearly interest rate, represented as percentage scaled by 10^decimals  */
   yearly: Scalars['BigInt'];
 };
 
@@ -2669,6 +2753,8 @@ export type Subscription = {
   ownershipTransferreds: Array<OwnershipTransferred>;
   paused?: Maybe<Paused>;
   pauseds: Array<Paused>;
+  price?: Maybe<Price>;
+  prices: Array<Price>;
   revokedOperator?: Maybe<RevokedOperator>;
   revokedOperators: Array<RevokedOperator>;
   rewardAPY?: Maybe<RewardApy>;
@@ -2991,6 +3077,24 @@ export type SubscriptionPausedsArgs = {
 };
 
 
+export type SubscriptionPriceArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionPricesArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Price_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Price_Filter>;
+};
+
+
 export type SubscriptionRevokedOperatorArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
@@ -3224,18 +3328,41 @@ export type SubscriptionWithdrawsArgs = {
   where?: InputMaybe<Withdraw_Filter>;
 };
 
-/** Token of standart ERC20, can be stored in vault. */
+/**
+ * Token of standart ERC20, can be stored in vault.
+ *
+ */
 export type Token = {
   __typename?: 'Token';
-  /** The blockchain address of the asset. */
+  /**
+   * The blockchain address of the asset.
+   *
+   */
   address: Scalars['String'];
-  /** The number of decimal places for the asset. */
+  /**
+   * The number of decimal places for the asset.
+   *
+   */
   decimals: Scalars['Int'];
-  /** The ID of the token. Mainly used for subgraph internal indexing. */
+  /**
+   * The ID of the token. Mainly used for subgraph internal indexing.
+   *
+   */
   id: Scalars['Bytes'];
-  /** The name of the asset. */
+  /**
+   * The name of the asset.
+   *
+   */
   name: Scalars['String'];
-  /** The symbol of the asset. */
+  /**
+   * The price of the token.
+   *
+   */
+  price: Price;
+  /**
+   * The symbol of the asset.
+   *
+   */
   symbol: Scalars['String'];
 };
 
@@ -3302,6 +3429,27 @@ export type Token_Filter = {
   name_starts_with?: InputMaybe<Scalars['String']>;
   name_starts_with_nocase?: InputMaybe<Scalars['String']>;
   or?: InputMaybe<Array<InputMaybe<Token_Filter>>>;
+  price?: InputMaybe<Scalars['String']>;
+  price_?: InputMaybe<Price_Filter>;
+  price_contains?: InputMaybe<Scalars['String']>;
+  price_contains_nocase?: InputMaybe<Scalars['String']>;
+  price_ends_with?: InputMaybe<Scalars['String']>;
+  price_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  price_gt?: InputMaybe<Scalars['String']>;
+  price_gte?: InputMaybe<Scalars['String']>;
+  price_in?: InputMaybe<Array<Scalars['String']>>;
+  price_lt?: InputMaybe<Scalars['String']>;
+  price_lte?: InputMaybe<Scalars['String']>;
+  price_not?: InputMaybe<Scalars['String']>;
+  price_not_contains?: InputMaybe<Scalars['String']>;
+  price_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  price_not_ends_with?: InputMaybe<Scalars['String']>;
+  price_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  price_not_in?: InputMaybe<Array<Scalars['String']>>;
+  price_not_starts_with?: InputMaybe<Scalars['String']>;
+  price_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  price_starts_with?: InputMaybe<Scalars['String']>;
+  price_starts_with_nocase?: InputMaybe<Scalars['String']>;
   symbol?: InputMaybe<Scalars['String']>;
   symbol_contains?: InputMaybe<Scalars['String']>;
   symbol_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -3329,6 +3477,10 @@ export enum Token_OrderBy {
   Decimals = 'decimals',
   Id = 'id',
   Name = 'name',
+  Price = 'price',
+  PriceDecimals = 'price__decimals',
+  PriceId = 'price__id',
+  PriceValue = 'price__value',
   Symbol = 'symbol'
 }
 
@@ -3588,48 +3740,98 @@ export enum Upgraded_OrderBy {
 
 export type Vault = {
   __typename?: 'Vault';
-  /** The blockchain address of the vault. */
+  /**
+   * The blockchain address of the vault.
+   *
+   */
   address: Scalars['String'];
-  /** The underlying asset stored in the vault. */
+  /**
+   * The underlying asset stored in the vault.
+   *
+   */
   asset: Token;
   /**
-   * Debt ratio for the Lender across all borrowers
-   * @dev decimals adjustment from maxBps feild
+   * Debt ratio for the Lender across all borrowers.
+   * @dev Requires decimals adjustment by "maxBps" field.
+   *
    */
   debtRatio: Scalars['BigInt'];
-  /** The number of decimal places for the vault's assets. */
+  /**
+   * The number of decimal places for the vault's assets.
+   *
+   */
   decimals: Scalars['Int'];
-  /** The ID of the vault. Mainly used for subgraph internal indexing. */
+  /**
+   * Total amount of tokens that the Vault has (including locked profit).
+   * @dev Requires decimals adjustment by token "decimals" field.
+   *
+   */
+  fundAssets: Scalars['BigInt'];
+  /**
+   * Price in USD of all tokens that the Vault has (including locked profit).
+   * @dev Requires decimals adjustment by price "decimals" field.
+   *
+   */
+  fundAssetsUSD: Scalars['BigInt'];
+  /**
+   * The ID of the vault. Mainly used for subgraph internal indexing.
+   *
+   */
   id: Scalars['Bytes'];
-  /** Last time a report occurred by any borrower */
+  /**
+   * Last time a report occurred by any borrower.
+   *
+   */
   lastReportTimestamp: Scalars['BigInt'];
   /**
-   * BPS points used to make adjustments for percentage-like fields for Vault and Lender
-   * @dev actually hold Int but Lender use uint256, to not cause overflow use BigInt
+   * BPS points used to make adjustments for percentage-like fields for Vault and Lender.
+   * @dev is actually stored Int, but the lender uses uint256 so as not to cause an overflow, use BigInt.
+   *
    */
   maxBps: Scalars['BigInt'];
-  /** The name of the vault. */
+  /**
+   * The name of the vault.
+   *
+   */
   name: Scalars['String'];
-  /** All interest rates / fees allowed in the market. Interest rate should be in APY percentage */
+  /**
+   * All interest rates / fees allowed in the market. Interest rate should be in APY percentage.
+   *
+   */
   rates: Array<InterestRate>;
-  /** The symbol of the vault. */
+  /**
+   * The symbol of the vault.
+   *
+   */
   symbol: Scalars['String'];
   /**
-   * Amount of tokens that all borrowers have taken
-   * @dev decimals adjustment from token decumals feild
+   * Amount of tokens that the Vault has (minus the locked profit).
+   * @dev Requires decimals adjustment by token "decimals" field.
+   *
+   */
+  totalAssets: Scalars['BigInt'];
+  /**
+   * Amount of tokens that all borrowers have taken.
+   * @dev Requires decimals adjustment by token "decimals" field.
+   *
    */
   totalDebt: Scalars['BigInt'];
   /**
    * The total amount of shares in vault.
-   * @dev decimals adjustment from decumals feild
+   * @dev Requires decimals adjustment by token "decimals" field.
+   *
    */
   totalSupply: Scalars['BigInt'];
   /**
-   * Total utilisation rate for the Vault across all strategies
-   * @dev decimals adjustment from maxBps feild
+   * Total utilisation rate for the Vault across all strategies.
+   * @dev Requires decimals adjustment by "maxBps" field.
+   *
    */
   totalUtilisationRate: Scalars['BigInt'];
-  /** Current version of protocol in semver notation. */
+  /**
+   * Current version of protocol in semver notation.
+   *
+   */
   version: Scalars['String'];
 };
 
@@ -3703,6 +3905,22 @@ export type Vault_Filter = {
   decimals_lte?: InputMaybe<Scalars['Int']>;
   decimals_not?: InputMaybe<Scalars['Int']>;
   decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  fundAssets?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD_gt?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD_gte?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  fundAssetsUSD_lt?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD_lte?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD_not?: InputMaybe<Scalars['BigInt']>;
+  fundAssetsUSD_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  fundAssets_gt?: InputMaybe<Scalars['BigInt']>;
+  fundAssets_gte?: InputMaybe<Scalars['BigInt']>;
+  fundAssets_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  fundAssets_lt?: InputMaybe<Scalars['BigInt']>;
+  fundAssets_lte?: InputMaybe<Scalars['BigInt']>;
+  fundAssets_not?: InputMaybe<Scalars['BigInt']>;
+  fundAssets_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   id?: InputMaybe<Scalars['Bytes']>;
   id_contains?: InputMaybe<Scalars['Bytes']>;
   id_gt?: InputMaybe<Scalars['Bytes']>;
@@ -3777,6 +3995,14 @@ export type Vault_Filter = {
   symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   symbol_starts_with?: InputMaybe<Scalars['String']>;
   symbol_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  totalAssets?: InputMaybe<Scalars['BigInt']>;
+  totalAssets_gt?: InputMaybe<Scalars['BigInt']>;
+  totalAssets_gte?: InputMaybe<Scalars['BigInt']>;
+  totalAssets_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  totalAssets_lt?: InputMaybe<Scalars['BigInt']>;
+  totalAssets_lte?: InputMaybe<Scalars['BigInt']>;
+  totalAssets_not?: InputMaybe<Scalars['BigInt']>;
+  totalAssets_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
   totalDebt?: InputMaybe<Scalars['BigInt']>;
   totalDebt_gt?: InputMaybe<Scalars['BigInt']>;
   totalDebt_gte?: InputMaybe<Scalars['BigInt']>;
@@ -3833,12 +4059,15 @@ export enum Vault_OrderBy {
   AssetSymbol = 'asset__symbol',
   DebtRatio = 'debtRatio',
   Decimals = 'decimals',
+  FundAssets = 'fundAssets',
+  FundAssetsUsd = 'fundAssetsUSD',
   Id = 'id',
   LastReportTimestamp = 'lastReportTimestamp',
   MaxBps = 'maxBps',
   Name = 'name',
   Rates = 'rates',
   Symbol = 'symbol',
+  TotalAssets = 'totalAssets',
   TotalDebt = 'totalDebt',
   TotalSupply = 'totalSupply',
   TotalUtilisationRate = 'totalUtilisationRate',
@@ -3977,6 +4206,7 @@ export type _Meta_ = {
    * will be null if the _meta field has a block constraint that asks for
    * a block number. It will be filled if the _meta field has no block constraint
    * and therefore asks for the latest  block
+   *
    */
   block: _Block_;
   /** The deployment ID */
@@ -4002,7 +4232,7 @@ export type VaultBySymbolQuery = { __typename?: 'Query', vaults: Array<{ __typen
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', address: string, name: string, symbol: string, decimals: number, asset: { __typename?: 'Token', address: string, name: string, symbol: string, decimals: number }, rates: Array<{ __typename?: 'InterestRate', perBlock: bigint }> }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', address: string, name: string, symbol: string, decimals: number, totalDebt: bigint, asset: { __typename?: 'Token', address: string, name: string, symbol: string, decimals: number }, rates: Array<{ __typename?: 'InterestRate', perBlock: bigint }> }> };
 
 export type GetVaultsSymbolsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4011,7 +4241,7 @@ export type GetVaultsSymbolsQuery = { __typename?: 'Query', vaults: Array<{ __ty
 
 
 export const VaultBySymbolDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"VaultBySymbol"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"symbol"},"value":{"kind":"Variable","name":{"kind":"Name","value":"symbol"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"asset"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"side"},"value":{"kind":"EnumValue","value":"LENDER"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"perBlock"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}}]}}]} as unknown as DocumentNode<VaultBySymbolQuery, VaultBySymbolQueryVariables>;
-export const GetVaultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetVaults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"name"}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"EnumValue","value":"asc"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"asset"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"side"},"value":{"kind":"EnumValue","value":"LENDER"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"perBlock"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}}]}}]} as unknown as DocumentNode<GetVaultsQuery, GetVaultsQueryVariables>;
+export const GetVaultsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetVaults"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"name"}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"EnumValue","value":"asc"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"asset"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rates"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"first"},"value":{"kind":"IntValue","value":"1"}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"side"},"value":{"kind":"EnumValue","value":"LENDER"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"perBlock"}}]}},{"kind":"Field","name":{"kind":"Name","value":"address"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"symbol"}},{"kind":"Field","name":{"kind":"Name","value":"decimals"}},{"kind":"Field","name":{"kind":"Name","value":"totalDebt"}}]}}]}}]} as unknown as DocumentNode<GetVaultsQuery, GetVaultsQueryVariables>;
 export const GetVaultsSymbolsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetVaultsSymbols"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"vaults"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"orderBy"},"value":{"kind":"EnumValue","value":"name"}},{"kind":"Argument","name":{"kind":"Name","value":"orderDirection"},"value":{"kind":"EnumValue","value":"asc"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"symbol"}}]}}]}}]} as unknown as DocumentNode<GetVaultsSymbolsQuery, GetVaultsSymbolsQueryVariables>;
 import { bigIntPolicy } from "../policies/bigIntPolicy";
 
@@ -4046,6 +4276,7 @@ export const scalarTypePolicies = {
   Minted: { fields: { amount: bigIntPolicy, blockNumber: bigIntPolicy, blockTimestamp: bigIntPolicy } },
   OwnershipTransferred: { fields: { blockNumber: bigIntPolicy, blockTimestamp: bigIntPolicy } },
   Paused: { fields: { blockNumber: bigIntPolicy, blockTimestamp: bigIntPolicy } },
+  Price: { fields: { value: bigIntPolicy } },
   RevokedOperator: { fields: { blockNumber: bigIntPolicy, blockTimestamp: bigIntPolicy } },
   RewardAPY: { fields: { daily: bigIntPolicy, monthly: bigIntPolicy, weekly: bigIntPolicy, yearly: bigIntPolicy } },
   Sent: { fields: { amount: bigIntPolicy, blockNumber: bigIntPolicy, blockTimestamp: bigIntPolicy } },
@@ -4059,8 +4290,11 @@ export const scalarTypePolicies = {
   Vault: {
     fields: {
       debtRatio: bigIntPolicy,
+      fundAssets: bigIntPolicy,
+      fundAssetsUSD: bigIntPolicy,
       lastReportTimestamp: bigIntPolicy,
       maxBps: bigIntPolicy,
+      totalAssets: bigIntPolicy,
       totalDebt: bigIntPolicy,
       totalSupply: bigIntPolicy,
       totalUtilisationRate: bigIntPolicy,
