@@ -33,7 +33,37 @@ describe('EnvironmentAdapter', () => {
     test('should return the first tag as the Stage', async () => {
         const expectedStage: Stage = Stage.Production;
 
-        mockHre.network.config.tags = [expectedStage];
+        mockHre.network.config.tags = [expectedStage, 'other'];
+
+        const adapter = new EnvironmentAdapter(mockHre);
+        
+        expect(await adapter.getStage()).toBe(expectedStage);
+    });
+    
+    test('should return the second tag as the Stage.Staging', async () => {
+        const expectedStage: Stage = Stage.Staging;
+
+        mockHre.network.config.tags = ['other', expectedStage];
+
+        const adapter = new EnvironmentAdapter(mockHre);
+        
+        expect(await adapter.getStage()).toBe(expectedStage);
+    });
+
+    test('should return the second tag as the Stage.Development', async () => {
+        const expectedStage: Stage = Stage.Development;
+
+        mockHre.network.config.tags = ['other', expectedStage];
+
+        const adapter = new EnvironmentAdapter(mockHre);
+        
+        expect(await adapter.getStage()).toBe(expectedStage);
+    });
+
+    test('should return the Stage.Development when not have stages', async () => {
+        const expectedStage: Stage = Stage.Development;
+
+        mockHre.network.config.tags = ['other', 'expectedStage'];
 
         const adapter = new EnvironmentAdapter(mockHre);
         
