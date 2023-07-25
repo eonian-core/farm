@@ -30,7 +30,8 @@ jobs:
           # fix for EndBug/add-and-commit
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
-      
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
@@ -49,12 +50,16 @@ jobs:
       - name: Link packages
         run: yarn bootstrap
 
-      - name: Deploy Protocol
-        env:
-          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
+      # - name: Deploy Protocol
+      #   env:
+      #     BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
+      #   run: |-
+      #     cd packages/contracts
+      #     yarn hardhat deploy
+
+      - name: Add test file
         run: |-
-          cd packages/contracts
-          yarn hardhat deploy
+          echo "$(date) - This is some random content: $RANDOM" > myfile.txt
 
       # Usefull for automated scripts
       - name: Export deployments to JSON config
@@ -71,8 +76,10 @@ jobs:
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with: 
-          default_author: github_actions
-          message: 'Deployed contracts to Development environment in BSC Mainnet'
+          author_name: Eonian CI/CD Bot
+          author_email: automation@eonian.finance
+          default_author: user_info
+          message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
 
   publish-source-code:
