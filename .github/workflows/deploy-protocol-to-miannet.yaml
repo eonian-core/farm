@@ -91,7 +91,7 @@ jobs:
 
     env:
       HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
-      ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+      BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
 
     steps:
       - uses: actions/checkout@v3
