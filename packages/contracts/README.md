@@ -79,3 +79,7 @@ For faster runs of your tests and scripts, consider skipping ts-node's type chec
 ## Deployed Contracts
 
 Deployed contracts addresses can be found in [deployments/deployed.ts](./deployments/deployed.ts) file.
+
+## Related Protocols
+
+* The project mainly utilize Gelato to trigger automated jobs.
