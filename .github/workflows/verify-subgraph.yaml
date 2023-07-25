@@ -6,8 +6,6 @@ on:
       - main
       - staging
       - development
-    paths:
-      - "packages/subgraph/**"
   
   pull_request:
     branches:
@@ -17,8 +15,6 @@ on:
     types:
       - opened
       - synchronize
-    paths:
-      - "packages/subgraph/**"
 
 jobs:
   test:

@@ -5,7 +5,7 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: Vault
+    name: USDT Vault
     network: sepolia
     source:
       address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"

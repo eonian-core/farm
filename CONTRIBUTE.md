@@ -21,6 +21,7 @@ Examples:
 * `yarn lerna add [package-name] --scope=@eonian/contracts` - add to contracts package
 * `yarn lerna add [package-name] --scope=@eonian/web` - add to web package
 * `yarn lerna add [package-name] --scope=@eonian/subgraph` - add to subgraph package
+* `yarn lerna add [package-name] --scope=@eonian/upgradeable` - add to upgradable package
 
 ## Graphql types code generation
 

@@ -44,7 +44,7 @@ contract VaultTest is TestWithERC1820Registry {
         vm.label(bob, "Bob");
 
         underlying = new ERC20Mock("Mock Token", "TKN");
-        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
+        
         vault = new VaultMock(
             address(underlying),
             rewards,
@@ -52,7 +52,8 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             defaultFounderFee
         );
-        vaultFounderToken.setVault(vault);
+
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200, vault);
         vault.setFounders(address(vaultFounderToken));
 
         strategy = new StrategyMock(address(underlying), address(vault));
@@ -1339,9 +1340,9 @@ contract VaultTest is TestWithERC1820Registry {
             defaultLPRRate,
             0
         );
-        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200);
+        
+        vaultFounderToken = new VaultFounderTokenMock(3, 12_000, 200, vault);
         vault.setFounders(address(vaultFounderToken));
-        vaultFounderToken.setVault(vault);
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);

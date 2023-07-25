@@ -4,9 +4,16 @@ files:
       network: sepolia
       description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
       schema: ../../schema.graphql
-      vault:
-        address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
-        startBlock: 3726610
+      vaults:
+        - name: "USDT Vault"
+          address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
+          startBlock: 3726610
+        - name: "USDC Vault"
+          address: "0xaEAc5252d56a57fE5F3208B4B56a9B99d05047aF" 
+          startBlock: 3950873
+        - name: "BUSD Vault"
+          address: "0xF4017645775b592Abe0801420eADd17E3585184c"
+          startBlock: 3950878
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
@@ -19,9 +26,10 @@ files:
       network: bsc
       description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
       schema: ../../schema.graphql
-      vault:
-        address: "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878"
-        startBlock: 29618633
+      vaults:
+        - name: "USDT Vault"
+          address: "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878" 
+          startBlock: 29618633
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
@@ -34,9 +42,10 @@ files:
       network: bsc
       description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain staging environment
       schema: ../../schema.graphql
-      vault:
-        address: "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2"
-        startBlock: 29619484
+      vaults:
+        - name: "USDT Vault"
+          address: "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2"
+          startBlock: 29619484
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
@@ -51,9 +60,10 @@ files:
       network: sepolia
       description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
       schema: ./schema.graphql
-      vault:
-        address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
-        startBlock: 3726610
+      vaults:
+        - name: "USDT Vault"
+          address: "0x9CF03106c5542932113574efCD38BaE5F3de204a"
+          startBlock: 3726610
       abis:
         Vault: ./abis/VaultImplementation.json
         ERC20: ./abis/ERC20.json
