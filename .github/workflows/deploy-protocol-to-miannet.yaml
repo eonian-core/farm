@@ -50,16 +50,12 @@ jobs:
       - name: Link packages
         run: yarn bootstrap
 
-      # - name: Deploy Protocol
-      #   env:
-      #     BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
-      #   run: |-
-      #     cd packages/contracts
-      #     yarn hardhat deploy
-
-      - name: Add test file
+      - name: Deploy Protocol
+        env:
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
-          echo "$(date) - This is some random content: $RANDOM" > myfile.txt
+          cd packages/contracts
+          yarn hardhat deploy
 
       # Usefull for automated scripts
       - name: Export deployments to JSON config
