@@ -5,78 +5,78 @@ on:
     branches:
       - staging
       - development
-    # paths:
-    #   - "packages/contracts/**"
+    paths:
+      - "packages/contracts/**"
 
 env:
   SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
   BSC_MAINNET_RPC_URL: ${{ vars.BSC_MAINNET_RPC_URL }}
 
 jobs:
-  # deploy: 
-  #   name: Deploy Protocol
-  #   runs-on: ubuntu-latest
-  #   environment:
-  #     name: ${{ github.ref_name }}
+  deploy: 
+    name: Deploy Protocol
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
 
-  #   env:
-  #     HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
-  #     BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
+    env:
+      HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
+      BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: recursive
-  #         # fix for EndBug/add-and-commit
-  #         repository: ${{ github.event.pull_request.head.repo.full_name }}
-  #         ref: ${{ github.head_ref }}
-  #         token: ${{ secrets.CI_GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
           
-  #     - name: Setup NodeJS
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "16"
-  #         cache: "yarn"
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "yarn"
 
-  #     - name: Install dependencies
-  #       run: yarn --ignore-scripts
+      - name: Install dependencies
+        run: yarn --ignore-scripts
 
-  #     - name: Install Foundry
-  #       uses: foundry-rs/foundry-toolchain@v1
-  #       with:
-  #         version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
-  #     # Need for hardhat scripts
-  #     - name: Link packages
-  #       run: yarn bootstrap
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn bootstrap
 
-  #     - name: Deploy Protocol
-  #       env:
-  #         BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
-  #       run: |-
-  #         cd packages/contracts
-  #         yarn hardhat deploy
+      - name: Deploy Protocol
+        env:
+          BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
+        run: |-
+          cd packages/contracts
+          yarn hardhat deploy
 
-  #     # Usefull for automated scripts
-  #     - name: Export deployments to JSON config
-  #       run: |-
-  #         cd packages/contracts
-  #         yarn hardhat export --export-all './deployments/deployed.json'
+      # Usefull for automated scripts
+      - name: Export deployments to JSON config
+        run: |-
+          cd packages/contracts
+          yarn hardhat export --export-all './deployments/deployed.json'
 
-  #     # Prefered to import in TypeScript
-  #     - name: Export deployments to TypeScript config
-  #       run: |-
-  #         cd packages/contracts
-  #         yarn hardhat export --export-all './deployments/deployed.ts'
+      # Prefered to import in TypeScript
+      - name: Export deployments to TypeScript config
+        run: |-
+          cd packages/contracts
+          yarn hardhat export --export-all './deployments/deployed.ts'
 
-  #     - name: Commit and push changes
-  #       uses: EndBug/add-and-commit@v9
-  #       with: 
-  #         author_name: Eonian CI/CD Bot
-  #         author_email: automation@eonian.finance
-  #         default_author: user_info
-  #         message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
-  #         fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with: 
+          author_name: Eonian CI/CD Bot
+          author_email: automation@eonian.finance
+          default_author: user_info
+          message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
+          fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
           
 
   publish-source-code:
@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     # Etherscan unstable and can fail, 
     # need publish code separatly from deploy to save deployed contracts
-    # needs: deploy
+    needs: deploy
 
     environment:
       name: ${{ github.ref_name }}
