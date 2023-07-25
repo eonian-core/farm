@@ -83,4 +83,3 @@ Deployed contracts addresses can be found in [deployments/deployed.ts](./deploym
 ## Related Protocols
 
 * The project mainly utilize Gelato to trigger automated jobs.
-
