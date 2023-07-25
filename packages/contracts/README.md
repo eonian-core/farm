@@ -70,31 +70,7 @@ all scripts from `./deploy` folder will be executed during startup sequence
 
 ## Deploy
 
-Fill in .env with enviroment variables required for deployment to your network
-
-Then run the deployment command, in example we will dpeloy to ropstein network
-
-```bash
-npx hardhat --netowrk ropstein deploy
-```
-
-Deploy source files of contracts to etherscan
-
-```bash
-npx hardhat --network ropsten etherscan-verify
-```
-
-Deploy source files of contracts to sourcify
-
-```bash
-npx hardhat --network ropsten sourcify
-```
-
-Export abi and address in json format. Usefull for dApps
-
-```bash
-npx hardhat --network ropsten export './some-path'
-```
+Deploy can be done only through github CI/CD. Create PR to deploy your changes to Sepolia preview, merge it to `development` branch to deploy to dev environment and to `staging` later to deploy to staging environment.
 
 ## Performance optimizations
 
