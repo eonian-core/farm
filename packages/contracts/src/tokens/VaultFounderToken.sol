@@ -75,7 +75,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
 
     /// @inheritdoc IVersionable
     function version() external pure returns (string memory) {
-        return "0.2.0";
+        return "0.2.1";
     }
 
     /// @dev set vault

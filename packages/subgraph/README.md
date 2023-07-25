@@ -37,6 +37,14 @@ sudo apt install postgresql
 ## Subgraphs
 
 * [Sepolia Testnet](https://thegraph.com/studio/subgraph/eonian-sepolia-testnet/)
+* [BSC Development](https://thegraph.com/hosted-service/subgraph/eonian-core/eonian-bsc-development)
+* [BSC Staging](https://thegraph.com/hosted-service/subgraph/eonian-core/eonian-bsc-staging)
+
+### Queries urls
+
+* [Sepolia Testnet](https://api.studio.thegraph.com/query/48141/eonian-sepolia-testnet/version/latest)
+* [BSC Development](https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-development)
+* [BSC Staging](https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-staging)
 
 ## Deploy
 
