@@ -63,7 +63,7 @@ npx solhint 'contracts/**/*.sol' --fix
 To start the local server with contracts (for example for dApp development) need start local node by command
 
 ```bash
-yarn node
+yarn serve
 ```
 
 all scripts from `./deploy` folder will be executed during startup sequence
