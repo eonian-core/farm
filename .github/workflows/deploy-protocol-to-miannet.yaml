@@ -118,7 +118,7 @@ jobs:
           BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
-          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input
+          yarn hardhat etherscan-verify --license AGPL-3.0 --force-license --solc-input --sleep
       
       # Working not on all blockchains, BSC for example
       - name: Publish code on Sourcify
