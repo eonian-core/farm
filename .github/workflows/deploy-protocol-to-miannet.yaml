@@ -30,7 +30,7 @@ jobs:
           # fix for EndBug/add-and-commit
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
           
       - name: Setup NodeJS
         uses: actions/setup-node@v3
@@ -81,6 +81,7 @@ jobs:
           default_author: user_info
           message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+          
 
   publish-source-code:
     name: Publish Source Code
