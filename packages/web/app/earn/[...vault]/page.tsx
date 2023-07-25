@@ -11,6 +11,7 @@ import Form from "./form/form";
 import { showEarn } from "../../features";
 
 import styles from './page.module.scss';
+import { getGraphQLEndpoint } from "../../api/endpoints";
 
 export const revalidate = 10;
 

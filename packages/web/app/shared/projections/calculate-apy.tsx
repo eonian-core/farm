@@ -1,13 +1,10 @@
 import { Vault } from "../../api";
 
-export const calculateVaultAPY = (
-  vault: Vault,
-  blocksPerDay = 28800
-): number => calculateAPY(
-    vault.rates[0].perBlock,
-    vault.asset.decimals,
-    blocksPerDay
-  );
+export const calculateVaultAPY = (vault: Vault, precision = 10000): number => {
+  const mantissa = 10n ** BigInt(vault.asset.decimals);
+  const scaled = vault.rates[0].apy.yearly * BigInt(precision);
+  return Number(scaled / mantissa) / precision;
+};
 
 export const calculateAPY = (
   interestRatePerBlock: bigint | number,

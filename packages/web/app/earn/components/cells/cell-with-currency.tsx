@@ -6,8 +6,10 @@ import { CellWithDescription } from "./cell-with-description";
 
 interface Props {
   value: bigint;
-  symbol: string;
   decimals: number;
+  valueUSD: bigint;
+  decimalsUSD: number;
+  symbol: string;
 }
 
 export const CellWithCurrency: React.FC<Props> = ({

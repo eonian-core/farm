@@ -17,7 +17,7 @@ const __dirname = dirname(__filename);
 
 async function main() {
   // Load schema from the file
-  const schema = await loadSchema(join(__dirname, "../schema.graphql"), {
+  const schema = await loadSchema(join(__dirname, "../../schema.graphql"), {
     loaders: [new GraphQLFileLoader()],
   });
 

@@ -9,8 +9,10 @@ interface Props {
 
 export const VaultTVLCell: React.FC<Props> = ({ vault }) => (
   <CellWithCurrency
-    value={vault.totalDebt}
-    symbol={vault.asset.symbol}
+    value={vault.fundAssets}
     decimals={vault.asset.decimals}
+    valueUSD={vault.fundAssetsUSD}
+    decimalsUSD={vault.asset.price.decimals!}
+    symbol={vault.asset.symbol}
   />
 );

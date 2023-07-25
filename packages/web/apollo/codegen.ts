@@ -2,15 +2,24 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "./apollo/schema.graphql",
+  schema:
+    "https://api.thegraph.com/subgraphs/name/eonian-core/eonian-bsc-development",
   documents: "app/**/*.{ts,tsx}",
   generates: {
+    "schema.graphql": {
+      plugins: ["schema-ast"],
+    },
     "app/api/gql/": {
       preset: "client",
       config: {
         useTypeImports: true,
         strictScalars: true,
-        scalars: { BigInt: "bigint", Bytes: "string", Int8: "number" },
+        scalars: {
+          BigInt: "bigint",
+          Bytes: "string",
+          Int8: "number",
+          BigDecimal: "string",
+        },
       },
       plugins: [
         {
