@@ -30,6 +30,12 @@ files:
         - name: "USDT Vault"
           address: "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878" 
           startBlock: 29618633
+        - name: "USDC Vault"
+          address: "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89" 
+          startBlock: 30281419
+        - name: "BUSD Vault"
+          address: "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4"
+          startBlock: 30281432
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
@@ -54,7 +60,7 @@ files:
         file: ../../src/event-handlers.ts
 
   # used primarly for testing
-  # matchstic framework not aloow to pass path to the schema
+  # matchstick framework doesn't allow to pass the path to the schema
   - output: local.yaml 
     data:
       network: sepolia
