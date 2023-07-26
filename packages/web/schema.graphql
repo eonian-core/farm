@@ -1445,7 +1445,7 @@ enum Paused_orderBy {
 
 type Price {
   "The decimals of the \"value\".\n"
-  decimals: Int
+  decimals: Int!
 
   "The ID of the price (same as Token ID).\n"
   id: Bytes!

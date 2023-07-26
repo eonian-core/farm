@@ -1465,7 +1465,7 @@ export type Price = {
    * The decimals of the "value".
    *
    */
-  decimals?: Maybe<Scalars['Int']>;
+  decimals: Scalars['Int'];
   /**
    * The ID of the price (same as Token ID).
    *
@@ -4227,12 +4227,12 @@ export type VaultBySymbolQueryVariables = Exact<{
 }>;
 
 
-export type VaultBySymbolQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', address: string, name: string, symbol: string, decimals: number, fundAssets: bigint, fundAssetsUSD: bigint, asset: { __typename?: 'Token', address: string, name: string, symbol: string, decimals: number, price: { __typename?: 'Price', value: bigint, decimals?: number | null } }, rates: Array<{ __typename?: 'InterestRate', perBlock: bigint, apy: { __typename?: 'RewardAPY', yearly: bigint } }> }> };
+export type VaultBySymbolQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', address: string, name: string, symbol: string, decimals: number, fundAssets: bigint, fundAssetsUSD: bigint, asset: { __typename?: 'Token', address: string, name: string, symbol: string, decimals: number, price: { __typename?: 'Price', value: bigint, decimals: number } }, rates: Array<{ __typename?: 'InterestRate', perBlock: bigint, apy: { __typename?: 'RewardAPY', yearly: bigint } }> }> };
 
 export type GetVaultsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', address: string, name: string, symbol: string, decimals: number, fundAssets: bigint, fundAssetsUSD: bigint, asset: { __typename?: 'Token', address: string, name: string, symbol: string, decimals: number, price: { __typename?: 'Price', value: bigint, decimals?: number | null } }, rates: Array<{ __typename?: 'InterestRate', perBlock: bigint, apy: { __typename?: 'RewardAPY', yearly: bigint } }> }> };
+export type GetVaultsQuery = { __typename?: 'Query', vaults: Array<{ __typename?: 'Vault', address: string, name: string, symbol: string, decimals: number, fundAssets: bigint, fundAssetsUSD: bigint, asset: { __typename?: 'Token', address: string, name: string, symbol: string, decimals: number, price: { __typename?: 'Price', value: bigint, decimals: number } }, rates: Array<{ __typename?: 'InterestRate', perBlock: bigint, apy: { __typename?: 'RewardAPY', yearly: bigint } }> }> };
 
 export type GetVaultsSymbolsQueryVariables = Exact<{ [key: string]: never; }>;
 
