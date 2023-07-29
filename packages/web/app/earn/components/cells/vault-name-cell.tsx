@@ -1,3 +1,4 @@
+import { Badge } from "@nextui-org/react";
 import React from "react";
 import { Vault } from "../../../api";
 import IconCoin from "../../../components/icons/icon-coin";
@@ -12,7 +13,6 @@ export const VaultNameCell: React.FC<Props> = ({ vault }) => (
     icon={
       <IconCoin symbol={vault.asset.symbol} width="1.75em" height="1.75em" />
     }
-    description={vault.name}
   >
     {vault.asset.symbol}
   </CellWithDescription>

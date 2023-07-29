@@ -13,6 +13,7 @@ import {
   VaultIndexCell,
   VaultTVLCell,
   VaultYouPositionCell,
+  VaultTagsCell,
 } from "./cells";
 
 import styles from "./vault-table.module.scss";
@@ -46,8 +47,8 @@ const COLUMNS: Column[] = [
     align: "center",
   },
   {
-    name: "TVL",
-    render: (vault) => <VaultTVLCell vault={vault} />,
+    name: "Tags",
+    render: (vault) => <VaultTagsCell vault={vault} />,
     align: "center",
     moveLinkBack: true,
   },
