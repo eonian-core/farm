@@ -1,16 +1,9 @@
-.container {
+.name {
   display: flex;
   align-items: center;
-  gap: var(--margin-200);
-  color: var(--color-text-300);
-}
+  gap: var(--margin-100);
 
-.symbol {
-  color: var(--color-text-500);
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  gap: var(--margin-50);
+  span {
+    line-height: normal;
+  }
 }
