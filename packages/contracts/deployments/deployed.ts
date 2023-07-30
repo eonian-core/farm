@@ -1,7 +1,7 @@
 export default {
   "56": [
     {
-      "name": "bsc_mainnet_staging",
+      "name": "bsc_mainnet_dev",
       "chainId": "56",
       "contracts": {
         "ApeLendingStrategy|Asset[USDT]": {
