@@ -29,7 +29,7 @@ export function generateApeSwapLendingStrategyDeployment(options: ApeSwapLending
     const config: ApeSwapLendingStrategyDeployConfig = {
         ...base,
         options,
-        dependencies: [`Vault|Asset[${options.asset}]`],
+        dependencies: [`Vault|Asset[${options.asset}]`, `LossRatioHealthCheck|Default`],
         tags: [`Asset[${options.asset}]`],
     }
 
@@ -69,13 +69,18 @@ export class ApeLendingStrategyDeployment extends BaseDeploymentService {
         ]
     }
 
-    async afterDeploy(Strategy: DeployResult, [vault]: Array<Deployment>) {
+    async afterDeploy(Strategy: DeployResult, [vault, healthCheck]: Array<Deployment>) {
         this.logger.log("Adding strategy to vault");
         const Vault = await this.hre.ethers.getContractAt("Vault", vault.address);
+        const HealthCheck = await this.hre.ethers.getContractAt("LossRatioHealthCheck", healthCheck.address);
+        const ApeLendingStrategy = await this.hre.ethers.getContractAt("ApeLendingStrategy", Strategy.address);
 
-        const tx = await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
-        const result = await tx.wait();
-        this.logger.log("Strategy added to vault", result);
+        const txStrategy = await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
+        const strategyResult = await txStrategy.wait();
+        this.logger.log("Strategy added to vault", strategyResult);
+
+        const txHealthCheck = await ApeLendingStrategy.setHealthCheck(HealthCheck.address);
+        const healthCheckResult = await txHealthCheck.wait();
+        this.logger.log("HealthCheck added to ApeLendingStrategy", healthCheckResult);
     }
 }
-

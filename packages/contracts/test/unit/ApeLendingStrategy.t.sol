@@ -17,6 +17,7 @@ import "./mocks/RainMakerMock.sol";
 import "./mocks/PancakeRouterMock.sol";
 import "./mocks/ApeLendingStrategyMock.sol";
 import "./mocks/VaultFounderTokenMock.sol";
+import "./mocks/LossRatioHealthCheckMock.sol";
 
 import "contracts/strategies/CTokenBaseStrategy.sol";
 
@@ -117,6 +118,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             minReportInterval,
             isPrepaid
         );
+        strategy.setHealthCheck(address(new LossRatioHealthCheckMock(1_500)));
         vault.addStrategy(address(strategy), 10_000);
     }
 

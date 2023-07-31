@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: AGPL-3.0
+pragma solidity ^0.8.19;
+
+import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
+import {IVersionable} from "../upgradeable/IVersionable.sol";
+import {IHealthCheck} from "./IHealthCheck.sol";
+import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
+
+    error HealthCheckFailed();
+
+contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
+    event ShutdownLossRatioChanged(uint256 ratio);
+    event HealthCheckEnabledChanged(bool enabled);
+
+    // represents 100%
+    uint256 public constant MAX_BPS = 10_000;
+
+    uint8 public constant PASS = 0;
+    uint8 public constant ACCEPTABLE_LOSS = 1;
+    uint8 public constant SIGNIFICANT_LOSS = 2;
+
+    // The ratio of the loss that will used to stop strategy.
+    uint256 public shutdownLossRatio;
+
+    /**
+ * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[50] private __gap;
+
+    // ------------------------------------------ Constructors ------------------------------------------
+
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
+
+    function initialize(uint256 _shutdownLossRatio)
+        public
+        initializer
+    {
+        __Ownable_init();
+
+        __LossRatioHealthCheck_init_unchained(_shutdownLossRatio);
+    }
+
+    function __LossRatioHealthCheck_init_unchained(uint256 _shutdownLossRatio)
+        internal
+        onlyInitializing
+    {
+        setShutdownLossRatio(_shutdownLossRatio);
+    }
+
+    /// @inheritdoc IVersionable
+    function version() external virtual pure override returns (string memory) {
+        return "1.0.0";
+    }
+
+    /// @notice Sets the ratio of the loss that will used to stop strategy.
+    /// @param _shutdownLossRatio represents persents of loss in comparison with total debt.
+    /// @dev Emits the "ShutdownLossRatioChanged" event.
+    function    setShutdownLossRatio(uint _shutdownLossRatio) public onlyOwner {
+        shutdownLossRatio = _shutdownLossRatio;
+        emit ShutdownLossRatioChanged(_shutdownLossRatio);
+    }
+
+    /// @inheritdoc IHealthCheck
+    function check(
+        address strategy,
+        uint256 profit,
+        uint256 loss,
+        uint256 /*debtPayment*/,
+        uint256 /*debtOutstanding*/,
+        uint256 totalDebt,
+        uint256 /*gasCost*/
+    ) external view returns (uint8 result)
+    {
+        // If no target provided skipp the execution.
+        if (address(strategy) == address(0)) {
+            revert HealthCheckFailed();
+        }
+
+        if(profit > 0 || loss == 0) {
+            // if stategy profit is positive or zero, then it is healthy and we need to get this profit
+            result = PASS;
+        } else if(loss > 0 && loss <= totalDebt * shutdownLossRatio / MAX_BPS) {
+            // if loss is positive but below critical loss threshold
+            result = ACCEPTABLE_LOSS;
+        } else {
+            // if loss is positive but still makes sense to run transaction to perform reporting.
+            result = SIGNIFICANT_LOSS;
+        }
+        return result;
+    }
+}

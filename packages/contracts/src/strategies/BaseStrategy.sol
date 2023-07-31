@@ -87,10 +87,9 @@ abstract contract BaseStrategy is
         bool _isPrepaid,
         AggregatorV3Interface __nativeTokenPriceFeed,
         AggregatorV3Interface __assetPriceFeed,
-        address _healthCheck,
-        uint256 _shutdownLossRatio
+        address _healthCheck
     ) internal onlyInitializing {
-        __HealthChecker_init(_healthCheck, _shutdownLossRatio); // ownable under the hood
+        __HealthChecker_init(_healthCheck); // ownable under the hood
         __Pausable_init();
         __GelatoJobAdapter_init(_ops, _minReportInterval, _isPrepaid);
 

@@ -55,8 +55,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         AggregatorV3Interface _nativeTokenPriceFeed,
         AggregatorV3Interface _assetPriceFeed,
         uint256 _minReportInterval,
-        bool _isPrepaid,
-        uint256 _shutdownLossRatio
+        bool _isPrepaid
     ) public onlyInitializing {
         __BaseStrategy_init(
             _lender,
@@ -66,8 +65,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
             _isPrepaid,
             _nativeTokenPriceFeed,
             _assetPriceFeed,
-            address(0),
-            _shutdownLossRatio
+            address(0)
         ); // Ownable is under the hood
 
         __CTokenBaseStrategyinit_unchained(_cToken, _rainMaker, _compToken);

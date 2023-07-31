@@ -25,7 +25,8 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         uint256 _minReportInterval,
         bool _isPrepaid,
         AggregatorV3Interface __nativeTokenPriceFeed,
-        AggregatorV3Interface __assetPriceFeed
+        AggregatorV3Interface __assetPriceFeed,
+        address _healthCheck
     ) initializer {
         __BaseStrategy_init(
             _lender,
@@ -35,8 +36,7 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
             _isPrepaid,
             __nativeTokenPriceFeed,
             __assetPriceFeed,
-            address(0),
-            1_500
+            _healthCheck
         );
     }
 

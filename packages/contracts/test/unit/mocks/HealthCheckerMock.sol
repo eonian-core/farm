@@ -9,7 +9,7 @@ contract HealthCheckerMock is HealthChecker, SafeInitializableMock {
     event HealthCheckPerformed();
 
     constructor(IHealthCheck healthCheck) initializer {
-        __HealthChecker_init(address(healthCheck), 1_500);
+        __HealthChecker_init(address(healthCheck));
     }
 
     function performHealthCheckExternal() external {

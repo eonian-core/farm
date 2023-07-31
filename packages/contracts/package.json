@@ -20,6 +20,7 @@
     "test:fuzz": "FOUNDRY_FUZZ_RUNS=1000 forge test -vvv",
     "test:coverage": "forge coverage",
     "test:coverage-report": "rm -rf coverage && mkdir coverage && forge coverage --report lcov && genhtml lcov.info --branch-coverage --output-dir coverage --ignore-errors category",
+    "test:forge-single-test": "forge test -vvvv --watch --match-test testHealthCheckPass",
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node --export-all './deployments/local.json'",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",

@@ -11,10 +11,12 @@ import "./mocks/OpsMock.sol";
 import "./mocks/BaseStrategyMock.sol";
 import "./mocks/AggregatorV3Mock.sol";
 import "./mocks/VaultFounderTokenMock.sol";
+import "./mocks/LossRatioHealthCheckMock.sol";
 
 import "contracts/IVault.sol";
 import "contracts/structures/PriceConverter.sol";
 import "contracts/automation/Job.sol";
+import "contracts/healthcheck/IHealthCheck.sol";
 
 import "contracts/strategies/CTokenBaseStrategy.sol";
 
@@ -32,6 +34,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     AggregatorV3Mock assetPriceFeed;
 
     BaseStrategyMock baseStrategy;
+    IHealthCheck healthCheck;
 
     address rewards = vm.addr(1);
     address alice = vm.addr(2);
@@ -55,7 +58,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             defaultLPRRate,
             defaultFounderFee
         );
-        vault.setFounders((address(vaultFounderToken)));
+        vaultFounderToken.setVault(vault);
 
         ops = new OpsMock();
         ops.setGelato(payable(alice));
@@ -68,6 +71,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         assetPriceFeed.setDecimals(8);
         assetPriceFeed.setPrice(1e8);
 
+        healthCheck = new LossRatioHealthCheckMock(1_500);
+
         baseStrategy = new BaseStrategyMock(
             vault,
             IERC20Upgradeable(address(underlying)),
@@ -75,7 +80,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             minReportInterval,
             isPrepaid,
             nativeTokenPriceFeed,
-            assetPriceFeed
+            assetPriceFeed,
+            address(healthCheck)
         );
         vault.addStrategy(address(baseStrategy), 10_000);
     }
@@ -98,7 +104,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             minReportInterval,
             isPrepaid,
             nativeTokenPriceFeed,
-            assetPriceFeed
+            assetPriceFeed,
+            address(healthCheck)
         );
     }
 
@@ -451,12 +458,11 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         assertEq(baseStrategy.minimumBetweenExecutions(), minReportInterval);
     }
 
-    function testHealthCheckPass() public {
-        uint256 _120_USDT = 120 * 10 ** 18;
-
+    function testHealthCheckPass(uint256 amount) public {
+        vm.assume(amount > 100 && amount < 10 ** 22);
         // Give the required funds to Actor
-        underlying.mint(alice, _120_USDT);
-        assertEq(underlying.balanceOf(alice), _120_USDT);
+        underlying.mint(alice, amount);
+        assertEq(underlying.balanceOf(alice), amount);
 
         // Allow to vault to take the Actor's assets
         vm.prank(alice);
@@ -464,7 +470,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         // Actor deposits funds to the vault
         vm.prank(alice);
-        vault.deposit(_120_USDT);
+        vault.deposit(amount);
 
         vm.mockCall(
             address(vault),
@@ -478,12 +484,12 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         baseStrategy.callWork();
     }
 
-    function testHealthCheckTriggerAcceptableLossFallback() public {
-        uint256 _120_USDT = 120 * 10 ** 18;
+    function testHealthCheckTriggerAcceptableLossFallback(uint256 amount) public {
+        vm.assume(amount > 100 && amount < 10 ** 22);
 
         // Give the required funds to Actor
-        underlying.mint(alice, _120_USDT);
-        assertEq(underlying.balanceOf(alice), _120_USDT);
+        underlying.mint(alice, amount);
+        assertEq(underlying.balanceOf(alice), amount);
 
         // Allow to vault to take the Actor's assets
         vm.prank(alice);
@@ -491,7 +497,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         // Actor deposits funds to the vault
         vm.prank(alice);
-        vault.deposit(_120_USDT);
+        vault.deposit(amount);
 
         // distribute funds to strategy
         baseStrategy.setHarvestLoss(0);
@@ -499,7 +505,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         baseStrategy.setHarvestProfit(0);
         // loss should be less then debt ratio threshold(15%)
-        baseStrategy.setHarvestLoss(_120_USDT / 100);
+        baseStrategy.setHarvestLoss(amount / 100);
 
         vm.mockCall(
             address(vault),
@@ -514,12 +520,12 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         baseStrategy.callWork();
     }
 
-    function testHealthCheckTriggerFailedAndToBeShutdown() public {
-        uint256 _120_USDT = 120 * 10 ** 18;
+    function testHealthCheckTriggerFailedAndToBeShutdown(uint256 amount) public {
+        vm.assume(amount > 100 && amount < 10 ** 22);
 
         // Give the required funds to Actor
-        underlying.mint(alice, _120_USDT);
-        assertEq(underlying.balanceOf(alice), _120_USDT);
+        underlying.mint(alice, amount);
+        assertEq(underlying.balanceOf(alice), amount);
 
         // Allow to vault to take the Actor's assets
         vm.prank(alice);
@@ -527,7 +533,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         // Actor deposits funds to the vault
         vm.prank(alice);
-        vault.deposit(_120_USDT);
+        vault.deposit(amount);
 
         // distribute funds to strategy
         baseStrategy.setHarvestLoss(0);
@@ -535,7 +541,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         baseStrategy.setHarvestProfit(0);
         // loss should be greater then debt ratio threshold(15%)
-        baseStrategy.setHarvestLoss(_120_USDT * 2);
+        baseStrategy.setHarvestLoss(amount * 2);
 
         vm.mockCall(
             address(vault),

@@ -38,8 +38,7 @@ contract CTokenBaseStrategyMock is CTokenBaseStrategy, SafeInitializableMock {
             __nativeTokenPriceFeed,
             __assetPriceFeed,
             _minReportInterval,
-            _isPrepaid,
-            1_500
+            _isPrepaid
         );
     }
 
