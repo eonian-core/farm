@@ -6,7 +6,7 @@ schema:
   file: ../../schema.graphql
 dataSources:
   - kind: ethereum
-    name: Vault
+    name: USDT Vault
     network: bsc
     source:
       address: "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2"
@@ -45,6 +45,8 @@ dataSources:
           file: ../../abis/VaultImplementation.json
         - name: ERC20
           file: ../../abis/ERC20.json
+        - name: ChainLinkPriceFeed
+          file: ../../abis/ChainLinkPriceFeed.json
       eventHandlers:
         - event: AdminChanged(address,address)
           handler: handleAdminChanged

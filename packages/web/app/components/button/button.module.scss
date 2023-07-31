@@ -95,6 +95,13 @@
   }
 }
 
+.sm {
+  --button-height: 2rem;
+  --button-hor-padding: var(--padding-200);
+    border-radius: var(--border-radius-450);
+    font-size: var(--font-size-200);
+}
+
 .md {
   --button-hor-padding: var(--padding-350);
   border-radius: var(--border-radius-450);

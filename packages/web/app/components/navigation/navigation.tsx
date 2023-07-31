@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from "react";
 import Menu from "./menu";
 import { links, mobileLinks, NavigationItem } from "./links";
 import ConnectWallet from "../wallet/connect-wallet";
+import { showEarn } from "../../features";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function Navigation() {
         </ul>
 
         <div className={styles.right}>
-          <ConnectWallet />
+          {showEarn && <ConnectWallet />}
           <Menu isOpen={isOpen} toggleMenu={toggleMenu}>
             <MenuItemList links={mobileLinks} onClick={closeMenu} />
           </Menu>

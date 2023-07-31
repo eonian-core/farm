@@ -10,14 +10,23 @@ const GetVaults = gql`
         name
         symbol
         decimals
+        price {
+          value
+          decimals
+        }
       }
       rates(first: 1, where: { side: LENDER }) {
         perBlock
+        apy {
+          yearly
+        }
       }
       address
       name
       symbol
       decimals
+      fundAssets
+      fundAssetsUSD
     }
   }
 `;

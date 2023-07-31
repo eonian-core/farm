@@ -1,17 +1,25 @@
 import { BlockchainType } from "../hardhat.config";
-import { deployOrUpgrade } from "../hardhat/deploy-or-upgrade";
+import {DeployConfig, BaseDeploymentService, BaseInitArgs, wrap} from '@eonian/upgradeable'
 
 /**
  * Testing deploy of simple Gelato Job, only to test gelato or local fork
  */
-const func = deployOrUpgrade({
+export const config: DeployConfig = {
   contract: "SimpleGelatoJob",
   chains: [BlockchainType.Local],
-  getArgs: ({ accounts: { gelatoOps } }) => [
-    gelatoOps,
-    1001, // minimum time between executions in seconds
-    true, // is prepayed
-  ],
-});
+  tags: ["Test"],
+}
 
-export default func;
+export class SimpleGelatoJobDeployment extends BaseDeploymentService {
+
+  async onResolveInitArgs({accounts: { gelatoOps }}: BaseInitArgs): Promise<Array<any>> {
+    return [
+      gelatoOps,
+      1001, // minimum time between executions in seconds
+      true, // is prepayed
+    ]
+  }
+
+}
+
+export default wrap(config, SimpleGelatoJobDeployment);

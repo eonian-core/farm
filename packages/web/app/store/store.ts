@@ -1,11 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, isPlain } from "@reduxjs/toolkit";
 
 import localeReducer from "./slices/localeSlice";
 import navigationReducer from "./slices/navigationSlice";
-import vaultActionReducer, {
-  failVaultAction,
-  initVaultAction,
-} from "./slices/vaultActionSlice";
+import positionInfoSlice from "./slices/positionInfoSlice";
+import vaultActionReducer from "./slices/vaultActionSlice";
 import vaultUserReducer from "./slices/vaultUserSlice";
 
 export const store = configureStore({
@@ -14,11 +12,13 @@ export const store = configureStore({
     navigation: navigationReducer,
     vaultUser: vaultUserReducer,
     vaultAction: vaultActionReducer,
+    positionInfo: positionInfoSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [failVaultAction.type, initVaultAction.type],
+        isSerializable: (value: any) =>
+          isPlain(value) || typeof value === "bigint",
       },
     }),
 });

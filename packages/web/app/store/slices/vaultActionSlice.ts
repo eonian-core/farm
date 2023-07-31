@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast, UpdateOptions } from "react-toastify";
 import { Vault } from "../../api";
-import { createVaultActionToast } from "../../earn/[[...vault]]/components";
+import { createVaultActionToast } from "../../earn/[...vault]/components";
 import { parseError } from "../../shared";
 
 const TOAST_ID = "vault-action-toast";

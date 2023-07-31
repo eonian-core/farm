@@ -1,0 +1,9 @@
+.container {
+  * + * {
+    margin-left: var(--margin-100);
+  }
+}
+
+.badgeBordered > span {
+  background-color: transparent !important;
+}
