@@ -52,6 +52,12 @@ files:
         - name: "USDT Vault"
           address: "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2"
           startBlock: 29619484
+        - name: "USDC Vault"
+          address: "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4" 
+          startBlock: 30459052
+        - name: "BUSD Vault"
+          address: "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058"
+          startBlock: 30459067
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
