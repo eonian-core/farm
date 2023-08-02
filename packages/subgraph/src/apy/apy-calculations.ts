@@ -18,6 +18,6 @@ export function toAPY(interestRatePerBlock: BigInt, decimals: i32): BigInt {
   const interestRate = (interestRatePerBlock.toI64() as f64) / mantissa;
   const blocksPerDay = BLOCKS_PER_DAY.toI64() as f64;
   const dailyReward = (interestRate * blocksPerDay + 1) as f64;
-  const result = (Math.pow(dailyReward, 365) - 1) * 100 * mantissa;
-  return BigInt.fromI64(result as i64);
+  const result = (Math.pow(dailyReward, 365) - 1) * mantissa;
+  return BigInt.fromI64(result as i64).times(BigInt.fromI32(100));
 }
