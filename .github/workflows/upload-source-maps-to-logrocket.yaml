@@ -54,5 +54,5 @@ jobs:
         run: logrocket release ${{ github.sha }} --apikey="${{ secrets.LOGROCKET_API_KEY }}"
 
       - name: Upload source maps
-        run: logrocket upload packages/web/.next/static/chunks ${{ github.sha }} --apikey="${{ secrets.LOGROCKET_API_KEY }}" --url-prefix="~/_next/static/chunks/"
+        run: logrocket upload packages/web/.next/static/chunks -r ${{ github.sha }} --apikey="${{ secrets.LOGROCKET_API_KEY }}" --url-prefix="~/_next/static/chunks/"
 
