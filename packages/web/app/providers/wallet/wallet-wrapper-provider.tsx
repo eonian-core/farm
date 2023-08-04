@@ -91,7 +91,6 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
   );
 
   const connect = React.useCallback(async () => {
-    throw new Error('Test connect error')
     const success = await W3O.connect(onboardConnect);
     if (success)
       await W3O.autoSelectProperChain(chain, chains, setOnboardChain);

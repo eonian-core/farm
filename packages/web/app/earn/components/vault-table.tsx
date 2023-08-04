@@ -62,6 +62,12 @@ const COLUMNS: Column[] = [
 
 export function VaultTable({ vaults, chainName }: Props) {
   const columns = useColumns();
+
+  React.useEffect(() => {
+    const a: Array<number> | null = null;
+    console.log(a!.length);
+  }, [])
+
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
