@@ -19,6 +19,8 @@ jobs:
     # If it's a pull request, then only execute the job when a certain label is present
     if: github.event.label.name == 'release_logrocket' || github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event_name != 'pull_request' && github.ref_name || 'preview' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
