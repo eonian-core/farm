@@ -20,7 +20,7 @@ export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
     const appId = process.env.NEXT_PUBLIC_LOGROCKET_APP_ID;
     if (appId) {
       LogRocket.init(appId, {
-        release: getRelease(),
+        release: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
       });
 
       const slug = appId.split("/").pop()?.toUpperCase() ?? "-";
@@ -47,8 +47,3 @@ export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
 };
 
 export const useMonitoringContext = () => useContext(MonitoringContext);
-
-function getRelease() {
-  console.log(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA);
-  return process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "unknown_commit";
-}

@@ -119,6 +119,10 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
     identify(address, { address, label });
   }, [identify, wallet]);
 
+  setTimeout(() => {
+    throw new Error("Test setTimeout error");
+  }, 2000)
+
   const value: WalletWrapperContextValue = {
     wallet,
     status,
