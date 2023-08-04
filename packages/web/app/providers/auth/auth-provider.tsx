@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
     return <>{children}</>;
   }
 
-  console.log('Authentication is enabled');
+  console.debug('Authentication is enabled');
 
   return (
     <Auth0Provider

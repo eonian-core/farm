@@ -10,6 +10,7 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs");
     return config;
   },
+  productionBrowserSourceMaps: process.env.BUILD_SOURCE_MAPS === "true",
 };
 
 const withMDX = createMDX({
