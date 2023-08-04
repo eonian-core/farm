@@ -37,6 +37,10 @@ jobs:
       - name: Build
         env:
           BUILD_SOURCE_MAPS: true
+
+          # Required for page generation
+          NEXT_PUBLIC_DEFAULT_CHAIN_NAME: "BSC_MAINNET"
+          NEXT_PUBLIC_ENVIRONMENT: "DEVELOPMENT"
         run: |-
           cd packages/web
           yarn build
