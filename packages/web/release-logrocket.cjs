@@ -83,7 +83,7 @@ function printVariables() {
     if (!value) {
       throw new Error(`Variable "${key}" is not defined`);
     }
-    if (key === "LOGROCKET_KEY") {
+    if (key === "LOGROCKET_API_KEY") {
       console.log(`\t[${key}: ${value?.split(":")?.[1]}]`);
       return;
     }
