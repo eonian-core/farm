@@ -74,23 +74,23 @@ contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
         uint256 /*debtOutstanding*/,
         uint256 totalDebt,
         uint256 /*gasCost*/
-    ) external view returns (uint8 result)
+    ) external view returns (uint8)
     {
-        // If no target provided skipp the execution.
+        // If no target is provided skip the execution.
         if (address(strategy) == address(0)) {
             revert HealthCheckFailed();
         }
 
         if(profit > 0 || loss == 0) {
-            // if stategy profit is positive or zero, then it is healthy and we need to get this profit
-            result = PASS;
-        } else if(loss > 0 && loss <= totalDebt * shutdownLossRatio / MAX_BPS) {
-            // if loss is positive but below critical loss threshold
-            result = ACCEPTABLE_LOSS;
-        } else {
-            // if loss is positive but still makes sense to run transaction to perform reporting.
-            result = SIGNIFICANT_LOSS;
-        }
-        return result;
+            // if strategy profit is positive or zero, then it is healthy, and we need to get this profit
+            return PASS;
+        } 
+        if(loss > 0 && loss <= totalDebt * shutdownLossRatio / MAX_BPS) {
+            // if the loss is positive but below the critical loss threshold
+            return ACCEPTABLE_LOSS;
+        } 
+        
+        // If the loss is positive and bigger than we can accept mark it as significant, each strategy can handle its own way.
+        return  SIGNIFICANT_LOSS;
     }
 }
