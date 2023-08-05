@@ -49,6 +49,9 @@ export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
 export const useMonitoringContext = () => useContext(MonitoringContext);
 
 function getRelease() {
-  console.log(process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA);
-  return process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA || "unknown_commit";
+  const {
+    NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA: commit = "unknown_commit",
+  } = process.env;
+  console.log(process.env);
+  return commit;
 }
