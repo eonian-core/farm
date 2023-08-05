@@ -37,14 +37,14 @@ async function releaseLogRocket() {
      * Create LogRocket release.
      */
     await asyncExec(
-      `yarn logrocket release ${VARS.COMMIT_MESSAGE} --apikey="${VARS.LOGROCKET_API_KEY}"`
+      `yarn logrocket release ${VARS.COMMIT} --apikey="${VARS.LOGROCKET_API_KEY}"`
     );
 
     /**
      * Upload source code to LogRocket platform.
      */
     await asyncExec(
-      `logrocket upload ${BUILD_PATH} -r ${VARS.COMMIT_MESSAGE} --apikey="${VARS.LOGROCKET_API_KEY}" --url-prefix="${URL_PREFIX}"`
+      `logrocket upload ${BUILD_PATH} -r ${VARS.COMMIT} --apikey="${VARS.LOGROCKET_API_KEY}" --url-prefix="${URL_PREFIX}"`
     );
 
     /**
