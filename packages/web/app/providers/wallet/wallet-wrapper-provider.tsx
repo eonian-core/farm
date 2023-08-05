@@ -109,10 +109,6 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
 
   useEffect(() => {
     W3O.reconnect(onboardConnect);
-
-    setTimeout(() => {
-      throw Error("Test setTimeout error 2");
-    }, 2000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
