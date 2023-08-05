@@ -52,6 +52,5 @@ function getRelease() {
   const {
     NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA: commit = "unknown_commit",
   } = process.env;
-  console.log(process.env);
   return commit;
 }
