@@ -12,8 +12,16 @@ contract HealthCheckerMock is HealthChecker, SafeInitializableMock {
         __HealthChecker_init(address(healthCheck));
     }
 
-    function performHealthCheckExternal() external {
-        performHealthCheck(address(0), 0, 0, 0, 0, 0, 0);
+    function performHealthCheckExternal(
+        address strategy,
+        uint256 profit,
+        uint256 loss,
+        uint256 debtPayment,
+        uint256 debtOutstanding,
+        uint256 totalDebt,
+        uint256 gasCost
+    ) external {
+        performHealthCheck(strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost);
     }
 }
 
