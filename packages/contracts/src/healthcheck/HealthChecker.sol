@@ -3,23 +3,18 @@ pragma solidity ^0.8.19;
 
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import {IHealthCheck} from "./IHealthCheck.sol";
+import {IHealthCheck, ACCEPTABLE_LOSS, SIGNIFICANT_LOSS} from "./IHealthCheck.sol";
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 error HealthCheckFailed();
 
 abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
     event HealthCheckChanged(address healthCheck);
-    event ShutdownLossRatioChanged(uint256 ratio);
     event HealthCheckEnabledChanged(bool enabled);
     event HealthCheckTriggered(uint8 result);
 
     // represents 100%
     uint256 public constant MAX_BPS = 10_000;
-
-    uint256 public constant PASS = 0;
-    uint256 public constant ACCEPTABLE_LOSS = 1;
-    uint256 public constant SIGNIFICANT_LOSS = 2;
 
     IHealthCheck public healthCheck;
     bool public healthCheckEnabled;
@@ -108,7 +103,7 @@ abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
         emit HealthCheckTriggered(checkResult);
 
         if(checkResult == SIGNIFICANT_LOSS) { // call fallback if loss to big
-            healthCheckFallback();
+            healthCheckFailedFallback();
         } else if(checkResult == ACCEPTABLE_LOSS) { // call secondary fallback if loss is acceptable
             acceptableLossFallback();
         }
@@ -116,7 +111,7 @@ abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
     }
 
     /// @dev Fallback function that is called when the health check fails.
-    function healthCheckFallback() internal virtual {
+    function healthCheckFailedFallback() internal virtual {
         revert HealthCheckFailed();
     }
 

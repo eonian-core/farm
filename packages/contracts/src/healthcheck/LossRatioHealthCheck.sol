@@ -5,21 +5,17 @@ import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/Own
 
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 import {IVersionable} from "../upgradeable/IVersionable.sol";
-import {IHealthCheck} from "./IHealthCheck.sol";
+import {IHealthCheck, PASS, ACCEPTABLE_LOSS, SIGNIFICANT_LOSS} from "./IHealthCheck.sol";
 import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
 
-    error HealthCheckFailed();
+error HealthCheckFailed();
+error ExceededMaximumLossRatioValue();
 
 contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
     event ShutdownLossRatioChanged(uint256 ratio);
-    event HealthCheckEnabledChanged(bool enabled);
 
     // represents 100%
     uint256 public constant MAX_BPS = 10_000;
-
-    uint8 public constant PASS = 0;
-    uint8 public constant ACCEPTABLE_LOSS = 1;
-    uint8 public constant SIGNIFICANT_LOSS = 2;
 
     // The ratio of the loss that will used to stop strategy.
     uint256 public shutdownLossRatio;
@@ -40,7 +36,7 @@ contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
         public
         initializer
     {
-        __Ownable_init();
+        __SafeUUPSUpgradeable_init();
 
         __LossRatioHealthCheck_init_unchained(_shutdownLossRatio);
     }
@@ -58,9 +54,13 @@ contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
     }
 
     /// @notice Sets the ratio of the loss that will used to stop strategy.
-    /// @param _shutdownLossRatio represents persents of loss in comparison with total debt.
+    /// @param _shutdownLossRatio represents percents of loss in comparison with total debt.
     /// @dev Emits the "ShutdownLossRatioChanged" event.
-    function    setShutdownLossRatio(uint _shutdownLossRatio) public onlyOwner {
+    function setShutdownLossRatio(uint _shutdownLossRatio) public onlyOwner {
+        if (_shutdownLossRatio > MAX_BPS) {
+            revert ExceededMaximumLossRatioValue();
+        }
+
         shutdownLossRatio = _shutdownLossRatio;
         emit ShutdownLossRatioChanged(_shutdownLossRatio);
     }

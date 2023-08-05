@@ -25,7 +25,8 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
             __nativeTokenPriceFeed,
             __assetPriceFeed,
             _minReportInterval,
-            _isPrepaid
+            _isPrepaid,
+            address(0)
         );
     }
 

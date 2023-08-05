@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
+uint8 constant PASS = 0;
+uint8 constant ACCEPTABLE_LOSS = 1;
+uint8 constant SIGNIFICANT_LOSS = 2;
+
 interface IHealthCheck {
     /// @notice Checks the overall state of the strategy
     /// @param strategy Address of the strategy to be checked.

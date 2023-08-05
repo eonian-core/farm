@@ -158,7 +158,7 @@ abstract contract BaseStrategy is
         _adjustPosition(outstandingDebt);
 
         uint256 totalDebt = lender.currentDebt();
-        uint256 gasPrice = _gasPriceUSD() * estimatedWorkGas;
+        uint256 gasCost = _gasCost();
         performHealthCheck(
             address(this),
             profit,
@@ -166,7 +166,7 @@ abstract contract BaseStrategy is
             debtPayment,
             outstandingDebt,
             totalDebt,
-            gasPrice
+            gasCost
         );
 
         emit Harvested(profit, loss, debtPayment, outstandingDebt);
@@ -207,8 +207,14 @@ abstract contract BaseStrategy is
     /// @return "true" if the gas price (mult. to "profitFactor" is lower than the strategy profit, in USD).
     function _checkGasPriceAgainstProfit(uint256 profit) internal view returns (bool) {
         uint256 credit = lender.availableCredit();
-        uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
+        uint256 gasCost = _gasCost();
         return profitFactor * gasCost < _convertAmountToUSD(credit + profit);
+    }
+
+    /// @notice Calculates the gas cost for this transaction based on gas price and work
+    /// @return gas price
+    function _gasCost() internal view returns  (uint256) {
+        return _gasPriceUSD() * estimatedWorkGas;
     }
 
     /// @inheritdoc IStrategy
@@ -328,7 +334,7 @@ abstract contract BaseStrategy is
         returns (uint256 amountFreed);
 
     /// @dev Fallback function that is called when the health check fails.
-    function healthCheckFallback() internal virtual override{
+    function healthCheckFailedFallback() internal virtual override{
         shutdown();
     }
 }

@@ -41,7 +41,7 @@ export class ApeLendingStrategyDeployment extends BaseDeploymentService {
 
     async onResolveInitArgs({
         accounts,
-        dependencies: [vault],
+        dependencies: [vault, healthCheck],
     }: BaseInitArgs): Promise<Array<any>> {
         const { asset: assetName }: ApeSwapLendingStrategyDeploymentOptions = (this.config as ApeSwapLendingStrategyDeployConfig).options;
 
@@ -66,6 +66,7 @@ export class ApeLendingStrategyDeployment extends BaseDeploymentService {
             tokenUsdFeed, // asset token price feed
             6 * HOUR, // min report interval in seconds
             true, // Job is prepaid
+            healthCheck.address, // LossRatioHealthCheck
         ]
     }
 
@@ -78,9 +79,5 @@ export class ApeLendingStrategyDeployment extends BaseDeploymentService {
         const txStrategy = await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
         const strategyResult = await txStrategy.wait();
         this.logger.log("Strategy added to vault", strategyResult);
-
-        const txHealthCheck = await ApeLendingStrategy.setHealthCheck(HealthCheck.address);
-        const healthCheckResult = await txHealthCheck.wait();
-        this.logger.log("HealthCheck added to ApeLendingStrategy", healthCheckResult);
     }
 }
