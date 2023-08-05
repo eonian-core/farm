@@ -3,10 +3,12 @@ import React, { useContext } from "react";
 
 interface MonitoringContextValue {
   identify: (uid: string, properties: Record<string, any>) => void;
+  reportError: (error: Error, source: string) => void;
 }
 
 export const MonitoringContext = React.createContext<MonitoringContextValue>({
   identify: () => {},
+  reportError: () => {},
 });
 
 export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
@@ -39,8 +41,14 @@ export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
     []
   );
 
+  const reportError = React.useCallback((error: Error, source: string) => {
+    LogRocket.captureException(error, {
+      tags: { source },
+    });
+  }, []);
+
   return (
-    <MonitoringContext.Provider value={{ identify }}>
+    <MonitoringContext.Provider value={{ identify, reportError }}>
       {children}
     </MonitoringContext.Provider>
   );
