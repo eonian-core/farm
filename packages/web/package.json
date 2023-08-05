@@ -8,7 +8,7 @@
     "dev:next-mock": "concurrently -c \"auto\" \"yarn:dev:next\" \"yarn:mock\" ",
     "dev:next": "next dev",
     "build": "next build",
-    "postbuild": "yarn release-logrocket", 
+    "postbuild": "yarn release-logrocket",
     "start": "next start",
     "lint": "next lint",
     "format": "next lint --fix",
@@ -22,7 +22,7 @@
     "jest": "node --experimental-vm-modules --experimental-specifier-resolution=node ./node_modules/.bin/jest",
     "mock": "ts-node --esm ./apollo/mocks/apollo-mock.ts",
     "gen:gql-types": "graphql-codegen --config ./apollo/codegen.ts",
-    "release-logrocket": "node release-logrocket.js"
+    "release-logrocket": "node release-logrocket.cjs"
   },
   "dependencies": {
     "@apollo/client": "3.8.0-rc.0",

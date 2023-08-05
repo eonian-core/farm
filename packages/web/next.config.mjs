@@ -10,7 +10,8 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs");
     return config;
   },
-  productionBrowserSourceMaps: process.env.BUILD_SOURCE_MAPS === "true",
+  // Build source maps only if LogRocket is enabled
+  productionBrowserSourceMaps: !!process.env.LOGROCKET_API_KEY,
 };
 
 const withMDX = createMDX({
