@@ -30,6 +30,11 @@ export function VaultList({ vaultsByChain }: Props) {
 
   useFetchPositionInfo(chainId, vaults);
 
+  React.useEffect(() => {
+    const a: number[] | null = null;
+    console.log(a!.length + a!.concat([])!.length)
+  }, [])
+
   return (
     <>
       <div className={styles.header}>
