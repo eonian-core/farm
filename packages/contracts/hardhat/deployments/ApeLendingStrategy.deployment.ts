@@ -29,7 +29,7 @@ export function generateApeSwapLendingStrategyDeployment(options: ApeSwapLending
     const config: ApeSwapLendingStrategyDeployConfig = {
         ...base,
         options,
-        dependencies: [`Vault|Asset[${options.asset}]`],
+        dependencies: [`Vault|Asset[${options.asset}]`, `LossRatioHealthCheck|Default`],
         tags: [`Asset[${options.asset}]`],
     }
 
@@ -41,7 +41,7 @@ export class ApeLendingStrategyDeployment extends BaseDeploymentService {
 
     async onResolveInitArgs({
         accounts,
-        dependencies: [vault],
+        dependencies: [vault, healthCheck],
     }: BaseInitArgs): Promise<Array<any>> {
         const { asset: assetName }: ApeSwapLendingStrategyDeploymentOptions = (this.config as ApeSwapLendingStrategyDeployConfig).options;
 
@@ -66,16 +66,18 @@ export class ApeLendingStrategyDeployment extends BaseDeploymentService {
             tokenUsdFeed, // asset token price feed
             6 * HOUR, // min report interval in seconds
             true, // Job is prepaid
+            healthCheck.address, // LossRatioHealthCheck
         ]
     }
 
-    async afterDeploy(Strategy: DeployResult, [vault]: Array<Deployment>) {
+    async afterDeploy(Strategy: DeployResult, [vault, healthCheck]: Array<Deployment>) {
         this.logger.log("Adding strategy to vault");
         const Vault = await this.hre.ethers.getContractAt("Vault", vault.address);
+        const HealthCheck = await this.hre.ethers.getContractAt("LossRatioHealthCheck", healthCheck.address);
+        const ApeLendingStrategy = await this.hre.ethers.getContractAt("ApeLendingStrategy", Strategy.address);
 
-        const tx = await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
-        const result = await tx.wait();
-        this.logger.log("Strategy added to vault", result);
+        const txStrategy = await Vault.addStrategy(Strategy.address, 10000); // 100% allocation
+        const strategyResult = await txStrategy.wait();
+        this.logger.log("Strategy added to vault", strategyResult);
     }
 }
-

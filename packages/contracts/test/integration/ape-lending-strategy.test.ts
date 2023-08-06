@@ -4,6 +4,8 @@ import {
   ApeLendingStrategy,
   ApeLendingStrategy__factory,
   IERC20,
+  LossRatioHealthCheck,
+  LossRatioHealthCheck__factory,
   Vault,
   VaultFounderToken,
 } from "../../typechain-types";
@@ -39,6 +41,7 @@ describe("Ape Lending Strategy", function () {
 
   let vault: Vault;
   let vaultFounderToken: VaultFounderToken;
+  let healthCheck: LossRatioHealthCheck;
   let strategy: ApeLendingStrategy;
   let assetToken: IERC20 & Contract;
 
@@ -71,7 +74,13 @@ describe("Ape Lending Strategy", function () {
 
     await resetBalance(vault.address, { tokens: [asset] });
 
-    strategy = await deployStrategy({ signer: owner, vault, asset });
+    healthCheck = await deployLossRatioHealthCheck(owner);
+    strategy = await deployStrategy({
+      signer: owner,
+      vault,
+      asset,
+      healthCheck,
+    });
     hre.tracer.nameTags[strategy.address] = "Strategy";
 
     await resetBalance(strategy.address, { tokens: [cToken] });
@@ -274,12 +283,33 @@ describe("Ape Lending Strategy", function () {
     );
   }
 
+  async function deployLossRatioHealthCheck(
+    signer: SignerWithAddress
+  ): Promise<LossRatioHealthCheck> {
+    const factory =
+      await ethers.getContractFactory<LossRatioHealthCheck__factory>(
+        "LossRatioHealthCheck",
+        signer
+      );
+
+    const contract = await factory.deploy(false);
+    await contract.deployed();
+
+    const tx = await contract.initialize(
+      5_00 // lossRatio = 5%
+    );
+    await tx.wait();
+
+    return contract;
+  }
+
   async function deployStrategy(options: {
     signer: SignerWithAddress;
     vault: Vault;
     asset: string;
+    healthCheck: LossRatioHealthCheck;
   }): Promise<ApeLendingStrategy> {
-    const { signer, vault, asset } = options;
+    const { signer, vault, asset, healthCheck } = options;
     const factory =
       await ethers.getContractFactory<ApeLendingStrategy__factory>(
         "ApeLendingStrategy",
@@ -296,7 +326,8 @@ describe("Ape Lending Strategy", function () {
       nativePriceFeed,
       assetPriceFeed,
       minReportInterval, // Min report interval
-      true // Job is prepaid
+      true, // Job is prepaid,
+      healthCheck.address //
     );
     await tx.wait();
 

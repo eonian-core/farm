@@ -3,14 +3,18 @@ pragma solidity ^0.8.19;
 
 import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-import {IHealthCheck} from "./IHealthCheck.sol";
+import {IHealthCheck, ACCEPTABLE_LOSS, SIGNIFICANT_LOSS} from "./IHealthCheck.sol";
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 error HealthCheckFailed();
 
 abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
-    event HealthCheckChanged(address);
-    event HealthCheckEnabledChanged(bool);
+    event HealthCheckChanged(address healthCheck);
+    event HealthCheckEnabledChanged(bool enabled);
+    event HealthCheckTriggered(uint8 result);
+
+    // represents 100%
+    uint256 public constant MAX_BPS = 10_000;
 
     IHealthCheck public healthCheck;
     bool public healthCheckEnabled;
@@ -20,7 +24,7 @@ abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 
     // ------------------------------------------ Constructors ------------------------------------------
 
@@ -29,7 +33,6 @@ abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
         onlyInitializing
     {
         __Ownable_init();
-
         __HealthChecker_init_unchained(_healthCheck);
     }
 
@@ -71,7 +74,8 @@ abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
         uint256 loss,
         uint256 debtPayment,
         uint256 debtOutstanding,
-        uint256 totalDebt
+        uint256 totalDebt,
+        uint256 gasCost
     ) internal virtual {
         // No health check implementation provided, skip the execution.
         if (address(healthCheck) == address(0)) {
@@ -86,17 +90,35 @@ abstract contract HealthChecker is SafeInitializable, OwnableUpgradeable {
             return;
         }
 
-        // Perform the health check, revert the transaction if unsuccessful.
-        bool success = healthCheck.check(
+        // If no custom health check implementation provided, call default one.
+        uint8 checkResult = healthCheck.check(
             strategy,
             profit,
             loss,
             debtPayment,
             debtOutstanding,
-            totalDebt
+            totalDebt,
+            gasCost
         );
-        if (!success) {
-            revert HealthCheckFailed();
+        emit HealthCheckTriggered(checkResult);
+
+        if(checkResult == SIGNIFICANT_LOSS) { // call fallback if loss to big
+            healthCheckFailedFallback();
+        } else if(checkResult == ACCEPTABLE_LOSS) { // call secondary fallback if loss is acceptable
+            acceptableLossFallback();
         }
+        // just allow to run normally in case of transaction is profitable
     }
+
+    /// @dev Fallback function that is called when the health check fails.
+    function healthCheckFailedFallback() internal virtual {
+        revert HealthCheckFailed();
+    }
+
+    /// @dev Fallback function that is called when the health check fails but loss is acceptable.
+    /* solhint-disable no-empty-blocks */
+    function acceptableLossFallback() internal virtual {
+        // do nothing by default but can be overridden
+    }
+    /* solhint-disable no-empty-blocks */
 }

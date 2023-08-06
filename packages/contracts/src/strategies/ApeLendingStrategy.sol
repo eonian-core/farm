@@ -58,7 +58,8 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
         address _nativeTokenPriceFeed,
         address _assetPriceFeed,
         uint256 _minReportInterval,
-        bool _isPrepaid
+        bool _isPrepaid,
+        address _healthCheck
     ) public initializer {
         __SafeUUPSUpgradeable_init_direct();
         __CTokenBaseStrategy_init(
@@ -71,7 +72,8 @@ contract ApeLendingStrategy is SafeUUPSUpgradeable, CTokenBaseStrategy {
             AggregatorV3Interface(_nativeTokenPriceFeed),
             AggregatorV3Interface(_assetPriceFeed),
             _minReportInterval,
-            _isPrepaid
+            _isPrepaid,
+            _healthCheck
         ); // ownable under the hood
 
         __ApeLendingStrategy_init_unchained(IERC20Upgradeable(BANANA), IPancakeRouter(PANCAKE_ROUTER));

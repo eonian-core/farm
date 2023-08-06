@@ -31,7 +31,8 @@ contract StrategyBorrowerMock is BaseStrategyMock {
             _minReportInterval,
             _isPrepaid,
             __nativeTokenPriceFeed,
-            __assetPriceFeed
+            __assetPriceFeed,
+            address(0)
         )
     {
         assetHolder = new AssetHolder(_asset);
