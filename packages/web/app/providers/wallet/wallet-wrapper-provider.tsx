@@ -12,6 +12,8 @@ import web3Onboard, { defaultChain } from "../../web3-onboard";
 import { ChainId } from "./wrappers/helpers";
 import { Chain, Wallet, WalletStatus } from "./wrappers/types";
 import * as W3O from "./wrappers/w3o-wallet-wrapper";
+import LogRocket from "logrocket";
+import { useMonitoringContext } from "../monitoring";
 
 interface Props {
   children: React.ReactNode;
@@ -46,6 +48,7 @@ export const WalletWrapperContext =
  */
 const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
   const useConnectWalletOptions = useConnectWallet();
+  const { identify } = useMonitoringContext();
   const [
     { wallet: onboardWallet, connecting },
     onboardConnect,
@@ -56,33 +59,45 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
   const [{ chains: onboardChains, connectedChain }, setOnboardChain] =
     useSetChainOptions;
 
-  const wallet = React.useMemo(() => W3O.getWallet(onboardWallet), [onboardWallet]);
+  const wallet = React.useMemo(
+    () => W3O.getWallet(onboardWallet),
+    [onboardWallet]
+  );
 
   const isWalletConnected = !!wallet;
 
-  const status = React.useMemo(() => W3O.getStatus(isWalletConnected, connecting), [isWalletConnected, connecting]);
+  const status = React.useMemo(
+    () => W3O.getStatus(isWalletConnected, connecting),
+    [isWalletConnected, connecting]
+  );
 
-  const chains = React.useMemo(() => W3O.getAvailableChains(
-      onboardChains.length === 0 ? [defaultChain as W3OChain] : onboardChains
-    ), [onboardChains]);
+  const chains = React.useMemo(
+    () =>
+      W3O.getAvailableChains(
+        onboardChains.length === 0 ? [defaultChain as W3OChain] : onboardChains
+      ),
+    [onboardChains]
+  );
 
-  const chain = React.useMemo(() => W3O.getCurrentChain(chains, connectedChain?.id), [connectedChain?.id, chains]);
+  const chain = React.useMemo(
+    () => W3O.getCurrentChain(chains, connectedChain?.id),
+    [connectedChain?.id, chains]
+  );
 
-  const provider = React.useMemo(() => onboardWallet?.provider
-      ? W3O.getProvider(onboardWallet?.provider)
-      : null, [onboardWallet?.provider]);
+  const provider = React.useMemo(
+    () =>
+      onboardWallet?.provider ? W3O.getProvider(onboardWallet?.provider) : null,
+    [onboardWallet?.provider]
+  );
 
   const connect = React.useCallback(async () => {
     const success = await W3O.connect(onboardConnect);
-    if (success) 
+    if (success)
       await W3O.autoSelectProperChain(chain, chains, setOnboardChain);
-    
   }, [chain, chains, onboardConnect, setOnboardChain]);
 
   const disconnect = React.useCallback(async () => {
-    if (wallet) 
-      await W3O.disconnect(wallet.label, onboardDisconnect);
-    
+    if (wallet) await W3O.disconnect(wallet.label, onboardDisconnect);
   }, [onboardDisconnect, wallet]);
 
   const setCurrentChain = React.useCallback(
@@ -96,6 +111,12 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
     W3O.reconnect(onboardConnect);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!wallet) return;
+    const { address, label } = wallet;
+    identify(address, { address, label });
+  }, [identify, wallet]);
 
   const value: WalletWrapperContextValue = {
     wallet,
@@ -116,11 +137,11 @@ const WalletWrapperImplementationProvider: React.FC<Props> = ({ children }) => {
 };
 
 export const WalletWrapperProvider: React.FC<Props> = ({ children }) => (
-    <Web3OnboardProvider web3Onboard={web3Onboard}>
-      <WalletWrapperImplementationProvider>
-        {children}
-      </WalletWrapperImplementationProvider>
-    </Web3OnboardProvider>
-  );
+  <Web3OnboardProvider web3Onboard={web3Onboard}>
+    <WalletWrapperImplementationProvider>
+      {children}
+    </WalletWrapperImplementationProvider>
+  </Web3OnboardProvider>
+);
 
 export const useWalletWrapperContext = () => useContext(WalletWrapperContext);

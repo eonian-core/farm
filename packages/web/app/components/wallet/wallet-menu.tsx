@@ -9,7 +9,7 @@ import useRouterPush from "../links/use-router-push";
 import { ULTRA_WIDE_SCREEN } from "../resize-hooks/screens";
 import { useWindowSize } from "../resize-hooks/useWindowSize";
 import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
-import { isAuthEnabled, useLogout } from "../../auth";
+import { isAuthEnabled, useLogout } from "../../providers/auth";
 
 interface ItemType extends Partial<DropdownItemBaseProps> {
   key: string;
