@@ -61266,7 +61266,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Implementation": {
-          "address": "0x69B5dc0Fc0E04B981F584914831D1436ab1350d7",
+          "address": "0x56E030601B3eB4eb8107FDc667dC69e6e2593E84",
           "abi": [
             {
               "inputs": [
@@ -63991,7 +63991,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDC]_Implementation": {
-          "address": "0xf2E8384D107cD3c8E1793AeC8bf054C7d997A8bF",
+          "address": "0xb012beA4AAccf69F21F15C2E5F8dB4e69857ae24",
           "abi": [
             {
               "inputs": [
@@ -66716,7 +66716,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDT]_Implementation": {
-          "address": "0x76Ca4d921dF3b1dDed488C2Ed62D3b52695fa3f3",
+          "address": "0xa9D9bDe191334C68fD4Ffffe0fb5A4b75e2262d4",
           "abi": [
             {
               "inputs": [
@@ -70401,7 +70401,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]_Implementation": {
-          "address": "0x9121e74294b052A4E98df6B9faeB8b027E91C75c",
+          "address": "0x7a7736d235F274934BB6ac583567dc7cE18494B8",
           "abi": [
             {
               "inputs": [
@@ -75046,7 +75046,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Implementation": {
-          "address": "0x3F31B7e5a452E173003e5272D0657ebFB6e48bE4",
+          "address": "0xfC939a184EA6166Ffd4284d6D8e31319866C35AB",
           "abi": [
             {
               "inputs": [
@@ -79691,7 +79691,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]_Implementation": {
-          "address": "0x310008e30A7DfBC175b144Aa633Da0649F44C0CA",
+          "address": "0xDA1F12Cf41246318077DbAA55d2A8cF7e85DF94b",
           "abi": [
             {
               "inputs": [
