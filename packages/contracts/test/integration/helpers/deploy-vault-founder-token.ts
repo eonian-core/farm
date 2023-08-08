@@ -1,4 +1,5 @@
 import { BigNumberish, Overrides, Signer } from "ethers";
+import _ from "lodash";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import {
   VaultFounderToken,
@@ -31,15 +32,33 @@ type Options = {
   initialTokenPrice: BigNumberish;
   overrides?: Overrides & { from?: string | Promise<string> };
   signer?: Signer | string;
+  name?: string;
+  symbol?: string;
+  vault: string;
 };
+
 
 export default async function deployVaultFounderToken(
   hre: HardhatRuntimeEnvironment,
-  options: Options
+  {
+    signer, 
+    maxCountTokens,
+    nextTokenPriceMultiplier,
+    initialTokenPrice,
+    name = "Vault Founder Token",
+    symbol = "VFT",
+    vault
+  }: Options
 ): Promise<VaultFounderToken> {
-  const { signer, ...specifiedParams } = options;
-  const params = [...Object.values(specifiedParams)] as Parameters<
-    VaultFounderToken["initialize"]
-  >;
-  return await _deployVaultFounderToken(hre, signer, ...params);
+  
+  return await _deployVaultFounderToken(
+    hre, 
+    signer, 
+    maxCountTokens,
+    nextTokenPriceMultiplier,
+    initialTokenPrice,
+    name, 
+    symbol, 
+    vault
+  );
 }

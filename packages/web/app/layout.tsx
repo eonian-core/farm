@@ -30,7 +30,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   store.dispatch(setLocale(locale));
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <GoogleAnalytics />
       <body className={roboto.className}>
         <Providers locale={locale}>

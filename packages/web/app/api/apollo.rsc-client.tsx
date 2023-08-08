@@ -2,9 +2,11 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
 import { ChainId } from "../providers/wallet/wrappers/helpers";
 import { getGraphQLEndpoint } from "./endpoints";
+import { scalarTypePolicies } from "./gql/graphql";
 
-const makeClientFactory = (chainId: ChainId) => () => new ApolloClient({
-    cache: new InMemoryCache(),
+const makeClientFactory = (chainId: ChainId) => () =>
+  new ApolloClient({
+    cache: new InMemoryCache({ typePolicies: scalarTypePolicies }),
     link: new HttpLink({
       uri: getGraphQLEndpoint(chainId),
     }),

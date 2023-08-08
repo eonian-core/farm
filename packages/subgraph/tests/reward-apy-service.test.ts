@@ -53,10 +53,10 @@ describe("RewardApyService", () => {
             assert.entityCount("RewardAPY", 1)
 
             assert.fieldEquals("RewardAPY", idStr, "decimals", INTEREST_RATE_DECIMALS.toString())
-            assert.fieldEquals("RewardAPY", idStr, "daily", "353403600")
-            assert.fieldEquals("RewardAPY", idStr, "weekly", "2471439000")
-            assert.fieldEquals("RewardAPY", idStr, "monthly", "10591899000")
-            assert.fieldEquals("RewardAPY", idStr, "yearly", "128868034800")
+            assert.fieldEquals("RewardAPY", idStr, "daily", "353406193");
+            assert.fieldEquals("RewardAPY", idStr, "weekly", "2480639625");
+            assert.fieldEquals("RewardAPY", idStr, "monthly", "10749438375");
+            assert.fieldEquals("RewardAPY", idStr, "yearly", "128993260500");
         })
 
         test("should update APY entity", () => {
@@ -70,10 +70,10 @@ describe("RewardApyService", () => {
             assert.entityCount("RewardAPY", 1)
 
             assert.fieldEquals("RewardAPY", idStr, "decimals", INTEREST_RATE_DECIMALS.toString())
-            assert.fieldEquals("RewardAPY", idStr, "daily", "706807200")
-            assert.fieldEquals("RewardAPY", idStr, "weekly", "4942878000")
-            assert.fieldEquals("RewardAPY", idStr, "monthly", "21183798000")
-            assert.fieldEquals("RewardAPY", idStr, "yearly", "257736069600")
+            assert.fieldEquals("RewardAPY", idStr, "daily", "706812386");
+            assert.fieldEquals("RewardAPY", idStr, "weekly", "4961279250")
+            assert.fieldEquals("RewardAPY", idStr, "monthly", "21498876750");
+            assert.fieldEquals("RewardAPY", idStr, "yearly", "257986521000");
         })
 
     })

@@ -56,29 +56,35 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     function initialize(
         uint256 maxCountTokens_,
         uint256 nextTokenPriceMultiplier_,
-        uint256 initialTokenPrice_
+        uint256 initialTokenPrice_,
+        string memory name_,
+        string memory symbol_,
+        Vault vault_
     ) public initializer {
         __SafeUUPSUpgradeable_init(); // owner init under the hood
-        __ERC5484Upgradeable_init("Eonian Vault Founder Token", "EVFT", BurnAuth.Neither, true); // __AccessControl_init inside
+        __ERC5484Upgradeable_init(name_, symbol_, BurnAuth.Neither, true); // __AccessControl_init inside
         __ReentrancyGuard_init();
         __RewardHolder_init_unchained(); // require __AccessControl_init
 
         maxCountTokens = maxCountTokens_;
         nextTokenPriceMultiplier = nextTokenPriceMultiplier_;
         nextTokenPrice = initialTokenPrice_;
+
+        setVault(vault_);
     }
 
     /// @inheritdoc IVersionable
     function version() external pure returns (string memory) {
-        return "0.1.1";
+        return "0.2.1";
     }
 
     /// @dev set vault
     /// @notice that is mandatory to be set before reward can be claimed
-    function setVault(Vault vault_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setVault(Vault vault_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         if(address(vault) != address(0)) {
             revokeRole(MINTER_ROLE, address(vault_));
         }
+
         super._setVault(vault_);
         grantRole(MINTER_ROLE, address(vault_));
     }
@@ -88,12 +94,12 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     /// @param uri token metadata uri
     /// @param amount holder balance, used as token price
     /// @return true if token was minted
-    function tryToMint(address to, string memory uri, uint256 amount) public virtual returns(bool){
+    function tryToMint(address to, string memory uri, uint256 amount) public virtual onlyRole(MINTER_ROLE) returns(bool){
         if(amount < nextTokenPrice || totalSupply() >= maxCountTokens) {
             return false;
         }
         
-        if(!_safeMint(to, uri)) { // requires MINTER_ROLE inside
+        if(!_safeMint(to, uri)) { 
             return false;
         }
 

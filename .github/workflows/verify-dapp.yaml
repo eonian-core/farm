@@ -6,17 +6,15 @@ on:
       - main
       - staging
       - development
-    paths:
-      - "packages/web/**"
   
   pull_request:
     branches:
       - main
+      - staging
+      - development
     types:
       - opened
       - synchronize
-    paths:
-      - "packages/web/**"
 
 jobs:
   # Add linting job after migration to nextjs version with given fix https://github.com/vercel/next.js/issues/44424
