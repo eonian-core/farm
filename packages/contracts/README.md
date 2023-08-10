@@ -72,6 +72,12 @@ all scripts from `./deploy` folder will be executed during startup sequence
 
 Deploy can be done only through github CI/CD. Create PR to deploy your changes to Sepolia preview, merge it to `development` branch to deploy to dev environment and to `staging` later to deploy to staging environment.
 
+Deploy consists two steps:
+- Deploy contracts
+- Verify contracts code
+
+Later contract fails can cause information about deployment not will be saved. As a result, all deploy scripts must result in the same state, not matter how often they are triggered.
+
 ## Performance optimizations
 
 For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details, see [the](https://hardhat.org/guides/typescript.html#performance-optimizations) documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
