@@ -1,11 +1,6 @@
-import { DeployResult, Deployment } from "@eonian/hardhat-deploy/types";
-import { Address } from "@eonian/hardhat-deploy/types";
-import {
-  DeployArgs,
-  DeploymentsService,
-  LifecycleDeploymentService,
-} from "../LifecycleDeployment.service";
-import { Logger } from "../logger/Logger";
+import { DeployResult, Deployment, Address } from '@eonian/hardhat-deploy/types';
+import { DeployArgs, DeploymentsService } from '../LifecycleDeployment.service';
+import { Logger } from '../logger/Logger';
 import {
   DependenciesService,
   NamedAccounts,
@@ -14,10 +9,10 @@ import {
   BaseDeploymentService,
   EnvironmentService,
   Stage,
-} from "../BaseDeployment.service";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
+} from '../BaseDeployment.service';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
-describe("BaseDeploymentService", () => {
+describe('BaseDeploymentService', () => {
   let config: BaseDeploymentConfig;
   let dependenciesServiceMock: DependenciesService;
   let accountsServiceMock: AccountsService;
@@ -29,9 +24,9 @@ describe("BaseDeploymentService", () => {
 
   beforeEach(() => {
     config = {
-      contract: "TestContract",
-      tags: ["Tag1", "Tag2"],
-      dependencies: ["Dependency1", "Dependency2"],
+      contract: 'TestContract',
+      tags: ['Tag1', 'Tag2'],
+      dependencies: ['Dependency1', 'Dependency2'],
     };
     dependenciesServiceMock = {
       resolve: jest.fn(),
@@ -42,7 +37,7 @@ describe("BaseDeploymentService", () => {
     deploymentsServiceMock = {} as DeploymentsService;
     loggerMock = {} as Logger;
     enironmentMock = {
-        getStage: jest.fn(async () => Stage.Development),
+      getStage: jest.fn(async () => Stage.Development),
     } as EnvironmentService;
     hreMock = {} as HardhatRuntimeEnvironment;
     baseDeploymentService = new BaseDeploymentService(
@@ -56,11 +51,12 @@ describe("BaseDeploymentService", () => {
     );
   });
 
-  describe("constructor", () => {
-    it("should throw an error if config tags array is empty", () => {
+  describe('constructor', () => {
+    it('should throw an error if config tags array is empty', () => {
       config.tags = [];
 
       expect(() => {
+        // eslint-disable-next-line no-new
         new BaseDeploymentService(
           config,
           dependenciesServiceMock,
@@ -70,43 +66,32 @@ describe("BaseDeploymentService", () => {
           deploymentsServiceMock,
           loggerMock
         );
-      }).toThrow("Contract must have at least one tag");
+      }).toThrow('Contract must have at least one tag');
     });
   });
 
-  describe("onResolveDependencies", () => {
-    it("should call dependencies service resolve method with the correct dependencies", async () => {
-      const dependencies: Deployment[] = [
-        { name: "Dependency1" },
-        { name: "Dependency2" },
-      ] as any;
+  describe('onResolveDependencies', () => {
+    it('should call dependencies service resolve method with the correct dependencies', async () => {
+      const dependencies: Deployment[] = [{ name: 'Dependency1' }, { name: 'Dependency2' }] as any;
       (dependenciesServiceMock.resolve as jest.Mock).mockResolvedValue(dependencies);
 
       const result = await baseDeploymentService.onResolveDependencies();
 
-      expect(dependenciesServiceMock.resolve).toHaveBeenCalledWith([
-        "Dependency1",
-        "Dependency2",
-      ]);
+      expect(dependenciesServiceMock.resolve).toHaveBeenCalledWith(['Dependency1', 'Dependency2']);
       expect(result).toEqual(dependencies);
     });
   });
 
-  describe("onResolveArgs", () => {
-    it("should return the correct DeployArgs object", async () => {
-      const deployer: Address = "0x123";
+  describe('onResolveArgs', () => {
+    it('should return the correct DeployArgs object', async () => {
+      const deployer: Address = '0x123';
 
       const accounts: NamedAccounts = {
         deployer,
       };
-      const dependencies: Deployment[] = [
-        { name: "Dependency1" },
-        { name: "Dependency2" },
-      ] as any;
+      const dependencies: Deployment[] = [{ name: 'Dependency1' }, { name: 'Dependency2' }] as any;
       (accountsServiceMock.get as jest.Mock).mockResolvedValue(accounts);
-      baseDeploymentService.onResolveInitArgs = jest
-        .fn()
-        .mockResolvedValue(["arg1", "arg2"]);
+      baseDeploymentService.onResolveInitArgs = jest.fn().mockResolvedValue(['arg1', 'arg2']);
 
       const result = await baseDeploymentService.onResolveArgs(dependencies);
 
@@ -114,66 +99,62 @@ describe("BaseDeploymentService", () => {
       expect(baseDeploymentService.onResolveInitArgs).toHaveBeenCalledWith({
         accounts,
         stage: Stage.Development,
-        dependencies
+        dependencies,
       });
       expect(result).toEqual<DeployArgs>({
-        name: "TestContract|Tag1|Tag2",
-        contract: "TestContract",
+        name: 'TestContract|Tag1|Tag2',
+        contract: 'TestContract',
         deployer,
         owner: deployer,
         init: {
-          args: ["arg1", "arg2"],
+          args: ['arg1', 'arg2'],
         },
       });
     });
   });
 
-  describe("generateContractName", () => {
-    it("should return the correct contract name", () => {
+  describe('generateContractName', () => {
+    it('should return the correct contract name', () => {
       const result = baseDeploymentService.generateContractName();
 
-      expect(result).toBe("TestContract|Tag1|Tag2");
+      expect(result).toBe('TestContract|Tag1|Tag2');
     });
   });
 
-  describe("onResolveInitArgs", () => {
-    it("should return an empty array by default", async () => {
+  describe('onResolveInitArgs', () => {
+    it('should return an empty array by default', async () => {
       const accounts: NamedAccounts = {
-        deployer: "0x123",
+        deployer: '0x123',
       };
       const dependencies: Deployment[] = [];
 
       const result = await baseDeploymentService.onResolveInitArgs({
         accounts,
         stage: Stage.Production,
-        dependencies
+        dependencies,
       });
 
       expect(result).toEqual([]);
     });
   });
 
-  describe("afterDeploy", () => {
-    it("should not throw an error and can be overridden", async () => {
+  describe('afterDeploy', () => {
+    it('should not throw an error and can be overridden', async () => {
       const deployResult: DeployResult = {
-        test: 1
+        test: 1,
       } as any;
 
-      await expect(
-        baseDeploymentService.afterDeploy(deployResult, [])
-      ).resolves.not.toThrow();
+      await expect(baseDeploymentService.afterDeploy(deployResult, [])).resolves.not.toThrow();
     });
   });
 
-  describe("afterUpgrade", () => {
-    it("should not throw an error and can be overridden", async () => {
+  describe('afterUpgrade', () => {
+    it('should not throw an error and can be overridden', async () => {
       const deployResult: DeployResult = {
-        test: 1
+        test: 1,
       } as any;
 
-      await expect(
-        baseDeploymentService.afterUpgrade(deployResult, [])
-      ).resolves.not.toThrow();
+      await expect(baseDeploymentService.afterUpgrade(deployResult, [])).resolves.not.toThrow();
     });
   });
 });

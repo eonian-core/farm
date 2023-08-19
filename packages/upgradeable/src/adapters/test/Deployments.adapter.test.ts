@@ -1,10 +1,10 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { DeployResult, Deployment } from "@eonian/hardhat-deploy/types";
-import { DeployArgs, DeploymentsService } from "../../LifecycleDeployment.service";
-import { DeploymentsAdapter } from "../Deployments.adapter";
-import { Logger } from "../../logger/Logger";
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployResult, Deployment } from '@eonian/hardhat-deploy/types';
+import { DeployArgs, DeploymentsService } from '../../LifecycleDeployment.service';
+import { DeploymentsAdapter } from '../Deployments.adapter';
+import { Logger } from '../../logger/Logger';
 
-describe("DeploymentsAdapter", () => {
+describe('DeploymentsAdapter', () => {
   let hreMock: HardhatRuntimeEnvironment;
   let loggerMock: Logger;
   let deploymentsAdapter: DeploymentsService;
@@ -21,18 +21,18 @@ describe("DeploymentsAdapter", () => {
     deploymentsAdapter = new DeploymentsAdapter(hreMock, loggerMock);
   });
 
-  describe("deploy", () => {
-    it("should deploy a contract with the provided arguments", async () => {
+  describe('deploy', () => {
+    it('should deploy a contract with the provided arguments', async () => {
       const deployArgs: DeployArgs = {
-        name: "TestContract-1",
-        contract: "TestContract",
-        deployer: "0x123",
-        owner: "0x456",
-        init: { args: ["arg1", "arg2"] },
+        name: 'TestContract-1',
+        contract: 'TestContract',
+        deployer: '0x123',
+        owner: '0x456',
+        init: { args: ['arg1', 'arg2'] },
       };
 
       const expectedDeployResult: DeployResult = {
-        'test': 1
+        test: 1,
       } as any;
 
       hreMock.deployments = {
@@ -42,22 +42,22 @@ describe("DeploymentsAdapter", () => {
 
       const deployResult = await deploymentsAdapter.deploy(deployArgs);
 
-      expect(hreMock.deployments.deploy).toHaveBeenCalledWith("TestContract-1", {
-        contract: "TestContract",
-        from: "0x123",
+      expect(hreMock.deployments.deploy).toHaveBeenCalledWith('TestContract-1', {
+        contract: 'TestContract',
+        from: '0x123',
         log: true,
         gasLimit: 4000000,
         autoMine: true,
         args: [true],
         proxy: {
-          owner: "0x456",
-          proxyContract: "ERC1967Proxy",
-          proxyArgs: ["{implementation}", "{data}"],
+          owner: '0x456',
+          proxyContract: 'ERC1967Proxy',
+          proxyArgs: ['{implementation}', '{data}'],
           checkProxyAdmin: false,
           execute: {
             init: {
-              methodName: "initialize",
-              args: ["arg1", "arg2"],
+              methodName: 'initialize',
+              args: ['arg1', 'arg2'],
             },
           },
         },
@@ -65,87 +65,81 @@ describe("DeploymentsAdapter", () => {
       expect(deployResult).toEqual(expectedDeployResult);
     });
 
-    it("should throw exception if contract and name the same", async () => {
+    it('should throw exception if contract and name the same', async () => {
       const deployArgs: DeployArgs = {
-        name: "TestContract",
-        contract: "TestContract",
-        deployer: "0x123",
-        owner: "0x456",
-        init: { args: ["arg1", "arg2"] },
+        name: 'TestContract',
+        contract: 'TestContract',
+        deployer: '0x123',
+        owner: '0x456',
+        init: { args: ['arg1', 'arg2'] },
       };
 
       const expectedDeployResult: DeployResult = {
-        'test': 1
+        test: 1,
       } as any;
 
       hreMock.deployments = {
         deploy: jest.fn().mockResolvedValue(expectedDeployResult),
       } as any;
 
-      const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs))
-        .rejects.toEqual(new Error(`Contract name and artifact name cannot be the same: ${deployArgs.name}`));
+      const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs)).rejects.toEqual(
+        new Error(`Contract name and artifact name cannot be the same: ${deployArgs.name}`)
+      );
 
       expect(hreMock.deployments.deploy).not.toHaveBeenCalled();
       expect(deployResult).toBeUndefined();
     });
   });
 
-  describe("get", () => {
-    it("should return the deployment by name if it exists", async () => {
+  describe('get', () => {
+    it('should return the deployment by name if it exists', async () => {
       const deployment: Deployment = {
-        'test': 1
+        test: 1,
       } as any;
 
       hreMock.deployments = {
         get: jest.fn().mockResolvedValue(deployment),
       } as any;
 
-      const result = await deploymentsAdapter.get("TestContract");
+      const result = await deploymentsAdapter.get('TestContract');
 
-      expect(hreMock.deployments.get).toHaveBeenCalledWith("TestContract");
+      expect(hreMock.deployments.get).toHaveBeenCalledWith('TestContract');
       expect(result).toEqual(deployment);
     });
 
-    it("should return undefined if the deployment does not exist", async () => {
+    it('should return undefined if the deployment does not exist', async () => {
       hreMock.deployments = {
-        get: jest.fn().mockRejectedValue(new Error("Deployment not found")),
+        get: jest.fn().mockRejectedValue(new Error('Deployment not found')),
       } as any;
 
-      const result = await deploymentsAdapter.get("NonExistentContract");
+      const result = await deploymentsAdapter.get('NonExistentContract');
 
-      expect(hreMock.deployments.get).toHaveBeenCalledWith(
-        "NonExistentContract"
-      );
+      expect(hreMock.deployments.get).toHaveBeenCalledWith('NonExistentContract');
       expect(result).toBeUndefined();
-      expect(loggerMock.warn).toHaveBeenCalledWith(
-        "Probably wasn't deployed before",
-        expect.any(Error)
-      );
+      expect(loggerMock.warn).toHaveBeenCalledWith("Probably wasn't deployed before", expect.any(Error));
     });
   });
 
-  describe("isDeployed", () => {
-    it("should return true if the deployment exists", async () => {
+  describe('isDeployed', () => {
+    it('should return true if the deployment exists', async () => {
       hreMock.deployments = {
         get: jest.fn().mockResolvedValue({} as Deployment),
       } as any;
 
-      const result = await deploymentsAdapter.isDeployed("TestContract");
+      const result = await deploymentsAdapter.isDeployed('TestContract');
 
-      expect(hreMock.deployments.get).toHaveBeenCalledWith("TestContract");
+      expect(hreMock.deployments.get).toHaveBeenCalledWith('TestContract');
       expect(result).toBe(true);
     });
 
-    it("should return false if the deployment does not exist", async () => {
+    it('should return false if the deployment does not exist', async () => {
       hreMock.deployments = {
         get: jest.fn().mockResolvedValue(undefined),
       } as any;
 
-      const result = await deploymentsAdapter.isDeployed("NonExistentContract");
+      const result = await deploymentsAdapter.isDeployed('NonExistentContract');
 
-      expect(hreMock.deployments.get).toHaveBeenCalledWith(
-        "NonExistentContract"
-      );
+      expect(hreMock.deployments.get).toHaveBeenCalledWith('NonExistentContract');
       expect(result).toBe(false);
     });
   });
