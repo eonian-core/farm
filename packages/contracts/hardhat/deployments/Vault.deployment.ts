@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { DeployFunction } from "@eonian/hardhat-deploy/types";
+import { DeployFunction } from "hardhat-deploy/types";
 import { DeployConfig, BaseDeploymentService, BaseInitArgs, wrap } from '@eonian/upgradeable'
 
 import { BlockchainType, Stage } from "../../hardhat.config";

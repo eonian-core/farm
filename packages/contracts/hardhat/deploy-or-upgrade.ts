@@ -4,7 +4,7 @@ import {
   Deployment,
   DeployResult,
   DeploymentsExtension,
-} from "@eonian/hardhat-deploy/types";
+} from "hardhat-deploy/types";
 import { BlockchainType, NamedAccounts, Stage } from "../hardhat.config";
 
 export interface ArgsFactoryOptions {

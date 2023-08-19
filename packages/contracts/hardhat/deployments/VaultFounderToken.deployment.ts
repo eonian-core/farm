@@ -1,7 +1,7 @@
 import {DeployConfig, BaseDeploymentService, BaseInitArgs, wrap} from '@eonian/upgradeable'
 
 import { BlockchainType } from "../../hardhat.config";
-import { DeployFunction, DeployResult, Deployment } from '@eonian/hardhat-deploy/types';
+import { DeployFunction, DeployResult, Deployment } from 'hardhat-deploy/types';
 
 export interface VaultFounderTokenDeploymentOptions {
     /** Name of asset */

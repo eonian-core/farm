@@ -10,7 +10,7 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-tracer";
-import "@eonian/hardhat-deploy";
+import "hardhat-deploy";
 import "hardhat-docgen";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomicfoundation/hardhat-foundry";
@@ -21,7 +21,7 @@ import { ethereumFork, binanceSmartChainFork } from "./hardhat/forks";
 import { providers, ProvidersContracts } from "./hardhat/providers";
 
 import "./hardhat/tasks/start-hardhat-node.ts";
-import { Address } from "@eonian/hardhat-deploy/types";
+import { Address } from "hardhat-deploy/types";
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners();

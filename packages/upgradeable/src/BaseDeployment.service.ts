@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { DeployResult, Deployment, Address } from '@eonian/hardhat-deploy/types';
+import { DeployResult, Deployment, Address } from 'hardhat-deploy/types';
 import { DeployArgs, DeploymentsService, LifecycleDeploymentService } from './LifecycleDeployment.service';
 import { Logger } from './logger/Logger';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';

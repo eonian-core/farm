@@ -1,6 +1,6 @@
-import '@eonian/hardhat-deploy';
+import 'hardhat-deploy';
 
-import { DeployFunction } from '@eonian/hardhat-deploy/types';
+import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { BaseDeploymentConfig, BaseDeploymentService } from './BaseDeployment.service';
 

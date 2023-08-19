@@ -1,4 +1,4 @@
-import { DeployResult, Deployment, Address } from '@eonian/hardhat-deploy/types';
+import { DeployResult, Deployment, Address } from 'hardhat-deploy/types';
 import { DeployArgs, DeploymentsService } from '../LifecycleDeployment.service';
 import { Logger } from '../logger/Logger';
 import {

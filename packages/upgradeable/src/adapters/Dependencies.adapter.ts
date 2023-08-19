@@ -1,4 +1,4 @@
-import { Deployment } from '@eonian/hardhat-deploy/types';
+import { Deployment } from 'hardhat-deploy/types';
 import { DependenciesService } from '../BaseDeployment.service';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
