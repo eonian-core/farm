@@ -14,7 +14,7 @@
     "build": "microbundle --target=node",
     "build:watch": "microbundle watch",
     "prepublish": "yarn build",
-    "lint-ts": "eslint . --ext .ts --fix",
+    "lint:ts": "eslint . --ext .ts --fix",
     "pre-commit": "lint-staged"
   },
   "source": "./src/index.ts",
@@ -72,6 +72,6 @@
     "hardhat-deploy": "^0.11.36"
   },
   "lint-staged": {
-    "*.ts": "yarn lint-ts"
+    "*.ts": "yarn lint:ts"
   }
 }

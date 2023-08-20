@@ -24,10 +24,11 @@
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node --export-all './deployments/local.json'",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",
-    "lint-ts": "eslint . --ext .ts --fix",
+    "lint:ts": "eslint . --ext .ts --fix",
     "lint:license": "./check-license.sh",
     "gas-usage:report": "forge snapshot",
-    "gas-usage:diff": "forge snapshot --diff"
+    "gas-usage:diff": "forge snapshot --diff",
+    "pre-commit": "lint-staged"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -65,6 +66,7 @@
     "hardhat-docgen": "^1.3.0",
     "hardhat-gas-reporter": "^1.0.9",
     "hardhat-tracer": "^2.5.1",
+    "lint-staged": "^14.0.0",
     "prettier": "^3.0.2",
     "prettier-plugin-solidity": "^1.1.3",
     "solhint": "^3.4.1",
@@ -75,13 +77,17 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^0.6.1",
+    "@eonian/upgradeable": "0.1.2",
     "@nomicfoundation/hardhat-foundry": "^1.0.1",
     "@openzeppelin/contracts": "^4.9.3",
     "@openzeppelin/contracts-upgradeable": "^4.9.3",
     "@types/sinon": "^10.0.15",
     "lodash": "^4.17.21",
     "sinon": "^15.1.0",
-    "tree-kill": "^1.2.2",
-    "@eonian/upgradeable": "0.1.2"
+    "tree-kill": "^1.2.2"
+  },
+  "lint-staged": {
+    "*.ts": "yarn lint:ts",
+    "*.sol": "yarn lint"
   }
 }
