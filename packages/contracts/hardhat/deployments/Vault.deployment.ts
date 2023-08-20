@@ -1,68 +1,58 @@
-import { BigNumber } from "ethers";
-import { DeployFunction } from "hardhat-deploy/types";
-import { DeployConfig, BaseDeploymentService, BaseInitArgs, wrap } from '@eonian/upgradeable'
+import { BigNumber } from 'ethers';
+import { DeployFunction } from 'hardhat-deploy/types';
+import { DeployConfig, BaseDeploymentService, BaseInitArgs, wrap } from '@eonian/upgradeable';
 
-import { BlockchainType, Stage } from "../../hardhat.config";
-
+import { BlockchainType, Stage } from '../../hardhat.config';
 
 export interface VaultDeploymentOptions {
-    /** Name of asset */
-    asset: string;
+  /** Name of asset */
+  asset: string;
 }
 
 export interface VaultDeployConfig extends DeployConfig {
-    options: VaultDeploymentOptions;
+  options: VaultDeploymentOptions;
 }
 
 /**
  * Base config for Vault deployment
  */
 export const base: Omit<DeployConfig, 'tags'> = {
-    contract: "Vault",
-    chains: [
-        BlockchainType.Mainnet,
-        BlockchainType.Testnet,
-        BlockchainType.Local,
-    ]
-}
-
+  contract: 'Vault',
+  chains: [BlockchainType.Mainnet, BlockchainType.Testnet, BlockchainType.Local],
+};
 
 export function generateVaultDeployment(options: VaultDeploymentOptions): DeployFunction {
-    const config: VaultDeployConfig = {
-        ...base,
-        options,
-        tags: [`Asset[${options.asset}]`],
-    }
+  const config: VaultDeployConfig = {
+    ...base,
+    options,
+    tags: [`Asset[${options.asset}]`],
+  };
 
-    return wrap(config, VaultDeployment);
+  return wrap(config, VaultDeployment);
 }
-
 
 export class VaultDeployment extends BaseDeploymentService {
+  async onResolveInitArgs({ accounts, stage }: BaseInitArgs): Promise<Array<any>> {
+    const { asset: assetName }: VaultDeploymentOptions = (this.config as VaultDeployConfig).options;
 
-    async onResolveInitArgs({ accounts, stage }: BaseInitArgs): Promise<Array<any>> {
-        const { asset: assetName }: VaultDeploymentOptions = (this.config as VaultDeployConfig).options;
-
-        const asset = accounts[assetName];
-        if (!asset) {
-            throw new Error(`Asset ${assetName} not found in accounts`)
-        }
-
-        const { treasury } = accounts
-
-        return [
-            asset, // asset
-            treasury, // rewards
-            stage !== Stage.Production // managment fee
-                ? 1500 // 15% for development and test versions
-                : 2000, // 20% for production versions
-            BigNumber.from("1" + "0".repeat(18)).div(3600), // 6 hours of locked profit release rate
-            `Eonian ${assetName} Vault Shares`, // name
-            `eon${assetName}`, // symbol
-            [], // defaultOperators
-            100, // vault founder tokens fee 1%
-        ]
+    const asset = accounts[assetName];
+    if (!asset) {
+      throw new Error(`Asset ${assetName} not found in accounts`);
     }
+
+    const { treasury } = accounts;
+
+    return [
+      asset, // asset
+      treasury, // rewards
+      stage !== Stage.Production // managment fee
+        ? 1500 // 15% for development and test versions
+        : 2000, // 20% for production versions
+      BigNumber.from('1' + '0'.repeat(18)).div(3600), // 6 hours of locked profit release rate
+      `Eonian ${assetName} Vault Shares`, // name
+      `eon${assetName}`, // symbol
+      [], // defaultOperators
+      100, // vault founder tokens fee 1%
+    ];
+  }
 }
-
-

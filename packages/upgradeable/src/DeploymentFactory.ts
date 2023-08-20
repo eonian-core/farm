@@ -1,5 +1,4 @@
-import 'hardhat-deploy';
-
+/// <reference path="types.d.ts"/>
 import { DeployFunction } from 'hardhat-deploy/types';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { BaseDeploymentConfig, BaseDeploymentService } from './BaseDeployment.service';

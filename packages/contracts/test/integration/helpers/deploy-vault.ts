@@ -1,18 +1,15 @@
-import { BigNumber, BigNumberish, Overrides, Signer } from "ethers";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import _ from "lodash";
-import { Vault, Vault__factory } from "../../../typechain-types";
+import { BigNumber, BigNumberish, Overrides, Signer } from 'ethers';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import _ from 'lodash';
+import { Vault, Vault__factory } from '../../../typechain-types';
 
 async function _deployVault(
   this: any,
   hre: HardhatRuntimeEnvironment,
   signer?: Signer | string,
-  ...params: Parameters<Vault["initialize"]>
+  ...params: Parameters<Vault['initialize']>
 ): Promise<Vault> {
-  const factory = await hre.ethers.getContractFactory<Vault__factory>(
-    "Vault",
-    signer
-  );
+  const factory = await hre.ethers.getContractFactory<Vault__factory>('Vault', signer);
   const contract = await factory.deploy(false);
   await contract.deployed();
 
@@ -37,20 +34,15 @@ type Options = {
 
 const defaultOptions: Partial<Options> = {
   managementFee: 1000, // 10%
-  lockedProfitReleaseRate: BigNumber.from("1" + "0".repeat(18)).div(3600), // 6 hours
-  name: "Vault Token",
-  symbol: "VTN",
+  lockedProfitReleaseRate: BigNumber.from('1' + '0'.repeat(18)).div(3600), // 6 hours
+  name: 'Vault Token',
+  symbol: 'VTN',
   defaultOperators: [],
   foundersRewardFee: 100, // 1%
 };
 
-export default async function deployVault(
-  hre: HardhatRuntimeEnvironment,
-  options: Options
-): Promise<Vault> {
+export default async function deployVault(hre: HardhatRuntimeEnvironment, options: Options): Promise<Vault> {
   const { signer, ...specifiedParams } = _.defaults(options, defaultOptions);
-  const params = [...Object.values(specifiedParams)] as Parameters<
-    Vault["initialize"]
-  >;
+  const params = [...Object.values(specifiedParams)] as Parameters<Vault['initialize']>;
   return await _deployVault(hre, signer, ...params);
 }

@@ -1,11 +1,6 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import {
-  DeployFunction,
-  Deployment,
-  DeployResult,
-  DeploymentsExtension,
-} from "hardhat-deploy/types";
-import { BlockchainType, NamedAccounts, Stage } from "../hardhat.config";
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { DeployFunction, Deployment, DeployResult, DeploymentsExtension } from 'hardhat-deploy/types';
+import { BlockchainType, NamedAccounts, Stage } from '../hardhat.config';
 
 export interface ArgsFactoryOptions {
   accounts: NamedAccounts;
@@ -54,10 +49,7 @@ export const deployOrUpgrade = ({
     } = hre;
     const { accounts } = await extractContext(hre);
 
-    const deployedContracts = await resolveDependencies(
-      hre.deployments,
-      dependencies
-    );
+    const deployedContracts = await resolveDependencies(hre.deployments, dependencies);
 
     const { deployer } = accounts;
 
@@ -71,12 +63,12 @@ export const deployOrUpgrade = ({
       args: [true], // Disable inititializers in implementaion contract
       proxy: {
         owner: deployer,
-        proxyContract: "ERC1967Proxy", // base for UUPS, directly from OpenZeppelin
-        proxyArgs: ["{implementation}", "{data}"], // specific for UUPS
+        proxyContract: 'ERC1967Proxy', // base for UUPS, directly from OpenZeppelin
+        proxyArgs: ['{implementation}', '{data}'], // specific for UUPS
         checkProxyAdmin: false,
         execute: {
           init: {
-            methodName: "initialize",
+            methodName: 'initialize',
             args: getArgs({
               accounts,
               stage: (network.config.tags?.[0] as Stage) || Stage.Development,
@@ -104,13 +96,10 @@ export const deployOrUpgrade = ({
 
 type GetDeployement = (name: string) => Promise<Deployment>;
 
-export const isDeployedBefore = async (
-  contract: string,
-  getDeployment: GetDeployement
-): Promise<boolean> => {
+export const isDeployedBefore = async (contract: string, getDeployment: GetDeployement): Promise<boolean> => {
   try {
     const oldDeployment = await getDeployment(contract);
-    console.log("Old deployment found for", contract, oldDeployment);
+    console.log('Old deployment found for', contract, oldDeployment);
 
     return !!oldDeployment?.implementation;
   } catch (e) {
@@ -136,7 +125,7 @@ export const extractContext = async ({
     networkName: await getNetworkName(),
     chainId: await getChainId(),
   };
-  log("context", context);
+  log('context', context);
 
   return context;
 };
@@ -146,12 +135,10 @@ export const resolveDependencies = async (
   { get: getDeployment, log }: DeploymentsExtension,
   dependencies: Array<string>
 ) => {
-  const deployedContracts = await Promise.all(
-    dependencies.map((name) => getDeployment(name))
-  );
+  const deployedContracts = await Promise.all(dependencies.map((name) => getDeployment(name)));
 
   log(
-    "dependencies",
+    'dependencies',
     dependencies.reduce(
       (total, dep, index) => ({
         ...total,

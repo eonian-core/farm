@@ -1,5 +1,5 @@
-import hre from "hardhat";
-import { expect } from "chai";
+import hre from 'hardhat';
+import { expect } from 'chai';
 import {
   ApeLendingStrategy,
   ApeLendingStrategy__factory,
@@ -8,31 +8,31 @@ import {
   LossRatioHealthCheck__factory,
   Vault,
   VaultFounderToken,
-} from "../../typechain-types";
-import { Contract } from "ethers";
-import deployVault from "./helpers/deploy-vault";
-import * as helpers from "@nomicfoundation/hardhat-network-helpers";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { binanceSmartChainFork } from "../../hardhat/forks";
-import warp from "./helpers/warp";
-import getToken from "./helpers/get-erc20-token";
-import resetBalance from "./helpers/reset-balance";
-import deployVaultFounderToken from "./helpers/deploy-vault-founder-token";
+} from '../../typechain-types';
+import { Contract } from 'ethers';
+import deployVault from './helpers/deploy-vault';
+import * as helpers from '@nomicfoundation/hardhat-network-helpers';
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { binanceSmartChainFork } from '../../hardhat/forks';
+import warp from './helpers/warp';
+import getToken from './helpers/get-erc20-token';
+import resetBalance from './helpers/reset-balance';
+import deployVaultFounderToken from './helpers/deploy-vault-founder-token';
 
-describe("Ape Lending Strategy", function () {
+describe('Ape Lending Strategy', function () {
   const { ethers } = hre;
 
   const minReportInterval = 3600;
 
-  const asset = "0xe9e7cea3dedca5984780bafc599bd69add087d56"; // BUSD
-  const cToken = "0x0096B6B49D13b347033438c4a699df3Afd9d2f96"; // oBUSD;
-  const rewards = "0x89C7a4F5dB815dd6EdD81606f95B931B2B82BdCD";
-  const nativePriceFeed = "0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee"; // Chainlink BNB/USD feed
-  const assetPriceFeed = "0xcbb98864ef56e9042e7d2efef76141f15731b82f"; // Chainlink BUSD/USD feed
+  const asset = '0xe9e7cea3dedca5984780bafc599bd69add087d56'; // BUSD
+  const cToken = '0x0096B6B49D13b347033438c4a699df3Afd9d2f96'; // oBUSD;
+  const rewards = '0x89C7a4F5dB815dd6EdD81606f95B931B2B82BdCD';
+  const nativePriceFeed = '0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee'; // Chainlink BNB/USD feed
+  const assetPriceFeed = '0xcbb98864ef56e9042e7d2efef76141f15731b82f'; // Chainlink BUSD/USD feed
 
-  hre.tracer.nameTags[asset] = "BUSD";
-  hre.tracer.nameTags[cToken] = "cToken";
-  hre.tracer.nameTags[rewards] = "Rewards";
+  hre.tracer.nameTags[asset] = 'BUSD';
+  hre.tracer.nameTags[cToken] = 'cToken';
+  hre.tracer.nameTags[rewards] = 'Rewards';
 
   let owner: SignerWithAddress;
   let holderA: SignerWithAddress;
@@ -47,20 +47,20 @@ describe("Ape Lending Strategy", function () {
 
   async function setup() {
     [owner] = await ethers.getSigners();
-    holderA = await ethers.getSigner(binanceSmartChainFork.accounts["holderA"]);
-    holderB = await ethers.getSigner(binanceSmartChainFork.accounts["holderB"]);
-    ops = await ethers.getSigner(binanceSmartChainFork.accounts["ops"]);
+    holderA = await ethers.getSigner(binanceSmartChainFork.accounts['holderA']);
+    holderB = await ethers.getSigner(binanceSmartChainFork.accounts['holderB']);
+    ops = await ethers.getSigner(binanceSmartChainFork.accounts['ops']);
 
     await helpers.impersonateAccount(holderA.address);
-    hre.tracer.nameTags[holderA.address] = "Holder A";
+    hre.tracer.nameTags[holderA.address] = 'Holder A';
     await helpers.impersonateAccount(holderB.address);
-    hre.tracer.nameTags[holderB.address] = "Holder B";
+    hre.tracer.nameTags[holderB.address] = 'Holder B';
 
     await helpers.impersonateAccount(ops.address);
-    hre.tracer.nameTags[ops.address] = "Gelato Ops";
+    hre.tracer.nameTags[ops.address] = 'Gelato Ops';
 
     vault = await deployVault(hre, { asset, rewards, signer: owner });
-    hre.tracer.nameTags[vault.address] = "Vault";
+    hre.tracer.nameTags[vault.address] = 'Vault';
 
     vaultFounderToken = await deployVaultFounderToken(hre, {
       maxCountTokens: 100,
@@ -81,7 +81,7 @@ describe("Ape Lending Strategy", function () {
       asset,
       healthCheck,
     });
-    hre.tracer.nameTags[strategy.address] = "Strategy";
+    hre.tracer.nameTags[strategy.address] = 'Strategy';
 
     await resetBalance(strategy.address, { tokens: [cToken] });
 
@@ -92,14 +92,12 @@ describe("Ape Lending Strategy", function () {
     await helpers.loadFixture(setup);
   });
 
-  it("Should deposit and withdraw from the vault", async function () {
+  it('Should deposit and withdraw from the vault', async function () {
     // Vault is empty, no BUSD amount on the token balance
     expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
 
     // Make sure that the holder has some amount of BUSD (e.g., >300)
-    expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(
-      300n * 10n ** 18n
-    );
+    expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(300n * 10n ** 18n);
 
     // Approve and deposit 30 BUSD in the vault on behalf of the holder
     const depositAmount = 30n * 10n ** 18n;
@@ -110,12 +108,10 @@ describe("Ape Lending Strategy", function () {
     await withdraw(holderA, withdrawalAmount);
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
-      depositAmount - withdrawalAmount
-    );
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount - withdrawalAmount);
   });
 
-  it("Should deposit and withdraw from the vault (multiple users)", async function () {
+  it('Should deposit and withdraw from the vault (multiple users)', async function () {
     // Vault is empty, no BUSD amount on the token balance
     expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
 
@@ -130,9 +126,7 @@ describe("Ape Lending Strategy", function () {
     await deposit(holderB, depositAmount);
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
-      depositAmount * 2n
-    );
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount * 2n);
 
     // Withdraw some BUSD from the vault on behalf of the holders
     const withdrawalAmount = 15n * 10n ** 18n;
@@ -140,19 +134,15 @@ describe("Ape Lending Strategy", function () {
     await withdraw(holderB, withdrawalAmount);
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
-      depositAmount * 2n - withdrawalAmount * 2n
-    );
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount * 2n - withdrawalAmount * 2n);
   });
 
-  it("Should deposit and withdraw from the vault after investing to the strategy", async function () {
+  it('Should deposit and withdraw from the vault after investing to the strategy', async function () {
     // Vault is empty, no BUSD amount on the token balance
     expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
 
     // Make sure that the holder has some amount of BUSD (e.g., >300)
-    expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(
-      300n * 10n ** 18n
-    );
+    expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(300n * 10n ** 18n);
 
     // Approve and deposit 30 BUSD in the vault on behalf of the holder
     const depositAmount = 30n * 10n ** 18n;
@@ -174,7 +164,7 @@ describe("Ape Lending Strategy", function () {
     });
   });
 
-  it("Should deposit and withdraw from the vault after investing to the strategy (multiple users)", async function () {
+  it('Should deposit and withdraw from the vault after investing to the strategy (multiple users)', async function () {
     // Vault is empty, no BUSD amount on the token balance
     expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
 
@@ -189,9 +179,7 @@ describe("Ape Lending Strategy", function () {
     await deposit(holderB, depositAmount);
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(
-      depositAmount * 2n
-    );
+    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount * 2n);
 
     // Transfer deposited amount of BUSD from the vault to the strategy
     // Track is: Vault -> Strategy -> ApeSwap's cToken contract
@@ -213,7 +201,7 @@ describe("Ape Lending Strategy", function () {
     });
   });
 
-  it("Should accumulate rewards", async function () {
+  it('Should accumulate rewards', async function () {
     // Vault is empty, no BUSD amount on the token balance
     expect(await assetToken.balanceOf(vault.address)).to.be.equal(0);
 
@@ -221,12 +209,12 @@ describe("Ape Lending Strategy", function () {
     expect(await vault.balanceOf(rewards)).to.be.equal(0);
 
     // Make sure that the holders have some amount of BUSD (e.g., >300)
-    const min = 3000n * 5n * (10n ** 18n);
+    const min = 3000n * 5n * 10n ** 18n;
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(min);
 
     // Make N deposits and reports
     for (let i = 0; i < 5; i++) {
-      const depositAmount = 3000n * (10n ** 18n);
+      const depositAmount = 3000n * 10n ** 18n;
       await deposit(holderA, depositAmount);
 
       await strategy.work();
@@ -256,7 +244,7 @@ describe("Ape Lending Strategy", function () {
     assetToken = assetToken.connect(holder);
     vault = vault.connect(holder);
     await assetToken.approve(vault.address, amount);
-    await expect(await vault["deposit(uint256)"](amount)).changeTokenBalances(
+    await expect(await vault['deposit(uint256)'](amount)).changeTokenBalances(
       assetToken,
       changeTokenBalances?.addresses ?? [vault.address, holder.address],
       changeTokenBalances?.balanceChanges ?? [amount, -amount]
@@ -276,21 +264,15 @@ describe("Ape Lending Strategy", function () {
   ) {
     assetToken = assetToken.connect(holder);
     vault = vault.connect(holder);
-    await expect(await vault["withdraw(uint256)"](amount)).changeTokenBalances(
+    await expect(await vault['withdraw(uint256)'](amount)).changeTokenBalances(
       assetToken,
       changeTokenBalances?.addresses ?? [vault.address, holder.address],
       changeTokenBalances?.balanceChanges ?? [-amount, amount]
     );
   }
 
-  async function deployLossRatioHealthCheck(
-    signer: SignerWithAddress
-  ): Promise<LossRatioHealthCheck> {
-    const factory =
-      await ethers.getContractFactory<LossRatioHealthCheck__factory>(
-        "LossRatioHealthCheck",
-        signer
-      );
+  async function deployLossRatioHealthCheck(signer: SignerWithAddress): Promise<LossRatioHealthCheck> {
+    const factory = await ethers.getContractFactory<LossRatioHealthCheck__factory>('LossRatioHealthCheck', signer);
 
     const contract = await factory.deploy(false);
     await contract.deployed();
@@ -310,11 +292,7 @@ describe("Ape Lending Strategy", function () {
     healthCheck: LossRatioHealthCheck;
   }): Promise<ApeLendingStrategy> {
     const { signer, vault, asset, healthCheck } = options;
-    const factory =
-      await ethers.getContractFactory<ApeLendingStrategy__factory>(
-        "ApeLendingStrategy",
-        signer
-      );
+    const factory = await ethers.getContractFactory<ApeLendingStrategy__factory>('ApeLendingStrategy', signer);
     const contract = await factory.deploy(false);
     await contract.deployed();
 

@@ -16,6 +16,7 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
+    "node/no-extraneous-import": ["error"],
     "node/no-unsupported-features/es-syntax": [
       "error",
       { ignores: ["modules"] },
@@ -28,8 +29,18 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["error"],
+    "node/no-unpublished-import": "off",
+    "no-useless-constructor": "off",
     "no-unused-vars": "off",
     "dot-notation": "off",
     camelcase: "off",
   },
+  overrides: [
+    {
+      files: ["**/*.test.ts"],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 };

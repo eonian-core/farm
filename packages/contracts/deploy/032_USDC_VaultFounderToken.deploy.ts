@@ -5,6 +5,5 @@ import { generateVaultFounderTokenDeployment } from '../hardhat/deployments/Vaul
  */
 
 export default generateVaultFounderTokenDeployment({
-  asset: "USDC"
-})
-
+  asset: 'USDC',
+});

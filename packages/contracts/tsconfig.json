@@ -14,6 +14,9 @@
     "./test",
     "./typechain"
   ],
+  "exclude": [
+    "./deployments"
+  ],
   "files": [
     "./hardhat.config.ts"
   ]

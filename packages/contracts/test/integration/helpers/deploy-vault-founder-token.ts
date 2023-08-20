@@ -1,22 +1,14 @@
-import { BigNumberish, Overrides, Signer } from "ethers";
-import _ from "lodash";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import {
-  VaultFounderToken,
-  VaultFounderToken__factory,
-} from "../../../typechain-types";
+import { BigNumberish, Overrides, Signer } from 'ethers';
+import { HardhatRuntimeEnvironment } from 'hardhat/types';
+import { VaultFounderToken, VaultFounderToken__factory } from '../../../typechain-types';
 
 async function _deployVaultFounderToken(
   this: any,
   hre: HardhatRuntimeEnvironment,
   signer?: Signer | string,
-  ...params: Parameters<VaultFounderToken["initialize"]>
+  ...params: Parameters<VaultFounderToken['initialize']>
 ): Promise<VaultFounderToken> {
-  const factory =
-    await hre.ethers.getContractFactory<VaultFounderToken__factory>(
-      "VaultFounderToken",
-      signer
-    );
+  const factory = await hre.ethers.getContractFactory<VaultFounderToken__factory>('VaultFounderToken', signer);
   const contract = await factory.deploy(false);
   await contract.deployed();
 
@@ -37,28 +29,26 @@ type Options = {
   vault: string;
 };
 
-
 export default async function deployVaultFounderToken(
   hre: HardhatRuntimeEnvironment,
   {
-    signer, 
+    signer,
     maxCountTokens,
     nextTokenPriceMultiplier,
     initialTokenPrice,
-    name = "Vault Founder Token",
-    symbol = "VFT",
-    vault
+    name = 'Vault Founder Token',
+    symbol = 'VFT',
+    vault,
   }: Options
 ): Promise<VaultFounderToken> {
-  
   return await _deployVaultFounderToken(
-    hre, 
-    signer, 
+    hre,
+    signer,
     maxCountTokens,
     nextTokenPriceMultiplier,
     initialTokenPrice,
-    name, 
-    symbol, 
+    name,
+    symbol,
     vault
   );
 }

@@ -1,6 +1,6 @@
+/// <reference path="../types.d.ts"/>
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { EnvironmentService, Stage } from '../BaseDeployment.service';
-
 const possibleStageValues = Object.values(Stage);
 
 export class EnvironmentAdapter implements EnvironmentService {

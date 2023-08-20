@@ -4,5 +4,5 @@ import { generateApeSwapLendingStrategyDeployment } from '../hardhat/deployments
  * Deploy USDC ApeSwap Lending strategy contract
  */
 export default generateApeSwapLendingStrategyDeployment({
-  asset: "USDC",
-})
+  asset: 'USDC',
+});

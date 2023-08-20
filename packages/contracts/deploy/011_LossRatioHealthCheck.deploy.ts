@@ -1,22 +1,13 @@
-import { BlockchainType } from "../hardhat.config";
-import {
-  DeployConfig,
-  BaseDeploymentService,
-  BaseInitArgs,
-  wrap,
-} from "@eonian/upgradeable";
+import { BlockchainType } from '../hardhat.config';
+import { DeployConfig, BaseDeploymentService, BaseInitArgs, wrap } from '@eonian/upgradeable';
 
 /**
  * Deploy LossRationHealthCheck.
  */
 export const config: DeployConfig = {
-  contract: "LossRatioHealthCheck",
-  chains: [
-    BlockchainType.Mainnet,
-    BlockchainType.Testnet,
-    BlockchainType.Local,
-  ],
-  tags: ["Default"],
+  contract: 'LossRatioHealthCheck',
+  chains: [BlockchainType.Mainnet, BlockchainType.Testnet, BlockchainType.Local],
+  tags: ['Default'],
 };
 
 export class LossRatioHealthCheckDeployment extends BaseDeploymentService {

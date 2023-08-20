@@ -1,6 +1,6 @@
 {
   "name": "@eonian/upgradeable",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0"
@@ -11,7 +11,7 @@
     "clear": "rm -rf dist",
     "dev": "concurrently -c \"auto\" \"yarn:test:watch\" \"yarn:build:watch\"",
     "rebuild": "yarn clear && yarn build",
-    "build": "microbundle",
+    "build": "microbundle --target=node",
     "build:watch": "microbundle watch",
     "prepublish": "yarn build",
     "lint-ts": "eslint . --ext .ts --fix",
@@ -51,7 +51,6 @@
     "eslint-plugin-promise": "^6.1.1",
     "ethers": "^5.7.2",
     "hardhat": "^2.13.0",
-    "hardhat-deploy": "0.11.36",
     "hardhat-docgen": "^1.3.0",
     "hardhat-gas-reporter": "^1.0.9",
     "hardhat-tracer": "^2.5.1",
@@ -66,7 +65,11 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "hardhat-deploy": "^0.11.36",
     "@uniswap/token-lists": "^1.0.0-beta.33"
+  },
+  "peerDependencies": {
+    "hardhat-deploy": "^0.11.36"
   },
   "lint-staged": {
     "*.ts": "yarn lint-ts"
