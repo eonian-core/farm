@@ -1,3 +1,4 @@
+/// <reference path="../types.d.ts"/>
 import { Deployment } from 'hardhat-deploy/types';
 import { DependenciesService } from '../BaseDeployment.service';
 import { HardhatRuntimeEnvironment } from 'hardhat/types';

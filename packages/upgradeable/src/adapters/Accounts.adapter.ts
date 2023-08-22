@@ -1,3 +1,4 @@
+/// <reference path="../types.d.ts"/>
 import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { AccountsService, NamedAccounts } from '../BaseDeployment.service';
 
