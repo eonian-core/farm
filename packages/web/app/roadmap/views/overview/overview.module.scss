@@ -92,7 +92,8 @@
     }
 
     .overview {
-        flex-direction: column;
+        margin-top: var(--margin-700);
+        flex-direction: column-reverse;
         align-items: center;
         justify-content: center;
 
@@ -135,6 +136,9 @@
 }
 
 @media (max-width: $screen-mobile) {
+    .overview {
+        margin-top: var(--margin-300);
+    }
     .content {
         p {
             font-size: var(--font-size-500);
