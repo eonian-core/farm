@@ -55,16 +55,16 @@
         width: calc(100% - 2 * var(--blur-size));
 
         background: linear-gradient(to bottom,
-                #024e7a,
+                #2748cf,
                 #880C86,
                 #C60782,
-                #FC4B53,
-                #FC7341,
-                #FE7B3A,
+                #0a77c5,
+                #80185f,
+                #085388,
                 #922971,
                 #7F1373,
-                #13DDD4,
-                #090de7);
+                #DA4344,
+                #9e108b);
         border-radius: calc(2 * var(--border-radius-400));
         z-index: -1;
         mix-blend-mode: screen;
