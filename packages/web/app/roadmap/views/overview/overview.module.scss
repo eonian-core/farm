@@ -41,6 +41,7 @@
 }
 
 .imageContainer {
+    // TODO: make image container as resusable component or mixin
     position: relative;
     margin-right: var(--margin-500);
 
@@ -80,6 +81,7 @@
 
         transform: rotate3d(0, 1, 0, -3deg);
 
+        border-radius: var(--border-radius-500);
     }
 }
 
