@@ -5,7 +5,9 @@ export type ForkData = HardhatNetworkForkingUserConfig & {
 };
 
 const bscRpcUrl = process.env.BSC_MAINNET_RPC_URL;
-if (!bscRpcUrl) throw new Error('Missing BSC_MAINNET_RPC_URL environment variable');
+if (!bscRpcUrl) {
+  throw new Error('Missing BSC_MAINNET_RPC_URL environment variable');
+}
 
 /** Binance Smart Chain Mainnet */
 export const binanceSmartChainFork: ForkData = {

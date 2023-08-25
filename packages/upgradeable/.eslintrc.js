@@ -27,6 +27,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'dot-notation': 'off',
     camelcase: 'off',
+    curly: ['error', 'all'],
   },
   overrides: [
     {
