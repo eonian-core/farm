@@ -108,6 +108,6 @@
     "ts-node": "^10.9.1"
   },
   "lint-staged": {
-    "*.ts": "eslint . --ext .ts --fix"
+    "*.(ts|tsx)": "eslint . --ext .ts,.tsx --fix"
   }
 }
