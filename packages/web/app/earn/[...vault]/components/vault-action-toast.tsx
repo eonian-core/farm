@@ -1,18 +1,15 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
-import { useAppSelector } from "../../../store/hooks";
-import {
-  FormAction,
-  FormActionStep,
-} from "../../../store/slices/vaultActionSlice";
+import React from 'react';
+import Image from 'next/image';
+import { useWalletWrapperContext } from '../../../providers/wallet/wallet-wrapper-provider';
+import { useAppSelector } from '../../../store/hooks';
+import { FormAction, FormActionStep } from '../../../store/slices/vaultActionSlice';
 
-import styles from "./vault-action-toast.module.scss";
-import { getActiveStepSelector } from "../../../store";
-import { toStringNumberFromDecimals } from "../../../shared";
-import { Loading } from "@nextui-org/react";
+import styles from './vault-action-toast.module.scss';
+import { getActiveStepSelector } from '../../../store';
+import { toStringNumberFromDecimals } from '../../../shared';
+import { Loading } from '@nextui-org/react';
 
 export const VaultActionToast = () => {
   const [total, confirmed] = useTransactionCounters();
@@ -33,16 +30,12 @@ export const VaultActionToast = () => {
 };
 
 function useTransactionCounters(): [total: number, confirmed: number] {
-  const { steps, completedSteps, stepsSkipped } = useAppSelector(
-    (state) => state.vaultAction
-  );
+  const { steps, completedSteps, stepsSkipped } = useAppSelector((state) => state.vaultAction);
   return [steps.length - stepsSkipped, completedSteps.length - stepsSkipped];
 }
 
 function useTransactionDescription(): string | undefined {
-  const { activeAction, amountBN, assetSymbol } = useAppSelector(
-    (state) => state.vaultAction
-  );
+  const { activeAction, amountBN, assetSymbol } = useAppSelector((state) => state.vaultAction);
   const { assetDecimals } = useAppSelector((state) => state.vaultUser);
   const activeStep = useAppSelector(getActiveStepSelector);
 
@@ -73,21 +66,13 @@ function ToastImage() {
   const { wallet } = useWalletWrapperContext();
   const { isTransactionActive } = useAppSelector((state) => state.vaultAction);
 
-  if (isTransactionActive) 
+  if (isTransactionActive) {
     return <Loading className={styles.image} size="md" />;
-  
+  }
 
   const size = 32; // Same size as <Loading /> component has.
   return (
-    wallet && (
-      <Image
-        className={styles.image}
-        src={wallet.iconImageSrc}
-        alt={wallet.label}
-        width={size}
-        height={size}
-      />
-    )
+    wallet && <Image className={styles.image} src={wallet.iconImageSrc} alt={wallet.label} width={size} height={size} />
   );
 }
 

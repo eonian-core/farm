@@ -1,12 +1,10 @@
-import React, { Children, isValidElement, PureComponent, ReactElement, ReactNode } from "react";
-import Waves from "./waves";
-import RoadmapCheckpointStrip, {
-  RoadmapCheckpointProps,
-} from "./roadmap-checkpoint-strip";
-import RoadmapCheckpointMenu from "./roadmap-checkpoint-menu";
+import React, { Children, isValidElement, PureComponent, ReactElement, ReactNode } from 'react';
+import Waves from './waves';
+import RoadmapCheckpointStrip, { RoadmapCheckpointProps } from './roadmap-checkpoint-strip';
+import RoadmapCheckpointMenu from './roadmap-checkpoint-menu';
 import RoadmapCheckpoint from './roadmap-checkpoint';
-import styles from "./roadmap.module.scss";
-import clsx from "clsx";
+import styles from './roadmap.module.scss';
+import clsx from 'clsx';
 
 export interface RoadmapProps {
   children: React.ReactNode;
@@ -61,15 +59,15 @@ export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
     };
   }
 
-  static getDerivedStateFromProps({children}: RoadmapProps, state: RoadmapState) {
+  static getDerivedStateFromProps({ children }: RoadmapProps, state: RoadmapState) {
     const { centeredCheckpointIndex: currentIndex } = state;
-    if (currentIndex >= 0) 
+    if (currentIndex >= 0) {
       return null;
-    
+    }
 
-    const firstUndoneCheckpointIndex = (Children.toArray(children) as Array<ReactElement<RoadmapCheckpointProps>>).findIndex(
-      (checkpoint) => !checkpoint?.props.completed
-    );
+    const firstUndoneCheckpointIndex = (
+      Children.toArray(children) as Array<ReactElement<RoadmapCheckpointProps>>
+    ).findIndex((checkpoint) => !checkpoint?.props.completed);
 
     return {
       centeredCheckpointIndex: Math.max(firstUndoneCheckpointIndex, 0),
@@ -79,53 +77,47 @@ export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
   componentDidMount(): void {
     this.handleResize();
 
-    window.addEventListener("resize", this.handleResize);
+    window.addEventListener('resize', this.handleResize);
   }
 
   componentWillUnmount(): void {
     cancelAnimationFrame(this.transitionFrameId);
 
-    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener('resize', this.handleResize);
   }
 
   render() {
-    const {
-      centeredCheckpointIndex,
-      width,
-      height,
-      peaks,
-    } = this.state;
-    const {children} = this.props
+    const { centeredCheckpointIndex, width, height, peaks } = this.state;
+    const { children } = this.props;
 
     return (
-      <div
-          ref={this.containerRef}
-          className={clsx(styles.overlay)}
+      <div ref={this.containerRef} className={clsx(styles.overlay)}>
+        <RoadmapCheckpointStrip
+          ref={this.stripRef}
+          containerWidth={width}
+          peaks={peaks}
+          wavePeakHeight={this.wavePeakHeight}
+          startAt={centeredCheckpointIndex}
         >
-          <RoadmapCheckpointStrip
-            ref={this.stripRef}
-            containerWidth={width}
-            peaks={peaks}
-            wavePeakHeight={this.wavePeakHeight}
-            startAt={centeredCheckpointIndex}
-          >{children}</RoadmapCheckpointStrip>
-          
-          <Waves
-            ref={this.wavesRef}
-            peaks={peaks}
-            width={width}
-            height={height}
-            waveHeight={this.waveHeight}
-            waveThickness={this.waveThickness}
-            startAt={centeredCheckpointIndex}
-          />
+          {children}
+        </RoadmapCheckpointStrip>
 
-          <RoadmapCheckpointMenu
-            activeCheckpointIndex={centeredCheckpointIndex}
-            count={Children.toArray(children).length}
-            onActiveCheckpointChanged={this.handleSetCenteredCheckpointIndex}
-          />
-        </div>
+        <Waves
+          ref={this.wavesRef}
+          peaks={peaks}
+          width={width}
+          height={height}
+          waveHeight={this.waveHeight}
+          waveThickness={this.waveThickness}
+          startAt={centeredCheckpointIndex}
+        />
+
+        <RoadmapCheckpointMenu
+          activeCheckpointIndex={centeredCheckpointIndex}
+          count={Children.toArray(children).length}
+          onActiveCheckpointChanged={this.handleSetCenteredCheckpointIndex}
+        />
+      </div>
     );
   }
 
@@ -141,9 +133,9 @@ export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
     this.wavesRef.current?.animate(progress);
     this.stripRef.current?.animate(progress);
 
-    if (delta < this.transitionDuration) 
+    if (delta < this.transitionDuration) {
       this.transitionFrameId = requestAnimationFrame(this.animate);
-    
+    }
   };
 
   /**
@@ -190,6 +182,4 @@ export default class Roadmap extends PureComponent<RoadmapProps, RoadmapState> {
       index !== prevIndex && this.startTransition(index);
     });
   };
-
 }
-

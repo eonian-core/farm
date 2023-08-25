@@ -1,7 +1,4 @@
-export const executeAfter = (
-  timeout: number,
-  execute: () => void
-): VoidFunction => {
+export const executeAfter = (timeout: number, execute: () => void): VoidFunction => {
   let timeoutId = -1;
 
   timeoutId = window.setTimeout(execute, timeout);

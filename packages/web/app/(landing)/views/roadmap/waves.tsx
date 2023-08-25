@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { Component } from "react";
-import PageIntersectionObserver from "./page-intersection-observer";
-import WavePainter from "./wave-painter";
-import styles from './waves.module.scss'
+import React, { Component } from 'react';
+import PageIntersectionObserver from './page-intersection-observer';
+import WavePainter from './wave-painter';
+import styles from './waves.module.scss';
 
 interface Props {
   peaks: number;
@@ -54,10 +54,7 @@ export default class Waves extends Component<Props> {
   }
 
   componentDidMount(): void {
-    this.pageObserver = new PageIntersectionObserver(
-      this.ref,
-      this.toggleSecondaryWavesAnimation
-    );
+    this.pageObserver = new PageIntersectionObserver(this.ref, this.toggleSecondaryWavesAnimation);
 
     this.init();
     this.draw();
@@ -80,20 +77,16 @@ export default class Waves extends Component<Props> {
 
   shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
     const { peaks, width, height } = this.props;
-    return (
-      peaks !== nextProps.peaks ||
-      width !== nextProps.width ||
-      height !== nextProps.height
-    );
+    return peaks !== nextProps.peaks || width !== nextProps.width || height !== nextProps.height;
   }
 
   private init() {
     const { current: canvas } = this.ref;
-    if (!canvas) 
+    if (!canvas) {
       return;
-    
+    }
 
-    this.ctx = canvas.getContext("2d")!;
+    this.ctx = canvas.getContext('2d')!;
 
     const { peaks, height, waveHeight, waveThickness, startAt } = this.props;
     const mainWaveWidth = waveThickness;
@@ -104,13 +97,13 @@ export default class Waves extends Component<Props> {
       .setPeaks(peaks)
       .setLineWidth(mainWaveWidth)
       .setScaleY(mainWaveScaleY)
-      .setColor("#5073b8")
-      .setPeakColor("#ef4e7b")
+      .setColor('#5073b8')
+      .setPeakColor('#ef4e7b')
       .setOffsetY(waveY)
       .setOffsetX(this.getShift(startAt))
       .build();
 
-    const middleWaveGradient = this.createGradient(this.ctx, waveY, "#ef4e7b");
+    const middleWaveGradient = this.createGradient(this.ctx, waveY, '#ef4e7b');
     this.middleWavePainter = new WavePainter.Builder(canvas)
       .setPeaks(peaks)
       .setLineWidth(40)
@@ -121,7 +114,7 @@ export default class Waves extends Component<Props> {
       .setOffsetY(waveY + 20)
       .build();
 
-    const farestWaveGradient = this.createGradient(this.ctx, waveY, "#5073b8");
+    const farestWaveGradient = this.createGradient(this.ctx, waveY, '#5073b8');
     this.farestWavePainter = new WavePainter.Builder(canvas)
       .setPeaks(peaks)
       .setLineWidth(40)
@@ -138,16 +131,12 @@ export default class Waves extends Component<Props> {
     return width * 2 * (index - 1);
   }
 
-  private createGradient(
-    ctx: CanvasRenderingContext2D,
-    offsetY: number,
-    color: string
-  ) {
+  private createGradient(ctx: CanvasRenderingContext2D, offsetY: number, color: string) {
     const { width } = this.props;
     const x = width / 2;
     const gradient = ctx.createLinearGradient(x, offsetY - 60, x, offsetY + 30);
     gradient.addColorStop(0, color);
-    gradient.addColorStop(1, "hsl(180, 4%, 14%)");
+    gradient.addColorStop(1, 'hsl(180, 4%, 14%)');
     return gradient;
   }
 
@@ -175,12 +164,8 @@ export default class Waves extends Component<Props> {
     if (elapsed > this.frameInterval) {
       this.previousFrameTimestamp = timestamp - (elapsed % this.frameInterval);
 
-      this.farestWavePainter.setOffsetX(
-        this.farestWavePainter.getOffsetX() - 4
-      );
-      this.middleWavePainter.setOffsetX(
-        this.middleWavePainter.getOffsetX() - 8
-      );
+      this.farestWavePainter.setOffsetX(this.farestWavePainter.getOffsetX() - 4);
+      this.middleWavePainter.setOffsetX(this.middleWavePainter.getOffsetX() - 8);
 
       this.draw();
     }
@@ -209,13 +194,6 @@ export default class Waves extends Component<Props> {
 
   render() {
     const { width, height } = this.props;
-    return (
-      <canvas
-        ref={this.ref}
-        width={width}
-        height={height}
-        className={styles.canvas}
-      />
-    );
+    return <canvas ref={this.ref} width={width} height={height} className={styles.canvas} />;
   }
 }

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import Button from "../button/button";
-import { InternalLink } from "../links/links";
-import WalletInfo from "./wallet-info";
-import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
-import { WalletStatus } from "../../providers/wallet/wrappers/types";
+import React from 'react';
+import Button from '../button/button';
+import { InternalLink } from '../links/links';
+import WalletInfo from './wallet-info';
+import { useWalletWrapperContext } from '../../providers/wallet/wallet-wrapper-provider';
+import { WalletStatus } from '../../providers/wallet/wrappers/types';
 
 const ConnectWallet = () => {
   const { status, connect } = useWalletWrapperContext();
@@ -21,10 +21,8 @@ const ConnectWallet = () => {
   return status === WalletStatus.CONNECTED ? (
     <WalletInfo />
   ) : (
-    <InternalLink href={"/earn"} onClick={handleClick}>
-      <Button bordered>
-        {status === WalletStatus.CONNECTING ? "Connecting..." : "Connect"}
-      </Button>
+    <InternalLink href={'/earn'} onClick={handleClick}>
+      <Button bordered>{status === WalletStatus.CONNECTING ? 'Connecting...' : 'Connect'}</Button>
     </InternalLink>
   );
 };

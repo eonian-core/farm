@@ -1,8 +1,8 @@
-import { Badge } from "@nextui-org/react";
-import React from "react";
-import { Vault } from "../../../api";
+import { Badge } from '@nextui-org/react';
+import React from 'react';
+import { Vault } from '../../../api';
 
-import styles from "./vault-tags-cell.module.scss";
+import styles from './vault-tags-cell.module.scss';
 
 interface Props {
   vault: Vault;

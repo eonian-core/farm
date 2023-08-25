@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button, ButtonProps } from "@nextui-org/react";
-import React from "react";
+import { Button, ButtonProps } from '@nextui-org/react';
+import React from 'react';
 
-import styles from "./percent-button-group.module.scss";
+import styles from './percent-button-group.module.scss';
 
 interface Props extends ButtonProps {
   inputValue: bigint;
@@ -13,12 +13,7 @@ interface Props extends ButtonProps {
 
 const COUNT = 4;
 
-export const PercentButtonGroup: React.FC<Props> = ({
-  inputValue,
-  maxValue,
-  onValueChange,
-  ...restProps
-}) => {
+export const PercentButtonGroup: React.FC<Props> = ({ inputValue, maxValue, onValueChange, ...restProps }) => {
   const precise = 100;
   return (
     <div className={styles.container}>

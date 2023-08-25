@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react';
 
-import Button from "./button";
-import IconExternal from "../icons/icon-external";
-import IconDiscord from "../icons/icon-discord";
-import IconTwitter from "../icons/icon-twitter";
+import Button from './button';
+import IconExternal from '../icons/icon-external';
+import IconDiscord from '../icons/icon-discord';
+import IconTwitter from '../icons/icon-twitter';
 
 function Component() {
   return (
@@ -77,9 +77,9 @@ function Component() {
 }
 
 const meta: Meta<typeof Component> = {
-  title: "Components/Button",
+  title: 'Components/Button',
   component: Component,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   decorators: [
     (Story) => (
       <div className="story-wrapper">

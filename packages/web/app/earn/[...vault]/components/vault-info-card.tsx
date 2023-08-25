@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Card } from "@nextui-org/react";
-import React from "react";
+import { Card } from '@nextui-org/react';
+import React from 'react';
 
-import { Vault } from "../../../api";
+import { Vault } from '../../../api';
 
-import CompactNumber from "../../../components/compact-number/compact-number";
-import IconBoxArrow from "../../../components/icons/icon-box-arrow";
+import CompactNumber from '../../../components/compact-number/compact-number';
+import IconBoxArrow from '../../../components/icons/icon-box-arrow';
 
-import styles from "./vault-info-card.module.scss";
-import { calculateVaultAPY } from "../../../shared/projections/calculate-apy";
-import clsx from "clsx";
-import { FormAction } from "../../../store/slices/vaultActionSlice";
+import styles from './vault-info-card.module.scss';
+import { calculateVaultAPY } from '../../../shared/projections/calculate-apy';
+import clsx from 'clsx';
+import { FormAction } from '../../../store/slices/vaultActionSlice';
 
 interface Props {
   value: bigint;
@@ -21,13 +21,7 @@ interface Props {
   className?: string;
 }
 
-export const VaultInfoCard: React.FC<Props> = ({
-  value,
-  currentDeposit,
-  vault,
-  formAction,
-  className,
-}) => {
+export const VaultInfoCard: React.FC<Props> = ({ value, currentDeposit, vault, formAction, className }) => {
   const { symbol: assetSymbol } = vault.asset;
 
   const threshold = React.useMemo(() => BigInt(1e6) * 10n ** BigInt(vault.asset.decimals), [vault.asset.decimals]);
@@ -97,14 +91,11 @@ export const VaultInfoCard: React.FC<Props> = ({
 };
 
 function ProfitChangeIndicator({ profitChange }: { profitChange: bigint }) {
-  const direction = React.useMemo(
-    () => (profitChange > 0 ? "top" : "bottom"),
-    [profitChange]
-  );
+  const direction = React.useMemo(() => (profitChange > 0 ? 'top' : 'bottom'), [profitChange]);
 
-  if (!profitChange) 
+  if (!profitChange) {
     return null;
-  
+  }
 
   const className = clsx({
     [styles.positiveChange]: profitChange > 0n,

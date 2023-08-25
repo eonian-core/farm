@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
-import { Vault } from "../../../../api";
-import { approveERC20 } from "../../../../shared";
-import { deposit } from "../../../../shared/web3/transactions/vault";
-import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
-import { FormAction, prepareVaultAction } from "../../../../store/slices/vaultActionSlice";
-import { useWriteTransactionSender } from "./internal-hooks";
+import { Vault } from '../../../../api';
+import { approveERC20 } from '../../../../shared';
+import { deposit } from '../../../../shared/web3/transactions/vault';
+import { useAppDispatch, useAppSelector } from '../../../../store/hooks';
+import { FormAction, prepareVaultAction } from '../../../../store/slices/vaultActionSlice';
+import { useWriteTransactionSender } from './internal-hooks';
 
 export function useDepositTransaction() {
   const dispatch = useAppDispatch();

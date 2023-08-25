@@ -1,23 +1,26 @@
-import React from "react";
-import styles from "./eonian-is-parallax.module.scss";
-import Image from "next/image";
-import clsx from "clsx";
+import React from 'react';
+import styles from './eonian-is-parallax.module.scss';
+import Image from 'next/image';
+import clsx from 'clsx';
 
-import ParallaxContainer from "../../../components/parallax/parallax-container";
-import ParallaxBlock from "../../../components/parallax/parallax-block";
+import ParallaxContainer from '../../../components/parallax/parallax-container';
+import ParallaxBlock from '../../../components/parallax/parallax-block';
 
-import bitoinCrystalPic from './assets/bitcoin_in_crystal.png'
-import ethereumCrystalPic from './assets/ethereum_crystal_2.png'
-import pyramidCristalPic from './assets/crystal_4.png'
-import { useIsDesktopOrSmaller } from "../../../components/resize-hooks/screens";
+import bitoinCrystalPic from './assets/bitcoin_in_crystal.png';
+import ethereumCrystalPic from './assets/ethereum_crystal_2.png';
+import pyramidCristalPic from './assets/crystal_4.png';
+import { useIsDesktopOrSmaller } from '../../../components/resize-hooks/screens';
 
 export const WhatIsEonianParallax = () => {
   const isSmallScreen = useIsDesktopOrSmaller();
 
   return (
-    <ParallaxContainer className={styles.parallaxContainer} fadeIn={{
-      delay: 0.1,
-    }}>
+    <ParallaxContainer
+      className={styles.parallaxContainer}
+      fadeIn={{
+        delay: 0.1,
+      }}
+    >
       <ParallaxBlock
         x={!isSmallScreen ? -0.1 : 0.3}
         y={!isSmallScreen ? 0.2 : -0.8}
@@ -40,20 +43,12 @@ export const WhatIsEonianParallax = () => {
         <EthereumImage />
       </ParallaxBlock>
 
-      <ParallaxBlock
-        x={0.6}
-        y={1.05}
-        scale={0.09}
-        className={styles.pyramidBox}
-        sizeLimits={{ min: 150, max: 180 }}
-      >
+      <ParallaxBlock x={0.6} y={1.05} scale={0.09} className={styles.pyramidBox} sizeLimits={{ min: 150, max: 180 }}>
         <PyramidImage />
       </ParallaxBlock>
-
     </ParallaxContainer>
   );
-}
-
+};
 
 export default WhatIsEonianParallax;
 
@@ -66,7 +61,7 @@ export const BitcoinImage = () => (
     </div>
     <Image src={bitoinCrystalPic} alt="Bitcoin crystal" placeholder="blur" />
   </div>
-)
+);
 
 export const EthereumImage = () => (
   <div className={clsx(styles.imageContainer, styles.ethereumImageContainer)}>
@@ -76,7 +71,7 @@ export const EthereumImage = () => (
     </div>
     <Image src={ethereumCrystalPic} alt="Ethereum crystal" placeholder="blur" />
   </div>
-)
+);
 
 export const PyramidImage = () => (
   <div className={clsx(styles.imageContainer, styles.crystalPyramidImageContainer)}>
@@ -88,4 +83,4 @@ export const PyramidImage = () => (
     </div>
     <Image src={pyramidCristalPic} alt="Crystal" placeholder="blur" />
   </div>
-)
+);

@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
 
 interface Props {
   width: number;
@@ -26,10 +26,11 @@ export default class RadialEffectPainter extends PureComponent<Props> {
 
   private init() {
     const { current: canvas } = this.ref;
-    if (!canvas) 
+    if (!canvas) {
       return;
-    
-    this.ctx = canvas.getContext("2d")!;
+    }
+
+    this.ctx = canvas.getContext('2d')!;
 
     this.renderContext();
   }
@@ -67,8 +68,8 @@ export default class RadialEffectPainter extends PureComponent<Props> {
         x2: x + r,
         y2: y,
         colorStops: [
-          { stop: 0, color: "hsl(341, 67%, 50%)" },
-          { stop: 1, color: "hsl(270, 35%, 50%)" },
+          { stop: 0, color: 'hsl(341, 67%, 50%)' },
+          { stop: 1, color: 'hsl(270, 35%, 50%)' },
         ],
       },
       {
@@ -79,8 +80,8 @@ export default class RadialEffectPainter extends PureComponent<Props> {
         x2: x,
         y2: y + r,
         colorStops: [
-          { stop: 0, color: "hsl(270, 35%, 50%)" },
-          { stop: 1, color: "hsl(229, 80%, 66%)" },
+          { stop: 0, color: 'hsl(270, 35%, 50%)' },
+          { stop: 1, color: 'hsl(229, 80%, 66%)' },
         ],
       },
       {
@@ -91,8 +92,8 @@ export default class RadialEffectPainter extends PureComponent<Props> {
         x2: x - r,
         y2: y,
         colorStops: [
-          { stop: 0, color: "hsl(229, 80%, 66%)" },
-          { stop: 1, color: "hsl(256, 77%, 60%)" },
+          { stop: 0, color: 'hsl(229, 80%, 66%)' },
+          { stop: 1, color: 'hsl(256, 77%, 60%)' },
         ],
       },
       {
@@ -103,8 +104,8 @@ export default class RadialEffectPainter extends PureComponent<Props> {
         x2: x,
         y2: y - r,
         colorStops: [
-          { stop: 0, color: "hsl(256, 77%, 60%)" },
-          { stop: 1, color: "hsla(341, 67%, 50%)" },
+          { stop: 0, color: 'hsl(256, 77%, 60%)' },
+          { stop: 1, color: 'hsla(341, 67%, 50%)' },
         ],
       },
     ];

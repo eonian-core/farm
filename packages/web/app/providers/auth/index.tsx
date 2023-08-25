@@ -1,2 +1,2 @@
-export * from './auth-provider'
-export * from './logout'
+export * from './auth-provider';
+export * from './logout';

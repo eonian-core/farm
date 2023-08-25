@@ -1,11 +1,8 @@
-import React from "react";
-import { useAppSelector } from "../../store/hooks";
-import {
-  formatNumberCompactWithThreshold,
-  FractionPartView,
-} from "../../shared/humanize";
-import { Tooltip } from "@nextui-org/react";
-import { toStringNumberFromDecimals } from "../../shared";
+import React from 'react';
+import { useAppSelector } from '../../store/hooks';
+import { formatNumberCompactWithThreshold, FractionPartView } from '../../shared/humanize';
+import { Tooltip } from '@nextui-org/react';
+import { toStringNumberFromDecimals } from '../../shared';
 
 interface Props {
   value: bigint;

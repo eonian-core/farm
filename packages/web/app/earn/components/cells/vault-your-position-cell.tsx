@@ -1,15 +1,15 @@
-import { Loading as NextUILoading, Tooltip } from "@nextui-org/react";
-import React from "react";
-import { Vault } from "../../../api";
-import Button from "../../../components/button/button";
-import IconWarning from "../../../components/icons/icon-warning";
-import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
-import { WalletStatus } from "../../../providers/wallet/wrappers/types";
-import { toUSDValue } from "../../../shared";
-import { useAppSelector } from "../../../store/hooks";
-import { CellWithCurrency } from "./cell-with-currency";
+import { Loading as NextUILoading, Tooltip } from '@nextui-org/react';
+import React from 'react';
+import { Vault } from '../../../api';
+import Button from '../../../components/button/button';
+import IconWarning from '../../../components/icons/icon-warning';
+import { useWalletWrapperContext } from '../../../providers/wallet/wallet-wrapper-provider';
+import { WalletStatus } from '../../../providers/wallet/wrappers/types';
+import { toUSDValue } from '../../../shared';
+import { useAppSelector } from '../../../store/hooks';
+import { CellWithCurrency } from './cell-with-currency';
 
-import styles from "./vault-your-position-cell.module.scss";
+import styles from './vault-your-position-cell.module.scss';
 
 interface Props {
   vault: Vault;
@@ -17,11 +17,9 @@ interface Props {
 
 export const VaultYouPositionCell: React.FC<Props> = ({ vault }) => {
   const { status } = useWalletWrapperContext();
-  const { isLoading: isPositionLoading, errors } = useAppSelector(
-    (state) => state.positionInfo
-  );
+  const { isLoading: isPositionLoading, errors } = useAppSelector((state) => state.positionInfo);
 
-  const error = typeof errors === "string" ? errors : errors[vault.address];
+  const error = typeof errors === 'string' ? errors : errors[vault.address];
   const isWalletConnecting = status === WalletStatus.CONNECTING;
   const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
 
@@ -62,7 +60,7 @@ function ConnectButton() {
   const handleClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     connect();
-  }
+  };
 
   return (
     <Button bordered size="sm" onClick={handleClick}>

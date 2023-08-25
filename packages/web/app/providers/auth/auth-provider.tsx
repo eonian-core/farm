@@ -1,10 +1,10 @@
-"use client";
+'use client';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 import { useEffect } from 'react';
 
-export const isInBrowser = () => typeof window !== "undefined";
-export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === "true" && isInBrowser();
+export const isInBrowser = () => typeof window !== 'undefined';
+export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === 'true' && isInBrowser();
 
 /** Wraper for authorisation provider, which enables authentication based on environment */
 export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element => {
@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
       domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
       clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
       authorizationParams={{
-        redirect_uri: window.location.protocol + "//" + window.location.host,
+        redirect_uri: window.location.protocol + '//' + window.location.host,
         audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE!,
       }}
       cacheLocation="localstorage"
@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }: React.PropsWithChildren): JSX.Element
   );
 };
 
-
 /** Allow open page only for authenticated users */
 export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren): JSX.Element => {
   useLoginWhenNotAuthenticated();
@@ -40,16 +39,14 @@ export const AuthenticateOnOpen = ({ children }: React.PropsWithChildren): JSX.E
   // it breaks web3 onboarding, and then imposible to connect any wallet
 
   return <>{children}</>;
-}
+};
 
 export const useLoginWhenNotAuthenticated = () => {
   const { isAuthenticated, isLoading, loginWithRedirect } = useAuth0();
 
   useEffect(() => {
-
-    if(!isLoading && !isAuthenticated) 
+    if (!isLoading && !isAuthenticated) {
       loginWithRedirect();
-    
-
-  }, [isAuthenticated, isLoading, loginWithRedirect])
-}
+    }
+  }, [isAuthenticated, isLoading, loginWithRedirect]);
+};

@@ -1,23 +1,23 @@
-import { usePathname } from "next/navigation";
-import React from "react";
-import { useOnResizeEffect } from "../resize-hooks/useOnResizeEffect";
-import styles from "./footer-radial.module.scss";
-import RadialEffectPainter from "./radial-effect-painter";
+import { usePathname } from 'next/navigation';
+import React from 'react';
+import { useOnResizeEffect } from '../resize-hooks/useOnResizeEffect';
+import styles from './footer-radial.module.scss';
+import RadialEffectPainter from './radial-effect-painter';
 
 interface FooterRadialProps {
-  radius?: number
+  radius?: number;
 }
 
 // Show readial only in landing page
 export const LandingOnlyRadial: React.FC<FooterRadialProps> = (props) => {
   const pathname = usePathname();
 
-  if (pathname !== "/") 
+  if (pathname !== '/') {
     return null;
-  
+  }
 
-  return <FooterRadial {...props} />
-}
+  return <FooterRadial {...props} />;
+};
 
 export default LandingOnlyRadial;
 
@@ -40,5 +40,3 @@ export const FooterRadial: React.FC<FooterRadialProps> = ({ radius = 60 }) => {
     </div>
   );
 };
-
-

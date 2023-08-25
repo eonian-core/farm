@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface NavigationSlice {
   pageLoading: string | null;
 }
 
 const initialState: NavigationSlice = {
-  pageLoading:null,
+  pageLoading: null,
 };
 
 const navigationSlice = createSlice({
-  name: "locale",
+  name: 'locale',
   initialState,
   reducers: {
     setPageLoading: (state, action: PayloadAction<string | null>) => {

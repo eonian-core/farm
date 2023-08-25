@@ -1,27 +1,21 @@
-import React from "react";
-import { ethers } from "ethers";
+import React from 'react';
+import { ethers } from 'ethers';
 
-import { useWalletWrapperContext } from "../../../../../providers/wallet/wallet-wrapper-provider";
-import { useAppDispatch } from "../../../../../store/hooks";
+import { useWalletWrapperContext } from '../../../../../providers/wallet/wallet-wrapper-provider';
+import { useAppDispatch } from '../../../../../store/hooks';
 import {
   setTransactionStarted,
   goToNextActionStep,
   failVaultAction,
-} from "../../../../../store/slices/vaultActionSlice";
+} from '../../../../../store/slices/vaultActionSlice';
 
-type FN<T, U extends unknown> = (
-  signer: ethers.JsonRpcSigner,
-  params: U
-) => Promise<() => Promise<T>>;
+type FN<T, U extends unknown> = (signer: ethers.JsonRpcSigner, params: U) => Promise<() => Promise<T>>;
 
 export function useWriteTransactionSender() {
   const { provider } = useWalletWrapperContext();
   const dispatch = useAppDispatch();
 
-  const send = async <T, U extends unknown>(
-    fn: FN<T, U>,
-    params: U
-  ): Promise<T> => {
+  const send = async <T, U extends unknown>(fn: FN<T, U>, params: U): Promise<T> => {
     let result: T;
     try {
       const signer = await provider!.getSigner();

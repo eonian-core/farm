@@ -1,16 +1,18 @@
-import { redirect } from "next/navigation";
-import { getClient, getVaults, Vault } from "../api";
-import { showEarn } from "../features";
-import { ChainId } from "../providers/wallet/wrappers/helpers";
-import { supportedChainsIds } from "../web3-onboard";
-import { VaultList, VaultsByChain } from "./components";
+import { redirect } from 'next/navigation';
+import { getClient, getVaults, Vault } from '../api';
+import { showEarn } from '../features';
+import { ChainId } from '../providers/wallet/wrappers/helpers';
+import { supportedChainsIds } from '../web3-onboard';
+import { VaultList, VaultsByChain } from './components';
 
-import styles from "./page.module.scss";
+import styles from './page.module.scss';
 
 export const revalidate = 30;
 
 export default async function Page() {
-  if (!showEarn) redirect("/");
+  if (!showEarn) {
+    redirect('/');
+  }
 
   const vaultsByChain = await fetchVaults();
   return (

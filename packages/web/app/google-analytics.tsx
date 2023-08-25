@@ -3,13 +3,13 @@
 // and it uses next/router instead of next/navigation, which not working in `app/`
 // next/router used for tracking page activity, which already covered by google analytics
 // possible to remove this component when https://github.com/MauricioRobayo/nextjs-google-analytics/issues/304 will be fixed
-import React from "react";
-import Script, { ScriptProps } from "next/script"; // not allow lazy load component
+import React from 'react';
+import Script, { ScriptProps } from 'next/script'; // not allow lazy load component
 
 type GoogleAnalyticsProps = {
   gaMeasurementId?: string;
   gtagUrl?: string;
-  strategy?: ScriptProps["strategy"];
+  strategy?: ScriptProps['strategy'];
   debugMode?: boolean;
 };
 
@@ -26,15 +26,14 @@ type WithIgnoreHashChange = GoogleAnalyticsProps & {
 export default function GoogleAnalytics({
   debugMode = false,
   gaMeasurementId,
-  gtagUrl = "https://www.googletagmanager.com/gtag/js",
-  strategy = "afterInteractive"
+  gtagUrl = 'https://www.googletagmanager.com/gtag/js',
+  strategy = 'afterInteractive',
 }: WithPageView | WithIgnoreHashChange): JSX.Element | null {
-  const _gaMeasurementId =
-    process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? gaMeasurementId;
+  const _gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? gaMeasurementId;
 
-  if (!_gaMeasurementId) 
+  if (!_gaMeasurementId) {
     return null;
-  
+  }
 
   return (
     <>
@@ -46,7 +45,7 @@ export default function GoogleAnalytics({
             gtag('js', new Date());
             gtag('config', '${_gaMeasurementId}', {
               page_path: window.location.pathname,
-              ${debugMode ? `debug_mode: ${debugMode},` : ""}
+              ${debugMode ? `debug_mode: ${debugMode},` : ''}
             });
           `}
       </Script>

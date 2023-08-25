@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { FormElement, Input, InputProps, Loading } from "@nextui-org/react";
-import React from "react";
+import { FormElement, Input, InputProps, Loading } from '@nextui-org/react';
+import React from 'react';
 
-import styles from "./form-input.module.scss";
-import IconCoin from "../../../components/icons/icon-coin";
-import CompactNumber from "../../../components/compact-number/compact-number";
-import { FractionPartView } from "../../../shared";
+import styles from './form-input.module.scss';
+import IconCoin from '../../../components/icons/icon-coin';
+import CompactNumber from '../../../components/compact-number/compact-number';
+import { FractionPartView } from '../../../shared';
 
-interface Props extends Partial<Omit<InputProps, "value" | "onChange">> {
+interface Props extends Partial<Omit<InputProps, 'value' | 'onChange'>> {
   value: string;
   balance: bigint;
   decimals: number;
@@ -40,17 +40,10 @@ const FormInput: React.FC<Props> = ({
       color="primary"
       placeholder="0"
       size="xl"
-      contentLeft={
-        <IconCoin symbol={assetSymbol} width="1.5em" height="1.5em" />
-      }
+      contentLeft={<IconCoin symbol={assetSymbol} width="1.5em" height="1.5em" />}
       contentRightStyling={false}
       contentRight={
-        <InputRightContent
-          balance={balance}
-          isLoading={isLoading}
-          decimals={decimals}
-          assetSymbol={assetSymbol}
-        />
+        <InputRightContent balance={balance} isLoading={isLoading} decimals={decimals} assetSymbol={assetSymbol} />
       }
       onChange={handleInputValueChange}
       disabled={disabled || isLoading}
@@ -64,10 +57,11 @@ function InputRightContent({
   isLoading,
   decimals,
   assetSymbol,
-}: Pick<Props, "balance" | "isLoading" | "decimals" | "assetSymbol">) {
-  if (isLoading) 
+}: Pick<Props, 'balance' | 'isLoading' | 'decimals' | 'assetSymbol'>) {
+  if (isLoading) {
     return <Loading className={styles.loading} size="sm" />;
-  
+  }
+
   return (
     <span className={styles.balance}>
       <CompactNumber

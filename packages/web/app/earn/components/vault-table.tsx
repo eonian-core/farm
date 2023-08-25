@@ -1,12 +1,9 @@
-import { Table } from "@nextui-org/react";
-import clsx from "clsx";
-import React from "react";
-import { Vault } from "../../api";
-import { InternalLink } from "../../components/links/links";
-import {
-  ScreenName,
-  useScreenName,
-} from "../../components/resize-hooks/screens";
+import { Table } from '@nextui-org/react';
+import clsx from 'clsx';
+import React from 'react';
+import { Vault } from '../../api';
+import { InternalLink } from '../../components/links/links';
+import { ScreenName, useScreenName } from '../../components/resize-hooks/screens';
 import {
   VaultAPYCell,
   VaultNameCell,
@@ -14,9 +11,9 @@ import {
   VaultTVLCell,
   VaultYouPositionCell,
   VaultTagsCell,
-} from "./cells";
+} from './cells';
 
-import styles from "./vault-table.module.scss";
+import styles from './vault-table.module.scss';
 
 interface Props {
   chainName: string;
@@ -26,36 +23,36 @@ interface Props {
 interface Column {
   name: string;
   render: (vault: Vault, index: number) => React.ReactNode;
-  align: "left" | "center";
+  align: 'left' | 'center';
   moveLinkBack?: boolean;
 }
 
 const COLUMNS: Column[] = [
   {
-    name: "#",
+    name: '#',
     render: (vault, index) => <VaultIndexCell index={index} />,
-    align: "left",
+    align: 'left',
   },
   {
-    name: "Vault",
+    name: 'Vault',
     render: (vault) => <VaultNameCell vault={vault} />,
-    align: "left",
+    align: 'left',
   },
   {
-    name: "APY",
+    name: 'APY',
     render: (vault) => <VaultAPYCell vault={vault} />,
-    align: "center",
+    align: 'center',
   },
   {
-    name: "Tags",
+    name: 'Tags',
     render: (vault) => <VaultTagsCell vault={vault} />,
-    align: "center",
+    align: 'center',
     moveLinkBack: true,
   },
   {
-    name: "Your position",
+    name: 'Your position',
     render: (vault) => <VaultYouPositionCell vault={vault} />,
-    align: "center",
+    align: 'center',
     moveLinkBack: true,
   },
 ];
@@ -77,12 +74,7 @@ export function VaultTable({ vaults, chainName }: Props) {
         </thead>
         <tbody>
           {vaults.map((vault, index) => (
-            <VaultRow
-              key={vault.address}
-              vault={vault}
-              index={index}
-              columns={columns}
-            />
+            <VaultRow key={vault.address} vault={vault} index={index} columns={columns} />
           ))}
         </tbody>
       </table>
@@ -130,12 +122,12 @@ function clickLinkUnderneath(event: React.MouseEvent) {
   const element = event.currentTarget as HTMLElement;
   const display = window.getComputedStyle(element).display;
 
-  element.style.display = "none";
+  element.style.display = 'none';
   const { clientX: x, clientY: y } = event;
   const elementAtPoint = document.elementFromPoint(x, y);
   element.style.display = display;
 
-  if (elementAtPoint && elementAtPoint.tagName.toLowerCase() === "a") {
+  if (elementAtPoint && elementAtPoint.tagName.toLowerCase() === 'a') {
     const linkElement = elementAtPoint as HTMLLinkElement;
     linkElement.click();
   }

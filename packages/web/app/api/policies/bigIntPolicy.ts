@@ -1,10 +1,11 @@
-import { FieldPolicy } from "@apollo/client";
+import { FieldPolicy } from '@apollo/client';
 
 export const bigIntPolicy: FieldPolicy<any, bigint> = {
   read: (value) => {
-    if (typeof value === 'bigint') 
+    if (typeof value === 'bigint') {
       return value;
-    
+    }
+
     return BigInt(value);
   },
 };

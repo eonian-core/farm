@@ -1,5 +1,5 @@
 // icon:infinity | CSS Icons https://css.gg/ | Astrit
-import * as React from "react";
+import * as React from 'react';
 
 function Logo(props: React.SVGProps<SVGSVGElement>) {
   return (

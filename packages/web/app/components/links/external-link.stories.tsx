@@ -3,98 +3,98 @@ import IconClose from '../icons/icon-close';
 import ExternalLink from './external-link';
 
 const meta: Meta<typeof ExternalLink> = {
-    title: 'Components/Links/ExternalLink',
-    component: ExternalLink,
-    tags: ['autodocs'],
-    decorators: [
-        (Story) => (
-            <div className="story-wrapper">
-                <Story />
-                <style global jsx>{`
-                .story-wrapper {
-                    width: 100%;
-                    height: 100%;
-                
-                    max-width: var(--max-width);
-                    padding: 0 var(--width-gap);
-                }
-          `}</style>
-            </div>
-        ),
-    ],
-}
+  title: 'Components/Links/ExternalLink',
+  component: ExternalLink,
+  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div className="story-wrapper">
+        <Story />
+        <style global jsx>{`
+          .story-wrapper {
+            width: 100%;
+            height: 100%;
+
+            max-width: var(--max-width);
+            padding: 0 var(--width-gap);
+          }
+        `}</style>
+      </div>
+    ),
+  ],
+};
 
 export default meta;
 type Story = StoryObj<typeof ExternalLink>;
 
 export const Default: Story = {
-    args: {
-        href: 'https://google.com',
-        children: <span>It is simple link.</span>
-    }
-}
+  args: {
+    href: 'https://google.com',
+    children: <span>It is simple link.</span>,
+  },
+};
 
 export const Hover: Story = {
-    parameters: { pseudo: { hover: true } },
-    args: {
-        href: 'https://google.com',
-        children: <span>It is simple link.</span>
-    }
-}
+  parameters: { pseudo: { hover: true } },
+  args: {
+    href: 'https://google.com',
+    children: <span>It is simple link.</span>,
+  },
+};
 
 export const Active: Story = {
-    parameters: { pseudo: { active: true } },
-    args: {
-        href: 'https://google.com',
-        children: <span>It is simple link.</span>
-    }
-}
+  parameters: { pseudo: { active: true } },
+  args: {
+    href: 'https://google.com',
+    children: <span>It is simple link.</span>,
+  },
+};
 
 export const WithIcon: Story = {
-    args: {
-        href: 'https://google.com',
-        children: <span>It is simple link.</span>,
-        icon: <IconClose />
-    }
-}
+  args: {
+    href: 'https://google.com',
+    children: <span>It is simple link.</span>,
+    icon: <IconClose />,
+  },
+};
 
 export const WithIconHover: Story = {
-    parameters: { pseudo: { hover: true } },
-    args: {
-        href: 'https://google.com',
-        children: <span>It is simple link.</span>,
-        icon: <IconClose />
-    }
-}
+  parameters: { pseudo: { hover: true } },
+  args: {
+    href: 'https://google.com',
+    children: <span>It is simple link.</span>,
+    icon: <IconClose />,
+  },
+};
 
 export const WithIconActive: Story = {
-    parameters: { pseudo: { active: true } },
-    args: {
-        href: 'https://google.com',
-        children: <span>It is simple link.</span>,
-        icon: <IconClose />
-    }
-}
+  parameters: { pseudo: { active: true } },
+  args: {
+    href: 'https://google.com',
+    children: <span>It is simple link.</span>,
+    icon: <IconClose />,
+  },
+};
 
 export const OnlyIcon: Story = {
-    args: {
-        href: 'https://google.com',
-        icon: <IconClose />
-    }
-}
+  args: {
+    href: 'https://google.com',
+    icon: <IconClose />,
+  },
+};
 
 export const OnlyIconHover: Story = {
-    parameters: { pseudo: { hover: true } },
-    args: {
-        href: 'https://google.com',
-        icon: <IconClose />
-    }
-}
+  parameters: { pseudo: { hover: true } },
+  args: {
+    href: 'https://google.com',
+    icon: <IconClose />,
+  },
+};
 
 export const OnlyIconActive: Story = {
-    parameters: { pseudo: { active: true } },
-    args: {
-        href: 'https://google.com',
-        icon: <IconClose />
-    }
-}
+  parameters: { pseudo: { active: true } },
+  args: {
+    href: 'https://google.com',
+    icon: <IconClose />,
+  },
+};

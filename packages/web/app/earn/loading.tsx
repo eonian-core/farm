@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Loading as LoadingIndicator } from "@nextui-org/react";
+import { Loading as LoadingIndicator } from '@nextui-org/react';
 
-import styles from "./layout.module.scss";
+import styles from './layout.module.scss';
 
 export default function Loading() {
   return (

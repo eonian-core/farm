@@ -1,6 +1,6 @@
-import { ApolloClient, gql } from "@apollo/client";
+import { ApolloClient, gql } from '@apollo/client';
 
-import { GetVaultsQuery, GetVaultsSymbolsQuery } from "../gql/graphql";
+import { GetVaultsQuery, GetVaultsSymbolsQuery } from '../gql/graphql';
 
 const GetVaults = gql`
   query GetVaults {
@@ -48,7 +48,6 @@ export const getVaults = async (client: ApolloClient<any>) => {
   });
   return { data, error };
 };
-
 
 /**
  * Get list of symbols of the Vaults

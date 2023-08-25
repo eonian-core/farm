@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import React, { PureComponent } from "react";
+import React, { PureComponent } from 'react';
 import {
   Svg,
   SVG,
@@ -13,15 +13,12 @@ import {
   Text,
   Point as SVGPoint,
   Runner,
-} from "@svgdotjs/svg.js";
-import {
-  DESKTOP_SCREEN,
-  TABLET_SCREEN,
-} from "../../../components/resize-hooks/screens";
-import styles from "./flow-diagram.module.scss";
-import { HIW_ANIMATION_DURATION } from "./constants";
-import debounce from "lodash.debounce";
-import { DebouncedFunc } from "lodash";
+} from '@svgdotjs/svg.js';
+import { DESKTOP_SCREEN, TABLET_SCREEN } from '../../../components/resize-hooks/screens';
+import styles from './flow-diagram.module.scss';
+import { HIW_ANIMATION_DURATION } from './constants';
+import debounce from 'lodash.debounce';
+import { DebouncedFunc } from 'lodash';
 
 interface Point {
   x: number;
@@ -47,66 +44,62 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private lineWidth = 0.165;
 
-  private colors = [
-    "hsl(341, 67%, 50%)",
-    "hsl(229, 80%, 66%)",
-    "hsl(256, 77%, 60%)",
-  ];
+  private colors = ['hsl(341, 67%, 50%)', 'hsl(229, 80%, 66%)', 'hsl(256, 77%, 60%)'];
 
   private params = {
     diagram: {
       attributes: {
-        "stroke-width": this.lineWidth,
-        "stroke-linecap": "round",
-        stroke: "#fff",
-        fill: "transparent",
+        'stroke-width': this.lineWidth,
+        'stroke-linecap': 'round',
+        stroke: '#fff',
+        fill: 'transparent',
       },
     },
     arrows: {
       scale: 0.75,
       attributes: {
-        fill: "#fff",
+        fill: '#fff',
       },
     },
     edges: {
       length: 5,
       attributes: {
-        "stroke-width": this.lineWidth,
-        "stroke-dasharray": "0.25, 0.35",
-        stroke: "#fff",
+        'stroke-width': this.lineWidth,
+        'stroke-dasharray': '0.25, 0.35',
+        stroke: '#fff',
       },
     },
     points: {
       link: {
         attributes: {
-          "stroke-width": this.lineWidth,
-          "stroke-dasharray": "0.5, 0.85",
-          "stroke-opacity": 0.0,
+          'stroke-width': this.lineWidth,
+          'stroke-dasharray': '0.5, 0.85',
+          'stroke-opacity': 0.0,
           opacity: 0.55,
-          fill: "none",
+          fill: 'none',
         },
       },
       dot: {
         size: this.lineWidth * 1.5,
         attributes: {
-          fill: "#fff",
+          fill: '#fff',
         },
       },
       circle: {
         size: 1.5,
         attributes: {
-          fill: "var(--color-background-start)",
-          stroke: "#f06",
-          "stroke-width": this.lineWidth,
+          fill: 'var(--color-background-start)',
+          stroke: '#f06',
+          'stroke-width': this.lineWidth,
         },
       },
       text: {
         attributes: {
-          fill: "var(--color-text-300)",
-          style: "text-transform: uppercase",
-          "font-weight": "var(--font-semibold)",
-          "text-anchor": "middle",
-          "dominant-baseline": "central",
+          fill: 'var(--color-text-300)',
+          style: 'text-transform: uppercase',
+          'font-weight': 'var(--font-semibold)',
+          'text-anchor': 'middle',
+          'dominant-baseline': 'central',
         },
       },
     },
@@ -142,7 +135,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     setTimeout(this.initSliderAnimationObserver, 100);
 
-    window.addEventListener("resize", this.handleResize);
+    window.addEventListener('resize', this.handleResize);
     this.handleResize();
   }
 
@@ -153,7 +146,7 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   componentWillUnmount(): void {
     this.disposeSliderAnimationObserver();
 
-    window.removeEventListener("resize", this.handleResize);
+    window.removeEventListener('resize', this.handleResize);
 
     this.resetSVG();
   }
@@ -163,35 +156,34 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private initSliderAnimationObserver = () => {
-    const slider = document.getElementById("diagram-slider");
-    slider?.addEventListener("transitionstart", this.handleTransition);
-    slider?.addEventListener("transitionend", this.handleTransition);
+    const slider = document.getElementById('diagram-slider');
+    slider?.addEventListener('transitionstart', this.handleTransition);
+    slider?.addEventListener('transitionend', this.handleTransition);
   };
 
   private disposeSliderAnimationObserver() {
     this.debouncedRedrawLink.cancel();
 
-    const slider = document.getElementById("diagram-slider");
-    slider?.removeEventListener("transitionstart", this.handleTransition);
-    slider?.removeEventListener("transitionend", this.handleTransition);
+    const slider = document.getElementById('diagram-slider');
+    slider?.removeEventListener('transitionstart', this.handleTransition);
+    slider?.removeEventListener('transitionend', this.handleTransition);
   }
 
   private handleTransition = (event: TransitionEvent) => {
     const { type, propertyName } = event;
-    if (["transform", "left"].indexOf(propertyName) < 0) 
+    if (['transform', 'left'].indexOf(propertyName) < 0) {
       return;
-    
+    }
 
-    type === "transitionstart"
-      ? this.debouncedRedrawLink(null)
-      : this.debouncedRedrawLink(this.activeStepPoint);
+    type === 'transitionstart' ? this.debouncedRedrawLink(null) : this.debouncedRedrawLink(this.activeStepPoint);
   };
 
   private handleResize = () => {
     const { current: container } = this.ref;
-    if (!container) 
+    if (!container) {
       return;
-    
+    }
+
     const { width } = container.getBoundingClientRect();
     const { isMobileDisplay, isDesktopDisplay } = this.state;
 
@@ -210,13 +202,13 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
   private drawSVG() {
     const { current: container } = this.ref;
-    if (!container) 
+    if (!container) {
       return;
-    
+    }
 
     this.resetSVG();
 
-    this.svg.addTo(container).size("100%", "100%");
+    this.svg.addTo(container).size('100%', '100%');
 
     this.activeStepPointLinkGroup = this.svg.group();
 
@@ -250,20 +242,17 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     group.path(`M ${x} ${y} h ${edges.length}`).attr(edges.attributes);
   }
 
-  private drawDiagram(
-    group?: G,
-    attributes = this.params.diagram.attributes
-  ): G {
+  private drawDiagram(group?: G, attributes = this.params.diagram.attributes): G {
     const paths = this.state.isMobileDisplay
       ? [
-          "M 0 -16 Q 4 -15 7 -12 q 5 6 1 15",
-          "M -8 -3 Q -12 7 -7 12 Q -4 15 0 16",
-          "M 8 3 A 1 1 60 0 1 -8 -3 A 1 1 60 0 1 8 3",
+          'M 0 -16 Q 4 -15 7 -12 q 5 6 1 15',
+          'M -8 -3 Q -12 7 -7 12 Q -4 15 0 16',
+          'M 8 3 A 1 1 60 0 1 -8 -3 A 1 1 60 0 1 8 3',
         ]
       : [
-          "m 0 10 Q 10 10 13 1 q 3 -9 12 -13 Q 35 -16 47 -7",
-          "M 35 8 Q 46 16 56 12 Q 65 9 68 -1 Q 71 -10 81 -10",
-          "M 47 -7 a 1 1 0 0 1 -12 15 A 1 1 0 0 1 47 -7",
+          'm 0 10 Q 10 10 13 1 q 3 -9 12 -13 Q 35 -16 47 -7',
+          'M 35 8 Q 46 16 56 12 Q 65 9 68 -1 Q 71 -10 81 -10',
+          'M 47 -7 a 1 1 0 0 1 -12 15 A 1 1 0 0 1 47 -7',
         ];
 
     const entryPath = paths[0];
@@ -272,13 +261,13 @@ export default class FlowDiagram extends PureComponent<Props, State> {
 
     group = group ?? this.svg.group();
 
-    const entryPathGradient = this.svg.gradient("linear", (add) => {
+    const entryPathGradient = this.svg.gradient('linear', (add) => {
       add.stop(0.65, this.colors[0]);
       add.stop(0.85, this.colors[2]);
       add.stop(1, this.colors[2]);
     });
     group!.path(entryPath).attr({ ...attributes, stroke: entryPathGradient });
-    const exitPathGradient = this.svg.gradient("linear", (add) => {
+    const exitPathGradient = this.svg.gradient('linear', (add) => {
       add.stop(0.15, this.colors[2]);
       add.stop(0.35, this.colors[1]);
       add.stop(1, this.colors[1]);
@@ -293,14 +282,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const createArrow = (marker: Marker, color: string) => {
       const { arrows } = this.params;
       marker
-        .path("M 0 1 L 8 5 L 0 9 L 1 5 L 0 1")
+        .path('M 0 1 L 8 5 L 0 9 L 1 5 L 0 1')
         .attr({
           ...arrows.attributes,
-          fill: "var(--color-background-start)",
+          fill: 'var(--color-background-start)',
         })
         .scale(arrows.scale);
       marker
-        .path("M 0 1 L 10 5 L 0 9 L 3 5 L 0 1")
+        .path('M 0 1 L 10 5 L 0 9 L 3 5 L 0 1')
         .attr({
           ...arrows.attributes,
           fill: color,
@@ -309,22 +298,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     };
 
     const firstPath = group.get(0) as Path;
-    firstPath.marker("mid", 10, 10, (marker) =>
-      createArrow(marker, this.colors[0])
-    );
+    firstPath.marker('mid', 10, 10, (marker) => createArrow(marker, this.colors[0]));
 
     const lastPath = group.get(1) as Path;
-    lastPath.marker("mid", 10, 10, (marker) =>
-      createArrow(marker, this.colors[1])
-    );
+    lastPath.marker('mid', 10, 10, (marker) => createArrow(marker, this.colors[1]));
 
     const circle = group.get(2) as Path;
-    circle.marker("start", 10, 10, (marker) =>
-      createArrow(marker, this.colors[2])
-    );
-    circle.marker("mid", 10, 10, (marker) =>
-      createArrow(marker, this.colors[2])
-    );
+    circle.marker('start', 10, 10, (marker) => createArrow(marker, this.colors[2]));
+    circle.marker('mid', 10, 10, (marker) => createArrow(marker, this.colors[2]));
   }
 
   private drawPoints(group: G) {
@@ -396,45 +377,43 @@ export default class FlowDiagram extends PureComponent<Props, State> {
       .attr({ ...circleAttributes, stroke: color });
 
     const dotOffset = pointOffset + circleSize / 2 - dotSize / 2;
-    const dotElement = pointGroup
-      .circle(dotSize)
-      .move(dotOffset, dotOffset)
-      .fill(dotAttributes.fill);
+    const dotElement = pointGroup.circle(dotSize).move(dotOffset, dotOffset).fill(dotAttributes.fill);
 
     const { x, y } = position;
     const { x: tX, y: tY } = textOffset;
 
     const isVShifted = tX === 0;
     const offsetFactor = isVShifted ? 2 : 1.75;
-    const textAnchor = isVShifted ? "middle" : tX > 0 ? "start" : "end";
+    const textAnchor = isVShifted ? 'middle' : tX > 0 ? 'start' : 'end';
     const textX = tX * offsetFactor;
     const textY = tY * offsetFactor;
     const textElement = pointGroup.text(label).attr({
       ...textAttributes,
-      "text-anchor": textAnchor,
-      "font-size": isDesktopDisplay ? fontSizeOnDesktop : 1,
+      'text-anchor': textAnchor,
+      'font-size': isDesktopDisplay ? fontSizeOnDesktop : 1,
       x: textX,
       y: textY,
     });
 
-    pointGroup.remember("pos", { x, y });
+    pointGroup.remember('pos', { x, y });
     pointGroup.id(`point-${label}`);
-    pointGroup.attr("data-color", color);
-    pointGroup.attr("data-label", label);
+    pointGroup.attr('data-color', color);
+    pointGroup.attr('data-label', label);
     pointGroup.translate(x, y);
-    pointGroup.css({ cursor: "pointer" });
+    pointGroup.css({ cursor: 'pointer' });
 
-    circleElement.remember("size", circleSize);
-    dotElement.remember("size", dotSize);
-    textElement.remember("pos", { x: textX, y: textY });
+    circleElement.remember('size', circleSize);
+    dotElement.remember('size', dotSize);
+    textElement.remember('pos', { x: textX, y: textY });
 
     this.setupPointAnimation(pointGroup);
 
     this.addMouseHoverEvent(pointGroup, (isHovered) => {
-      if (this.activeStepPoint === label) 
+      if (this.activeStepPoint === label) {
         return;
-      
-      pointGroup.remember(isHovered ? "runAnimation" : "reverseAnimation")();
+      }
+
+      pointGroup.remember(isHovered ? 'runAnimation' : 'reverseAnimation')();
     });
 
     pointGroup.click(() => {
@@ -443,16 +422,16 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   public selectPoint = (label: string) => {
-    if (this.activeStepPoint === label) 
+    if (this.activeStepPoint === label) {
       return;
-    
+    }
 
     const group = this.getPointGroup(label);
-    if (!group) 
+    if (!group) {
       return;
-    
+    }
 
-    this.activeStepPointGroup?.remember("reverseAnimation")?.();
+    this.activeStepPointGroup?.remember('reverseAnimation')?.();
 
     this.activeStepPointGroup = group;
     this.activeStepPoint = label;
@@ -460,43 +439,40 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const { onActiveStepChanged } = this.props;
     onActiveStepChanged?.(this.activeStepPoint!);
 
-    this.activeStepPointGroup.remember("runAnimation")();
+    this.activeStepPointGroup.remember('runAnimation')();
   };
 
   private createLinkToCard(label: string) {
     const cardElement = document.getElementById(label);
     const pointGroup = this.getPointGroup(label);
-    if (!cardElement || !pointGroup) 
+    if (!cardElement || !pointGroup) {
       return;
-    
+    }
+
     const { link } = this.params.points;
-    const color = pointGroup.attr("data-color");
+    const color = pointGroup.attr('data-color');
     const group = this.activeStepPointLinkGroup;
     const path = this.getPathForLink(pointGroup, cardElement);
     const pathElement = this.getPath(group)?.plot(path) ?? group.path(path);
     pathElement.attr({ ...link.attributes, stroke: color });
-    this.animate(pathElement).attr({ "stroke-opacity": 1.0 });
+    this.animate(pathElement).attr({ 'stroke-opacity': 1.0 });
   }
 
   private hideLinkToCard() {
     const pathElement = this.getPath(this.activeStepPointLinkGroup);
-    this.animate(pathElement)?.attr({ "stroke-opacity": 0.0 });
+    this.animate(pathElement)?.attr({ 'stroke-opacity': 0.0 });
   }
 
   private getPathForLink(from: G, to: HTMLElement) {
     const { current: container } = this.ref;
-    const {
-      x: containerX,
-      y: containerY,
-      height,
-    } = container!.getBoundingClientRect();
+    const { x: containerX, y: containerY, height } = container!.getBoundingClientRect();
     const { width, x: cardX, y: cardY } = to.getBoundingClientRect();
     const centerX = cardX - containerX + width / 2;
 
     const isOnBottom = cardY > containerY;
     const point = new SVGPoint(centerX, isOnBottom ? height : 0);
 
-    const pointPosition = from.remember("pos");
+    const pointPosition = from.remember('pos');
     const cardPosition = point.transform(this.wrapperGroup.ctm().inverse());
 
     const startX = isOnBottom ? cardPosition.x : pointPosition.x;
@@ -520,9 +496,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
         `A 1 1 0 0 1 ${endX} ${fY - step * 2}`,
         `L ${endX} ${endY}`,
       ];
-    } else if (endX === startX) 
+    } else if (endX === startX) {
       path = [`M ${startX} ${startY} V ${endY}`];
-     else {
+    } else {
       path = [
         `M ${startX} ${startY}`,
         `V ${fY}`,
@@ -540,22 +516,22 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     const dotElement = pointGroup.get(1) as Circle;
     const textElement = pointGroup.get(2) as Text;
 
-    const circleSize = circleElement.remember("size");
-    const dotSize = dotElement.remember("size");
-    const { x, y } = textElement.remember("pos");
+    const circleSize = circleElement.remember('size');
+    const dotSize = dotElement.remember('size');
+    const { x, y } = textElement.remember('pos');
 
     const timeline = new Timeline();
     circleElement.timeline(timeline);
     dotElement.timeline(timeline);
     textElement.timeline(timeline);
 
-    pointGroup.remember("runAnimation", () => {
+    pointGroup.remember('runAnimation', () => {
       this.animate(dotElement).size(dotSize * 1.5);
       this.animate(circleElement).size(circleSize * 1.5);
       this.animate(textElement).attr({ x: x * 1.25, y: y * 1.25 });
     });
 
-    pointGroup.remember("reverseAnimation", () => {
+    pointGroup.remember('reverseAnimation', () => {
       this.animate(dotElement).size(dotSize);
       this.animate(circleElement).size(circleSize);
       this.animate(textElement).attr({ x, y });
@@ -573,20 +549,16 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private resizeBox({ x, y, width, height }: DOMRect, margin: Point): DOMRect {
-    return new DOMRect(
-      x - margin.x / 2,
-      y - margin.y / 2,
-      width + margin.x,
-      height + margin.y
-    );
+    return new DOMRect(x - margin.x / 2, y - margin.y / 2, width + margin.x, height + margin.y);
   }
 
   private iteratePaths(group: G, callback: (path: Path) => void) {
     const paths = group.children();
     for (const path of paths) {
-      if (path.type !== "path") 
+      if (path.type !== 'path') {
         continue;
-      
+      }
+
       callback(path as Path);
     }
   }
@@ -611,9 +583,9 @@ export default class FlowDiagram extends PureComponent<Props, State> {
   }
 
   private addMouseHoverEvent(group: G, callback: (hover: boolean) => void) {
-    group.css({ "pointer-events": "bounding-box" } as any);
+    group.css({ 'pointer-events': 'bounding-box' } as any);
     const handler = (event: MouseEvent) => {
-      const isEnter = event.type === "mouseenter";
+      const isEnter = event.type === 'mouseenter';
       callback(isEnter);
     };
     group.mouseenter(handler);
@@ -628,14 +600,14 @@ export default class FlowDiagram extends PureComponent<Props, State> {
     element: T | null,
     duration = HIW_ANIMATION_DURATION,
     delay = 0
-  ): T & Runner => element?.animate(duration, delay, "absolute") as unknown as T &
-      Runner;
+  ): T & Runner => element?.animate(duration, delay, 'absolute') as unknown as T & Runner;
 
   private getPath(group: G): Path | null {
     const element = group.get(0);
-    if (element?.type === "path") 
+    if (element?.type === 'path') {
       return element as Path;
-    
+    }
+
     return null;
   }
 }

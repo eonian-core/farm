@@ -32,9 +32,5 @@ describe('SecOpsCodeReview component', () => {
     const imageCard = screen.getByRole('img', { name: 'robot picture' });
 
     expect(imageCard.closest('a')).toHaveAttribute('href', '/security/all-reviews');
-    
-    
   });
-
-
 });

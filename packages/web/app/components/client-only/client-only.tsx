@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export function ClientOnly({ children }: React.PropsWithChildren) {
   const [hasMounted, setHasMounted] = React.useState(false);
@@ -7,9 +7,9 @@ export function ClientOnly({ children }: React.PropsWithChildren) {
     setHasMounted(true);
   }, []);
 
-  if (!hasMounted) 
+  if (!hasMounted) {
     return null;
-  
+  }
 
   return <>{children}</>;
 }

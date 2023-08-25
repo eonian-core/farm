@@ -1,9 +1,9 @@
-import { ChainId } from "./helpers";
+import { ChainId } from './helpers';
 
 export enum WalletStatus {
-  NOT_CONNECTED = "NOT_CONNECTED",
-  CONNECTING = "CONNECTING",
-  CONNECTED = "CONNECTED",
+  NOT_CONNECTED = 'NOT_CONNECTED',
+  CONNECTING = 'CONNECTING',
+  CONNECTED = 'CONNECTED',
 }
 
 export interface Chain {

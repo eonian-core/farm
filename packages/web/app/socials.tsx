@@ -1,10 +1,10 @@
-import IconDiscord from "./components/icons/icon-discord";
-import IconGithub from "./components/icons/icon-github";
-import IconMedium from "./components/icons/icon-medium";
-import IconTelegram from "./components/icons/icon-telegram";
-import IconTwitter from "./components/icons/icon-twitter";
-import IconYoutube from "./components/icons/icon-youtube";
-import { store } from "./store/store";
+import IconDiscord from './components/icons/icon-discord';
+import IconGithub from './components/icons/icon-github';
+import IconMedium from './components/icons/icon-medium';
+import IconTelegram from './components/icons/icon-telegram';
+import IconTwitter from './components/icons/icon-twitter';
+import IconYoutube from './components/icons/icon-youtube';
+import { store } from './store/store';
 
 export interface SocialLink {
   name: string;
@@ -19,47 +19,47 @@ export interface LocalesSocials {
 export const socials: LocalesSocials = {
   en: [
     {
-      name: "Telegram",
+      name: 'Telegram',
       icon: <IconTelegram />,
-      href: "https://t.me/+9yTj0kBHbMozMDAy",
+      href: 'https://t.me/+9yTj0kBHbMozMDAy',
     },
     {
-      name: "Medium",
+      name: 'Medium',
       icon: <IconMedium />,
-      href: "https://medium.com/eonian-finance",
+      href: 'https://medium.com/eonian-finance',
     },
     {
-      name: "GitHub",
+      name: 'GitHub',
       icon: <IconGithub />,
-      href: "https://github.com/eonian-core",
+      href: 'https://github.com/eonian-core',
     },
     {
-      name: "Twitter",
+      name: 'Twitter',
       icon: <IconTwitter />,
-      href: "https://twitter.com/EonianFinance",
+      href: 'https://twitter.com/EonianFinance',
     },
     {
-      name: "Discord",
+      name: 'Discord',
       icon: <IconDiscord />,
-      href: "https://discord.gg/8mcUPPYJmj",
+      href: 'https://discord.gg/8mcUPPYJmj',
     },
     {
-      name: "YouTube",
+      name: 'YouTube',
       icon: <IconYoutube />,
-      href: "https://youtube.com/@EonianDAO",
+      href: 'https://youtube.com/@EonianDAO',
     },
   ],
 
   ru: [
     {
-      name: "Telegram",
+      name: 'Telegram',
       icon: <IconTelegram />,
-      href: "https://t.me/firstblockrus",
+      href: 'https://t.me/firstblockrus',
     },
     {
-      name: "YouTube",
+      name: 'YouTube',
       icon: <IconYoutube />,
-      href: "https://www.youtube.com/@eonian3304",
+      href: 'https://www.youtube.com/@eonian3304',
     },
   ],
 };

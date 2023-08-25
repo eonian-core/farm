@@ -1,20 +1,17 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Vault } from "../../api";
-import {
-  ChainId,
-  getRPCEndpoint,
-} from "../../providers/wallet/wrappers/helpers";
-import { defaultChain } from "../../web3-onboard";
-import { NetworkSelector } from "./network-selector";
-import { VaultTable } from "./vault-table";
+import React from 'react';
+import { Vault } from '../../api';
+import { ChainId, getRPCEndpoint } from '../../providers/wallet/wrappers/helpers';
+import { defaultChain } from '../../web3-onboard';
+import { NetworkSelector } from './network-selector';
+import { VaultTable } from './vault-table';
 
-import styles from "./vault-list.module.scss";
-import { fetchPositionInfo } from "../../store/slices/positionInfoSlice";
-import { useWalletWrapperContext } from "../../providers/wallet/wallet-wrapper-provider";
-import { useAppDispatch } from "../../store/hooks";
-import { JsonRpcProvider } from "ethers";
+import styles from './vault-list.module.scss';
+import { fetchPositionInfo } from '../../store/slices/positionInfoSlice';
+import { useWalletWrapperContext } from '../../providers/wallet/wallet-wrapper-provider';
+import { useAppDispatch } from '../../store/hooks';
+import { JsonRpcProvider } from 'ethers';
 
 export type VaultsByChain = Record<ChainId, Vault[]>;
 
@@ -52,11 +49,14 @@ function useFetchPositionInfo(chainId: ChainId, vaults: Vault[]) {
   const dispatch = useAppDispatch();
 
   const callback = () => {
-    if (!multicallAddress || !walletAddress || !provider || vaults.length === 0)
+    if (!multicallAddress || !walletAddress || !provider || vaults.length === 0) {
       return;
+    }
 
     const endpoint = getRPCEndpoint(chainId);
-    if (!endpoint) return;
+    if (!endpoint) {
+      return;
+    }
 
     dispatch(
       fetchPositionInfo({
@@ -68,12 +68,5 @@ function useFetchPositionInfo(chainId: ChainId, vaults: Vault[]) {
     );
   };
 
-  React.useEffect(callback, [
-    vaults,
-    chainId,
-    dispatch,
-    provider,
-    multicallAddress,
-    walletAddress,
-  ]);
+  React.useEffect(callback, [vaults, chainId, dispatch, provider, multicallAddress, walletAddress]);
 }

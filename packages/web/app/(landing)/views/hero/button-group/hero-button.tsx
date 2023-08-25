@@ -1,15 +1,12 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useIsDesktopOrSmaller } from "../../../../components/resize-hooks/screens";
-import { WrapperLink } from "../../../../components/links/wrapper-link";
-import Button, {
-  Props as ButtonProps,
-} from "../../../../components/button/button";
+import React from 'react';
+import { useIsDesktopOrSmaller } from '../../../../components/resize-hooks/screens';
+import { WrapperLink } from '../../../../components/links/wrapper-link';
+import Button, { Props as ButtonProps } from '../../../../components/button/button';
 
-import styles from "./hero-button.module.scss";
-import clsx from "clsx";
-
+import styles from './hero-button.module.scss';
+import clsx from 'clsx';
 
 interface Props extends ButtonProps {
   children: React.ReactNode;
@@ -18,18 +15,12 @@ interface Props extends ButtonProps {
   bold?: boolean;
 }
 
-const HeroButton: React.FC<Props> = ({
-  children,
-  href,
-  icon,
-  bold,
-  ...restProps
-}) => {
+const HeroButton: React.FC<Props> = ({ children, href, icon, bold, ...restProps }) => {
   const isDesktop = useIsDesktopOrSmaller();
 
   return (
-    <WrapperLink className={clsx(styles.button, {[styles.bold]: bold})} href={href}>
-      <Button size={isDesktop ? "md" : "lg"} icon={icon} dark wide {...restProps}>
+    <WrapperLink className={clsx(styles.button, { [styles.bold]: bold })} href={href}>
+      <Button size={isDesktop ? 'md' : 'lg'} icon={icon} dark wide {...restProps}>
         {children}
       </Button>
     </WrapperLink>
@@ -37,4 +28,3 @@ const HeroButton: React.FC<Props> = ({
 };
 
 export default HeroButton;
-

@@ -1,18 +1,18 @@
-import React from "react";
-import IconBNB from "./icon-bnb";
-import IconEthereum from "./icon-ethereum";
-import IconBitcoin from "./icon-bitcoin";
-import IconTether from "./icon-tether";
-import IconUSDC from "./icon-usdc";
-import IconBUSD from "./icon-busd";
+import React from 'react';
+import IconBNB from './icon-bnb';
+import IconEthereum from './icon-ethereum';
+import IconBitcoin from './icon-bitcoin';
+import IconTether from './icon-tether';
+import IconUSDC from './icon-usdc';
+import IconBUSD from './icon-busd';
 
 export enum CoinIcon {
-  BNB = "BNB",
-  ETH = "ETH",
-  USDT = "USDT",
-  BUSD = "BUSD",
-  USDC = "USDC",
-  BTC = "BTC",
+  BNB = 'BNB',
+  ETH = 'ETH',
+  USDT = 'USDT',
+  BUSD = 'BUSD',
+  USDC = 'USDC',
+  BTC = 'BTC',
 }
 
 interface Props extends React.SVGProps<SVGSVGElement> {

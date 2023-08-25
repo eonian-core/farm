@@ -1,7 +1,7 @@
-import { Provider } from "ethers";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createVaultRequest, Multicall, MulticallRequest } from "../../shared";
-import { Vault } from "../../api";
+import { Provider } from 'ethers';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createVaultRequest, Multicall, MulticallRequest } from '../../shared';
+import { Vault } from '../../api';
 
 interface FetchParams {
   walletAddress: string;
@@ -10,17 +10,11 @@ interface FetchParams {
   provider: Provider;
 }
 
-const getError = (message?: any) =>
-  `Error occured when requesting data: "${message || "Unknown error"}"`;
+const getError = (message?: any) => `Error occured when requesting data: "${message || 'Unknown error'}"`;
 
 export const fetchPositionInfo = createAsyncThunk(
-  "positionInfo/multicall",
-  async ({
-    walletAddress,
-    vaultAddresses,
-    multicallAddress,
-    provider,
-  }: FetchParams) => {
+  'positionInfo/multicall',
+  async ({ walletAddress, vaultAddresses, multicallAddress, provider }: FetchParams) => {
     const requests = getRequests(walletAddress, vaultAddresses);
     const multicall = new Multicall(multicallAddress, provider, requests);
     const responses = await multicall.makeRequest();
@@ -28,8 +22,11 @@ export const fetchPositionInfo = createAsyncThunk(
     const { data, errors } = responses.reduce(
       (map, response, index) => {
         const address = vaultAddresses[index];
-        if (response.success) map.data[address] = responses[index].data;
-        else map.errors[address] = getError(response.data);
+        if (response.success) {
+          map.data[address] = responses[index].data;
+        } else {
+          map.errors[address] = getError(response.data);
+        }
         return map;
       },
       {
@@ -57,11 +54,11 @@ const initialState: PositionInfoSlice = {
   vaultBalances: {},
   errors: {},
   isLoading: false,
-  lastRequestForWallet: "",
+  lastRequestForWallet: '',
 };
 
 const positionInfoSlice = createSlice({
-  name: "positionInfo",
+  name: 'positionInfo',
   initialState,
   reducers: {
     reset: () => initialState,
@@ -85,13 +82,8 @@ const positionInfoSlice = createSlice({
   },
 });
 
-function getRequests(
-  walletAddress: string,
-  vaultAddresses: string[]
-): MulticallRequest[] {
-  return vaultAddresses.map((vaultAddress) =>
-    createVaultRequest(vaultAddress, "maxWithdraw", [walletAddress])
-  );
+function getRequests(walletAddress: string, vaultAddresses: string[]): MulticallRequest[] {
+  return vaultAddresses.map((vaultAddress) => createVaultRequest(vaultAddress, 'maxWithdraw', [walletAddress]));
 }
 
 export const { reset } = positionInfoSlice.actions;

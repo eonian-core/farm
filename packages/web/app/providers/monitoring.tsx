@@ -1,5 +1,5 @@
-import LogRocket from "logrocket";
-import React, { useContext } from "react";
+import LogRocket from 'logrocket';
+import React, { useContext } from 'react';
 
 interface MonitoringContextValue {
   identify: (uid: string, properties: Record<string, any>) => void;
@@ -14,7 +14,7 @@ export const MonitoringContext = React.createContext<MonitoringContextValue>({
 export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
   React.useEffect(() => {
     const env = process.env.NODE_ENV;
-    if (env !== "production") {
+    if (env !== 'production') {
       console.debug(`Monitoring is disabled, ENV is not "production" (${env})`);
       return;
     }
@@ -25,21 +25,20 @@ export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
         release: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
       });
 
-      const slug = appId.split("/").pop()?.toUpperCase() ?? "-";
+      const slug = appId.split('/').pop()?.toUpperCase() ?? '-';
       console.debug(`Monitoring is enabled (${slug})`);
       return;
     }
-    console.debug("Monitoring is disabled");
+    console.debug('Monitoring is disabled');
   }, []);
 
-  const identify = React.useCallback(
-    (uid: string, properties: Record<string, any>) => {
-      if (process.env.NODE_ENV !== "production") return;
-      LogRocket.identify(uid, properties);
-      console.debug("User identification is set");
-    },
-    []
-  );
+  const identify = React.useCallback((uid: string, properties: Record<string, any>) => {
+    if (process.env.NODE_ENV !== 'production') {
+      return;
+    }
+    LogRocket.identify(uid, properties);
+    console.debug('User identification is set');
+  }, []);
 
   const reportError = React.useCallback((error: Error, source: string) => {
     LogRocket.captureException(error, {
@@ -47,11 +46,7 @@ export const MonitoringProvider = ({ children }: React.PropsWithChildren) => {
     });
   }, []);
 
-  return (
-    <MonitoringContext.Provider value={{ identify, reportError }}>
-      {children}
-    </MonitoringContext.Provider>
-  );
+  return <MonitoringContext.Provider value={{ identify, reportError }}>{children}</MonitoringContext.Provider>;
 };
 
 export const useMonitoringContext = () => useContext(MonitoringContext);

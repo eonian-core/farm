@@ -1,17 +1,12 @@
-import { redirect } from "next/navigation";
-import {
-  getClient,
-  getVaultBySymbol,
-  getVaultsSymbols,
-  Vault,
-} from "../../api";
-import { ChainId } from "../../providers/wallet/wrappers/helpers";
-import { defaultChain } from "../../web3-onboard";
-import Form from "./form/form";
-import { showEarn } from "../../features";
+import { redirect } from 'next/navigation';
+import { getClient, getVaultBySymbol, getVaultsSymbols, Vault } from '../../api';
+import { ChainId } from '../../providers/wallet/wrappers/helpers';
+import { defaultChain } from '../../web3-onboard';
+import Form from './form/form';
+import { showEarn } from '../../features';
 
 import styles from './page.module.scss';
-import { getGraphQLEndpoint } from "../../api/endpoints";
+import { getGraphQLEndpoint } from '../../api/endpoints';
 
 export const revalidate = 10;
 
@@ -37,11 +32,13 @@ export async function generateStaticParams(): Promise<RouteSegment[]> {
 export default async function Page({ params }: Params) {
   const { vault: vaultRoute = [] } = params;
 
-  if (!showEarn)
-    redirect("/");
+  if (!showEarn) {
+    redirect('/');
+  }
 
-  if (vaultRoute.length != 2)
-    redirect("/earn/");
+  if (vaultRoute.length != 2) {
+    redirect('/earn/');
+  }
 
   const [chainName, vaultSymbol] = vaultRoute;
   const chainId = ChainId.getByName(chainName);

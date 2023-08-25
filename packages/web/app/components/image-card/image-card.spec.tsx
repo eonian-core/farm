@@ -1,7 +1,7 @@
 /* eslint-disable react/no-children-prop */
-import React from 'react'
-import { getByTestId, render } from '@testing-library/react'
-import ImageCard, { Target } from './image-card'
+import React from 'react';
+import { getByTestId, render } from '@testing-library/react';
+import ImageCard, { Target } from './image-card';
 
 describe('ImageCard', () => {
   const sampleLink = 'https://example.com';
@@ -15,23 +15,17 @@ describe('ImageCard', () => {
   );
 
   it('renders a link with the correct href attribute', () => {
-    const { getByTestId } = render(
-      <ImageCard href={sampleLink} image={sampleImage} children={sampleChildren} />
-    );
+    const { getByTestId } = render(<ImageCard href={sampleLink} image={sampleImage} children={sampleChildren} />);
     expect(getByTestId('image-card')).toHaveAttribute('href', sampleLink);
   });
 
   it('renders the image passed as a prop', () => {
-    const { getByAltText } = render(
-      <ImageCard href={sampleLink} image={sampleImage} children={sampleChildren} />
-    );
+    const { getByAltText } = render(<ImageCard href={sampleLink} image={sampleImage} children={sampleChildren} />);
     expect(getByAltText('Sample Image')).toBeInTheDocument();
   });
 
   it('renders the children passed as a prop', () => {
-    const { getByText } = render(
-      <ImageCard href={sampleLink} image={sampleImage} children={sampleChildren} />
-    );
+    const { getByText } = render(<ImageCard href={sampleLink} image={sampleImage} children={sampleChildren} />);
     expect(getByText('Sample Heading')).toBeInTheDocument();
     expect(getByText('Sample description text')).toBeInTheDocument();
     expect(getByText('Sample Button')).toBeInTheDocument();
@@ -65,22 +59,22 @@ describe('Target component', () => {
       <Target>
         <span data-testid="target-child">Child element</span>
       </Target>
-    )
+    );
 
-    const childElement = getByTestId('target-child')
-    expect(childElement).toBeInTheDocument()
+    const childElement = getByTestId('target-child');
+    expect(childElement).toBeInTheDocument();
 
-    const iconElement = getByTestId('icon-external')
-    expect(iconElement).toBeInTheDocument()
-  })
+    const iconElement = getByTestId('icon-external');
+    expect(iconElement).toBeInTheDocument();
+  });
 
   it('applies disabled styles when the disabled prop is true', () => {
     const { queryByTestId } = render(
       <Target disabled>
         <span data-testid="target-child">Child element</span>
       </Target>
-    )
+    );
 
-    expect(queryByTestId('external-icon')).toBeNull()
-  })
-})
+    expect(queryByTestId('external-icon')).toBeNull();
+  });
+});

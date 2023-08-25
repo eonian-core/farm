@@ -1,6 +1,6 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
-import VaultABI from "../abi/Vault.json";
+import VaultABI from '../abi/Vault.json';
 
 interface DepositWithdrawParams {
   vaultAddress: string;
@@ -26,4 +26,3 @@ export async function withdraw(
   const response: ethers.TransactionResponse = await contract.withdraw(amount);
   return (): Promise<ethers.TransactionReceipt | null> => response.wait();
 }
-

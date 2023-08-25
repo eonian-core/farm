@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface LocaleState {
   current: string;
 }
 
 const initialState: LocaleState = {
-  current: "en",
+  current: 'en',
 };
 
 const localeSlice = createSlice({
-  name: "locale",
+  name: 'locale',
   initialState,
   reducers: {
     setLocale: (state, action: PayloadAction<string>) => {

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { MDXProvider } from "@mdx-js/react";
-import type { MDXComponents } from "mdx/types";
-import styles from "./page.module.scss";
-import heading from "../components/heading/heading";
-import Column from "./columns/columns";
-import Contacts from "./contacts/contacts";
-import Content from "./content/en.mdx";
+import { MDXProvider } from '@mdx-js/react';
+import type { MDXComponents } from 'mdx/types';
+import styles from './page.module.scss';
+import heading from '../components/heading/heading';
+import Column from './columns/columns';
+import Contacts from './contacts/contacts';
+import Content from './content/en.mdx';
 
 const components: MDXComponents = {
   h1: heading.H1,

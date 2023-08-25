@@ -1,24 +1,24 @@
-import React from "react";
+import React from 'react';
 
-import ParallaxContainer from "../../../components/parallax/parallax-container";
-import ParallaxBlock from "../../../components/parallax/parallax-block";
-import { ScreenName, useScreenName } from "../../../components/resize-hooks/screens";
+import ParallaxContainer from '../../../components/parallax/parallax-container';
+import ParallaxBlock from '../../../components/parallax/parallax-block';
+import { ScreenName, useScreenName } from '../../../components/resize-hooks/screens';
 
-import styles from "./solution-parallax.module.scss";
+import styles from './solution-parallax.module.scss';
 
 const BackgroundTextScreenMap = {
-  [ScreenName.ULTRA_WIDE]: {x: 0.8, y: -0.9}, 
-  [ScreenName.DESKTOP]: {x: 0.7, y: -0.8},
-  [ScreenName.LAPTOP]: {x: 0.9, y: -0.7},
-  [ScreenName.TABLET]: {x: 0.75, y: -0.6},
-  [ScreenName.MOBILE]: {x: 0.6, y: -0.8},
-  [ScreenName.SMALL_MOBILE]: {x: 0.4, y: -0.8},
-}
+  [ScreenName.ULTRA_WIDE]: { x: 0.8, y: -0.9 },
+  [ScreenName.DESKTOP]: { x: 0.7, y: -0.8 },
+  [ScreenName.LAPTOP]: { x: 0.9, y: -0.7 },
+  [ScreenName.TABLET]: { x: 0.75, y: -0.6 },
+  [ScreenName.MOBILE]: { x: 0.6, y: -0.8 },
+  [ScreenName.SMALL_MOBILE]: { x: 0.4, y: -0.8 },
+};
 
 export const SolutionParallax = () => {
   const screen = useScreenName();
-  const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
-  
+  const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP];
+
   return (
     <ParallaxContainer className={styles.solutionParalax}>
       <ParallaxBlock
@@ -30,16 +30,12 @@ export const SolutionParallax = () => {
       >
         <BackgroundText>Eonian</BackgroundText>
       </ParallaxBlock>
-
     </ParallaxContainer>
   );
-}
-
+};
 
 export default SolutionParallax;
 
-export const BackgroundText = ({children}: {children: React.ReactNode}) => (
-  <div className={styles.backgroundText}>
-    {children}
-  </div>
-)
+export const BackgroundText = ({ children }: { children: React.ReactNode }) => (
+  <div className={styles.backgroundText}>{children}</div>
+);

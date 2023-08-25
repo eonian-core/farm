@@ -1,11 +1,9 @@
-import { ForwardRefComponent, motion } from "framer-motion";
-import React, { PropsWithChildren, useRef } from "react";
-import { useInView } from "../use-in-view/use-in-view";
-import FadeInChildList, { FadeInChildListProps } from "./fade-in-child-list";
+import { ForwardRefComponent, motion } from 'framer-motion';
+import React, { PropsWithChildren, useRef } from 'react';
+import { useInView } from '../use-in-view/use-in-view';
+import FadeInChildList, { FadeInChildListProps } from './fade-in-child-list';
 
-export interface FadeInListProps
-  extends FadeInWrapperProps,
-    FadeInChildListProps {
+export interface FadeInListProps extends FadeInWrapperProps, FadeInChildListProps {
   /** Class for children item wrappers */
   childClassName?: string;
 }
@@ -21,11 +19,7 @@ export const FadeInListContext = React.createContext<FadeInListContextState>({
 
 export const useFadeInListContext = () => React.useContext(FadeInListContext);
 
-export default function FadeInList({
-  children,
-  childClassName,
-  ...props
-}: PropsWithChildren<FadeInListProps>) {
+export default function FadeInList({ children, childClassName, ...props }: PropsWithChildren<FadeInListProps>) {
   return (
     <FadeInWrapper {...props}>
       <FadeInChildList {...props} className={childClassName}>
@@ -44,7 +38,7 @@ export interface FadeInWrapperProps extends PropsWithChildren {
   className?: string;
 
   /** The amount of the element that needs to be visible before triggering the animation, default is 'all' */
-  amount?: "some" | "all" | number;
+  amount?: 'some' | 'all' | number;
   /** Trigger the animation only once, default true */
   once?: boolean;
 }
@@ -63,19 +57,17 @@ export const FadeInWrapper = ({
   // Possible to pass wrapper component through props
   // but it in some situations breaks react refs on mobile
   let WrapperTag: ForwardRefComponent<any, any>;
-  if (isList) 
+  if (isList) {
     WrapperTag = motion.ul;
-   else if (isSection) 
+  } else if (isSection) {
     WrapperTag = motion.section;
-   else 
+  } else {
     WrapperTag = motion.div;
-  
+  }
 
   return (
     <WrapperTag ref={ref} className={className}>
-      <FadeInListContext.Provider value={{ isVisible: isInView }}>
-        {children}
-      </FadeInListContext.Provider>
+      <FadeInListContext.Provider value={{ isVisible: isInView }}>{children}</FadeInListContext.Provider>
     </WrapperTag>
   );
 };

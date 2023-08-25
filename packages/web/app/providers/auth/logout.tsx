@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useCallback } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 /**
  * Return logout function which must redirect to specific path

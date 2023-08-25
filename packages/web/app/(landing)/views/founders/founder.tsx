@@ -1,11 +1,11 @@
-import React from "react";
-import styles from "./founder.module.scss";
-import Image, { StaticImageData } from "next/image";
+import React from 'react';
+import styles from './founder.module.scss';
+import Image, { StaticImageData } from 'next/image';
 
 import AvatarYuriy from './assets/yuriy.png';
-import AvatarVladislav from "./assets/vladislav.png";
-import AvatarArtem from "./assets/artem.png";
-import AvatarSergey from "./assets/sergey.png";
+import AvatarVladislav from './assets/vladislav.png';
+import AvatarArtem from './assets/artem.png';
+import AvatarSergey from './assets/sergey.png';
 
 interface Props {
   name: string;
@@ -20,12 +20,12 @@ const avatars: Record<string, StaticImageData> = {
 };
 
 const Founder: React.FC<Props> = ({ children, name }) => (
-    <li className={styles.container}>
-      <div className={styles.avatar}>
-        <Image src={avatars[name]} alt="avatar" placeholder="blur" />
-      </div>
-      {children}
-    </li>
-  );
+  <li className={styles.container}>
+    <div className={styles.avatar}>
+      <Image src={avatars[name]} alt="avatar" placeholder="blur" />
+    </div>
+    {children}
+  </li>
+);
 
 export default Founder;

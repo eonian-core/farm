@@ -1,13 +1,9 @@
-import React from "react";
-import styles from "./contacts.module.scss";
-import IconDownOpen from "../../components/icons/icon-down-open";
-import ExternalLink from "../../components/links/external-link";
-import {
-  SocialLink,
-  useLocalSocials,
-  useOtherLanguageslSocials,
-} from "../../socials";
-import { Dropdown } from "@nextui-org/react";
+import React from 'react';
+import styles from './contacts.module.scss';
+import IconDownOpen from '../../components/icons/icon-down-open';
+import ExternalLink from '../../components/links/external-link';
+import { SocialLink, useLocalSocials, useOtherLanguageslSocials } from '../../socials';
+import { Dropdown } from '@nextui-org/react';
 
 export const Contacts = () => {
   const localLinks = useLocalSocials();
@@ -32,11 +28,7 @@ export const Contacts = () => {
 
 export default Contacts;
 
-export const OtherLanguages = ({
-  otherLocales,
-}: {
-  otherLocales: Record<string, Array<SocialLink>>;
-}) => (
+export const OtherLanguages = ({ otherLocales }: { otherLocales: Record<string, Array<SocialLink>> }) => (
   <div className={styles.otherLanguagesCollapse}>
     <Dropdown placement="bottom">
       <Dropdown.Trigger>
@@ -54,21 +46,13 @@ export const OtherLanguages = ({
   </div>
 );
 
-function OtherLanguagesMenu({
-  otherLocales,
-}: {
-  otherLocales: Record<string, Array<SocialLink>>;
-}) {
+function OtherLanguagesMenu({ otherLocales }: { otherLocales: Record<string, Array<SocialLink>> }) {
   const options = useOptions(otherLocales);
   return (
     <Dropdown.Menu>
       {options.map(({ name, href, icon }) => (
         <Dropdown.Item key={name}>
-          <ExternalLink
-            className={styles.otherLanguagesLink}
-            href={href}
-            icon={icon}
-          >
+          <ExternalLink className={styles.otherLanguagesLink} href={href} icon={icon}>
             {name}
           </ExternalLink>
         </Dropdown.Item>
@@ -85,9 +69,7 @@ function useOptions(otherLocales: Record<string, Array<SocialLink>>) {
 
   const callback = () =>
     Object.keys(otherLocales)
-      .map((locale) =>
-        otherLocales[locale].map((link) => mapLink(link, locale))
-      )
+      .map((locale) => otherLocales[locale].map((link) => mapLink(link, locale)))
       .flat();
 
   return React.useMemo(callback, [otherLocales]);

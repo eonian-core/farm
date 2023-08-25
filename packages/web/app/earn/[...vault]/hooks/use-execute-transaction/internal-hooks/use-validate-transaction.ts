@@ -1,17 +1,16 @@
-import React from "react";
-import { toast } from "react-toastify";
+import React from 'react';
+import { toast } from 'react-toastify';
 
-import { FormAction } from "../../../../../store/slices/vaultActionSlice";
-import { Vault } from "../../../../../api";
-import { toStringNumberFromDecimals } from "../../../../../shared";
-import { useAppSelector } from "../../../../../store/hooks";
+import { FormAction } from '../../../../../store/slices/vaultActionSlice';
+import { Vault } from '../../../../../api';
+import { toStringNumberFromDecimals } from '../../../../../shared';
+import { useAppSelector } from '../../../../../store/hooks';
 
 export function useValidateTransaction() {
-  const { walletBalanceBN, vaultBalanceBN, assetDecimals } = useAppSelector(
-    (state) => state.vaultUser
-  );
+  const { walletBalanceBN, vaultBalanceBN, assetDecimals } = useAppSelector((state) => state.vaultUser);
   return React.useCallback(
-    (action: FormAction, vault: Vault, amount: bigint) => validateAndShowToast(action, {
+    (action: FormAction, vault: Vault, amount: bigint) =>
+      validateAndShowToast(action, {
         vault,
         amount,
         assetDecimals,
@@ -55,9 +54,9 @@ function validate(action: FormAction, data: ValidationData) {
 
 function validateWithdraw(data: ValidationData) {
   const { amount, vault, vaultBalance, assetDecimals } = data;
-  if (amount <= 0) 
-    throw new Error("Please enter an amount greater than 0 to continue.");
-  
+  if (amount <= 0) {
+    throw new Error('Please enter an amount greater than 0 to continue.');
+  }
 
   const assetSymbol = vault.asset.symbol;
   if (amount > vaultBalance) {
@@ -70,28 +69,26 @@ function validateWithdraw(data: ValidationData) {
 
 function validateDeposit(data: ValidationData) {
   const { amount, vault, walletBalance, assetDecimals } = data;
-  if (amount <= 0) 
-    throw new Error("Please enter an amount greater than 0 to continue.");
-  
+  if (amount <= 0) {
+    throw new Error('Please enter an amount greater than 0 to continue.');
+  }
 
   const assetSymbol = vault.asset.symbol;
   if (amount > walletBalance) {
     const balance = toStringNumberFromDecimals(walletBalance, assetDecimals);
-    throw new Error(
-      `Insufficient token balance in your wallet: ${balance} ${assetSymbol}`
-    );
+    throw new Error(`Insufficient token balance in your wallet: ${balance} ${assetSymbol}`);
   }
 }
 
-const validationToastId = "validation-toast-id";
+const validationToastId = 'validation-toast-id';
 
 function showToast(content: string) {
   const isToastActive = toast.isActive(validationToastId);
-  if (isToastActive) 
+  if (isToastActive) {
     toast.update(validationToastId, { render: content });
-   else 
+  } else {
     toast.warning(content, { toastId: validationToastId });
-  
+  }
 }
 
 function hideToast() {

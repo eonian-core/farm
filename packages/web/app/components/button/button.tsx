@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import styles from "./button.module.scss";
-import clsx from "clsx";
+import styles from './button.module.scss';
+import clsx from 'clsx';
 
 export interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'size' | 'type'> {
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   bordered?: boolean;
   gradient?: boolean;
   dark?: boolean;
@@ -14,7 +14,7 @@ export interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'size' |
 }
 
 const Button: React.FC<Props> = ({
-  size = "md",
+  size = 'md',
   bordered = false,
   gradient = false,
   dark = false,
@@ -24,11 +24,11 @@ const Button: React.FC<Props> = ({
   ...restProps
 }) => {
   const classes = clsx(styles.button, styles[size], {
-    [styles["bordered"]]: bordered,
-    [styles["gradient"]]: gradient,
-    [styles["dark"]]: dark,
-    [styles["icon"]]: !!icon,
-    [styles["wide"]]: wide,
+    [styles['bordered']]: bordered,
+    [styles['gradient']]: gradient,
+    [styles['dark']]: dark,
+    [styles['icon']]: !!icon,
+    [styles['wide']]: wide,
   });
   return (
     <button className={classes} {...restProps}>

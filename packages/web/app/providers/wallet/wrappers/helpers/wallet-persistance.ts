@@ -1,7 +1,7 @@
-import { ChainId } from "./wallet-chain-id";
+import { ChainId } from './wallet-chain-id';
 
-const WALLET_LOCAL_STORAGE_KEY = "__connected-wallet-label";
-const CHAIN_LOCAL_STORAGE_KEY = "__last-active-chain";
+const WALLET_LOCAL_STORAGE_KEY = '__connected-wallet-label';
+const CHAIN_LOCAL_STORAGE_KEY = '__last-active-chain';
 
 class WalletPersistance {
   saveWalletLabel = (walletLabel: string) => {

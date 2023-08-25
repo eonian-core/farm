@@ -1,27 +1,20 @@
-import React from "react";
-import {
-  toBigIntWithDecimals,
-  toStringNumberFromDecimals,
-} from "../../../shared";
+import React from 'react';
+import { toBigIntWithDecimals, toStringNumberFromDecimals } from '../../../shared';
 
 export const useNumberInputValue = (
   defaultValue: bigint,
   decimals: number
 ): [bigint, string, (value: string | bigint) => void] => {
   const [value, setValue] = React.useState(defaultValue);
-  const [displayValue, setDisplayValue] = React.useState(
-    bigIntToString(value, decimals)
-  );
+  const [displayValue, setDisplayValue] = React.useState(bigIntToString(value, decimals));
 
   const handleValueChange = React.useCallback(
     (value: string | bigint) => {
-      const isBigInt = typeof value === "bigint";
-      const values = isBigInt
-        ? parseBigIntValue(value, decimals)
-        : parseValue(value, decimals);
-      if (!values) 
+      const isBigInt = typeof value === 'bigint';
+      const values = isBigInt ? parseBigIntValue(value, decimals) : parseValue(value, decimals);
+      if (!values) {
         return;
-      
+      }
 
       const [newValue, displayValue] = values;
       setDisplayValue(displayValue);
@@ -35,24 +28,19 @@ export const useNumberInputValue = (
 
 export type ValueParseResult = [value: bigint, displayValue: string];
 
-export function parseValue(
-  value: string,
-  decimals: number
-): ValueParseResult | null {
+export function parseValue(value: string, decimals: number): ValueParseResult | null {
   const newValue = normalizeValue(value);
   const isValid = validate(newValue, decimals);
-  if (!isValid) 
+  if (!isValid) {
     return null;
-  
+  }
+
   const numberValue = parseFloat(newValue);
   const isNumber = !isNaN(numberValue);
   return [isNumber ? toBigIntWithDecimals(newValue, decimals) : 0n, newValue];
 }
 
-export function parseBigIntValue(
-  value: bigint,
-  decimals: number
-): ValueParseResult | null {
+export function parseBigIntValue(value: bigint, decimals: number): ValueParseResult | null {
   return [value, bigIntToString(value, decimals)];
 }
 
@@ -60,25 +48,21 @@ export function parseBigIntValue(
  * Converts the big integer to number (in string representation) and removes empty fraction part.
  */
 function bigIntToString(value: bigint, decimals: number): string {
-  return toStringNumberFromDecimals(value, decimals).replace(/\.0$/, "");
+  return toStringNumberFromDecimals(value, decimals).replace(/\.0$/, '');
 }
 
 function normalizeValue(value: string | number): string {
   return String(value)
-    .replaceAll(",", ".") // Transforms a comma to a dot.
-    .replace(/^(0+)([0-9]+.*)/g, "$2"); // Removes extra leading zeros from the input.
+    .replaceAll(',', '.') // Transforms a comma to a dot.
+    .replace(/^(0+)([0-9]+.*)/g, '$2'); // Removes extra leading zeros from the input.
 }
 
 function validate(value: string, decimals: number): boolean {
-  if (!value) 
+  if (!value) {
     return true;
-  
+  }
 
-  const validators = [
-    validateNumber,
-    validateRange,
-    validateFractionPartLength,
-  ];
+  const validators = [validateNumber, validateRange, validateFractionPartLength];
   return validators.every((validator) => validator(value, decimals));
 }
 
@@ -104,10 +88,11 @@ function validateRange(value: string, decimals: number) {
  * E.g. "0.01" number is invalid (if decimals = 1), but "0.01000" is considered as a valid number.
  */
 function validateFractionPartLength(value: string, decimals: number) {
-  const parts = value.split(".");
-  if (parts.length !== 2) 
+  const parts = value.split('.');
+  if (parts.length !== 2) {
     return true;
-  
+  }
+
   const [, fractionPart] = parts;
-  return !fractionPart.endsWith("0") || fractionPart.length <= decimals;
+  return !fractionPart.endsWith('0') || fractionPart.length <= decimals;
 }

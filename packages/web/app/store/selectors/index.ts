@@ -1,1 +1,1 @@
-export * from "./vaultActionSelectors";
+export * from './vaultActionSelectors';

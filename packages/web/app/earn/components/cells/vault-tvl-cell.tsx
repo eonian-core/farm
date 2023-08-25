@@ -1,7 +1,7 @@
-import { Row } from "@nextui-org/react";
-import React from "react";
-import { Vault } from "../../../api";
-import { CellWithCurrency } from "./cell-with-currency";
+import { Row } from '@nextui-org/react';
+import React from 'react';
+import { Vault } from '../../../api';
+import { CellWithCurrency } from './cell-with-currency';
 
 interface Props {
   vault: Vault;

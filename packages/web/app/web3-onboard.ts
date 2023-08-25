@@ -1,29 +1,29 @@
-import type { InitOptions, ThemingMap } from "@web3-onboard/core/dist/types";
-import injectedModule from "@web3-onboard/injected-wallets";
-import walletConnectModule from "@web3-onboard/walletconnect";
-import init from "@web3-onboard/core";
-import { ChainId, getRPCEndpoint } from "./providers/wallet/wrappers/helpers";
+import type { InitOptions, ThemingMap } from '@web3-onboard/core/dist/types';
+import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect';
+import init from '@web3-onboard/core';
+import { ChainId, getRPCEndpoint } from './providers/wallet/wrappers/helpers';
 
 const theme: ThemingMap = {
-  "--w3o-background-color": "var(--color-background-start)",
-  "--w3o-foreground-color": "var(--color-background-end)",
-  "--w3o-text-color": "var(--color-text-300)",
-  "--w3o-border-color": "var(--color-text-500)",
-  "--w3o-action-color": "var(--color-primary-500)",
-  "--w3o-border-radius": "var(--border-radius-500)",
+  '--w3o-background-color': 'var(--color-background-start)',
+  '--w3o-foreground-color': 'var(--color-background-end)',
+  '--w3o-text-color': 'var(--color-text-300)',
+  '--w3o-border-color': 'var(--color-text-500)',
+  '--w3o-action-color': 'var(--color-primary-500)',
+  '--w3o-border-radius': 'var(--border-radius-500)',
 };
 
-const chains: Partial<Record<ChainId, InitOptions["chains"][0]>> = {
+const chains: Partial<Record<ChainId, InitOptions['chains'][0]>> = {
   [ChainId.SEPOLIA]: {
     id: ChainId.toHex(ChainId.SEPOLIA),
-    token: "SepoliaETH",
-    label: "Sepolia - Testnet",
+    token: 'SepoliaETH',
+    label: 'Sepolia - Testnet',
     rpcUrl: getRPCEndpoint(ChainId.SEPOLIA),
   },
   [ChainId.BSC_MAINNET]: {
     id: ChainId.toHex(ChainId.BSC_MAINNET),
-    token: "BNB",
-    label: "BSC Mainnet",
+    token: 'BNB',
+    label: 'BSC Mainnet',
     rpcUrl: getRPCEndpoint(ChainId.BSC_MAINNET),
   },
 };
@@ -43,7 +43,7 @@ export default init({
     },
   },
   appMetadata: {
-    name: "Eonian Finance",
+    name: 'Eonian Finance',
     icon: `
         <svg
           width="24"
@@ -60,14 +60,13 @@ export default init({
           />
         </svg>
     `,
-    description:
-      "Decentralized and secure protocol for passive investments with peace of mind.",
-    gettingStartedGuide: "https://eonian.finance/", // The url to a getting started guide for app
-    explore: "https://eonian.finance/", // The url that points to more information about app
+    description: 'Decentralized and secure protocol for passive investments with peace of mind.',
+    gettingStartedGuide: 'https://eonian.finance/', // The url to a getting started guide for app
+    explore: 'https://eonian.finance/', // The url that points to more information about app
   },
 });
 
-function getWallets(): InitOptions["wallets"] {
+function getWallets(): InitOptions['wallets'] {
   const wallets = [injectedModule()];
   const walletConnectProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
   if (walletConnectProjectId) {
@@ -83,9 +82,6 @@ function getWallets(): InitOptions["wallets"] {
   return wallets;
 }
 
-export const supportedChainsIds = supportedChains.map((chain) =>
-  ChainId.parse(chain.id)
-);
+export const supportedChainsIds = supportedChains.map((chain) => ChainId.parse(chain.id));
 
-export const defaultChain =
-  chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!;
+export const defaultChain = chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!;

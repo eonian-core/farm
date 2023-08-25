@@ -4,16 +4,17 @@ export default class PageIntersectionObserver<T extends HTMLElement> {
   constructor(
     private ref: React.RefObject<T>,
     private intersectCallback: (isIntersecting: boolean) => void,
-    private root: IntersectionObserverInit["root"] = document
+    private root: IntersectionObserverInit['root'] = document
   ) {
     this.observer = null;
   }
 
   private callback: IntersectionObserverCallback = (entries) => {
     for (const { target, isIntersecting } of entries) {
-      if (target !== this.ref.current) 
+      if (target !== this.ref.current) {
         continue;
-      
+      }
+
       this.intersectCallback(isIntersecting);
     }
   };
@@ -22,9 +23,9 @@ export default class PageIntersectionObserver<T extends HTMLElement> {
     this.destroy();
 
     const { current: node } = this.ref;
-    if (!node) 
+    if (!node) {
       return;
-    
+    }
 
     const options: IntersectionObserverInit = {
       root: this.root,

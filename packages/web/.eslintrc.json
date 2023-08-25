@@ -1,10 +1,11 @@
 {
   "extends": [
     "next/core-web-vitals",
+    "plugin:prettier/recommended",
     "plugin:storybook/recommended"
   ],
   "rules": {
-    "curly": ["error", "multi-or-nest"],
+    "curly": ["error", "all"],
     "arrow-body-style": ["error", "as-needed"]
   }
 }

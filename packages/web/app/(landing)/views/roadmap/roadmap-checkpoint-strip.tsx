@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import styles from "./roadmap-checkpoint.module.scss";
+import React, { Component } from 'react';
+import styles from './roadmap-checkpoint.module.scss';
 
 export interface RoadmapCheckpointProps {
   completed: boolean;
@@ -22,8 +22,7 @@ export interface RoadmapContextState {
   isCentered: boolean;
 }
 
-export const RoadmapContext = React.createContext<RoadmapContextState>({ width: 100, isCentered: false});
-
+export const RoadmapContext = React.createContext<RoadmapContextState>({ width: 100, isCentered: false });
 
 export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointStripProps> {
   private ref: React.RefObject<HTMLDivElement>;
@@ -43,9 +42,7 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
 
   shouldComponentUpdate(nextProps: Readonly<RoadmapCheckpointStripProps>): boolean {
     const { peaks, containerWidth } = this.props;
-    return (
-      peaks !== nextProps.peaks || containerWidth !== nextProps.containerWidth
-    );
+    return peaks !== nextProps.peaks || containerWidth !== nextProps.containerWidth;
   }
 
   render() {
@@ -59,10 +56,12 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
           transform: `translateX(${this.getOffset(startAt)}px)`,
         }}
       >
-        <RoadmapContext.Provider value={{
-          width: this.checkpointWidth,
-          isCentered: peaks === 1
-        }}>
+        <RoadmapContext.Provider
+          value={{
+            width: this.checkpointWidth,
+            isCentered: peaks === 1,
+          }}
+        >
           {children}
         </RoadmapContext.Provider>
       </div>
@@ -82,24 +81,26 @@ export default class RoadmapCheckpointStrip extends Component<RoadmapCheckpointS
     const { containerWidth, peaks } = this.props;
     const delta = peaks > 1 ? peaks % 2 : -1;
     const offset = peaks > 1 ? 0 : containerWidth / 2;
-    
+
     return -this.checkpointWidth * (index - delta) + offset;
   }
 
   public prepareAnimation(moveTo: number) {
     const { current: strip } = this.ref;
-    if (!strip) 
+    if (!strip) {
       return;
-    
+    }
+
     this.currentX = +this.regExp.exec(strip.style.transform)![1];
     this.targetX = this.getOffset(moveTo);
   }
 
   public animate = (progress: number) => {
     const { current: strip } = this.ref;
-    if (!strip) 
+    if (!strip) {
       return;
-    
+    }
+
     const x = this.currentX + (this.targetX - this.currentX) * progress;
     strip.style.transform = `translateX(${x}px)`;
   };

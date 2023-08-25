@@ -1,28 +1,21 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
-import styles from "./form.module.scss";
-import { Card } from "@nextui-org/react";
-import FormHeader from "./form-header";
-import FormButton from "./form-button";
-import { Vault } from "../../../api";
-import FormInput from "./form-input";
-import { useAppSelector } from "../../../store/hooks";
-import { useWalletWrapperContext } from "../../../providers/wallet/wallet-wrapper-provider";
-import { WalletStatus } from "../../../providers/wallet/wrappers/types";
-import { PercentButtonGroup, VaultInfoCard, VaultLink } from "../components";
-import {
-  useVaultUserInfo,
-  useNumberInputValue,
-  useExecuteTransaction,
-} from "../hooks";
-import {
-  FormAction,
-  FormActionStep,
-} from "../../../store/slices/vaultActionSlice";
-import { getActiveStepSelector } from "../../../store";
-import { ChainId } from "../../../providers/wallet/wrappers/helpers";
+import styles from './form.module.scss';
+import { Card } from '@nextui-org/react';
+import FormHeader from './form-header';
+import FormButton from './form-button';
+import { Vault } from '../../../api';
+import FormInput from './form-input';
+import { useAppSelector } from '../../../store/hooks';
+import { useWalletWrapperContext } from '../../../providers/wallet/wallet-wrapper-provider';
+import { WalletStatus } from '../../../providers/wallet/wrappers/types';
+import { PercentButtonGroup, VaultInfoCard, VaultLink } from '../components';
+import { useVaultUserInfo, useNumberInputValue, useExecuteTransaction } from '../hooks';
+import { FormAction, FormActionStep } from '../../../store/slices/vaultActionSlice';
+import { getActiveStepSelector } from '../../../store';
+import { ChainId } from '../../../providers/wallet/wrappers/helpers';
 
 interface Props {
   vault: Vault;
@@ -36,19 +29,14 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
     autoUpdateInterval: 5000,
   });
 
-  const { isLoading, lastRequestForWallet } = useAppSelector(
-    (state) => state.vaultUser
-  );
+  const { isLoading, lastRequestForWallet } = useAppSelector((state) => state.vaultUser);
 
-  const [formAction, setFormAction] = React.useState<FormAction>(
-    FormAction.DEPOSIT
-  );
+  const [formAction, setFormAction] = React.useState<FormAction>(FormAction.DEPOSIT);
 
   const [value, displayValue, handleValueChange] = useInputValue(vault);
 
   const balances = useBalance();
-  const formBalance =
-    formAction === FormAction.DEPOSIT ? balances.inWallet : balances.inVault;
+  const formBalance = formAction === FormAction.DEPOSIT ? balances.inWallet : balances.inVault;
 
   const vaultChain = useVaultChain(chainId);
   const hasPendingTransactions = useHasPendingTransactions();
@@ -74,8 +62,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
 
   const isFirstRequestFinished = lastRequestForWallet === wallet?.address;
   const isWalletNotConnected = status === WalletStatus.NOT_CONNECTED;
-  const isFormReady =
-    !isLoading || isFirstRequestFinished || isWalletNotConnected;
+  const isFormReady = !isLoading || isFirstRequestFinished || isWalletNotConnected;
 
   return (
     <div className={styles.container}>
@@ -83,10 +70,7 @@ const Form: React.FC<Props> = ({ vault, chainId }) => {
         <p>🛠 Alpha test application may display inaccurate APY.</p>
       </Card>
       <Card variant="bordered">
-        <FormHeader
-          currentAction={formAction}
-          onCurrentActionChange={setFormAction}
-        />
+        <FormHeader currentAction={formAction} onCurrentActionChange={setFormAction} />
 
         <Card.Divider />
 
@@ -142,9 +126,7 @@ export interface Balance {
 }
 
 function useBalance(): Balance {
-  const { walletBalanceBN, vaultBalanceBN } = useAppSelector(
-    (state) => state.vaultUser
-  );
+  const { walletBalanceBN, vaultBalanceBN } = useAppSelector((state) => state.vaultUser);
   const wallet = BigInt(walletBalanceBN);
   const vault = BigInt(vaultBalanceBN);
   return {

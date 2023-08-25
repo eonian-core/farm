@@ -1,5 +1,5 @@
-import React, { Children, PropsWithChildren, useEffect, useState } from "react";
-import { useFadeInListContext } from "./fade-in-list";
+import React, { Children, PropsWithChildren, useEffect, useState } from 'react';
+import { useFadeInListContext } from './fade-in-list';
 
 export interface FadeInChildListProps extends PropsWithChildren {
   /** The delay before the animation starts, default 0.2s */
@@ -22,33 +22,29 @@ export default function FadeInChildList({
   const { isVisible } = useFadeInListContext();
   const delayedIsInView = useDelay(toMs(initialDelay), isVisible);
 
-  const { maxIsVisible } = useAnimation(
-    Children.count(children),
-    delayedIsInView,
-    delay
-  );
+  const { maxIsVisible } = useAnimation(Children.count(children), delayedIsInView, delay);
 
   return (
     <>
-      {Children.map(children, (child, i) =>{
-        
+      {Children.map(children, (child, i) => {
         // fix for rendering li items
-        if(!child || child === '\n') 
-          return
-        
+        if (!child || child === '\n') {
+          return;
+        }
 
         return (
-        <div
-          className={className}
-          style={{
-            transition: `opacity ${duration}s, transform ${duration}s`,
-            transform: maxIsVisible > i ? "none" : "translateY(20px)",
-            opacity: maxIsVisible > i ? 1 : 0,
-          }}
-        >
-          {child}
-        </div>
-      )})}
+          <div
+            className={className}
+            style={{
+              transition: `opacity ${duration}s, transform ${duration}s`,
+              transform: maxIsVisible > i ? 'none' : 'translateY(20px)',
+              opacity: maxIsVisible > i ? 1 : 0,
+            }}
+          >
+            {child}
+          </div>
+        );
+      })}
     </>
   );
 }
@@ -67,11 +63,7 @@ export const useDelay = (delay: number, state: boolean) => {
   return delayedState;
 };
 
-export const useAnimation = (
-  childrenCount: number,
-  isVisible: boolean,
-  delay: number
-) => {
+export const useAnimation = (childrenCount: number, isVisible: boolean, delay: number) => {
   const [maxIsVisible, setMaxIsVisible] = useState(0);
 
   useEffect(() => {

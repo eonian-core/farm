@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
 /**
  * Converts normal number value to BigInt with decimals representation.

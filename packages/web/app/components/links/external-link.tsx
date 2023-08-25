@@ -1,6 +1,6 @@
-import clsx from "clsx";
-import { LinkWithIconProps, LinkWithIcon } from "./links";
-import styles from "./links.module.scss";
+import clsx from 'clsx';
+import { LinkWithIconProps, LinkWithIcon } from './links';
+import styles from './links.module.scss';
 
 const ExternalLink = ({ href, className, ...props }: LinkWithIconProps) => (
   <LinkWithIcon

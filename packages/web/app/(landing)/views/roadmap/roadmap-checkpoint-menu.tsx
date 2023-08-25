@@ -1,7 +1,7 @@
-import clsx from "clsx";
-import React from "react";
-import IconChevron from "../../../components/icons/icon-chevron";
-import styles from './roadmap-checkpoint-menu.module.scss'
+import clsx from 'clsx';
+import React from 'react';
+import IconChevron from '../../../components/icons/icon-chevron';
+import styles from './roadmap-checkpoint-menu.module.scss';
 
 export interface RoadmapCheckpointMenuProps {
   activeCheckpointIndex: number;
@@ -55,17 +55,16 @@ export interface ChevronProps {
 }
 
 const Chevron = ({ onClick, left = false, disabled = false }: ChevronProps) => (
-  <IconChevron 
-    width={28} 
-    height={28} 
-    onClick={onClick} 
+  <IconChevron
+    width={28}
+    height={28}
+    onClick={onClick}
     className={clsx({
       [styles.chevron]: !disabled,
-      [styles.chevronLeft]: left,      
+      [styles.chevronLeft]: left,
       [styles.chevronDiabled]: disabled,
-    })} 
+    })}
   />
 );
-
 
 export default React.memo(RoadmapCheckpointMenu);

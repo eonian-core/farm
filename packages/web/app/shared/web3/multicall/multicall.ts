@@ -1,5 +1,5 @@
-import { Contract, Interface, Provider } from "ethers";
-import { MULTICALL_ABI } from "./multicall-abi";
+import { Contract, Interface, Provider } from 'ethers';
+import { MULTICALL_ABI } from './multicall-abi';
 
 export interface MulticallRequest {
   address: string;
@@ -49,9 +49,13 @@ export class Multicall {
    * @returns A list of responses that correspond the specified requests.
    */
   public async makeRequest(): Promise<MulticallResponse[]> {
-    const results: Aggregate3Response[] =
-      await this.contract.aggregate3.staticCall(this.requestData);
-    return results.map(({ success, returnData }, index): MulticallResponse => ({ success, data: this.responseDecoders[index](returnData) }));
+    const results: Aggregate3Response[] = await this.contract.aggregate3.staticCall(this.requestData);
+    return results.map(
+      ({ success, returnData }, index): MulticallResponse => ({
+        success,
+        data: this.responseDecoders[index](returnData),
+      })
+    );
   }
 
   /**
@@ -72,10 +76,7 @@ export class Multicall {
       (request, index): Aggregate3Request => ({
         target: request.address,
         allowFailure: request.allowFailure ?? true,
-        callData: this.interfaces[index].encodeFunctionData(
-          request.functionName,
-          request.args
-        ),
+        callData: this.interfaces[index].encodeFunctionData(request.functionName, request.args),
       })
     );
   }
@@ -85,10 +86,10 @@ export class Multicall {
    * @returns The decoders list.
    */
   private createResponseDecoders(): Aggregate3ReturnDataDecoder[] {
-    return this.requests.map(({ functionName }, index) => (returnData: string) =>
-        this.interfaces[index].decodeFunctionResult(
-          functionName,
-          returnData
-        )[0]);
+    return this.requests.map(
+      ({ functionName }, index) =>
+        (returnData: string) =>
+          this.interfaces[index].decodeFunctionResult(functionName, returnData)[0]
+    );
   }
 }

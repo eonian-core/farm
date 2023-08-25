@@ -1,19 +1,13 @@
-import * as React from "react";
+import * as React from 'react';
 
-type Direction = "top" | "right" | "bottom" | "left";
+type Direction = 'top' | 'right' | 'bottom' | 'left';
 
 interface Props extends React.SVGProps<SVGSVGElement> {
   direction?: Direction;
   size?: number | string;
 }
 
-function IconBoxArrow({
-  size,
-  width = "0.75em",
-  height = "0.75em",
-  direction = "top",
-  ...restProps
-}: Props) {
+function IconBoxArrow({ size, width = '0.75em', height = '0.75em', direction = 'top', ...restProps }: Props) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -30,14 +24,14 @@ function IconBoxArrow({
 
 function getRotationZ(direction: Direction) {
   switch (direction) {
-    case "top":
-      return "180";
-    case "left":
-      return "90";
-    case "right":
-      return "-90";
+    case 'top':
+      return '180';
+    case 'left':
+      return '90';
+    case 'right':
+      return '-90';
     default:
-      return "0";
+      return '0';
   }
 }
 

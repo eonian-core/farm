@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import styles from "./navigation.module.scss";
-import LogoWithText from "../logo/logo-with-text";
-import { MenuItem } from "./menu-item";
-import { useState, useEffect, useCallback } from "react";
-import Menu from "./menu";
-import { links, mobileLinks, NavigationItem } from "./links";
-import ConnectWallet from "../wallet/connect-wallet";
-import { showEarn } from "../../features";
+import styles from './navigation.module.scss';
+import LogoWithText from '../logo/logo-with-text';
+import { MenuItem } from './menu-item';
+import { useState, useEffect, useCallback } from 'react';
+import Menu from './menu';
+import { links, mobileLinks, NavigationItem } from './links';
+import ConnectWallet from '../wallet/connect-wallet';
+import { showEarn } from '../../features';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);

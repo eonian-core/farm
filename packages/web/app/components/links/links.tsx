@@ -1,16 +1,13 @@
-"use client";
+'use client';
 
-import Link, { LinkProps as NextLinkProps } from "next/link";
-import React, { useCallback } from "react";
-import clsx from "clsx";
-import styles from "./links.module.scss";
-import { useAppDispatch } from "../../store/hooks";
-import { setPageLoading } from "../../store/slices/navigationSlice";
+import Link, { LinkProps as NextLinkProps } from 'next/link';
+import React, { useCallback } from 'react';
+import clsx from 'clsx';
+import styles from './links.module.scss';
+import { useAppDispatch } from '../../store/hooks';
+import { setPageLoading } from '../../store/slices/navigationSlice';
 
-export type BaseLinkProps = Omit<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>,
-  keyof NextLinkProps
-> &
+export type BaseLinkProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof NextLinkProps> &
   NextLinkProps & {
     children?: React.ReactNode;
   } & React.RefAttributes<HTMLAnchorElement>;
@@ -66,30 +63,18 @@ export const LinkWithIcon = ({
 };
 
 /** Link used for navigation between pages **inside** application */
-export const InternalLink = ({
-  href,
-  className,
-  onClick,
-  ...props
-}: LinkWithIconProps) => {
+export const InternalLink = ({ href, className, onClick, ...props }: LinkWithIconProps) => {
   const dispatch = useAppDispatch();
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       onClick?.(e);
-      if (!e.defaultPrevented) 
+      if (!e.defaultPrevented) {
         dispatch(setPageLoading(href.toString()));
-      
+      }
     },
     [onClick, dispatch, href]
   );
 
-  return (
-    <LinkWithIcon
-      href={href}
-      className={clsx(styles.internalLink, className)}
-      onClick={handleClick}
-      {...props}
-    />
-  );
+  return <LinkWithIcon href={href} className={clsx(styles.internalLink, className)} onClick={handleClick} {...props} />;
 };

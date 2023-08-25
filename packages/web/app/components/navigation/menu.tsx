@@ -1,12 +1,11 @@
-import { useRef } from "react";
-import { CSSTransition } from "react-transition-group";
+import { useRef } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
-import { HamburgerMenu } from "../hamburger-menu/hamburger-menu";
-import styles from "./navigation.module.scss";
-import { Inter } from "next/font/google";
-import clsx from "clsx";
-import { SocialMenuItem } from "./menu-item";
-
+import { HamburgerMenu } from '../hamburger-menu/hamburger-menu';
+import styles from './navigation.module.scss';
+import { Inter } from 'next/font/google';
+import clsx from 'clsx';
+import { SocialMenuItem } from './menu-item';
 
 export interface MenuProps {
   children: React.ReactNode;
@@ -15,8 +14,8 @@ export interface MenuProps {
 }
 
 const inter = Inter({
-  subsets: ["latin", "cyrillic"],
-  display: "block", // force to show font anyway
+  subsets: ['latin', 'cyrillic'],
+  display: 'block', // force to show font anyway
 });
 
 export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {

@@ -1,21 +1,13 @@
-import clsx from "clsx";
-import React, { useContext } from "react";
-import { H3Context } from "../../../components/heading/heading";
-import IconCheck from "../../../components/icons/icon-check";
-import { RoadmapCheckpointProps, RoadmapContext } from "./roadmap-checkpoint-strip";
-import styles from "./roadmap-checkpoint.module.scss";
+import clsx from 'clsx';
+import React, { useContext } from 'react';
+import { H3Context } from '../../../components/heading/heading';
+import IconCheck from '../../../components/icons/icon-check';
+import { RoadmapCheckpointProps, RoadmapContext } from './roadmap-checkpoint-strip';
+import styles from './roadmap-checkpoint.module.scss';
 
+const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({ title, date, href, completed, children }) => {
+  const { width, isCentered } = useContext(RoadmapContext);
 
-
-const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({
-  title,
-  date,
-  href,
-  completed,
-  children,
-}) => {
-  const {width, isCentered} = useContext(RoadmapContext);
-  
   return (
     <a
       className={clsx(styles.container, { [styles.pointer]: !!href })}
@@ -25,15 +17,14 @@ const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({
       rel="noopener noreferrer"
     >
       <H3Context.Provider value={{ isExternalLink: !!href }}>
-
         {children}
-        
+
         <div className={clsx(styles.pin, { [styles.hidden]: isCentered })} />
-        
+
         <div
           className={clsx(styles.point, {
-            [styles["point--done"]]: completed,
-            [styles["point--centered"]]: isCentered,
+            [styles['point--done']]: completed,
+            [styles['point--centered']]: isCentered,
           })}
         >
           {completed && <IconCheck width={20} height={20} />}
@@ -43,6 +34,6 @@ const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({
   );
 };
 
-RoadmapCheckpoint.displayName = "RoadmapCheckpoint";
+RoadmapCheckpoint.displayName = 'RoadmapCheckpoint';
 
 export default RoadmapCheckpoint;

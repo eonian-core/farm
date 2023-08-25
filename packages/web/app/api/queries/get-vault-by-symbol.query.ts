@@ -1,5 +1,5 @@
-import { ApolloClient, gql } from "@apollo/client";
-import { VaultBySymbolQuery } from "../gql/graphql";
+import { ApolloClient, gql } from '@apollo/client';
+import { VaultBySymbolQuery } from '../gql/graphql';
 
 export const GetVaultBySymbol = gql`
   query VaultBySymbol($symbol: String!) {

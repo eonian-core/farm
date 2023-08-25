@@ -1,19 +1,19 @@
-import clsx from "clsx";
-import * as React from "react";
-import { usePathname } from "next/navigation";
-import { InternalLink, LinkWithIconProps } from "../links/links";
-import styles from "./navigation.module.scss";
+import clsx from 'clsx';
+import * as React from 'react';
+import { usePathname } from 'next/navigation';
+import { InternalLink, LinkWithIconProps } from '../links/links';
+import styles from './navigation.module.scss';
 
-import { Socials } from "../socials/socials";
-import { useLocalSocials } from "../../socials";
-import IconExternal from "../icons/icon-external";
-import ExternalLink from "../links/external-link";
+import { Socials } from '../socials/socials';
+import { useLocalSocials } from '../../socials';
+import IconExternal from '../icons/icon-external';
+import ExternalLink from '../links/external-link';
 
 export const MenuItem = ({ className, ...props }: LinkWithIconProps) => {
   const pathname = usePathname();
 
   const href = props.href.toString();
-  const isExternal = !href.startsWith("/");
+  const isExternal = !href.startsWith('/');
   const isActive = !isExternal && pathname.startsWith(href);
 
   return (

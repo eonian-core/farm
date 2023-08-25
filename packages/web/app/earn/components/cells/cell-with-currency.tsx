@@ -1,8 +1,8 @@
-import { Row, Spacer, Tooltip } from "@nextui-org/react";
-import React from "react";
-import CompactNumber from "../../../components/compact-number/compact-number";
-import { toStringNumberFromDecimals } from "../../../shared";
-import { CellWithDescription } from "./cell-with-description";
+import { Row, Spacer, Tooltip } from '@nextui-org/react';
+import React from 'react';
+import CompactNumber from '../../../components/compact-number/compact-number';
+import { toStringNumberFromDecimals } from '../../../shared';
+import { CellWithDescription } from './cell-with-description';
 
 interface Props {
   value: bigint;
@@ -12,11 +12,7 @@ interface Props {
   symbol: string;
 }
 
-export const CellWithCurrency: React.FC<Props> = ({
-  value,
-  decimals,
-  symbol,
-}) => {
+export const CellWithCurrency: React.FC<Props> = ({ value, decimals, symbol }) => {
   const valueUSD = value;
   return (
     <Tooltip content={<TooltipContent />}>
@@ -55,12 +51,7 @@ interface ValueNumberProps extends React.PropsWithChildren {
   currencyAtStart?: boolean;
 }
 
-function ValueNumber({
-  value,
-  decimals,
-  currencyAtStart,
-  children,
-}: ValueNumberProps) {
+function ValueNumber({ value, decimals, currencyAtStart, children }: ValueNumberProps) {
   const threshold = BigInt(1e6) * 10n ** BigInt(decimals);
   return (
     <CompactNumber
