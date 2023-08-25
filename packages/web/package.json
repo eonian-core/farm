@@ -22,7 +22,8 @@
     "jest": "node --experimental-vm-modules --experimental-specifier-resolution=node ./node_modules/.bin/jest",
     "mock": "ts-node --esm ./apollo/mocks/apollo-mock.ts",
     "gen:gql-types": "graphql-codegen --config ./apollo/codegen.ts",
-    "release-logrocket": "node release-logrocket.cjs"
+    "release-logrocket": "node release-logrocket.cjs",
+    "pre-commit": "lint-staged"
   },
   "dependencies": {
     "@apollo/client": "3.8.0-rc.0",
@@ -95,6 +96,7 @@
     "graphql-scalars": "^1.21.3",
     "jest": "^29.4.2",
     "jest-environment-jsdom": "^29.4.2",
+    "lint-staged": "^14.0.1",
     "logrocket-cli": "^0.13.1",
     "opener": "^1.5.2",
     "prettier": "^3.0.2",
@@ -104,5 +106,8 @@
     "storybook": "7.0.2",
     "storybook-addon-pseudo-states": "^2.0.0-next.0",
     "ts-node": "^10.9.1"
+  },
+  "lint-staged": {
+    "*.ts": "eslint . --ext .ts --fix"
   }
 }

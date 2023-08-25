@@ -18216,6 +18216,22 @@ lint-staged@^14.0.0:
     string-argv "0.3.2"
     yaml "2.3.1"
 
+lint-staged@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-14.0.1.tgz#57dfa3013a3d60762d9af5d9c83bdb51291a6232"
+  integrity sha512-Mw0cL6HXnHN1ag0mN/Dg4g6sr8uf8sn98w2Oc1ECtFto9tvRF7nkXGJRbx8gPlHyoR0pLyBr2lQHbWwmUHe1Sw==
+  dependencies:
+    chalk "5.3.0"
+    commander "11.0.0"
+    debug "4.3.4"
+    execa "7.2.0"
+    lilconfig "2.1.0"
+    listr2 "6.6.1"
+    micromatch "4.0.5"
+    pidtree "0.6.0"
+    string-argv "0.3.2"
+    yaml "2.3.1"
+
 listr2@6.6.1:
   version "6.6.1"
   resolved "https://registry.yarnpkg.com/listr2/-/listr2-6.6.1.tgz#08b2329e7e8ba6298481464937099f4a2cd7f95d"
