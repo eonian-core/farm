@@ -25,7 +25,7 @@
     "serve": "hardhat node --export-all './deployments/local.json'",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",
     "lint:ts": "eslint . --ext .ts --fix",
-    "lint:license": "./check-license.sh",
+    "lint:license": "node -e 'require(\"./check-license\").check()'",
     "gas-usage:report": "forge snapshot",
     "gas-usage:diff": "forge snapshot --diff",
     "pre-commit": "lint-staged"
