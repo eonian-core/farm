@@ -36,4 +36,9 @@ async function check(files) {
   }
 }
 
-module.exports = { check };
+async function main() {
+  const files = process.argv.slice(2);
+  await check(files.length > 0 ? files : undefined);
+}
+
+main();
