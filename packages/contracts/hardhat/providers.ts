@@ -1,13 +1,13 @@
-import { ChainSymobls } from '@eonian/upgradeable';
+import { ChainSymobls } from '@eonian/upgradeable'
 
 /** Map of contract names to their respective addresses on blockchain */
 export interface ContractAddresses {
-  [name: string]: string;
+  [name: string]: string
 }
 
 /** Map of contracts addresses on multiple chains */
 export interface ContractsOnChains {
-  [chainSymbol: string]: ContractAddresses;
+  [chainSymbol: string]: ContractAddresses
 }
 
 export enum ProvidersContracts {
@@ -34,4 +34,4 @@ export const providers: ContractsOnChains = {
     [ProvidersContracts.chainlink__USDC_USD_feed]: '0x51597f405303c4377e36123cbc172b13269ea163', // https://data.chain.link/bsc/mainnet/crypto-usd/usdc-usd
     [ProvidersContracts.chainlink__BUSD_USD_feed]: '0xcbb98864ef56e9042e7d2efef76141f15731b82f', // https://data.chain.link/bsc/mainnet/crypto-usd/busd-usd
   },
-};
+}

@@ -1,4 +1,4 @@
-import { generateVaultFounderTokenDeployment } from '../hardhat/deployments/VaultFounderToken.deployment';
+import { generateVaultFounderTokenDeployment } from '../hardhat/deployments/VaultFounderToken.deployment'
 
 /**
  * Deploy USDC Vault Founder Token contract
@@ -6,4 +6,4 @@ import { generateVaultFounderTokenDeployment } from '../hardhat/deployments/Vaul
 
 export default generateVaultFounderTokenDeployment({
   asset: 'USDC',
-});
+})

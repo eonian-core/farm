@@ -24,7 +24,7 @@
     "dev": "FOUNDRY_FUZZ_RUNS=5 forge test --watch -vvv",
     "serve": "hardhat node --export-all './deployments/local.json'",
     "lint": "solhint 'src/**/*.sol' --formatter stylish --fix && yarn lint:license",
-    "lint:ts": "eslint . --ext .ts --fix",
+    "lint:eslint": "eslint . --ext .ts,.js --fix",
     "lint:license": "node ./check-license.js",
     "gas-usage:report": "forge snapshot",
     "gas-usage:diff": "forge snapshot --diff",
@@ -34,6 +34,7 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
+    "@eonian/eslint-config": "0.0.7",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
@@ -45,20 +46,11 @@
     "@types/debug": "^4.1.7",
     "@types/lodash": "^4.14.192",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^12.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.4.0",
-    "@typescript-eslint/parser": "^6.4.0",
+    "@types/node": "^20.5.6",
     "chai": "^4.3.7",
     "debug": "^4.3.4",
     "dotenv": "^16.0.0",
     "eslint": "^8.47.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-n": "^16.0.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-promise": "^6.1.1",
     "ethers": "^5.7.2",
     "ganache": "^7.7.7",
     "hardhat": "^2.13.0",
@@ -73,7 +65,7 @@
     "solidity-coverage": "^0.8.2",
     "ts-node": "^10.9.1",
     "typechain": "^8.3.1",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@chainlink/contracts": "^0.6.1",

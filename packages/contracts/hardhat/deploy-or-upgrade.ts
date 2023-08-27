@@ -1,59 +1,60 @@
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { DeployFunction, Deployment, DeployResult, DeploymentsExtension } from 'hardhat-deploy/types';
-import { BlockchainType, NamedAccounts, Stage } from '../hardhat.config';
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import type { DeployFunction, DeployResult, Deployment, DeploymentsExtension } from 'hardhat-deploy/types'
+import type { BlockchainType, NamedAccounts } from '../hardhat.config'
+import { Stage } from '../hardhat.config'
 
 export interface ArgsFactoryOptions {
-  accounts: NamedAccounts;
-  stage: Stage;
-  dependencies: Array<Deployment>;
+  accounts: NamedAccounts
+  stage: Stage
+  dependencies: Array<Deployment>
 }
 
 export interface DeployUpgradableConfig {
   /** Name of contract */
-  contract: string;
+  contract: string
   /** Define on which blockchains this contract can be deploed */
-  chains: Array<BlockchainType>;
+  chains: Array<BlockchainType>
   /** Additional tags */
-  tags?: string[];
+  tags?: string[]
 
   /** List of contracts on which current contract depend, will be passed in getArgs function */
-  dependencies?: string[];
+  dependencies?: string[]
 
   /** Function to generate arguments which will be passed to contract */
-  getArgs: (options: ArgsFactoryOptions) => Array<any>;
+  getArgs: (options: ArgsFactoryOptions) => Array<any>
 
   /** Function to run after deploy */
   afterDeploy?: (
     hre: HardhatRuntimeEnvironment,
     deployResult: DeployResult,
     dependencies: Array<Deployment>
-  ) => Promise<void>;
+  ) => Promise<void>
 }
 
 /**
  * Deploy UUPS Proxy and implementation contract
  * or upgrade existing if already deployed
  * */
-export const deployOrUpgrade = ({
+export function deployOrUpgrade({
   contract,
   chains,
   tags = [],
   dependencies = [],
   getArgs,
   afterDeploy,
-}: DeployUpgradableConfig): DeployFunction => {
+}: DeployUpgradableConfig): DeployFunction {
   const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const {
       network,
       deployments: { deploy, get: getDeployment },
-    } = hre;
-    const { accounts } = await extractContext(hre);
+    } = hre
+    const { accounts } = await extractContext(hre)
 
-    const deployedContracts = await resolveDependencies(hre.deployments, dependencies);
+    const deployedContracts = await resolveDependencies(hre.deployments, dependencies)
 
-    const { deployer } = accounts;
+    const { deployer } = accounts
 
-    const isUpdate = await isDeployedBefore(contract, getDeployment);
+    const isUpdate = await isDeployedBefore(contract, getDeployment)
 
     const result = await deploy(contract, {
       from: deployer,
@@ -77,65 +78,64 @@ export const deployOrUpgrade = ({
           },
         },
       },
-    });
+    })
 
     // trigger only on first deploy
     if (!isUpdate) {
-      await afterDeploy?.(hre, result, deployedContracts);
+      await afterDeploy?.(hre, result, deployedContracts)
     }
-  };
-
-  func.tags = [contract, ...chains, ...tags];
-
-  func.skip = skipFactory(chains);
-
-  func.dependencies = dependencies;
-
-  return func;
-};
-
-type GetDeployement = (name: string) => Promise<Deployment>;
-
-export const isDeployedBefore = async (contract: string, getDeployment: GetDeployement): Promise<boolean> => {
-  try {
-    const oldDeployment = await getDeployment(contract);
-    console.log('Old deployment found for', contract, oldDeployment);
-
-    return !!oldDeployment?.implementation;
-  } catch (e) {
-    console.warn("Probably wasan't deployed before", e);
-    return false;
   }
-};
+
+  func.tags = [contract, ...chains, ...tags]
+
+  func.skip = skipFactory(chains)
+
+  func.dependencies = dependencies
+
+  return func
+}
+
+type GetDeployement = (name: string) => Promise<Deployment>
+
+export async function isDeployedBefore(contract: string, getDeployment: GetDeployement): Promise<boolean> {
+  try {
+    const oldDeployment = await getDeployment(contract)
+    console.log('Old deployment found for', contract, oldDeployment)
+
+    return !!oldDeployment?.implementation
+  }
+  catch (e) {
+    console.warn('Probably wasan\'t deployed before', e)
+    return false
+  }
+}
 
 export interface Context {
-  accounts: NamedAccounts;
-  networkName: string;
-  chainId: string;
+  accounts: NamedAccounts
+  networkName: string
+  chainId: string
 }
 
 /** Extract context from enviroment */
-export const extractContext = async ({
+export async function extractContext({
   getNamedAccounts,
   getChainId,
   deployments: { getNetworkName, log },
-}: HardhatRuntimeEnvironment): Promise<Context> => {
+}: HardhatRuntimeEnvironment): Promise<Context> {
   const context = {
-    accounts: (await getNamedAccounts()) as any,
-    networkName: await getNetworkName(),
+    accounts: await getNamedAccounts(),
+    networkName: getNetworkName(),
     chainId: await getChainId(),
-  };
-  log('context', context);
+  }
+  log('context', context)
 
-  return context;
-};
+  return context as unknown as Context
+}
 
 /** Retive contracts based on dependencies list */
-export const resolveDependencies = async (
-  { get: getDeployment, log }: DeploymentsExtension,
-  dependencies: Array<string>
-) => {
-  const deployedContracts = await Promise.all(dependencies.map((name) => getDeployment(name)));
+export async function resolveDependencies({ get: getDeployment, log }: DeploymentsExtension,
+  dependencies: Array<string>) {
+  const deployedContracts = await Promise.all(dependencies.map(name => getDeployment(name)))
 
   log(
     'dependencies',
@@ -144,27 +144,26 @@ export const resolveDependencies = async (
         ...total,
         [dep]: deployedContracts[index].address,
       }),
-      {}
-    )
-  );
+      {},
+    ),
+  )
 
-  return deployedContracts;
-};
+  return deployedContracts
+}
 
 /**
  * Generate function which define when need skip deployment execution
  * Based on network tags and contract chains.
  * If contract chains not include network tag, then skip deployment
  * */
-export const skipFactory =
-  (contractChains: Array<BlockchainType>) =>
-  async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
+export function skipFactory(contractChains: Array<BlockchainType>) {
+  return ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
     for (const chain of network.config.tags) {
       // Dont skip if contract expected to be deployed in this chain
       if (contractChains.includes(chain as BlockchainType)) {
-        return false;
+        return Promise.resolve(false)
       }
     }
-
-    return true;
-  };
+    return Promise.resolve(true)
+  }
+}
