@@ -98,7 +98,7 @@ export class BaseDeploymentService extends LifecycleDeploymentService {
 
   /** Allow to override init method args, will be passed only one time */
   async onResolveInitArgs(_args: BaseInitArgs): Promise<Array<any>> {
-    return []
+    return Promise.resolve([])
   }
 
   async afterDeploy(_deployResult: DeployResult, _dependencies: Array<Deployment>): Promise<void> {}

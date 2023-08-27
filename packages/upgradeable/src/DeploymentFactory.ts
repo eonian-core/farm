@@ -38,14 +38,14 @@ export class DeploymentFactory<Config extends DeployConfig, Deployment extends B
   }
 
   skip(contractChains: Array<string>): SkipFunction {
-    return async ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
+    return ({ network }: HardhatRuntimeEnvironment): Promise<boolean> => {
       for (const chain of network.config.tags) {
         // Dont skip if contract expected to be deployed in this chain
         if (contractChains.includes(chain)) {
-          return false
+          return Promise.resolve(false)
         }
       }
-      return true
+      return Promise.resolve(true)
     }
   }
 }

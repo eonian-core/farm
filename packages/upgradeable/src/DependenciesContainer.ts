@@ -9,7 +9,7 @@ import { AccountsAdapter } from './adapters/Accounts.adapter'
 
 export class DependenciesContainer<Config extends DeployConfig, Deployment extends BaseDeploymentService>
 implements IDependenciesContainer<Config, Deployment> {
-  async resolve(
+  resolve(
     ServiceClass: Newable<Deployment>,
     config: Config,
     hre: HardhatRuntimeEnvironment,
@@ -19,7 +19,8 @@ implements IDependenciesContainer<Config, Deployment> {
     const dependenciesService = new DependenciesAdapter(hre)
     const accounts = new AccountsAdapter(hre)
     const enironment = new EnvironmentAdapter(hre)
-
-    return new ServiceClass(config, dependenciesService, accounts, enironment, hre, deployments, logger)
+    return Promise.resolve(
+      new ServiceClass(config, dependenciesService, accounts, enironment, hre, deployments, logger),
+    )
   }
 }

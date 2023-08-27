@@ -20,7 +20,7 @@ export class DeploymentsAdapter implements DeploymentsService {
       getChainId,
       deployments: { getNetworkName },
     } = this.hre
-    this.logger.log(`Deploying ${name} to network ${await getNetworkName()} with chainId ${await getChainId()}`)
+    this.logger.log(`Deploying ${name} to network ${getNetworkName()} with chainId ${await getChainId()}`)
 
     return this.hre.deployments.deploy(name, {
       contract,

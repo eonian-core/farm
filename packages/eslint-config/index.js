@@ -1,14 +1,6 @@
-"use strict";
-
 module.exports = {
-  env: {
-    browser: true,
-    commonjs: true,
-    es6: true,
-    node: true,
-  },
   plugins: ["sonarjs"],
-  extends: ["@antfu"],
+  extends: ["./antfu.eslintrc.js"],
   rules: {
     // Allows the global variable "process" to be used
     "n/prefer-global/process": ["error", "always"],
@@ -18,13 +10,19 @@ module.exports = {
 
     // Refer to https://github.com/SonarSource/eslint-plugin-sonarjs/blob/master/docs/rules/cognitive-complexity.md
     "sonarjs/cognitive-complexity": "error",
+
+    // Allows using destructing assignment to get methods
+    "@typescript-eslint/unbound-method": "off",
   },
   overrides: [
     {
-      files: ["**/*.test.ts"],
-      extends: ["plugin:jest/recommended"],
-      env: {
-        jest: true,
+      // Reducing the strictness of checks in test files
+      files: ["*.test.ts", "*.test.js", "*.spec.ts", "*.spec.js"],
+      rules: {
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/require-await": "off",
       },
     },
   ],
