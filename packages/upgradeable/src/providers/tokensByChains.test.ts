@@ -1,7 +1,7 @@
 // tokenDict.test.ts
-import { ChainSymobls, chains } from './chains';
-import { getTokenBySymbol, listToDict, tokensByChains } from './tokensByChains';
-import { TokenInfo } from '@uniswap/token-lists';
+import type { TokenInfo } from '@uniswap/token-lists'
+import { ChainSymobls, chains } from './chains'
+import { getTokenBySymbol, listToDict, tokensByChains } from './tokensByChains'
 
 describe('listToDict function', () => {
   it('should convert token list to dict filtered by chain symbol', () => {
@@ -42,26 +42,26 @@ describe('listToDict function', () => {
         address: '0x6',
         decimals: 18,
       },
-    ] as any;
+    ] as any
 
-    const ethDict = listToDict(testTokens, ChainSymobls.ETH);
+    const ethDict = listToDict(testTokens, ChainSymobls.ETH)
     expect(ethDict).toEqual({
       ETH1: testTokens[0],
       ETH2: testTokens[1],
-    });
+    })
 
-    const bscDict = listToDict(testTokens, ChainSymobls.BSC);
+    const bscDict = listToDict(testTokens, ChainSymobls.BSC)
     expect(bscDict).toEqual({
       BSC1: testTokens[2],
       BSC2: testTokens[3],
-    });
+    })
 
-    const sepDict = listToDict(testTokens, ChainSymobls.Sepolia);
+    const sepDict = listToDict(testTokens, ChainSymobls.Sepolia)
     expect(sepDict).toEqual({
       SEP1: testTokens[4],
       SEP2: testTokens[5],
-    });
-  });
+    })
+  })
 
   it('should return an empty dict when no tokens match the chain symbol', () => {
     const testTokens: TokenInfo[] = [
@@ -77,12 +77,12 @@ describe('listToDict function', () => {
         address: '0x2',
         decimals: 18,
       },
-    ] as any;
+    ] as any
 
-    const bscDict = listToDict(testTokens, ChainSymobls.BSC);
-    expect(bscDict).toEqual({});
-  });
-});
+    const bscDict = listToDict(testTokens, ChainSymobls.BSC)
+    expect(bscDict).toEqual({})
+  })
+})
 
 describe('getTokenBySymbol function', () => {
   it('should return the correct token for given chain symbol and token symbol', () => {
@@ -91,21 +91,21 @@ describe('getTokenBySymbol function', () => {
       symbol: 'TEST',
       address: '0x1',
       decimals: 18,
-    } as any;
-    tokensByChains[ChainSymobls.ETH] = { TEST: testToken }; // mock the tokensByChains data
+    } as any
+    tokensByChains[ChainSymobls.ETH] = { TEST: testToken } // mock the tokensByChains data
 
-    const result = getTokenBySymbol(ChainSymobls.ETH, 'TEST');
-    expect(result).toEqual(testToken);
-  });
+    const result = getTokenBySymbol(ChainSymobls.ETH, 'TEST')
+    expect(result).toEqual(testToken)
+  })
 
   it('should throw an error when the chain symbol does not exist in tokensByChains', () => {
     expect(() => {
-      getTokenBySymbol('NON_EXISTENT' as ChainSymobls, 'TEST');
-    }).toThrowError(new Error('Chain NON_EXISTENT and token TEST pair is not found'));
-  });
+      getTokenBySymbol('NON_EXISTENT' as ChainSymobls, 'TEST')
+    }).toThrow(new Error('Chain NON_EXISTENT and token TEST pair is not found'))
+  })
 
   it('should return undefined when the token symbol does not exist in the chain', () => {
-    const result = getTokenBySymbol(ChainSymobls.ETH, 'NON_EXISTENT');
-    expect(result).toBeUndefined();
-  });
-});
+    const result = getTokenBySymbol(ChainSymobls.ETH, 'NON_EXISTENT')
+    expect(result).toBeUndefined()
+  })
+})

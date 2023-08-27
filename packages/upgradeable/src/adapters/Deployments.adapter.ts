@@ -1,26 +1,26 @@
 /// <reference path="../types.d.ts"/>
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
-import { DeployResult, Deployment } from 'hardhat-deploy/types';
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import type { DeployResult, Deployment } from 'hardhat-deploy/types'
 
-import { DeployArgs, DeploymentsService } from '../LifecycleDeployment.service';
-import { Logger } from '../logger/Logger';
+import type { DeployArgs, DeploymentsService } from '../LifecycleDeployment.service'
+import type { Logger } from '../logger/Logger'
 
 export class DeploymentsAdapter implements DeploymentsService {
   constructor(
     readonly hre: HardhatRuntimeEnvironment,
-    readonly logger: Logger
+    readonly logger: Logger,
   ) {}
 
   async deploy({ name, contract, deployer, owner, init: { args } }: DeployArgs): Promise<DeployResult> {
     if (name === contract) {
-      throw new Error(`Contract name and artifact name cannot be the same: ${name}`);
+      throw new Error(`Contract name and artifact name cannot be the same: ${name}`)
     }
 
     const {
       getChainId,
       deployments: { getNetworkName },
-    } = this.hre;
-    this.logger.log(`Deploying ${name} to network ${await getNetworkName()} with chainId ${await getChainId()}`);
+    } = this.hre
+    this.logger.log(`Deploying ${name} to network ${await getNetworkName()} with chainId ${await getChainId()}`)
 
     return this.hre.deployments.deploy(name, {
       contract,
@@ -41,19 +41,20 @@ export class DeploymentsAdapter implements DeploymentsService {
           },
         },
       },
-    });
+    })
   }
 
   async get(name: string): Promise<Deployment | undefined> {
     try {
-      return await this.hre.deployments.get(name);
-    } catch (e) {
-      this.logger.warn("Probably wasn't deployed before", e);
+      return await this.hre.deployments.get(name)
+    }
+    catch (e) {
+      this.logger.warn('Probably wasn\'t deployed before', e)
     }
   }
 
   async isDeployed(name: string): Promise<boolean> {
-    const deployment = await this.get(name);
-    return !!deployment;
+    const deployment = await this.get(name)
+    return !!deployment
   }
 }

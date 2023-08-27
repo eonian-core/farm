@@ -1,13 +1,13 @@
 /** Blockchain related information */
 export interface Chain {
   /** Full name of blockchain, for example Etherium Mainnet */
-  name: string;
+  name: string
   /** Blockchain short name, for example BSC */
-  symbol: string;
+  symbol: string
   /** Id of chain, 1 */
-  chainId: number;
+  chainId: number
   /** Base currency symobl, for example ETH */
-  currency: string;
+  currency: string
 }
 
 /** List of suported chains by this list */
@@ -19,7 +19,7 @@ export enum ChainSymobls {
 
 /** List of chains referenced by symbol */
 export interface ChainList {
-  [chainSymbol: string]: Chain;
+  [chainSymbol: string]: Chain
 }
 
 /** Main metadata about chains */
@@ -42,4 +42,4 @@ export const chains: ChainList = {
     chainId: 11155111,
     currency: 'SepoliaETH',
   },
-};
+}
