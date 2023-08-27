@@ -14,7 +14,7 @@
     "build": "microbundle --target=node",
     "build:watch": "microbundle watch",
     "prepublish": "yarn build",
-    "lint:ts": "eslint . --ext .ts --fix",
+    "lint": "eslint . --ext .ts,.js --fix",
     "pre-commit": "lint-staged"
   },
   "source": "./src/index.ts",
@@ -26,6 +26,7 @@
   "unpkg": "./dist/index.umd.js",
   "types": "./dist/index.d.ts",
   "devDependencies": {
+    "@eonian/eslint-config": "0.0.2",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.6",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.8",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
