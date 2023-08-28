@@ -1,13 +1,13 @@
-import * as features from '../../features';
-import IconExternal from '../icons/icon-external';
-import ExternalLink from '../links/external-link';
-import { InternalLink } from '../links/links';
-import styles from './footer.module.scss';
+import * as features from '../../features'
+import IconExternal from '../icons/icon-external'
+import ExternalLink from '../links/external-link'
+import { InternalLink } from '../links/links'
+import styles from './footer.module.scss'
 
 export interface ResourceItem {
-  href: string;
-  label: string;
-  external?: boolean;
+  href: string
+  label: string
+  external?: boolean
 }
 
 const list: Array<ResourceItem> = [
@@ -34,12 +34,12 @@ const list: Array<ResourceItem> = [
     isEnabled: features.showTOS,
     external: true,
   },
-].filter(({ isEnabled }) => isEnabled);
+].filter(({ isEnabled }) => isEnabled)
 
-export const Resources = () => {
+export function Resources() {
   // if at least one feautre is enabled, the footer resources will be shown
   if (!list.length) {
-    return null;
+    return null
   }
 
   return (
@@ -48,16 +48,18 @@ export const Resources = () => {
       <ul>
         {list.map(({ href, label, external }) => (
           <li key={href}>
-            {external ? (
+            {external
+              ? (
               <ExternalLink icon={<IconExternal />} iconAtEnd href={href}>
                 {label}
               </ExternalLink>
-            ) : (
+                )
+              : (
               <InternalLink href={href}>{label}</InternalLink>
-            )}
+                )}
           </li>
         ))}
       </ul>
     </div>
-  );
-};
+  )
+}

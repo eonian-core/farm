@@ -1,13 +1,13 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { H2 } from '../../../components/heading/heading';
-import StableProfit from './stable-profit';
+import type { Meta, StoryFn } from '@storybook/react'
+import { H2 } from '../../../components/heading/heading'
+import StableProfit from './stable-profit'
 
 const meta: Meta<typeof StableProfit> = {
   title: 'Views/StableProfit',
   component: StableProfit,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -23,11 +23,11 @@ const meta: Meta<typeof StableProfit> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
+export default meta
 
-const Template: StoryFn<typeof StableProfit> = (props) => (
+const Template: StoryFn<typeof StableProfit> = props => (
   <StableProfit {...props}>
     <H2>Stable and High Yield</H2>
     <p>
@@ -68,7 +68,7 @@ const Template: StoryFn<typeof StableProfit> = (props) => (
       </li>
     </ul>
   </StableProfit>
-);
+)
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}

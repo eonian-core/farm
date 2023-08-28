@@ -1,19 +1,19 @@
-import Container from '../../../components/contrainer/container';
-import FadeIn from '../../../components/fade-in/fade-in';
-import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens';
-import styles from './problem.module.scss';
+import Container from '../../../components/contrainer/container'
+import FadeIn from '../../../components/fade-in/fade-in'
+import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
+import styles from './problem.module.scss'
 
 interface ProblemProps {
   /** content of the block, expected to have: Category, h2 and p elements */
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 /**
  * Problem block of the landing page
  * @param children - content of the block
  */
-export const Problem = ({ children }: ProblemProps) => {
-  const isMobileOrSmaller = useIsMobileOrSmaller();
+export function Problem({ children }: ProblemProps) {
+  const isMobileOrSmaller = useIsMobileOrSmaller()
 
   return (
     <Container className={styles.pageContainer}>
@@ -25,7 +25,7 @@ export const Problem = ({ children }: ProblemProps) => {
         </FadeIn>
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default Problem;
+export default Problem

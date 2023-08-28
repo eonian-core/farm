@@ -1,5 +1,5 @@
 // icon:tether | Simple Icons https://simpleicons.org | SimpleIcons.org
-import * as React from 'react';
+import * as React from 'react'
 
 function IconTether(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -12,7 +12,7 @@ function IconTether(props: React.SVGProps<SVGSVGElement>) {
         />
       </g>
     </svg>
-  );
+  )
 }
 
-export default IconTether;
+export default IconTether

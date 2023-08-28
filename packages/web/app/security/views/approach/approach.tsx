@@ -1,18 +1,18 @@
-import React from 'react';
-import styles from './approach.module.scss';
-import Image from 'next/image';
-import robotPic from './assets/robot.png';
-import Container from '../../../components/contrainer/container';
-import FadeInList from '../../../components/fade-in/fade-in-list';
-import FadeIn from '../../../components/fade-in/fade-in';
-import { useIsLaptopOrSmaller } from '../../../components/resize-hooks/screens';
+import React from 'react'
+import Image from 'next/image'
+import Container from '../../../components/contrainer/container'
+import FadeInList from '../../../components/fade-in/fade-in-list'
+import FadeIn from '../../../components/fade-in/fade-in'
+import { useIsLaptopOrSmaller } from '../../../components/resize-hooks/screens'
+import robotPic from './assets/robot.png'
+import styles from './approach.module.scss'
 
 export interface ApproachProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function Approach({ children }: ApproachProps) {
-  const isLaptopOrSmaller = useIsLaptopOrSmaller();
+  const isLaptopOrSmaller = useIsLaptopOrSmaller()
 
   return (
     <Container className={styles.pageContainer}>
@@ -31,5 +31,5 @@ export default function Approach({ children }: ApproachProps) {
         </FadeInList>
       </div>
     </Container>
-  );
+  )
 }

@@ -1,22 +1,23 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { useIsDesktopOrSmaller } from '../../../../components/resize-hooks/screens';
-import { WrapperLink } from '../../../../components/links/wrapper-link';
-import Button, { Props as ButtonProps } from '../../../../components/button/button';
+import React from 'react'
+import clsx from 'clsx'
+import { useIsDesktopOrSmaller } from '../../../../components/resize-hooks/screens'
+import { WrapperLink } from '../../../../components/links/wrapper-link'
+import type { Props as ButtonProps } from '../../../../components/button/button'
+import Button from '../../../../components/button/button'
 
-import styles from './hero-button.module.scss';
-import clsx from 'clsx';
+import styles from './hero-button.module.scss'
 
 interface Props extends ButtonProps {
-  children: React.ReactNode;
-  href: string;
-  icon?: React.ReactNode;
-  bold?: boolean;
+  children: React.ReactNode
+  href: string
+  icon?: React.ReactNode
+  bold?: boolean
 }
 
 const HeroButton: React.FC<Props> = ({ children, href, icon, bold, ...restProps }) => {
-  const isDesktop = useIsDesktopOrSmaller();
+  const isDesktop = useIsDesktopOrSmaller()
 
   return (
     <WrapperLink className={clsx(styles.button, { [styles.bold]: bold })} href={href}>
@@ -24,7 +25,7 @@ const HeroButton: React.FC<Props> = ({ children, href, icon, bold, ...restProps 
         {children}
       </Button>
     </WrapperLink>
-  );
-};
+  )
+}
 
-export default HeroButton;
+export default HeroButton

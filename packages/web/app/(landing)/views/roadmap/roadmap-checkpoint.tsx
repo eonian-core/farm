@@ -1,12 +1,13 @@
-import clsx from 'clsx';
-import React, { useContext } from 'react';
-import { H3Context } from '../../../components/heading/heading';
-import IconCheck from '../../../components/icons/icon-check';
-import { RoadmapCheckpointProps, RoadmapContext } from './roadmap-checkpoint-strip';
-import styles from './roadmap-checkpoint.module.scss';
+import clsx from 'clsx'
+import React, { useContext } from 'react'
+import { H3Context } from '../../../components/heading/heading'
+import IconCheck from '../../../components/icons/icon-check'
+import type { RoadmapCheckpointProps } from './roadmap-checkpoint-strip'
+import { RoadmapContext } from './roadmap-checkpoint-strip'
+import styles from './roadmap-checkpoint.module.scss'
 
-const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({ title, date, href, completed, children }) => {
-  const { width, isCentered } = useContext(RoadmapContext);
+const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({ href, completed, children }) => {
+  const { width, isCentered } = useContext(RoadmapContext)
 
   return (
     <a
@@ -31,9 +32,9 @@ const RoadmapCheckpoint: React.FC<RoadmapCheckpointProps> = ({ title, date, href
         </div>
       </H3Context.Provider>
     </a>
-  );
-};
+  )
+}
 
-RoadmapCheckpoint.displayName = 'RoadmapCheckpoint';
+RoadmapCheckpoint.displayName = 'RoadmapCheckpoint'
 
-export default RoadmapCheckpoint;
+export default RoadmapCheckpoint

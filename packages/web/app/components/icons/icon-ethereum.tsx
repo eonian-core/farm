@@ -1,5 +1,5 @@
 // icon:ethereum | Fontawesome https://fontawesome.com/ | Fontawesome
-import * as React from 'react';
+import * as React from 'react'
 
 function IconEthereum(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -16,7 +16,7 @@ function IconEthereum(props: React.SVGProps<SVGSVGElement>) {
         </g>
       </g>
     </svg>
-  );
+  )
 }
 
-export default IconEthereum;
+export default IconEthereum

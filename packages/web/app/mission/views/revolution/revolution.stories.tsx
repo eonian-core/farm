@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Card, { Target } from '../../../components/card/card';
-import heading from '../../../components/heading/heading';
+import type { Meta, StoryObj } from '@storybook/react'
+import Card, { Target } from '../../../components/card/card'
+import heading from '../../../components/heading/heading'
 
-import { Revolution } from './revolution';
+import { Revolution } from './revolution'
 
 const meta: Meta<typeof Revolution> = {
   title: 'Views/Revolution',
   component: Revolution,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -29,10 +29,10 @@ const meta: Meta<typeof Revolution> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Revolution>;
+export default meta
+type Story = StoryObj<typeof Revolution>
 
 export const Default: Story = {
   args: {
@@ -57,4 +57,4 @@ export const Default: Story = {
       </>
     ),
   },
-};
+}

@@ -1,8 +1,8 @@
-import clsx from 'clsx';
-import React from 'react';
+import clsx from 'clsx'
+import React from 'react'
 
 interface Props extends React.SVGProps<SVGSVGElement> {
-  size: string | number;
+  size: string | number
 }
 
 const Spinner: React.FC<Props> = ({ size, className, ...restProps }) => (
@@ -23,6 +23,6 @@ const Spinner: React.FC<Props> = ({ size, className, ...restProps }) => (
       fill="currentFill"
     />
   </svg>
-);
+)
 
-export default Spinner;
+export default Spinner

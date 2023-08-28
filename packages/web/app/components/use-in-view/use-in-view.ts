@@ -2,37 +2,39 @@
 // Implementation with fix for https://github.com/framer/motion/issues/1940
 // Bug prevent using `useInView` for mobile devices
 // TODO: remove when fix will be implemented
-import { RefObject, useEffect, useState } from 'react';
-import { inView, InViewOptions } from '@motionone/dom';
+import type { RefObject } from 'react'
+import { useEffect, useState } from 'react'
+import type { InViewOptions } from '@motionone/dom'
+import { inView } from '@motionone/dom'
 
 interface Options extends Omit<InViewOptions, 'root' | 'amount'> {
-  root?: RefObject<Element>;
-  once?: boolean;
-  amount?: 'some' | 'all' | number;
+  root?: RefObject<Element>
+  once?: boolean
+  amount?: 'some' | 'all' | number
 }
 
 export function useInView(ref: RefObject<Element>, { root, margin, amount, once = false }: Options = {}) {
-  const [isInView, setInView] = useState(false);
+  const [isInView, setInView] = useState(false)
 
   useEffect(() => {
     if (!ref.current || (once && isInView)) {
-      return;
+      return
     }
 
     const onEnter = () => {
-      setInView(true);
+      setInView(true)
 
-      return once ? undefined : () => setInView(false);
-    };
+      return once ? undefined : () => setInView(false)
+    }
 
     const options: InViewOptions = {
       root: root?.current ?? undefined,
       margin,
       amount: amount === 'some' ? 'any' : amount,
-    };
+    }
 
-    return inView(ref.current, onEnter, options);
-  }, [root, ref, margin, once, amount]);
+    return inView(ref.current, onEnter, options)
+  }, [root, ref, margin, once, amount, isInView])
 
-  return isInView;
+  return isInView
 }

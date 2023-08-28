@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from 'react'
 
 function IconWarning(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -21,7 +21,7 @@ function IconWarning(props: React.SVGProps<SVGSVGElement>) {
       />
       <path d="M256 397.25a20 20 0 1120-20 20 20 0 01-20 20z" />
     </svg>
-  );
+  )
 }
 
-export default IconWarning;
+export default IconWarning

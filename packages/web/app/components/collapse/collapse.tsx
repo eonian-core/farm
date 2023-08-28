@@ -1,33 +1,33 @@
-import React from 'react';
-import { useLocationHash } from './use-location-hash';
-import { Collapse as NextUICollapse } from '@nextui-org/react';
-import { useToId } from '../heading/to-id';
+import React from 'react'
+import { Collapse as NextUICollapse } from '@nextui-org/react'
+import { useToId } from '../heading/to-id'
+import { useLocationHash } from './use-location-hash'
 
-import styles from './collapse.module.scss';
+import styles from './collapse.module.scss'
 
 interface Props {
-  title: string;
-  expanded: boolean;
-  children: React.ReactNode;
+  title: string
+  expanded: boolean
+  children: React.ReactNode
 }
 
 export default function Collapse({ title, expanded, children }: Props) {
-  const [isExpanded, setIsExpanded] = React.useState(expanded);
+  const [isExpanded, setIsExpanded] = React.useState(expanded)
 
-  const id = useToId(title);
-  const hash = useLocationHash();
+  const id = useToId(title)
+  const hash = useLocationHash()
 
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
     if (typeof hash !== 'string' || typeof id !== 'string') {
-      return;
+      return
     }
     if (id === hash) {
-      setIsExpanded(true);
-      scrollIntoView(ref);
+      setIsExpanded(true)
+      scrollIntoView(ref)
     }
-  }, [hash, id]);
+  }, [hash, id])
 
   return (
     <div id={id} ref={ref} className={styles.container}>
@@ -35,9 +35,9 @@ export default function Collapse({ title, expanded, children }: Props) {
         {children}
       </NextUICollapse>
     </div>
-  );
+  )
 }
 
-export const scrollIntoView = (ref: React.RefObject<HTMLDivElement>) => {
-  ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
+export function scrollIntoView(ref: React.RefObject<HTMLDivElement>) {
+  ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}

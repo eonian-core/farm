@@ -1,9 +1,9 @@
-import React from 'react';
+import React from 'react'
 
-import styles from './icon-metamask.module.scss';
+import styles from './icon-metamask.module.scss'
 
-const IconMetamask = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 318.6 318.6" {...props}>
+function IconMetamask(props: React.SVGProps<SVGSVGElement>) {
+  return <svg xmlns="http://www.w3.org/2000/svg" x="0" y="0" viewBox="0 0 318.6 318.6" {...props}>
     <path
       fill="#e2761b"
       stroke="#e2761b"
@@ -77,6 +77,6 @@ const IconMetamask = (props: React.SVGProps<SVGSVGElement>) => (
       className={styles.st6}
     />
   </svg>
-);
+}
 
-export default IconMetamask;
+export default IconMetamask

@@ -1,8 +1,9 @@
-import clsx from 'clsx';
-import { ContainerProps } from 'postcss';
-import React from 'react';
-import { FadeInWrapper, FadeInWrapperProps } from '../fade-in/fade-in-list';
-import styles from './container.module.scss';
+import clsx from 'clsx'
+import type { ContainerProps } from 'postcss'
+import React from 'react'
+import type { FadeInWrapperProps } from '../fade-in/fade-in-list'
+import { FadeInWrapper } from '../fade-in/fade-in-list'
+import styles from './container.module.scss'
 
 export interface FadeInContainerPros extends ContainerProps, FadeInWrapperProps {}
 
@@ -11,8 +12,8 @@ export interface FadeInContainerPros extends ContainerProps, FadeInWrapperProps 
  * from container children on one screen.
  * And pass isInView context for children
  * */
-export const FadeInContainer = ({ className, ...props }: FadeInContainerPros) => (
-  <FadeInWrapper {...props} className={clsx(styles.container, className)} isSection />
-);
+export function FadeInContainer({ className, ...props }: FadeInContainerPros) {
+  return <FadeInWrapper {...props} className={clsx(styles.container, className)} isSection />
+}
 
-export default FadeInContainer;
+export default FadeInContainer

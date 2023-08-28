@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
-const IconBNB = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 2500 2500" {...props}>
+function IconBNB(props: React.SVGProps<SVGSVGElement>) {
+  return <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 2500 2500" {...props}>
     <g id="Layer_x0020_1">
       <g id="_2082423948800">
         <path
@@ -11,6 +11,6 @@ const IconBNB = (props: React.SVGProps<SVGSVGElement>) => (
       </g>
     </g>
   </svg>
-);
+}
 
-export default IconBNB;
+export default IconBNB

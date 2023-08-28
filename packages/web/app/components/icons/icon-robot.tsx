@@ -1,8 +1,8 @@
-import * as React from 'react';
-import styles from './icon-robot.module.scss';
+import * as React from 'react'
+import styles from './icon-robot.module.scss'
 
 interface Props extends React.SVGProps<SVGSVGElement> {
-  size?: string | number;
+  size?: string | number
 }
 
 const IconRobot: React.FC<Props> = ({ size = 16, ...restProps }) => (
@@ -22,6 +22,6 @@ const IconRobot: React.FC<Props> = ({ size = 16, ...restProps }) => (
       stroke="currentColor"
     />
   </svg>
-);
+)
 
-export default IconRobot;
+export default IconRobot

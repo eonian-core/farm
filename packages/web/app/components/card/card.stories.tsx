@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { Card, Target } from './card';
+import { Card, Target } from './card'
 
 const meta: Meta<typeof Card> = {
   title: 'Components/Card',
   component: Card,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -22,10 +22,10 @@ const meta: Meta<typeof Card> = {
       </div>
     ),
   ],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Card>;
+export default meta
+type Story = StoryObj<typeof Card>
 
 export const Default: Story = {
   args: {
@@ -38,7 +38,7 @@ export const Default: Story = {
       </>
     ),
   },
-};
+}
 
 export const Hover: Story = {
   parameters: { pseudo: { hover: true } },
@@ -52,7 +52,7 @@ export const Hover: Story = {
       </>
     ),
   },
-};
+}
 
 export const Active: Story = {
   parameters: { pseudo: { active: true } },
@@ -66,4 +66,4 @@ export const Active: Story = {
       </>
     ),
   },
-};
+}

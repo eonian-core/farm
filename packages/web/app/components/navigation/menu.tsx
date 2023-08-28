@@ -1,25 +1,25 @@
-import { useRef } from 'react';
-import { CSSTransition } from 'react-transition-group';
+import { useRef } from 'react'
+import { CSSTransition } from 'react-transition-group'
 
-import { HamburgerMenu } from '../hamburger-menu/hamburger-menu';
-import styles from './navigation.module.scss';
-import { Inter } from 'next/font/google';
-import clsx from 'clsx';
-import { SocialMenuItem } from './menu-item';
+import { Inter } from 'next/font/google'
+import clsx from 'clsx'
+import { HamburgerMenu } from '../hamburger-menu/hamburger-menu'
+import styles from './navigation.module.scss'
+import { SocialMenuItem } from './menu-item'
 
 export interface MenuProps {
-  children: React.ReactNode;
-  isOpen?: boolean;
-  toggleMenu?: () => void;
+  children: React.ReactNode
+  isOpen?: boolean
+  toggleMenu?: () => void
 }
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
   display: 'block', // force to show font anyway
-});
+})
 
-export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
-  const nodeRef = useRef(null);
+export function Menu({ children, isOpen, toggleMenu }: MenuProps) {
+  const nodeRef = useRef(null)
 
   return (
     <div className={clsx(styles.menuWrapper, { [styles.menuOpen]: isOpen })}>
@@ -48,7 +48,7 @@ export const Menu = ({ children, isOpen, toggleMenu }: MenuProps) => {
         <HamburgerMenu active={isOpen} onClick={toggleMenu} />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Menu;
+export default Menu

@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import { GradientCard } from './gradient-card';
+import { GradientCard } from './gradient-card'
 
 const meta: Meta<typeof GradientCard> = {
   title: 'Components/GradientCard',
   component: GradientCard,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -20,10 +20,10 @@ const meta: Meta<typeof GradientCard> = {
       </div>
     ),
   ],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof GradientCard>;
+export default meta
+type Story = StoryObj<typeof GradientCard>
 
 export const Default: Story = {
   args: {
@@ -34,4 +34,4 @@ export const Default: Story = {
       </>
     ),
   },
-};
+}

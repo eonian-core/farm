@@ -1,20 +1,21 @@
-'use client';
+'use client'
 
-import { FormElement, Input, InputProps, Loading } from '@nextui-org/react';
-import React from 'react';
+import type { FormElement, InputProps } from '@nextui-org/react'
+import { Input, Loading } from '@nextui-org/react'
+import React from 'react'
 
-import styles from './form-input.module.scss';
-import IconCoin from '../../../components/icons/icon-coin';
-import CompactNumber from '../../../components/compact-number/compact-number';
-import { FractionPartView } from '../../../shared';
+import IconCoin from '../../../components/icons/icon-coin'
+import CompactNumber from '../../../components/compact-number/compact-number'
+import { FractionPartView } from '../../../shared'
+import styles from './form-input.module.scss'
 
 interface Props extends Partial<Omit<InputProps, 'value' | 'onChange'>> {
-  value: string;
-  balance: bigint;
-  decimals: number;
-  assetSymbol: string;
-  onChange: (value: string) => void;
-  isLoading: boolean;
+  value: string
+  balance: bigint
+  decimals: number
+  assetSymbol: string
+  onChange: (value: string) => void
+  isLoading: boolean
 }
 
 const FormInput: React.FC<Props> = ({
@@ -29,8 +30,8 @@ const FormInput: React.FC<Props> = ({
 }) => {
   const handleInputValueChange = React.useCallback(
     (event: React.ChangeEvent<FormElement>) => onChange(event.target.value),
-    [onChange]
-  );
+    [onChange],
+  )
 
   return (
     <Input
@@ -49,8 +50,8 @@ const FormInput: React.FC<Props> = ({
       disabled={disabled || isLoading}
       {...restProps}
     />
-  );
-};
+  )
+}
 
 function InputRightContent({
   balance,
@@ -59,7 +60,7 @@ function InputRightContent({
   assetSymbol,
 }: Pick<Props, 'balance' | 'isLoading' | 'decimals' | 'assetSymbol'>) {
   if (isLoading) {
-    return <Loading className={styles.loading} size="sm" />;
+    return <Loading className={styles.loading} size="sm" />
   }
 
   return (
@@ -69,13 +70,13 @@ function InputRightContent({
         decimals={decimals}
         fractionDigits={2}
         fractionPartView={FractionPartView.CUT}
-        tooltipContent={(value) => `${value} ${assetSymbol}`}
+        tooltipContent={value => `${value} ${assetSymbol}`}
         childrenAtStart
       >
         Balance:&nbsp;
       </CompactNumber>
     </span>
-  );
+  )
 }
 
-export default FormInput;
+export default FormInput

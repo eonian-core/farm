@@ -1,48 +1,48 @@
-import React from 'react';
-import { useOnResizeEffect } from '../../../components/resize-hooks/useOnResizeEffect';
-import { HIW_ANIMATION_DURATION, HIW_ITEM_WIDTH } from './constants';
-import styles from './flow-slider.module.scss';
-import { HIWContext } from './context';
+import React from 'react'
+import { useOnResizeEffect } from '../../../components/resize-hooks/useOnResizeEffect'
+import { HIW_ANIMATION_DURATION, HIW_ITEM_WIDTH } from './constants'
+import styles from './flow-slider.module.scss'
+import { HIWContext } from './context'
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const FlowSlider: React.FC<Props> = ({ children }) => {
-  const { steps, activeStep } = React.useContext(HIWContext);
+  const { steps, activeStep } = React.useContext(HIWContext)
 
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = React.useRef<HTMLDivElement>(null)
 
-  const [offsetX, setOffsetX] = React.useState(0);
-  const [translateX, setTranslateX] = React.useState(0);
-  const [visibleSteps, setVisibleSteps] = React.useState(1);
+  const [offsetX, setOffsetX] = React.useState(0)
+  const [translateX, setTranslateX] = React.useState(0)
+  const [visibleSteps, setVisibleSteps] = React.useState(1)
 
   useOnResizeEffect(() => {
-    const { current: container } = ref;
+    const { current: container } = ref
     if (!container) {
-      return;
+      return
     }
 
-    const { width: containerWidth } = container.getBoundingClientRect();
-    const visibleOnScreen = Math.max(Math.floor(containerWidth / HIW_ITEM_WIDTH), 1);
-    setVisibleSteps(visibleOnScreen);
+    const { width: containerWidth } = container.getBoundingClientRect()
+    const visibleOnScreen = Math.max(Math.floor(containerWidth / HIW_ITEM_WIDTH), 1)
+    setVisibleSteps(visibleOnScreen)
 
-    const visiblePart = visibleOnScreen * HIW_ITEM_WIDTH;
-    const offset = (containerWidth - visiblePart) / 2;
-    setOffsetX(offset);
-  }, []);
+    const visiblePart = visibleOnScreen * HIW_ITEM_WIDTH
+    const offset = (containerWidth - visiblePart) / 2
+    setOffsetX(offset)
+  }, [])
 
   React.useEffect(() => {
-    const { current: container } = ref;
-    const itemElement = document.getElementById(activeStep);
+    const { current: container } = ref
+    const itemElement = document.getElementById(activeStep)
     if (!container || !itemElement) {
-      return;
+      return
     }
 
-    const index = steps.indexOf(activeStep);
-    const translateN = visibleSteps >= 3 ? Math.max(Math.min(index - 1, steps.length - visibleSteps), 0) : index;
-    setTranslateX(-translateN * HIW_ITEM_WIDTH);
-  }, [visibleSteps, activeStep, steps]);
+    const index = steps.indexOf(activeStep)
+    const translateN = visibleSteps >= 3 ? Math.max(Math.min(index - 1, steps.length - visibleSteps), 0) : index
+    setTranslateX(-translateN * HIW_ITEM_WIDTH)
+  }, [visibleSteps, activeStep, steps])
 
   return (
     <div
@@ -57,7 +57,7 @@ const FlowSlider: React.FC<Props> = ({ children }) => {
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default FlowSlider;
+export default FlowSlider

@@ -1,13 +1,13 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import { H2 } from '../../../components/heading/heading';
-import SafeInvestments from './safe-investments';
+import type { Meta, StoryFn } from '@storybook/react'
+import { H2 } from '../../../components/heading/heading'
+import SafeInvestments from './safe-investments'
 
 const meta: Meta<typeof SafeInvestments> = {
   title: 'Views/SafeInvestments',
   component: SafeInvestments,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -23,11 +23,11 @@ const meta: Meta<typeof SafeInvestments> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
+export default meta
 
-const Template: StoryFn<typeof SafeInvestments> = (props) => (
+const Template: StoryFn<typeof SafeInvestments> = props => (
   <SafeInvestments {...props}>
     <H2>Safe Investments</H2>
     <p>
@@ -63,7 +63,7 @@ const Template: StoryFn<typeof SafeInvestments> = (props) => (
       </li>
     </ul>
   </SafeInvestments>
-);
+)
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}

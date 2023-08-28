@@ -1,12 +1,12 @@
-import clsx from 'clsx';
-import React from 'react';
-import IconChevron from '../../../components/icons/icon-chevron';
-import styles from './roadmap-checkpoint-menu.module.scss';
+import clsx from 'clsx'
+import React from 'react'
+import IconChevron from '../../../components/icons/icon-chevron'
+import styles from './roadmap-checkpoint-menu.module.scss'
 
 export interface RoadmapCheckpointMenuProps {
-  activeCheckpointIndex: number;
-  count: number;
-  onActiveCheckpointChanged: (index: number) => void;
+  activeCheckpointIndex: number
+  count: number
+  onActiveCheckpointChanged: (index: number) => void
 }
 
 const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
@@ -16,11 +16,11 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
 }) => {
   const handleChangeIndex = React.useCallback(
     (index: number) => {
-      index = Math.max(Math.min(index, count - 1), 0);
-      onActiveCheckpointChanged(index);
+      index = Math.max(Math.min(index, count - 1), 0)
+      onActiveCheckpointChanged(index)
     },
-    [count, onActiveCheckpointChanged]
-  );
+    [count, onActiveCheckpointChanged],
+  )
 
   return (
     <div className={styles.menu}>
@@ -30,7 +30,7 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
         onClick={() => handleChangeIndex(activeCheckpointIndex - 1)}
       />
 
-      {new Array(count).fill(0).map((_, index) => (
+      {Array.from({ length: count }).fill(0).map((_, index) => (
         <div
           key={index}
           className={clsx(styles.point, { [styles.active]: index === activeCheckpointIndex })}
@@ -45,17 +45,17 @@ const RoadmapCheckpointMenu: React.FC<RoadmapCheckpointMenuProps> = ({
         onClick={() => handleChangeIndex(activeCheckpointIndex + 1)}
       />
     </div>
-  );
-};
-
-export interface ChevronProps {
-  onClick: VoidFunction;
-  left?: boolean;
-  disabled?: boolean;
+  )
 }
 
-const Chevron = ({ onClick, left = false, disabled = false }: ChevronProps) => (
-  <IconChevron
+export interface ChevronProps {
+  onClick: VoidFunction
+  left?: boolean
+  disabled?: boolean
+}
+
+function Chevron({ onClick, left = false, disabled = false }: ChevronProps) {
+  return <IconChevron
     width={28}
     height={28}
     onClick={onClick}
@@ -65,6 +65,6 @@ const Chevron = ({ onClick, left = false, disabled = false }: ChevronProps) => (
       [styles.chevronDiabled]: disabled,
     })}
   />
-);
+}
 
-export default React.memo(RoadmapCheckpointMenu);
+export default React.memo(RoadmapCheckpointMenu)

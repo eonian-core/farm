@@ -1,7 +1,7 @@
 type Sitemap = Array<{
-  url: string;
-  lastModified?: string | Date;
-}>;
+  url: string
+  lastModified?: string | Date
+}>
 
 export default function sitemap(): Sitemap {
   return [
@@ -25,5 +25,5 @@ export default function sitemap(): Sitemap {
       url: 'https://eonian.finance/security',
       lastModified: new Date(),
     },
-  ];
+  ]
 }

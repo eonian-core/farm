@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Image from 'next/image';
+import type { Meta, StoryObj } from '@storybook/react'
+import Image from 'next/image'
 
-import { ImageCard, Target } from './image-card';
-import magnifierPic from './magnifier.png';
+import { ImageCard, Target } from './image-card'
+import magnifierPic from './magnifier.png'
 
 const meta: Meta<typeof ImageCard> = {
   title: 'Components/ImageCard',
   component: ImageCard,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -24,10 +24,10 @@ const meta: Meta<typeof ImageCard> = {
       </div>
     ),
   ],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof ImageCard>;
+export default meta
+type Story = StoryObj<typeof ImageCard>
 
 export const Default: Story = {
   args: {
@@ -41,7 +41,7 @@ export const Default: Story = {
       </>
     ),
   },
-};
+}
 
 export const DefaultVertical: Story = {
   args: {
@@ -56,7 +56,7 @@ export const DefaultVertical: Story = {
       </>
     ),
   },
-};
+}
 
 export const Hover: Story = {
   parameters: { pseudo: { hover: true } },
@@ -71,7 +71,7 @@ export const Hover: Story = {
       </>
     ),
   },
-};
+}
 
 export const Active: Story = {
   parameters: { pseudo: { active: true } },
@@ -86,4 +86,4 @@ export const Active: Story = {
       </>
     ),
   },
-};
+}

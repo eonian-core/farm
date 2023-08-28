@@ -1,56 +1,56 @@
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import React from 'react';
-import { useInView } from '../use-in-view/use-in-view';
+import { motion } from 'framer-motion'
+import React, { useRef } from 'react'
+import { useInView } from '../use-in-view/use-in-view'
 
 export interface FadeInProps extends Omit<FadeInBodyProps, 'isInView'> {
   /** Should the animation play only once, default is true */
-  once?: boolean;
+  once?: boolean
   /**
    * The amount of the element that needs to be visible before triggering the animation, default is '0.9'
    * do not use 'all', produce sometimes hardly found bugs
    * */
-  amount?: 'some' | 'all' | number;
+  amount?: 'some' | 'all' | number
 }
 
 /** Renders in normal div which will appear visible only on view */
-export const FadeIn = ({ once = true, amount = 0.9, ...props }: FadeInProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once, amount });
+export function FadeIn({ once = true, amount = 0.9, ...props }: FadeInProps) {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once, amount })
 
-  return <FadeInBody {...props} isInView={isInView} ref={ref} />;
-};
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return <FadeInBody {...props} isInView={isInView} ref={ref} />
+}
 
-export default FadeIn;
+export default FadeIn
 
 export interface FadeInBodyProps {
   /** The content to be rendered */
-  children: React.ReactNode;
+  children: React.ReactNode
 
-  className?: string;
+  className?: string
 
   /** The delay before the animation starts, default 0s */
-  delay?: number;
+  delay?: number
   /** The duration of the animation, 1s */
-  duration?: number;
+  duration?: number
 
   /** Does need zoom in when fade in, default is false */
-  zoomIn?: boolean;
+  zoomIn?: boolean
   /** The initial scale of the element when zoom in, default is 0.9 */
-  zoomInInitial?: number;
+  zoomInInitial?: number
 
   /** Should the animation fade up, default is true */
-  fadeUp?: boolean;
+  fadeUp?: boolean
   /** The initial y position of the element when fade up, default is '30%' */
-  fadeUpInitial?: string;
+  fadeUpInitial?: string
 
   /** Should the animation fade horizontal, default is false */
-  fadeHorizontal?: boolean;
+  fadeHorizontal?: boolean
   /** The initial x position of the element when fade horizontal, default is '30%' */
-  fadeHorizontalInitial?: string;
+  fadeHorizontalInitial?: string
 
   /** Show or not content */
-  isInView?: boolean;
+  isInView?: boolean
 }
 
 /** Simple wrapper to allow contnracts fade in animation in more complex components */
@@ -69,7 +69,7 @@ export const FadeInBody = React.forwardRef<HTMLDivElement, FadeInBodyProps>(
       fadeHorizontal = false,
       fadeHorizontalInitial = '30%',
     },
-    ref
+    ref,
   ) => (
     <motion.div
       ref={ref}
@@ -89,7 +89,7 @@ export const FadeInBody = React.forwardRef<HTMLDivElement, FadeInBodyProps>(
     >
       {children}
     </motion.div>
-  )
-);
+  ),
+)
 
-FadeInBody.displayName = 'FadeInBody';
+FadeInBody.displayName = 'FadeInBody'

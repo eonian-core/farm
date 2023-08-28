@@ -1,15 +1,15 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
-import { PropsWithChildren } from 'react';
-import Container from '../../../components/contrainer/container';
-import FadeIn from '../../../components/fade-in/fade-in';
-import styles from './who-are-we.module.scss';
-import futurePic from './assets/space-rocket-starting-in-scify-city.png';
-import FadeInList from '../../../components/fade-in/fade-in-list';
-import { useIsLaptopOrSmaller } from '../../../components/resize-hooks/screens';
+import type { PropsWithChildren } from 'react'
+import Container from '../../../components/contrainer/container'
+import FadeIn from '../../../components/fade-in/fade-in'
+import FadeInList from '../../../components/fade-in/fade-in-list'
+import { useIsLaptopOrSmaller } from '../../../components/resize-hooks/screens'
+import styles from './who-are-we.module.scss'
+import futurePic from './assets/space-rocket-starting-in-scify-city.png'
 
-export const WhoWeAre = ({ children }: PropsWithChildren) => {
-  const isLaptopOrSmaller = useIsLaptopOrSmaller();
+export function WhoWeAre({ children }: PropsWithChildren) {
+  const isLaptopOrSmaller = useIsLaptopOrSmaller()
 
   return (
     <Container className={styles.pageContainer}>
@@ -28,7 +28,7 @@ export const WhoWeAre = ({ children }: PropsWithChildren) => {
         </FadeIn>
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default WhoWeAre;
+export default WhoWeAre

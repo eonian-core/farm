@@ -1,5 +1,5 @@
 // icon:tether | Simple Icons https://simpleicons.org | SimpleIcons.org
-import * as React from 'react';
+import * as React from 'react'
 
 function IconBUSD(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -11,7 +11,7 @@ function IconBUSD(props: React.SVGProps<SVGSVGElement>) {
         <path d="M294.2,126.71l41.5,42.5L168.2,336.71l-41.5-41.5Z" />
       </g>
     </svg>
-  );
+  )
 }
 
-export default IconBUSD;
+export default IconBUSD

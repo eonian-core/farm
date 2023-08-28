@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import styles from './cell-with-description.module.scss';
+import styles from './cell-with-description.module.scss'
 
 interface Props {
-  children: React.ReactNode;
-  description?: React.ReactNode;
-  icon?: React.ReactNode;
+  children: React.ReactNode
+  description?: React.ReactNode
+  icon?: React.ReactNode
 }
 
 export const CellWithDescription: React.FC<Props> = ({ icon, children, description }) => (
@@ -16,4 +16,4 @@ export const CellWithDescription: React.FC<Props> = ({ icon, children, descripti
       {description && <div className={styles.description}>{description}</div>}
     </div>
   </div>
-);
+)

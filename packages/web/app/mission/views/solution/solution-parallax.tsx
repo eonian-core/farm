@@ -1,10 +1,10 @@
-import React from 'react';
+import React from 'react'
 
-import ParallaxContainer from '../../../components/parallax/parallax-container';
-import ParallaxBlock from '../../../components/parallax/parallax-block';
-import { ScreenName, useScreenName } from '../../../components/resize-hooks/screens';
+import ParallaxContainer from '../../../components/parallax/parallax-container'
+import ParallaxBlock from '../../../components/parallax/parallax-block'
+import { ScreenName, useScreenName } from '../../../components/resize-hooks/screens'
 
-import styles from './solution-parallax.module.scss';
+import styles from './solution-parallax.module.scss'
 
 const BackgroundTextScreenMap = {
   [ScreenName.ULTRA_WIDE]: { x: 0.8, y: -0.9 },
@@ -13,11 +13,11 @@ const BackgroundTextScreenMap = {
   [ScreenName.TABLET]: { x: 0.75, y: -0.6 },
   [ScreenName.MOBILE]: { x: 0.6, y: -0.8 },
   [ScreenName.SMALL_MOBILE]: { x: 0.4, y: -0.8 },
-};
+}
 
-export const SolutionParallax = () => {
-  const screen = useScreenName();
-  const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP];
+export function SolutionParallax() {
+  const screen = useScreenName()
+  const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
 
   return (
     <ParallaxContainer className={styles.solutionParalax}>
@@ -31,11 +31,11 @@ export const SolutionParallax = () => {
         <BackgroundText>Eonian</BackgroundText>
       </ParallaxBlock>
     </ParallaxContainer>
-  );
-};
+  )
+}
 
-export default SolutionParallax;
+export default SolutionParallax
 
-export const BackgroundText = ({ children }: { children: React.ReactNode }) => (
-  <div className={styles.backgroundText}>{children}</div>
-);
+export function BackgroundText({ children }: { children: React.ReactNode }) {
+  return <div className={styles.backgroundText}>{children}</div>
+}

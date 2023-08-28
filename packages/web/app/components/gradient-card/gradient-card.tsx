@@ -1,11 +1,11 @@
-import styles from './gradient-card.module.scss';
+import styles from './gradient-card.module.scss'
 
 export interface GradientCardProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
-export const GradientCard = ({ children }: GradientCardProps) => (
-  <div className={styles.gradientCard}>
+export function GradientCard({ children }: GradientCardProps) {
+  return <div className={styles.gradientCard}>
     <div className={styles.gradientWrapper}>
       <div className={`${styles.gradient} ${styles.gradient1}`}></div>
       <div className={`${styles.gradient} ${styles.gradient2}`}></div>
@@ -16,4 +16,4 @@ export const GradientCard = ({ children }: GradientCardProps) => (
       <div className={styles.content}>{children}</div>
     </div>
   </div>
-);
+}

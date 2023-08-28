@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react'
 
-import Button from './button';
-import IconExternal from '../icons/icon-external';
-import IconDiscord from '../icons/icon-discord';
-import IconTwitter from '../icons/icon-twitter';
+import IconExternal from '../icons/icon-external'
+import IconDiscord from '../icons/icon-discord'
+import IconTwitter from '../icons/icon-twitter'
+import Button from './button'
 
 function Component() {
   return (
@@ -73,7 +73,7 @@ function Component() {
         </Button>
       </div>
     </div>
-  );
+  )
 }
 
 const meta: Meta<typeof Component> = {
@@ -81,7 +81,7 @@ const meta: Meta<typeof Component> = {
   component: Component,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -118,9 +118,9 @@ const meta: Meta<typeof Component> = {
       </div>
     ),
   ],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Component>;
+export default meta
+type Story = StoryObj<typeof Component>
 
-export const Default: Story = {};
+export const Default: Story = {}

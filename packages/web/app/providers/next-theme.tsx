@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import React from 'react';
-import { ThemeProvider } from 'next-themes';
-import { CssBaseline, NextUIProvider, createTheme } from '@nextui-org/react';
-import { useServerInsertedHTML } from 'next/navigation';
+import React from 'react'
+import { ThemeProvider } from 'next-themes'
+import { CssBaseline, NextUIProvider, createTheme } from '@nextui-org/react'
+import { useServerInsertedHTML } from 'next/navigation'
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const darkTheme = createTheme({
@@ -42,18 +42,18 @@ const darkTheme = createTheme({
       backgroundContrast: 'var(--color-dark-500)',
     },
   },
-});
+})
 
-const NextThemeProvider = ({ children }: Props) => {
-  useServerInsertedHTML(() => <>{CssBaseline.flush()}</>);
+function NextThemeProvider({ children }: Props) {
+  useServerInsertedHTML(() => <>{CssBaseline.flush()}</>)
 
   // For some reason "useServerInsertedHTML" inserts NextUI styles several times (To <head /> and <body />),
   // what breaks the element styles. We can find these <style /> elements and remove one of them.
   React.useEffect(() => {
     document.body.querySelectorAll('#stitches').forEach((element) => {
-      element.remove();
-    });
-  }, []);
+      element.remove()
+    })
+  }, [])
 
   return (
     <ThemeProvider
@@ -65,7 +65,7 @@ const NextThemeProvider = ({ children }: Props) => {
     >
       <NextUIProvider disableBaseline={true}>{children}</NextUIProvider>
     </ThemeProvider>
-  );
-};
+  )
+}
 
-export default NextThemeProvider;
+export default NextThemeProvider

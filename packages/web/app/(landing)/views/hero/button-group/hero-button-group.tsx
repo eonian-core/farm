@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import styles from './hero-button-group.module.scss';
+import styles from './hero-button-group.module.scss'
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
-const HeroButtonGroup: React.FC<Props> = ({ children }) => <div className={styles.container}>{children}</div>;
+const HeroButtonGroup: React.FC<Props> = ({ children }) => <div className={styles.container}>{children}</div>
 
-export default HeroButtonGroup;
+export default HeroButtonGroup

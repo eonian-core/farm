@@ -1,19 +1,19 @@
-import Container from '../../../components/contrainer/container';
-import FadeInList from '../../../components/fade-in/fade-in-list';
-import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
-import { useLocalSocials } from '../../../socials';
-import InDevelopmentParallax from './in-development-parallax';
-import styles from './in-development.module.scss';
-import { Socials } from '../../../components/socials/socials';
+import Container from '../../../components/contrainer/container'
+import FadeInList from '../../../components/fade-in/fade-in-list'
+import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens'
+import { useLocalSocials } from '../../../socials'
+import { Socials } from '../../../components/socials/socials'
+import InDevelopmentParallax from './in-development-parallax'
+import styles from './in-development.module.scss'
 
 interface ContainerProps {
   /** content of the block, expected to have: h2, p  and Card elements */
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
-export const InDevelopment = ({ children }: ContainerProps) => {
-  const socials = useLocalSocials();
-  const isTabletOrSmaller = useIsTabletOrSmaller();
+export function InDevelopment({ children }: ContainerProps) {
+  const socials = useLocalSocials()
+  const isTabletOrSmaller = useIsTabletOrSmaller()
 
   return (
     <Container className={styles.pageContainer}>
@@ -32,7 +32,7 @@ export const InDevelopment = ({ children }: ContainerProps) => {
         </FadeInList>
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default InDevelopment;
+export default InDevelopment

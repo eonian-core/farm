@@ -1,10 +1,10 @@
-import clsx from 'clsx';
-import React from 'react';
-import styles from './hamburger-menu.module.scss';
+import clsx from 'clsx'
+import React from 'react'
+import styles from './hamburger-menu.module.scss'
 
 export interface HamburgerMenuProps {
-  active?: boolean;
-  onClick?: () => void;
+  active?: boolean
+  onClick?: () => void
 }
 
 export const HamburgerMenu = React.forwardRef(
@@ -21,7 +21,7 @@ export const HamburgerMenu = React.forwardRef(
         <span></span>
       </div>
     </div>
-  )
-);
+  ),
+)
 
-HamburgerMenu.displayName = 'HamburgerMenu';
+HamburgerMenu.displayName = 'HamburgerMenu'

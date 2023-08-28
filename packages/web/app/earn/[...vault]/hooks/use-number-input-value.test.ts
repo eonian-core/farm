@@ -1,4 +1,5 @@
-import { parseBigIntValue, parseValue, ValueParseResult } from './use-number-input-value';
+import type { ValueParseResult } from './use-number-input-value'
+import { parseBigIntValue, parseValue } from './use-number-input-value'
 
 describe('parseValue', () => {
   const validData: [string, ValueParseResult, number][] = [
@@ -7,12 +8,12 @@ describe('parseValue', () => {
     ['5.0', [5n * 10n ** 9n, '5.0'], 9],
     ['5', [5n * 10n ** 9n, '5'], 9],
     ['0.1234', [1234n * 10n ** 5n, '0.1234'], 9],
-  ];
+  ]
   it.each(validData)('Should parse valid input', (input, result, decimals) => {
-    const values = parseValue(input, decimals);
-    expect(values).toEqual(result);
-  });
-});
+    const values = parseValue(input, decimals)
+    expect(values).toEqual(result)
+  })
+})
 
 describe('parseBigIntValue', () => {
   const validData: [bigint, ValueParseResult, number][] = [
@@ -24,9 +25,9 @@ describe('parseBigIntValue', () => {
     [12345n, [12345n, '0.000000000000012345'], 18],
     [1234567891011n, [1234567891011n, '0.000001234567891011'], 18],
     [9300000000000000001n, [9300000000000000001n, '9.300000000000000001'], 18],
-  ];
+  ]
   it.each(validData)('Should parse valid input', (input, result, decimals) => {
-    const values = parseBigIntValue(input, decimals);
-    expect(values).toEqual(result);
-  });
-});
+    const values = parseBigIntValue(input, decimals)
+    expect(values).toEqual(result)
+  })
+})

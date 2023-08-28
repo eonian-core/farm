@@ -1,10 +1,9 @@
-import React from 'react';
-import FadeInChildList from '../../../components/fade-in/fade-in-child-list';
-import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
-import styles from './founders-list.module.scss';
+import React from 'react'
+import FadeInChildList from '../../../components/fade-in/fade-in-child-list'
+import styles from './founders-list.module.scss'
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const FoundersList: React.FC<Props> = ({ children }) => (
@@ -13,6 +12,6 @@ const FoundersList: React.FC<Props> = ({ children }) => (
       {children}
     </FadeInChildList>
   </ul>
-);
+)
 
-export default FoundersList;
+export default FoundersList

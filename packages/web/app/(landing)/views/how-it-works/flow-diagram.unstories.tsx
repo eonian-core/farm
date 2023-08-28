@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import FlowDiagram from './flow-diagram';
+import type { Meta, StoryObj } from '@storybook/react'
+import FlowDiagram from './flow-diagram'
 
 const meta: Meta<typeof FlowDiagram> = {
   title: 'Views/HowItWorks/FlowDiagram',
   component: FlowDiagram,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -26,10 +26,10 @@ const meta: Meta<typeof FlowDiagram> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof FlowDiagram>;
+export default meta
+type Story = StoryObj<typeof FlowDiagram>
 
 export const Default: Story = {
   args: {
@@ -44,4 +44,4 @@ export const Default: Story = {
       'Withdraw',
     ],
   },
-};
+}

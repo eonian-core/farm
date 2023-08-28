@@ -1,15 +1,15 @@
-import type { Meta, StoryFn } from '@storybook/react';
-import FlowDiagramContextListener from './flow-digram-context-listener';
-import FlowSlider from './flow-slider';
-import FlowSliderItem from './flow-slider-item';
-import HowItWorks from './how-it-works';
+import type { Meta, StoryFn } from '@storybook/react'
+import FlowDiagramContextListener from './flow-digram-context-listener'
+import FlowSlider from './flow-slider'
+import FlowSliderItem from './flow-slider-item'
+import HowItWorks from './how-it-works'
 
 const meta: Meta<typeof HowItWorks> = {
   title: 'Views/HowItWorks',
   component: HowItWorks,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -29,11 +29,11 @@ const meta: Meta<typeof HowItWorks> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
+export default meta
 
-const Template: StoryFn<typeof HowItWorks> = (props) => (
+const Template: StoryFn<typeof HowItWorks> = props => (
   <HowItWorks {...props}>
     <FlowDiagramContextListener />
     <FlowSlider>
@@ -67,7 +67,7 @@ const Template: StoryFn<typeof HowItWorks> = (props) => (
       </FlowSliderItem>
     </FlowSlider>
   </HowItWorks>
-);
+)
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default = Template.bind({})
+Default.args = {}

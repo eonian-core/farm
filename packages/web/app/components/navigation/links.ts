@@ -1,8 +1,8 @@
-import * as features from '../../features';
+import * as features from '../../features'
 
 export interface NavigationItem {
-  href: string;
-  label: string;
+  href: string
+  label: string
 }
 
 export const links = [
@@ -15,6 +15,6 @@ export const links = [
     href: 'https://leovs09.notion.site/465899d944244e9cb55e5dea502efd47',
     label: 'Docs',
   },
-].filter(Boolean) as Array<NavigationItem>;
+].filter(Boolean) as Array<NavigationItem>
 
-export const mobileLinks: Array<NavigationItem> = [{ href: '/', label: 'Home' }, ...links];
+export const mobileLinks: Array<NavigationItem> = [{ href: '/', label: 'Home' }, ...links]

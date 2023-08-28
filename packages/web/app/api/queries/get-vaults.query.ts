@@ -1,6 +1,7 @@
-import { ApolloClient, gql } from '@apollo/client';
+import type { ApolloClient } from '@apollo/client'
+import { gql } from '@apollo/client'
 
-import { GetVaultsQuery, GetVaultsSymbolsQuery } from '../gql/graphql';
+import type { GetVaultsQuery, GetVaultsSymbolsQuery } from '../gql/graphql'
 
 const GetVaults = gql`
   query GetVaults {
@@ -29,7 +30,7 @@ const GetVaults = gql`
       fundAssetsUSD
     }
   }
-`;
+`
 
 const GetVaultsSymbols = gql`
   query GetVaultsSymbols {
@@ -37,24 +38,24 @@ const GetVaultsSymbols = gql`
       symbol
     }
   }
-`;
+`
 
 /**
  * Get list of Vaults
  * */
-export const getVaults = async (client: ApolloClient<any>) => {
+export async function getVaults(client: ApolloClient<any>) {
   const { data, error } = await client.query<GetVaultsQuery>({
     query: GetVaults,
-  });
-  return { data, error };
-};
+  })
+  return { data, error }
+}
 
 /**
  * Get list of symbols of the Vaults
  * */
-export const getVaultsSymbols = async (client: ApolloClient<any>) => {
+export async function getVaultsSymbols(client: ApolloClient<any>) {
   const { data, error } = await client.query<GetVaultsSymbolsQuery>({
     query: GetVaultsSymbols,
-  });
-  return { data, error };
-};
+  })
+  return { data, error }
+}

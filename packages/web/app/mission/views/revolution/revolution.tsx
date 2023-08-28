@@ -1,24 +1,24 @@
-import Image from 'next/image';
+import Image from 'next/image'
 
-import { useLocalSocials } from '../../../socials';
-import Container from '../../../components/contrainer/container';
-import FadeInList from '../../../components/fade-in/fade-in-list';
-import { useIsLaptopOrSmaller, useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
-import { Socials } from '../../../components/socials/socials';
+import { useLocalSocials } from '../../../socials'
+import Container from '../../../components/contrainer/container'
+import FadeInList from '../../../components/fade-in/fade-in-list'
+import { useIsLaptopOrSmaller, useIsTabletOrSmaller } from '../../../components/resize-hooks/screens'
+import { Socials } from '../../../components/socials/socials'
 
-import styles from './revolution.module.scss';
-import cityPic from './assets/sci-fi-city-from-golden-lake.png';
-import FadeIn from '../../../components/fade-in/fade-in';
+import FadeIn from '../../../components/fade-in/fade-in'
+import styles from './revolution.module.scss'
+import cityPic from './assets/sci-fi-city-from-golden-lake.png'
 
 interface ContainerProps {
   /** content of the block, expected to have: h2, p  and Card elements */
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
-export const Revolution = ({ children }: ContainerProps) => {
-  const socials = useLocalSocials();
-  const isLaptopOrSmaller = useIsLaptopOrSmaller();
-  const isTabletOrSmaller = useIsTabletOrSmaller();
+export function Revolution({ children }: ContainerProps) {
+  const socials = useLocalSocials()
+  const isLaptopOrSmaller = useIsLaptopOrSmaller()
+  const isTabletOrSmaller = useIsTabletOrSmaller()
 
   return (
     <Container className={styles.pageContainer}>
@@ -46,7 +46,7 @@ export const Revolution = ({ children }: ContainerProps) => {
         </FadeIn>
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default Revolution;
+export default Revolution

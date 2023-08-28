@@ -1,20 +1,20 @@
-import Container from '../../../components/contrainer/container';
-import FadeIn from '../../../components/fade-in/fade-in';
-import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens';
-import WhatIsEonianParallax from './eonian-is-parallax';
-import styles from './eonian-is.module.scss';
+import Container from '../../../components/contrainer/container'
+import FadeIn from '../../../components/fade-in/fade-in'
+import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
+import WhatIsEonianParallax from './eonian-is-parallax'
+import styles from './eonian-is.module.scss'
 
 interface EonianIsProps {
   /** content of the block, expected to have: Category, h2 and p elements */
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 /**
  * Block with explanation what is Eonian
  * @param children - content of the block
  */
-export const EonianIs = ({ children }: EonianIsProps) => {
-  const isMobileOrSmaller = useIsMobileOrSmaller();
+export function EonianIs({ children }: EonianIsProps) {
+  const isMobileOrSmaller = useIsMobileOrSmaller()
 
   return (
     <Container className={styles.pageContainer}>
@@ -28,7 +28,7 @@ export const EonianIs = ({ children }: EonianIsProps) => {
         <WhatIsEonianParallax />
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default EonianIs;
+export default EonianIs

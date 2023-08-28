@@ -1,15 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Category from '../../../components/category/category';
-import heading from '../../../components/heading/heading';
+import type { Meta, StoryObj } from '@storybook/react'
+import heading from '../../../components/heading/heading'
 
-import { EonianIs } from './eonian-is';
+import { EonianIs } from './eonian-is'
 
 const meta: Meta<typeof EonianIs> = {
   title: 'Views/EonianIs',
   component: EonianIs,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -29,10 +28,10 @@ const meta: Meta<typeof EonianIs> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof EonianIs>;
+export default meta
+type Story = StoryObj<typeof EonianIs>
 
 export const Default: Story = {
   args: {
@@ -49,4 +48,4 @@ export const Default: Story = {
       </>
     ),
   },
-};
+}

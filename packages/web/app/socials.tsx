@@ -1,19 +1,19 @@
-import IconDiscord from './components/icons/icon-discord';
-import IconGithub from './components/icons/icon-github';
-import IconMedium from './components/icons/icon-medium';
-import IconTelegram from './components/icons/icon-telegram';
-import IconTwitter from './components/icons/icon-twitter';
-import IconYoutube from './components/icons/icon-youtube';
-import { store } from './store/store';
+import IconDiscord from './components/icons/icon-discord'
+import IconGithub from './components/icons/icon-github'
+import IconMedium from './components/icons/icon-medium'
+import IconTelegram from './components/icons/icon-telegram'
+import IconTwitter from './components/icons/icon-twitter'
+import IconYoutube from './components/icons/icon-youtube'
+import { store } from './store/store'
 
 export interface SocialLink {
-  name: string;
-  href: string;
-  icon: React.ReactNode;
+  name: string
+  href: string
+  icon: React.ReactNode
 }
 
 export interface LocalesSocials {
-  [locale: string]: Array<SocialLink>;
+  [locale: string]: Array<SocialLink>
 }
 
 export const socials: LocalesSocials = {
@@ -62,17 +62,17 @@ export const socials: LocalesSocials = {
       href: 'https://www.youtube.com/@eonian3304',
     },
   ],
-};
+}
 
-export default socials;
+export default socials
 
-export const useLocalSocials = (): Array<SocialLink> => {
-  const { current } = store.getState().locale;
-  return socials[current];
-};
+export function useLocalSocials(): Array<SocialLink> {
+  const { current } = store.getState().locale
+  return socials[current]
+}
 
-export const useOtherLanguageslSocials = (): LocalesSocials => {
-  const { current } = store.getState().locale;
-  const { [current]: localLinks, ...otherLocales } = socials;
-  return otherLocales;
-};
+export function useOtherLanguageslSocials(): LocalesSocials {
+  const { current } = store.getState().locale
+  const { [current]: _localLinks, ...otherLocales } = socials
+  return otherLocales
+}

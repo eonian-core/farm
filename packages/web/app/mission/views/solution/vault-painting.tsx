@@ -1,14 +1,14 @@
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
+import Image from 'next/image'
+import { motion } from 'framer-motion'
+import { useRef } from 'react'
 
-import vaultPic from './assets/vault2.png';
-import styles from './vault-painting.module.scss';
-import { useInView } from '../../../components/use-in-view/use-in-view';
+import { useInView } from '../../../components/use-in-view/use-in-view'
+import vaultPic from './assets/vault2.png'
+import styles from './vault-painting.module.scss'
 
-export const VaultPainting = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+export function VaultPainting() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, amount: 0.5 })
 
   return (
     <div className={styles.wrapper}>
@@ -26,7 +26,7 @@ export const VaultPainting = () => {
         <Image src={vaultPic} alt="Futuristic bank vault" placeholder="blur" />
       </motion.div>
     </div>
-  );
-};
+  )
+}
 
-export default VaultPainting;
+export default VaultPainting

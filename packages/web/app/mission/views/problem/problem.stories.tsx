@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Category from '../../../components/category/category';
-import heading from '../../../components/heading/heading';
+import type { Meta, StoryObj } from '@storybook/react'
+import Category from '../../../components/category/category'
+import heading from '../../../components/heading/heading'
 
-import { Problem } from './problem';
+import { Problem } from './problem'
 
 const meta: Meta<typeof Problem> = {
   title: 'Views/Problem',
   component: Problem,
   tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -29,10 +29,10 @@ const meta: Meta<typeof Problem> = {
   parameters: {
     layout: 'fullscreen',
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Problem>;
+export default meta
+type Story = StoryObj<typeof Problem>
 
 export const Default: Story = {
   args: {
@@ -51,4 +51,4 @@ export const Default: Story = {
       </>
     ),
   },
-};
+}

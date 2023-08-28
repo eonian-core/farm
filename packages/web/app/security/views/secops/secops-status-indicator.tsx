@@ -1,8 +1,8 @@
-import React from 'react';
-import styles from './secops.module.scss';
+import React from 'react'
+import styles from './secops.module.scss'
 
 export interface SecOpsStatusIndicatorProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function SecOpsStatusIndicator({ children }: SecOpsStatusIndicatorProps) {
@@ -11,5 +11,5 @@ export default function SecOpsStatusIndicator({ children }: SecOpsStatusIndicato
       <div className={styles.secOpsStatusIndicator} />
       {children}
     </div>
-  );
+  )
 }

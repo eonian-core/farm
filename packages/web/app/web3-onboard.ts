@@ -1,8 +1,8 @@
-import type { InitOptions, ThemingMap } from '@web3-onboard/core/dist/types';
-import injectedModule from '@web3-onboard/injected-wallets';
-import walletConnectModule from '@web3-onboard/walletconnect';
-import init from '@web3-onboard/core';
-import { ChainId, getRPCEndpoint } from './providers/wallet/wrappers/helpers';
+import type { InitOptions, ThemingMap } from '@web3-onboard/core/dist/types'
+import injectedModule from '@web3-onboard/injected-wallets'
+import walletConnectModule from '@web3-onboard/walletconnect'
+import init from '@web3-onboard/core'
+import { ChainId, getRPCEndpoint } from './providers/wallet/wrappers/helpers'
 
 const theme: ThemingMap = {
   '--w3o-background-color': 'var(--color-background-start)',
@@ -11,7 +11,7 @@ const theme: ThemingMap = {
   '--w3o-border-color': 'var(--color-text-500)',
   '--w3o-action-color': 'var(--color-primary-500)',
   '--w3o-border-radius': 'var(--border-radius-500)',
-};
+}
 
 const chains: Partial<Record<ChainId, InitOptions['chains'][0]>> = {
   [ChainId.SEPOLIA]: {
@@ -26,9 +26,9 @@ const chains: Partial<Record<ChainId, InitOptions['chains'][0]>> = {
     label: 'BSC Mainnet',
     rpcUrl: getRPCEndpoint(ChainId.BSC_MAINNET),
   },
-};
+}
 
-const supportedChains = Object.values(chains).filter((chain) => !!chain.rpcUrl);
+const supportedChains = Object.values(chains).filter(chain => !!chain.rpcUrl)
 
 export default init({
   theme,
@@ -64,24 +64,24 @@ export default init({
     gettingStartedGuide: 'https://eonian.finance/', // The url to a getting started guide for app
     explore: 'https://eonian.finance/', // The url that points to more information about app
   },
-});
+})
 
 function getWallets(): InitOptions['wallets'] {
-  const wallets = [injectedModule()];
-  const walletConnectProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID;
+  const wallets = [injectedModule()]
+  const walletConnectProjectId = process.env.NEXT_PUBLIC_WC_PROJECT_ID
   if (walletConnectProjectId) {
     wallets.push(
       walletConnectModule({
         projectId: walletConnectProjectId,
         requiredChains: Object.keys(chains)
           .map(Number)
-          .filter((id) => id !== ChainId.SEPOLIA),
-      })
-    );
+          .filter(id => id !== ChainId.SEPOLIA),
+      }),
+    )
   }
-  return wallets;
+  return wallets
 }
 
-export const supportedChainsIds = supportedChains.map((chain) => ChainId.parse(chain.id));
+export const supportedChainsIds = supportedChains.map(chain => ChainId.parse(chain.id))
 
-export const defaultChain = chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!;
+export const defaultChain = chains[ChainId.getByName(process.env.NEXT_PUBLIC_DEFAULT_CHAIN_NAME)]!

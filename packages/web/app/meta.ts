@@ -1,10 +1,12 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next'
 
-export const overrideMetadata = (title: string, description: string): Metadata => ({
-  title,
-  description,
-  openGraph: {
-    description,
+export function overrideMetadata(title: string, description: string): Metadata {
+  return {
     title,
-  },
-});
+    description,
+    openGraph: {
+      description,
+      title,
+    },
+  }
+}
