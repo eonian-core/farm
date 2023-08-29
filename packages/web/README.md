@@ -10,7 +10,7 @@ This is Eonian Farm yield aggregator UI dApp.
 
 ### First Start Guide
 
-Run development server 
+Run development server
 
 ```bash
 yarn dev
