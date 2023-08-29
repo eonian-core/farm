@@ -1943,6 +1943,17 @@
   resolved "https://registry.yarnpkg.com/@emotion/use-insertion-effect-with-fallbacks/-/use-insertion-effect-with-fallbacks-1.0.1.tgz#08de79f54eb3406f9daaf77c76e35313da963963"
   integrity sha512-jT/qyKZ9rzLErtrjGgdkMBn2OP8wl0G3sQlBb3YPryvKHsjvINUhVaPFfP+fpBcOkmrVOVEEHQFJ7nbj2TH2gw==
 
+"@eonian/eslint-config@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@eonian/eslint-config/-/eslint-config-0.0.7.tgz#3aea73b08d232f58de06f68ee615b689027a0088"
+  integrity sha512-rJ8rdsI0Tc7Yl4F9+7lZhg5VfDkJn0Z8bhqa/HFYtrJdB9GiRVFEYk3jNaZ6Si3aFxfu2SFbAihlTi/T09iF3A==
+  dependencies:
+    "@antfu/eslint-config-basic" "^0.41.0"
+    "@typescript-eslint/eslint-plugin" "^6.4.1"
+    "@typescript-eslint/parser" "^6.4.1"
+    eslint-plugin-jest "^27.2.3"
+    eslint-plugin-sonarjs "^0.21.0"
+
 "@eonian/graphql-typescript-scalar-type-policies@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@eonian/graphql-typescript-scalar-type-policies/-/graphql-typescript-scalar-type-policies-1.0.6.tgz#b99bbed7be3268d65cdfcda58c4b42ec47afb2f1"
@@ -3007,10 +3018,17 @@
     which "2.0.2"
     yaml "1.10.2"
 
-"@graphprotocol/graph-ts@0.30.0", "@graphprotocol/graph-ts@^0.27.0":
+"@graphprotocol/graph-ts@0.30.0":
   version "0.30.0"
   resolved "https://registry.yarnpkg.com/@graphprotocol/graph-ts/-/graph-ts-0.30.0.tgz#591dee3c7d9fc236ad57ce0712779e94aef9a50a"
   integrity sha512-h5tJqlsZXglGYM0PcBsBOqof4PT0Fr4Z3QBTYN/IjMF3VvRX2A8/bdpqaAnva+2N0uAfXXwRcwcOcW5O35yzXw==
+  dependencies:
+    assemblyscript "0.19.10"
+
+"@graphprotocol/graph-ts@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@graphprotocol/graph-ts/-/graph-ts-0.27.0.tgz#948fe1716f6082964a01a63a19bcbf9ac44e06ff"
+  integrity sha512-r1SPDIZVQiGMxcY8rhFSM0y7d/xAbQf5vHMWUf59js1KgoyWpM6P3tczZqmQd7JTmeyNsDGIPzd9FeaxllsU4w==
   dependencies:
     assemblyscript "0.19.10"
 
