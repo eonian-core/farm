@@ -1,7 +1,7 @@
 {
   "name": "@eonian/eslint-config",
   "version": "0.0.7",
-  "license": "MIT",
+  "license": "ISC",
   "main": "index.js",
   "publishConfig": {
     "access": "public"

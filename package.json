@@ -9,13 +9,12 @@
     "dev": "lerna exec --parallel -- yarn dev",
     "build": "lerna run build",
     "test": "lerna run test",
+    "postinstall": "git submodule update --init --recursive && lerna exec --scope='@eonian/contracts' -- yarn postinstall && generate-lockfile --lockfile ./yarn.lock --package ./packages/web/package.json -w ./packages/web/yarn.lock --force",
     "build:contracts": "lerna run build --scope='@eonian/contracts'",
     "test:contracts": "lerna run test --scope='@eonian/contracts'",
     "dev:contracts": "lerna run dev --scope='@eonian/contracts'",
     "serve:contracts": "lerna run serve --scope='@eonian/contracts'",
-    "install-vercel": "NOYARNPOSTINSTALL=1 yarn install",
-    "postinstall": "test -n \"$NOYARNPOSTINSTALL\" || (git submodule update --init --recursive && lerna exec --scope='@eonian/contracts' -- yarn postinstall && generate-lockfile --lockfile ./yarn.lock --package ./packages/web/package.json -w ./packages/web/yarn.lock --force)",
-    "prepublish": "test -n \"$NOYARNPOSTINSTALL\" || (husky install && lerna exec --scope='@eonian/upgradeable' -- yarn prepublish)",
+    "prepublish": "husky install && lerna exec --scope='@eonian/upgradeable' -- yarn prepublish",
     "pre-commit": "lerna run pre-commit --scope='@eonian/*'"
   },
   "workspaces": {
