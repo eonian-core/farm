@@ -5,7 +5,7 @@ type Sitemap = Array<{
   lastModified?: string | Date;
 }>;
 
-const domain = "https://eonian.finance";
+export const DOMAIN = "https://eonian.finance";
 const currentDate = new Date();
 
 export default function sitemap(): Sitemap {
@@ -13,7 +13,7 @@ export default function sitemap(): Sitemap {
     .filter(({ external }) => !external)
     .filter(({ isEnabled }) => isEnabled)
     .map(link => ({
-      url: `${domain}${link.href}`,
+      url: `${DOMAIN}${link.href}`,
       lastModified: currentDate,
     }));
 }
