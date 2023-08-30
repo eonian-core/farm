@@ -12,10 +12,11 @@ export interface ResourceItem {
 
 const list: Array<ResourceItem> = [
   { href: "/community", label: "Community", isEnabled: features.showCommunity },
-  { href: "/faq", label: "FAQ", isEnabled: features.showFaq },
+  { href: "/roadmap", label: "Roadmap", isEnabled: features.showRoadmap },
   { href: "/mission", label: "Mission", isEnabled: features.showMission },
   { href: "/security", label: "Security", isEnabled: features.showSecurity },
   { href: "/earn", label: "Earn", isEnabled: features.showEarn },
+  { href: "/faq", label: "FAQ", isEnabled: features.showFaq },
   {
     href: "https://leovs09.notion.site/465899d944244e9cb55e5dea502efd47",
     label: "Docs",

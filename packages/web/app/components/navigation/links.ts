@@ -7,7 +7,7 @@ export interface NavigationItem {
 
 export const links = [
   features.showMission && { href: "/mission", label: "Mission" },
-  features.showFaq && { href: "/faq", label: "FAQ" },
+  features.showRoadmap && { href: "/roadmap", label: "Roadmap" },
   features.showCommunity && { href: "/community", label: "Community" },
   features.showSecurity && { href: "/security", label: "Security" },
   features.showEarn && { href: "/earn", label: "Earn" },
