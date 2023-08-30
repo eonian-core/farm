@@ -16,14 +16,14 @@ export const Overview = ({children}: PropsWithChildren) => {
 
                 <FadeInImage 
                     className={styles.imageContainer}
-                    delay={0.1} 
+                    delay={!isLaptopOrSmaller ? 0.1 : 0.7} 
                     amount={0.1} 
                     fadeUpInitial='20%'
                     src={rocketPic} 
                     alt="Futuristic launching to orbit"
                 />
 
-                <FadeInList className={styles.content} delay={!isLaptopOrSmaller ? 0.3 : 0.7} amount={0.1}>
+                <FadeInList className={styles.content} initialDelay={!isLaptopOrSmaller ? 0.2 : 0.1} delay={0.1} amount={0.1}>
                     {children}
                 </FadeInList>
                 
