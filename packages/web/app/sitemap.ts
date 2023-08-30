@@ -1,29 +1,19 @@
+import { ResourcesLinks } from "./features";
+
 type Sitemap = Array<{
   url: string;
   lastModified?: string | Date;
 }>;
 
+const domain = "https://eonian.finance";
+const currentDate = new Date();
+
 export default function sitemap(): Sitemap {
-  return [
-    {
-      url: "https://eonian.finance",
-      lastModified: new Date(),
-    },
-    {
-      url: "https://eonian.finance/mission",
-      lastModified: new Date(),
-    },
-    {
-      url: "https://eonian.finance/faq",
-      lastModified: new Date(),
-    },
-    {
-      url: "https://eonian.finance/community",
-      lastModified: new Date(),
-    },
-    {
-      url: "https://eonian.finance/security",
-      lastModified: new Date(),
-    },
-  ];
+  return Object.values(ResourcesLinks)
+    .filter(({ external }) => !external)
+    .filter(({ isEnabled }) => isEnabled)
+    .map(link => ({
+      url: `${domain}${link.href}`,
+      lastModified: currentDate,
+    }));
 }
