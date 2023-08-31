@@ -1,5 +1,5 @@
 import { Address, Bytes, BigInt } from "@graphprotocol/graph-ts";
-import { Vault } from "../generated/Vault/Vault"
+import { Vault, Vault__interestRatePerBlockResult } from "../generated/Vault/Vault"
 import { Vault as VaultEntity } from "../generated/schema"
 import {ILogger, WithLogger} from './logger'
 import { TokenService } from "./token-service";
@@ -69,7 +69,7 @@ export class VaultService extends WithLogger {
         entity.debtRatio = vault.debtRatio()
         entity.lastReportTimestamp = vault.lastReportTimestamp();
 
-        const interestAndUtilisation = vault.interestRatePerBlock();
+        const interestAndUtilisation = this.getInterestRate(vault);
         entity.totalUtilisationRate = interestAndUtilisation.getValue1();
 
         entity.rates = [this.interestService.createOrUpdate(
@@ -80,6 +80,15 @@ export class VaultService extends WithLogger {
         ).id];
 
         entity.save()
+    }
+
+    getInterestRate(vault: Vault): Vault__interestRatePerBlockResult {
+        const interestRatePerBlock = vault.try_interestRatePerBlock();
+        if (interestRatePerBlock.reverted) {
+            this.logger.warn('Method "Vault.interestRatePerBlock" reverted, vault: {}', [vault.name()])
+            return new Vault__interestRatePerBlockResult(BigInt.zero(), BigInt.zero());
+        }
+        return interestRatePerBlock.value
     }
 
     toUSD(value: BigInt, tokenContractAddress: Address): BigInt {
