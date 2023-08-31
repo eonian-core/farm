@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
@@ -398,6 +398,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(freed < outstandingDebt);
 
+        underlying.mint(address(baseStrategy), freed);
         baseStrategy.setLiquidateAllPositionsReturn(freed);
 
         (uint256 profit, uint256 loss, uint256 debtPayment) = baseStrategy
@@ -414,6 +415,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(freed >= outstandingDebt);
 
+        underlying.mint(address(baseStrategy), freed);
         baseStrategy.setLiquidateAllPositionsReturn(freed);
 
         (uint256 profit, uint256 loss, uint256 debtPayment) = baseStrategy
