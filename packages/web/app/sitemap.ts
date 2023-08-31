@@ -10,8 +10,7 @@ const currentDate = new Date();
 
 export default function sitemap(): Sitemap {
   return Object.values(ResourcesLinks)
-    .filter(({ external }) => !external)
-    .filter(({ isEnabled }) => isEnabled)
+    .filter(({ external, isEnabled }) => !external && isEnabled)
     .map(link => ({
       url: `${DOMAIN}${link.href}`,
       lastModified: currentDate,
