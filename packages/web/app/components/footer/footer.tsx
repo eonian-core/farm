@@ -1,12 +1,12 @@
-import React from "react";
-import LogoWithText from "../logo/logo-with-text";
-import { useLocalSocials } from "../../socials";
-import styles from "./footer.module.scss";
-import { Resources } from "./resources";
-import { Socials } from "./socials";
+import React from 'react'
+import LogoWithText from '../logo/logo-with-text'
+import { useLocalSocials } from '../../socials'
+import styles from './footer.module.scss'
+import { Resources } from './resources'
+import { Socials } from './socials'
 
-const Footer = () => {
-  const socials = useLocalSocials();
+function Footer() {
+  const socials = useLocalSocials()
 
   return (
     <footer className={styles.footer}>
@@ -14,8 +14,7 @@ const Footer = () => {
         <div className={styles.logoSection}>
           <LogoWithText />
           <div className={styles.sign}>
-            Hand-crafted with <span className={styles.heart}>❤️</span> by our
-            team
+            Hand-crafted with <span className={styles.heart}>❤️</span> by our team
           </div>
         </div>
 
@@ -28,7 +27,7 @@ const Footer = () => {
         Copyright &copy; {new Date().getFullYear()} <span>Eonian Finance</span>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
+export default Footer

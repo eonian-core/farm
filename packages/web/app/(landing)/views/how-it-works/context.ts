@@ -1,17 +1,15 @@
-import React from "react";
+import React from 'react'
 
 export interface HIWContextState {
-  steps: string[];
-  activeStep: string;
-  setActiveStep: (label: string) => void;
+  steps: string[]
+  activeStep: string
+  setActiveStep: (label: string) => void
 }
 
 export const defaultHIWContextState = {
   steps: [],
-  activeStep: "",
+  activeStep: '',
   setActiveStep: () => {},
-};
+}
 
-export const HIWContext = React.createContext<HIWContextState>(
-  defaultHIWContextState
-);
+export const HIWContext = React.createContext<HIWContextState>(defaultHIWContextState)

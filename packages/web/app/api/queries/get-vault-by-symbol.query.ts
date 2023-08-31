@@ -1,5 +1,6 @@
-import { ApolloClient, gql } from "@apollo/client";
-import { VaultBySymbolQuery } from "../gql/graphql";
+import type { ApolloClient } from '@apollo/client'
+import { gql } from '@apollo/client'
+import type { VaultBySymbolQuery } from '../gql/graphql'
 
 export const GetVaultBySymbol = gql`
   query VaultBySymbol($symbol: String!) {
@@ -28,17 +29,17 @@ export const GetVaultBySymbol = gql`
       fundAssetsUSD
     }
   }
-`;
+`
 
 /**
  * Get vault by its symbol
  * */
-export const getVaultBySymbol = async (client: ApolloClient<any>, symbol: string) => {
+export async function getVaultBySymbol(client: ApolloClient<any>, symbol: string) {
   const { data, error } = await client.query<VaultBySymbolQuery>({
     query: GetVaultBySymbol,
     variables: {
       symbol,
     },
-  });
-  return { data, error };
-};
+  })
+  return { data, error }
+}

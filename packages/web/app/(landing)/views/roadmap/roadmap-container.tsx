@@ -1,19 +1,15 @@
-import clsx from "clsx";
-import FadeIn from "../../../components/fade-in/fade-in";
+import clsx from 'clsx'
+import FadeIn from '../../../components/fade-in/fade-in'
 import styles from './roadmap-container.module.scss'
 
 export interface RoadmapContainerProps {
-    children: React.ReactNode;
+  children: React.ReactNode
 }
 
-export const RoadmapContainer = ({ children }: RoadmapContainerProps) => (
-        <FadeIn 
-            className={clsx(styles.roadmapContainer)}
-            amount={0.3}
-            fadeUpInitial="10%"
-        >
-            {children}
-        </FadeIn>
-    )
+export function RoadmapContainer({ children }: RoadmapContainerProps) {
+  return <FadeIn className={clsx(styles.roadmapContainer)} amount={0.3} fadeUpInitial="10%">
+    {children}
+  </FadeIn>
+}
 
-export default RoadmapContainer;
+export default RoadmapContainer

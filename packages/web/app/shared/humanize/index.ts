@@ -1,2 +1,2 @@
-export * from './format-number';
-export * from './to-usd-value';
+export * from './format-number'
+export * from './to-usd-value'

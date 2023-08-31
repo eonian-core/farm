@@ -1,64 +1,54 @@
-import { BigNumberish, Overrides, Signer } from "ethers";
-import _ from "lodash";
-import { HardhatRuntimeEnvironment } from "hardhat/types";
-import {
-  VaultFounderToken,
-  VaultFounderToken__factory,
-} from "../../../typechain-types";
+import type { BigNumberish, Overrides, Signer } from 'ethers'
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import type { VaultFounderToken, VaultFounderToken__factory } from '../../../typechain-types'
 
 async function _deployVaultFounderToken(
   this: any,
   hre: HardhatRuntimeEnvironment,
   signer?: Signer | string,
-  ...params: Parameters<VaultFounderToken["initialize"]>
+  ...params: Parameters<VaultFounderToken['initialize']>
 ): Promise<VaultFounderToken> {
-  const factory =
-    await hre.ethers.getContractFactory<VaultFounderToken__factory>(
-      "VaultFounderToken",
-      signer
-    );
-  const contract = await factory.deploy(false);
-  await contract.deployed();
+  const factory = await hre.ethers.getContractFactory<VaultFounderToken__factory>('VaultFounderToken', signer)
+  const contract = await factory.deploy(false)
+  await contract.deployed()
 
-  const transaction = await contract.initialize.call(this, ...params);
-  await transaction.wait();
+  const transaction = await contract.initialize.call(this, ...params)
+  await transaction.wait()
 
-  return contract;
+  return contract
 }
 
-type Options = {
-  maxCountTokens: BigNumberish;
-  nextTokenPriceMultiplier: BigNumberish;
-  initialTokenPrice: BigNumberish;
-  overrides?: Overrides & { from?: string | Promise<string> };
-  signer?: Signer | string;
-  name?: string;
-  symbol?: string;
-  vault: string;
-};
-
+interface Options {
+  maxCountTokens: BigNumberish
+  nextTokenPriceMultiplier: BigNumberish
+  initialTokenPrice: BigNumberish
+  overrides?: Overrides & { from?: string | Promise<string> }
+  signer?: Signer | string
+  name?: string
+  symbol?: string
+  vault: string
+}
 
 export default async function deployVaultFounderToken(
   hre: HardhatRuntimeEnvironment,
   {
-    signer, 
+    signer,
     maxCountTokens,
     nextTokenPriceMultiplier,
     initialTokenPrice,
-    name = "Vault Founder Token",
-    symbol = "VFT",
-    vault
-  }: Options
+    name = 'Vault Founder Token',
+    symbol = 'VFT',
+    vault,
+  }: Options,
 ): Promise<VaultFounderToken> {
-  
   return await _deployVaultFounderToken(
-    hre, 
-    signer, 
+    hre,
+    signer,
     maxCountTokens,
     nextTokenPriceMultiplier,
     initialTokenPrice,
-    name, 
-    symbol, 
-    vault
-  );
+    name,
+    symbol,
+    vault,
+  )
 }

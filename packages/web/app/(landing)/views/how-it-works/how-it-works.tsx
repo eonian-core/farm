@@ -1,30 +1,31 @@
-"use client";
-import clsx from "clsx";
-import React from "react";
-import Container from "../../../components/contrainer/container";
-import { useOnResizeEffect } from "../../../components/resize-hooks/useOnResizeEffect";
-import { useInView } from "../../../components/use-in-view/use-in-view";
-import { HIW_AUTOSCROLL_DURATION } from "./constants";
-import { HIWContextState, defaultHIWContextState, HIWContext } from "./context";
-import { FlowSliderItemProps } from "./flow-slider-item";
-import styles from "./how-it-works.module.scss";
+'use client'
+import clsx from 'clsx'
+import React from 'react'
+import Container from '../../../components/contrainer/container'
+import { useOnResizeEffect } from '../../../components/resize-hooks/useOnResizeEffect'
+import { useInView } from '../../../components/use-in-view/use-in-view'
+import { HIW_AUTOSCROLL_DURATION } from './constants'
+import type { HIWContextState } from './context'
+import { HIWContext, defaultHIWContextState } from './context'
+import type { FlowSliderItemProps } from './flow-slider-item'
+import styles from './how-it-works.module.scss'
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const HowItWorks: React.FC<Props> = ({ children }) => {
-  const containerRef = React.useRef<HTMLElement>(null);
-  const stepLabels = useStepLabels(children);
+  const containerRef = React.useRef<HTMLElement>(null)
+  const stepLabels = useStepLabels(children)
 
-  const isInView = useInView(containerRef, {amount: 0.3});
+  const isInView = useInView(containerRef, { amount: 0.3 })
   const onceInView = useOnce(isInView)
 
-  const [activeStep, setActiveStep] = React.useState(stepLabels[0]);
+  const [activeStep, setActiveStep] = React.useState(stepLabels[0])
 
   useOnResizeEffect(() => {
-    setActiveStep(stepLabels[0]);
-  }, []);
+    setActiveStep(stepLabels[0])
+  }, [])
 
   const contextValue: HIWContextState = React.useMemo(
     () => ({
@@ -33,65 +34,64 @@ const HowItWorks: React.FC<Props> = ({ children }) => {
       activeStep,
       setActiveStep,
     }),
-    [stepLabels, activeStep]
-  );
+    [stepLabels, activeStep],
+  )
 
   React.useEffect(() => {
-    if (!isInView) 
-      return;
-    
-    
-    const interval = window.setInterval(() => {
-      const index = stepLabels.indexOf(activeStep) + 1;
-      const nextStep = stepLabels[index >= stepLabels.length ? 0 : index];
-      setActiveStep(nextStep);
-    }, HIW_AUTOSCROLL_DURATION);
+    if (!isInView) {
+      return
+    }
 
-    return () => window.clearInterval(interval);
-  }, [isInView, activeStep, stepLabels]);
+    const interval = window.setInterval(() => {
+      const index = stepLabels.indexOf(activeStep) + 1
+      const nextStep = stepLabels[index >= stepLabels.length ? 0 : index]
+      setActiveStep(nextStep)
+    }, HIW_AUTOSCROLL_DURATION)
+
+    return () => window.clearInterval(interval)
+  }, [isInView, activeStep, stepLabels])
 
   return (
-    <Container ref={containerRef} className={clsx(styles.container, {[styles.visible]: onceInView})}>
-      <HIWContext.Provider value={contextValue}>
-        {children}
-      </HIWContext.Provider>
+    <Container ref={containerRef} className={clsx(styles.container, { [styles.visible]: onceInView })}>
+      <HIWContext.Provider value={contextValue}>{children}</HIWContext.Provider>
     </Container>
-  );
-};
+  )
+}
 
-export default HowItWorks;
+export default HowItWorks
 
 function useStepLabels(children: React.ReactNode): string[] {
-  return React.useMemo(() => extractStepLabels(children), [children]);
+  return React.useMemo(() => extractStepLabels(children), [children])
 }
 
 function extractStepLabels(children: React.ReactNode): string[] {
-  const elements = React.Children.toArray(children) as React.ReactElement[];
-  if (!Array.isArray(elements) || !elements.length) 
-    return [];
-  
+  const elements = React.Children.toArray(children) as React.ReactElement[]
+  if (!Array.isArray(elements) || !elements.length) {
+    return []
+  }
 
-  const result = [];
+  const result = []
   for (const { props } of elements) {
-    if (props && "stepLabel" in props) {
-      const itemProps = props as FlowSliderItemProps;
-      result.push(itemProps.stepLabel);
-      continue;
+    if (props && 'stepLabel' in props) {
+      const itemProps = props as FlowSliderItemProps
+      result.push(itemProps.stepLabel)
+      continue
     }
 
-    if (props && "children" in props) {
-      const next = extractStepLabels(props.children);
-      result.push(...next);
+    if (props && 'children' in props) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+      const next = extractStepLabels(props.children)
+      result.push(...next)
     }
   }
-  return result;
+  return result
 }
 
 /** Switch state to true only once */
-export const useOnce = (target: boolean): boolean => {
-  const ref = React.useRef<boolean>(target);
+export function useOnce(target: boolean): boolean {
+  const ref = React.useRef<boolean>(target)
 
-  ref.current ||= target;
+  ref.current ||= target
 
-  return ref.current;
+  return ref.current
 }

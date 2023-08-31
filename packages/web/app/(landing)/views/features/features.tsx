@@ -1,41 +1,45 @@
-import React from "react";
+import React from 'react'
 
-import styles from "./features.module.scss";
-import Container from "../../../components/contrainer/container";
-import clsx from "clsx";
-import FadeInList from "../../../components/fade-in/fade-in-list";
-import { useIsMobileOrSmaller } from "../../../components/resize-hooks/screens";
+import clsx from 'clsx'
+import Container from '../../../components/contrainer/container'
+import FadeInList from '../../../components/fade-in/fade-in-list'
+import { useIsMobileOrSmaller } from '../../../components/resize-hooks/screens'
+import styles from './features.module.scss'
 
 export interface ImageProps {
-    className: string
+  className: string
 }
 
 interface StableProfitProps extends React.PropsWithChildren {
-    /** Image which will be rendered */
-    image: (props: ImageProps) => React.ReactNode
-    /** Show image on right side */
-    right?: boolean
-    className?: string
+  /** Image which will be rendered */
+  image: (props: ImageProps) => React.ReactNode
+  /** Show image on right side */
+  right?: boolean
+  className?: string
 }
 
 const Features: React.FC<StableProfitProps> = ({ children, image, right, className }) => {
-    const isMobileOrSmaller = useIsMobileOrSmaller()
+  const isMobileOrSmaller = useIsMobileOrSmaller()
 
-    const Image = image({
-        className: clsx(styles.image, {[styles.right]: right})
-    });
+  const Image = image({
+    className: clsx(styles.image, { [styles.right]: right }),
+  })
 
-    return (
-        <Container>
-            <FadeInList className={clsx(className, styles.wrapper, {[styles.right]: right})} amount={!isMobileOrSmaller ? 0.3 : 0.1} initialDelay={0}>
-                {!right && Image}
-                
-                <div className={clsx(styles.features, {[styles.right]: right})}>{children}</div>
+  return (
+    <Container>
+      <FadeInList
+        className={clsx(className, styles.wrapper, { [styles.right]: right })}
+        amount={!isMobileOrSmaller ? 0.3 : 0.1}
+        initialDelay={0}
+      >
+        {!right && Image}
 
-                {right && Image}
-            </FadeInList>
-        </Container>
-    );
-};
+        <div className={clsx(styles.features, { [styles.right]: right })}>{children}</div>
 
-export default Features;
+        {right && Image}
+      </FadeInList>
+    </Container>
+  )
+}
+
+export default Features

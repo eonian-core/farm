@@ -6,15 +6,9 @@
     "outDir": "dist",
     "declaration": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
-  "include": [
-    "./scripts",
-    "./deploy",
-    "./test",
-    "./typechain"
-  ],
-  "files": [
-    "./src/types.d.ts"
-  ]
+  "include": ["./src"],
+  "exclude": ["dist"],
+  "files": ["./src/types.d.ts"]
 }

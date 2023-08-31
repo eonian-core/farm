@@ -20,10 +20,11 @@ import {
   Transfer as TransferEvent,
   Unpaused as UnpausedEvent,
   Upgraded as UpgradedEvent,
+  Vault,
+
   Withdraw as WithdrawEvent,
-  Vault
-} from "../generated/Vault/Vault"
-import { 
+} from '../generated/Vault/Vault'
+import {
   AdminChanged,
   Approval,
   AuthorizedOperator,
@@ -46,15 +47,12 @@ import {
   Unpaused,
   Upgraded,
   Withdraw,
-  Vault as VaultEntity
- } from "../generated/schema"
-import { runApp } from "./app"
-
-
+} from '../generated/schema'
+import { runApp } from './app'
 
 export function handleAdminChanged(event: AdminChangedEvent): void {
-  let entity = new AdminChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new AdminChanged(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.previousAdmin = event.params.previousAdmin
   entity.newAdmin = event.params.newAdmin
@@ -69,8 +67,8 @@ export function handleAdminChanged(event: AdminChangedEvent): void {
 }
 
 export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Approval(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.owner = event.params.owner
   entity.spender = event.params.spender
@@ -86,8 +84,8 @@ export function handleApproval(event: ApprovalEvent): void {
 }
 
 export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
-  let entity = new AuthorizedOperator(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new AuthorizedOperator(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.operator = event.params.operator
   entity.tokenHolder = event.params.tokenHolder
@@ -102,8 +100,8 @@ export function handleAuthorizedOperator(event: AuthorizedOperatorEvent): void {
 }
 
 export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
-  let entity = new BeaconUpgraded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new BeaconUpgraded(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.beacon = event.params.beacon
 
@@ -117,10 +115,10 @@ export function handleBeaconUpgraded(event: BeaconUpgradedEvent): void {
 }
 
 export function handleBorrowerDebtManagementReported(
-  event: BorrowerDebtManagementReportedEvent
+  event: BorrowerDebtManagementReportedEvent,
 ): void {
-  let entity = new BorrowerDebtManagementReported(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new BorrowerDebtManagementReported(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.borrower = event.params.borrower
   entity.debtPayment = event.params.debtPayment
@@ -139,8 +137,8 @@ export function handleBorrowerDebtManagementReported(
 }
 
 export function handleBurned(event: BurnedEvent): void {
-  let entity = new Burned(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Burned(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.operator = event.params.operator
   entity.from = event.params.from
@@ -158,8 +156,8 @@ export function handleBurned(event: BurnedEvent): void {
 }
 
 export function handleDeposit(event: DepositEvent): void {
-  let entity = new Deposit(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Deposit(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.caller = event.params.caller
   entity.owner = event.params.owner
@@ -176,8 +174,8 @@ export function handleDeposit(event: DepositEvent): void {
 }
 
 export function handleInitialized(event: InitializedEvent): void {
-  let entity = new Initialized(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Initialized(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.version = event.params.version
 
@@ -191,10 +189,10 @@ export function handleInitialized(event: InitializedEvent): void {
 }
 
 export function handleLockedProfitReleaseRateChanged(
-  event: LockedProfitReleaseRateChangedEvent
+  event: LockedProfitReleaseRateChangedEvent,
 ): void {
-  let entity = new LockedProfitReleaseRateChanged(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new LockedProfitReleaseRateChanged(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.rate = event.params.rate
 
@@ -208,8 +206,8 @@ export function handleLockedProfitReleaseRateChanged(
 }
 
 export function handleMinted(event: MintedEvent): void {
-  let entity = new Minted(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Minted(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.operator = event.params.operator
   entity.to = event.params.to
@@ -227,10 +225,10 @@ export function handleMinted(event: MintedEvent): void {
 }
 
 export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
+  event: OwnershipTransferredEvent,
 ): void {
-  let entity = new OwnershipTransferred(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new OwnershipTransferred(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
@@ -245,8 +243,8 @@ export function handleOwnershipTransferred(
 }
 
 export function handlePaused(event: PausedEvent): void {
-  let entity = new Paused(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Paused(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.account = event.params.account
 
@@ -260,8 +258,8 @@ export function handlePaused(event: PausedEvent): void {
 }
 
 export function handleRevokedOperator(event: RevokedOperatorEvent): void {
-  let entity = new RevokedOperator(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new RevokedOperator(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.operator = event.params.operator
   entity.tokenHolder = event.params.tokenHolder
@@ -276,8 +274,8 @@ export function handleRevokedOperator(event: RevokedOperatorEvent): void {
 }
 
 export function handleSent(event: SentEvent): void {
-  let entity = new Sent(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Sent(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.operator = event.params.operator
   entity.from = event.params.from
@@ -296,8 +294,8 @@ export function handleSent(event: SentEvent): void {
 }
 
 export function handleStrategyAdded(event: StrategyAddedEvent): void {
-  let entity = new StrategyAdded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new StrategyAdded(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.strategy = event.params.strategy
   entity.debtRatio = event.params.debtRatio
@@ -312,8 +310,8 @@ export function handleStrategyAdded(event: StrategyAddedEvent): void {
 }
 
 export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
-  let entity = new StrategyRemoved(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new StrategyRemoved(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.strategy = event.params.strategy
   entity.fromQueueOnly = event.params.fromQueueOnly
@@ -328,10 +326,10 @@ export function handleStrategyRemoved(event: StrategyRemovedEvent): void {
 }
 
 export function handleStrategyReturnedToQueue(
-  event: StrategyReturnedToQueueEvent
+  event: StrategyReturnedToQueueEvent,
 ): void {
-  let entity = new StrategyReturnedToQueue(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new StrategyReturnedToQueue(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.strategy = event.params.strategy
 
@@ -345,8 +343,8 @@ export function handleStrategyReturnedToQueue(
 }
 
 export function handleStrategyRevoked(event: StrategyRevokedEvent): void {
-  let entity = new StrategyRevoked(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new StrategyRevoked(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.strategy = event.params.strategy
 
@@ -360,8 +358,8 @@ export function handleStrategyRevoked(event: StrategyRevokedEvent): void {
 }
 
 export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Transfer(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.from = event.params.from
   entity.to = event.params.to
@@ -377,8 +375,8 @@ export function handleTransfer(event: TransferEvent): void {
 }
 
 export function handleUnpaused(event: UnpausedEvent): void {
-  let entity = new Unpaused(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Unpaused(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.account = event.params.account
 
@@ -392,8 +390,8 @@ export function handleUnpaused(event: UnpausedEvent): void {
 }
 
 export function handleUpgraded(event: UpgradedEvent): void {
-  let entity = new Upgraded(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Upgraded(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.implementation = event.params.implementation
 
@@ -401,9 +399,9 @@ export function handleUpgraded(event: UpgradedEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
-  let vault = Vault.bind(event.address)
+  const vault = Vault.bind(event.address)
 
-  entity.version = vault.version();
+  entity.version = vault.version()
 
   entity.save()
 
@@ -411,8 +409,8 @@ export function handleUpgraded(event: UpgradedEvent): void {
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
-  let entity = new Withdraw(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const entity = new Withdraw(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
   entity.caller = event.params.caller
   entity.receiver = event.params.receiver

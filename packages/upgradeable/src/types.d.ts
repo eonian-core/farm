@@ -1,1 +1,1 @@
-import "@eonian/hardhat-deploy";
+import 'hardhat-deploy';
