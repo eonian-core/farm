@@ -1,23 +1,15 @@
-import * as features from "../../features";
-
-export interface NavigationItem {
-  href: string;
-  label: string;
-}
+import {ResourceItem, ResourcesLinks} from "../../features";
 
 export const links = [
-  features.showMission && { href: "/mission", label: "Mission" },
-  features.showFaq && { href: "/faq", label: "FAQ" },
-  features.showCommunity && { href: "/community", label: "Community" },
-  features.showSecurity && { href: "/security", label: "Security" },
-  features.showEarn && { href: "/earn", label: "Earn" },
-  features.showDocs && {
-    href: "https://leovs09.notion.site/465899d944244e9cb55e5dea502efd47",
-    label: "Docs",
-  },
-].filter(Boolean) as Array<NavigationItem>;
+  ResourcesLinks.Mission,
+  ResourcesLinks.Roadmap,
+  ResourcesLinks.Community,
+  ResourcesLinks.Security,
+  ResourcesLinks.Earn,
+  ResourcesLinks.Docs
+].filter(({ isEnabled }) => isEnabled);
 
-export const mobileLinks: Array<NavigationItem> = [
+export const mobileLinks: Array<ResourceItem> = [
   { href: "/", label: "Home" },
   ...links,
 ];

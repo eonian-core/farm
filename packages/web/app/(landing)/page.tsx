@@ -25,10 +25,6 @@ import FlowSlider from "./views/how-it-works/flow-slider";
 import FlowSliderItem from "./views/how-it-works/flow-slider-item";
 import HowItWorks from "./views/how-it-works/how-it-works";
 import InDevelopment from "./views/in-development/in-development";
-import Roadmap from "./views/roadmap/roadmap";
-import RoadmapCheckpoint from "./views/roadmap/roadmap-checkpoint";
-import RoadmapContainer from "./views/roadmap/roadmap-container";
-import RoadmapDate from "./views/roadmap/roadmap-date";
 import SafeInvestments from "./views/safe-investments/safe-investments";
 import StableProfit from "./views/stable-profit/stable-profit";
 import Card, { Target } from "../components/card/card";
@@ -56,10 +52,6 @@ const components = {
   IconExternal,
   IconRobot,
   IconDiscord,
-  Roadmap,
-  RoadmapCheckpoint,
-  RoadmapContainer,
-  RoadmapDate,
   InDevelopment,
   Target,
   HowItWorks,

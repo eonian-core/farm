@@ -5,9 +5,9 @@ import LogoWithText from "../logo/logo-with-text";
 import { MenuItem } from "./menu-item";
 import { useState, useEffect, useCallback } from "react";
 import Menu from "./menu";
-import { links, mobileLinks, NavigationItem } from "./links";
+import { links, mobileLinks } from "./links";
 import ConnectWallet from "../wallet/connect-wallet";
-import { showEarn } from "../../features";
+import { ResourceItem, showEarn } from "../../features";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,7 @@ export default function Navigation() {
 }
 
 export interface MenuItemListProps {
-  links: Array<NavigationItem>;
+  links: Array<ResourceItem>;
   onClick: () => void;
 }
 
