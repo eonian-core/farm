@@ -5,6 +5,7 @@ import { useLocalSocials } from '../../../socials';
 import InDevelopmentParallax from './in-development-parallax';
 import styles from './in-development.module.scss';
 import { Socials } from '../../../components/socials/socials';
+import { JoinWaitlistForm } from "./join-waitlist-form";
 
 interface ContainerProps {
     /** content of the block, expected to have: h2, p  and Card elements */
@@ -27,6 +28,8 @@ export const InDevelopment = ({ children }: ContainerProps) => {
                     initialDelay={0}
                 >
                     {children}
+
+                    <JoinWaitlistForm />
 
                     <Socials socials={socials} />
                 </FadeInList>

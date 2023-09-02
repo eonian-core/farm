@@ -7,6 +7,7 @@ import { Provider } from "react-redux";
 import { store } from "../store/store";
 import { WalletWrapperProvider } from "./wallet/wallet-wrapper-provider";
 import { AuthProvider } from "../auth";
+import { WaitlistProvider } from "./waitlist";
 
 interface Props {
   locale: string;
@@ -18,7 +19,9 @@ export default function Providers({ children }: Props) {
     <NextThemeProvider>
       <Provider store={store}>
         <WalletWrapperProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <WaitlistProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </WaitlistProvider>
         </WalletWrapperProvider>
       </Provider>
     </NextThemeProvider>
