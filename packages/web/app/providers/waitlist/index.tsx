@@ -15,14 +15,12 @@ export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const tumelio = useTuemilio()
 
-    const join = useCallback((email: string) => {
-        tumelio.createSubscriber(email)
-    }, [tumelio.createSubscriber]);
-
-    const isJoined = !!tumelio.subscriber
-
     return (
-        <WaitlistContext.Provider value={{ join, isJoined, openDashboard: tumelio.showDashboard }}>
+        <WaitlistContext.Provider value={{ 
+            join: tumelio.createSubscriber, 
+            isJoined: !!tumelio.subscriber, 
+            openDashboard: tumelio.showDashboard 
+        }}>
             <TuemilioScript />
             {children}
         </WaitlistContext.Provider>
