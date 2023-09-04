@@ -1,11 +1,8 @@
 import Container from "../../../components/contrainer/container";
 import FadeInList from "../../../components/fade-in/fade-in-list";
 import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens';
-import { useLocalSocials } from '../../../socials';
 import InDevelopmentParallax from './in-development-parallax';
 import styles from './in-development.module.scss';
-import { Socials } from '../../../components/socials/socials';
-import { JoinWaitlistForm } from "./join-waitlist-form";
 
 interface ContainerProps {
     /** content of the block, expected to have: h2, p  and Card elements */
@@ -13,7 +10,6 @@ interface ContainerProps {
 };
 
 export const InDevelopment = ({ children }: ContainerProps) => {
-    const socials = useLocalSocials()
     const isTabletOrSmaller = useIsTabletOrSmaller()
 
     return (
@@ -28,10 +24,6 @@ export const InDevelopment = ({ children }: ContainerProps) => {
                     initialDelay={0}
                 >
                     {children}
-
-                    <JoinWaitlistForm />
-
-                    <Socials socials={socials} />
                 </FadeInList>
             </div>
         </Container>

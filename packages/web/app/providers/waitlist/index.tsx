@@ -12,7 +12,6 @@ const defailtContextState: WaitlistState = { join: () => { }, openDashboard: () 
 const WaitlistContext = createContext<WaitlistState>(defailtContextState);
 
 export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-
     const tumelio = useTuemilio()
 
     return (
