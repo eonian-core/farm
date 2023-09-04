@@ -9,11 +9,20 @@ export const JoinWaitlistForm = () => {
         setEmail(e.target.value);
     }, []);
 
-    const {join} = useWaitlist()
+    const {join, isJoined, openDashboard} = useWaitlist()
 
     const handleSubmit = useCallback(() => {
         join(email)
     }, [join, email]);
+
+    if(isJoined) return (
+        <div>
+            <p>Thank you for joining</p>
+            <Button color="primary" onClick={openDashboard}>
+                Open dashboard
+            </Button>
+            </div>
+    )
 
     return (
         <div>

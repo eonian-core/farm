@@ -3,14 +3,13 @@ import { useTuemilio, TuemilioScript } from './tuemilio';
 
 export interface WaitlistState {
     join: (email: string) => void;
+    openDashboard: () => void;
     isJoined: boolean;
 }
 
-const defailtContextState: WaitlistState = { join: () => { }, isJoined: false }
+const defailtContextState: WaitlistState = { join: () => { }, openDashboard: () => {}, isJoined: false }
 
 const WaitlistContext = createContext<WaitlistState>(defailtContextState);
-
-
 
 export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
@@ -23,7 +22,7 @@ export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }
     const isJoined = !!tumelio.subscriber
 
     return (
-        <WaitlistContext.Provider value={{ join, isJoined }}>
+        <WaitlistContext.Provider value={{ join, isJoined, openDashboard: tumelio.showDashboard }}>
             <TuemilioScript />
             {children}
         </WaitlistContext.Provider>
