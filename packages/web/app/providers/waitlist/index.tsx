@@ -1,39 +1,30 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { ITumelioWrapper } from './tuemilio';
-import { useTuemilio } from './useTuemilio';
+import { useTuemilio, TuemilioScript } from './tuemilio';
 
 export interface WaitlistState {
     join: (email: string) => void;
+    isJoined: boolean;
 }
 
-const defailtContextState: WaitlistState = { join: () => { } }
+const defailtContextState: WaitlistState = { join: () => { }, isJoined: false }
 
 const WaitlistContext = createContext<WaitlistState>(defailtContextState);
 
-const defaulWaitlistState: ITumelioWrapper = {
-    createSubscriber: () => {
-        // TODO: add default error handling
-        alert('Eh :( we have problem to add you waitlist, please contact us on Discord or Telegram')
-    },
-    showDashboard: () => {},
-    fireConfety: () => {}
-}
+
 
 export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [state, setState] = useState<ITumelioWrapper>(defaulWaitlistState);
-    useTuemilio(setState)
+
+    const tumelio = useTuemilio()
 
     const join = useCallback((email: string) => {
-        console.log('join', state.createSubscriber, email)
-        state.createSubscriber(email)
-        
-        // TODO: fix dashboard to show after join
-        state.showDashboard()
-        state.fireConfety()
-    }, [state.createSubscriber, state.showDashboard, state.fireConfety]);
+        tumelio.createSubscriber(email)
+    }, [tumelio.createSubscriber]);
+
+    const isJoined = !!tumelio.subscriber
 
     return (
-        <WaitlistContext.Provider value={{ join }}>
+        <WaitlistContext.Provider value={{ join, isJoined }}>
+            <TuemilioScript />
             {children}
         </WaitlistContext.Provider>
     );

@@ -12,8 +12,6 @@ export const JoinWaitlistForm = () => {
     const {join} = useWaitlist()
 
     const handleSubmit = useCallback(() => {
-        // Submit the email here
-        console.log(email);
         join(email)
     }, [join, email]);
 
