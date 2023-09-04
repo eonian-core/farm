@@ -74,10 +74,12 @@ export const InternalLink = ({
 }: LinkWithIconProps) => {
   const dispatch = useAppDispatch();
 
+  const isSamePageLink = href.toString().startsWith("#");
+
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       onClick?.(e);
-      if (!e.defaultPrevented) 
+      if (!e.defaultPrevented && !isSamePageLink) 
         dispatch(setPageLoading(href.toString()));
       
     },
