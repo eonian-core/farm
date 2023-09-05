@@ -1,0 +1,31 @@
+
+.form {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    border: 1px solid var(--color-dark-300);
+    border-radius: var(--border-radius-550);
+    max-width: var(--width-500);
+
+    min-height: var(--margin-500);
+    padding: var(--padding-100);
+
+    label {
+        position: absolute;
+        top: var(--padding-100);
+        left: var(--padding-500);
+        transition: 0.3s;
+        padding: 0 var(--padding-50);
+    }
+
+    &:hover, &:focus, &active {
+        label {
+            font-size: var(--font-size-100);
+            top: calc(var(--padding-100) * -1);
+            left: var(--padding-200);
+            background: var(--color-background-start);
+        }
+    }
+}

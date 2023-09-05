@@ -32,7 +32,7 @@ import Founders from "./views/founders/founders";
 import FoundersList from "./views/founders/founders-list";
 import Founder from "./views/founders/founder";
 import IconCoin, { CoinIcon } from "../components/icons/icon-coin";
-import { JoinWaitlistForm } from "./views/in-development/join-waitlist-form";
+import { Waitlist } from "../components/waitlist/waitlist";
 
 const components = {
   Card,
@@ -63,7 +63,7 @@ const components = {
   SafeInvestments,
   Features,
   ul: FeaturesList,
-  JoinWaitlistForm,
+  Waitlist,
   UsdtIcon: () => <IconCoin symbol={CoinIcon.USDT} width={18} height={18} />,
 };
 
