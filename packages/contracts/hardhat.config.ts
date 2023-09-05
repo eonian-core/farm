@@ -76,9 +76,11 @@ const bscMainnet: NetworkUserConfig = {
   },
 }
 
-console.log('Current network: ', process.env.HARDHAT_NETWORK)
+const defaultNetwork = 'hardhat'
+console.log(`Current network: "${process.env.HARDHAT_NETWORK || defaultNetwork}"`)
 
 const config: HardhatUserConfig = {
+  defaultNetwork,
   solidity: {
     version: '0.8.19',
     settings: {
@@ -88,7 +90,6 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
       forking: binanceSmartChainFork,
