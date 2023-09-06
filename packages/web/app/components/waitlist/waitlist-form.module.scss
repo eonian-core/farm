@@ -48,12 +48,11 @@
         bottom: 0;
         left: 1rem;
         background: linear-gradient(
-            to bottom right,
-            rgba(160, 87, 224, 0.829) 0%,
-            rgba(175, 54, 231, 0.726) 29%,
-            rgba(228, 61, 114, 0.651) 48%,
-            rgba(57, 61, 172, 0.788) 74%,
-            rgba(62, 74, 163, 0.733) 100%);
+            to right, 
+            rgba(112, 39, 175, 0.829) 0%, 
+            rgba(102, 32, 194, 0.726) 45%, 
+            rgba(57, 61, 172, 0.788) 75%,
+            rgba(62, 74, 163, 0.733) 100%);     
         transform: scale(0.5);
         filter: blur(10px);
         opacity: 0;
@@ -80,16 +79,15 @@
 
     &:hover {
         background: linear-gradient(
-            to bottom right,
-            rgba(160, 87, 224, 0.829) 0%,
-            rgba(175, 54, 231, 0.726) 29%,
-            rgba(228, 61, 114, 0.651) 48%,
-            rgba(57, 61, 172, 0.788) 74%,
-            rgba(62, 74, 163, 0.733) 100%);           
+            to right, 
+            rgba(112, 39, 175, 0.829) 0%, 
+            rgba(102, 32, 194, 0.726) 45%, 
+            rgba(57, 61, 172, 0.788) 75%,
+            rgba(62, 74, 163, 0.733) 100%);     
     }
 
     &:hover::before {
-        opacity: 0.7;
+        opacity: 0.9;
         transform: scale(1);
     }
 
@@ -98,20 +96,7 @@
         
 }
 
-.shadow {
-    position: absolute;
-    z-index: 0;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    border-radius: var(--border-radius-550);
-    
-    box-shadow:
-        3px -3px 30px #1beabd,
-        -3px 3px 30px #10abff;
-}
+
 
 .container {
     background: var(--color-background-start);
