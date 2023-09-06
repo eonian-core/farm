@@ -1,13 +1,20 @@
 
 .button {
   animation: appearWithDelay 1s ease-in;
+  &.bold {
+    button {
+      font-weight: var(--font-bold);
+    }
+  }
+  
+  &.dark {
+    button {
+      background-color: var(--color-neutral-825);
+    }
+  }
+  
 }
 
-.bold {
-  button p {
-    font-weight: var(--font-bold);
-  }
-}
 
 @keyframes appearWithDelay {
   0% {

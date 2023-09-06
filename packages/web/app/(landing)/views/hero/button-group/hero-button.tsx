@@ -23,13 +23,14 @@ const HeroButton: React.FC<Props> = ({
   href,
   icon,
   bold,
+  bordered,
   ...restProps
 }) => {
   const isDesktop = useIsDesktopOrSmaller();
 
   return (
-    <WrapperLink className={clsx(styles.button, {[styles.bold]: bold})} href={href}>
-      <Button size={isDesktop ? "md" : "lg"} icon={icon} dark wide {...restProps}>
+    <WrapperLink className={clsx(styles.button, {[styles.bold]: bold}, {[styles.dark]: !bordered})} href={href}>
+      <Button size={isDesktop ? "md" : "lg"} icon={icon} dark wide round bordered={bordered} {...restProps}>
         {children}
       </Button>
     </WrapperLink>

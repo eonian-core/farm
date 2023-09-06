@@ -9,6 +9,7 @@ export interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'size' |
   gradient?: boolean;
   dark?: boolean;
   wide?: boolean;
+  round?: boolean;
   icon?: React.ReactNode;
   children: React.ReactNode;
 }
@@ -19,6 +20,7 @@ const Button: React.FC<Props> = ({
   gradient = false,
   dark = false,
   wide = false,
+  round = false,
   icon,
   children,
   ...restProps
@@ -29,6 +31,7 @@ const Button: React.FC<Props> = ({
     [styles["dark"]]: dark,
     [styles["icon"]]: !!icon,
     [styles["wide"]]: wide,
+    [styles["round"]]: round,
   });
   return (
     <button className={classes} {...restProps}>
