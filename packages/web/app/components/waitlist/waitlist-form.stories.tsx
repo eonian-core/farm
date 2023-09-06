@@ -3,6 +3,8 @@ import {WaitlistForm} from './waitlist-form';
 import NextThemeProvider from '../../providers/next-theme';
 
 
+
+
 const meta: Meta<typeof WaitlistForm> = {
     title: 'Components/forms/WaitlistForm',
     component: WaitlistForm,
@@ -30,10 +32,34 @@ const meta: Meta<typeof WaitlistForm> = {
 export default meta;
 type Story = StoryObj<typeof WaitlistForm>;
 
+const onSubmit = (email: string) => {
+    console.log('Submited!', email)
+}
+
+
 export const Default: Story = {
     args: {
-        onSubmit: (email: string) => {
-            console.log('Submited!', email)
-        }
+        onSubmit
+    }
+}
+
+export const Hover: Story = {
+    parameters: {pseudo: { hover: true }},
+    args: {
+        onSubmit
+    }
+}
+
+export const Active: Story = {
+    parameters: {pseudo: { active: true }},
+    args: {
+        onSubmit
+    }
+}
+
+export const Focus: Story = {
+    parameters: {pseudo: { focus: true }},
+    args: {
+        onSubmit
     }
 }

@@ -1,16 +1,14 @@
 
 .form {
     position: relative;
-    display: flex;
-    flex-direction: row;
+    
     width: 100%;
 
-    border: 1px solid var(--color-dark-300);
     border-radius: var(--border-radius-550);
     max-width: var(--width-500);
 
     min-height: var(--margin-500);
-    padding: var(--padding-100);
+    padding: var(--padding-10);
 
     label {
         position: absolute;
@@ -20,7 +18,7 @@
         padding: 0 var(--padding-50);
     }
 
-    &:hover, &:focus, &active {
+    &:hover, &:focus, &:active {
         label {
             font-size: var(--font-size-100);
             top: calc(var(--padding-100) * -1);
@@ -28,4 +26,18 @@
             background: var(--color-background-start);
         }
     }
+
+    background: linear-gradient(21deg, #10abff, #1beabd);
+}
+
+.container {
+    background: var(--color-background-start);
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+
+    border-radius: var(--border-radius-550);
 }

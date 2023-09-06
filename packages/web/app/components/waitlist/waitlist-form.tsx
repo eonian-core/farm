@@ -35,14 +35,17 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
                 onSubmit(data.email)
             })}>
 
-            <EmailInput 
-                {...register("email", { required: true })}
-            />
-            <Emaillabel error={errors.email as any} />
+                <div className={styles.container}>
 
-            <button color="primary" type="submit" >
-                Join Waitlist
-            </button>
+                    <EmailInput 
+                        {...register("email", { required: true })}
+                    />
+                    <Emaillabel error={errors.email as any} />
+
+                    <button color="primary" type="submit" >
+                        Join Waitlist
+                    </button>
+                </div>
         </form>
     )
 }
