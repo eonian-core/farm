@@ -1,7 +1,6 @@
-
 .form {
     position: relative;
-    
+
     width: 100%;
 
     border-radius: var(--border-radius-550);
@@ -9,6 +8,8 @@
 
     min-height: var (--font-size-850);
     padding: var(--padding-10);
+
+    transition: all 1s;
 
     label {
         position: absolute;
@@ -18,7 +19,9 @@
         padding: 0 var(--padding-50);
     }
 
-    &:hover, &:focus, &:active {
+    &:hover,
+    &:focus,
+    &:active {
         label {
             font-size: var(--font-size-100);
             top: calc(var(--padding-100) * -1);
@@ -27,7 +30,87 @@
         }
     }
 
-    background: linear-gradient(21deg, #10abff, #1beabd);
+    background: linear-gradient(to right bottom,
+        hsla(0, 0%, 100%, 0.502),
+        hsla(0, 0%, 100%, 0.251),
+        hsla(0, 0%, 100%, 0.527),
+        hsla(0, 0%, 100%, 0.541),
+        hsla(0, 0%, 100%, 0.205),
+        hsla(0, 0%, 100%, 0.301),
+        hsla(0, 0%, 100%, 0.502));
+
+    &:before {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        right: 1rem;
+        bottom: 0;
+        left: 1rem;
+        background: linear-gradient(
+            to bottom right,
+            rgba(160, 87, 224, 0.829) 0%,
+            rgba(175, 54, 231, 0.726) 29%,
+            rgba(228, 61, 114, 0.651) 48%,
+            rgba(57, 61, 172, 0.788) 74%,
+            rgba(62, 74, 163, 0.733) 100%);
+        transform: scale(0.5);
+        filter: blur(10px);
+        opacity: 0;
+        transition: all 0.3s;
+        border-radius: inherit;
+    }
+
+    /* 
+    * Prevents issues when the parent creates a 
+    * stacking context. (For example, using the transform
+    * property )
+    */
+    &::after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: inherit;
+        border-radius: inherit;
+    }
+
+    &:hover {
+        background: linear-gradient(
+            to bottom right,
+            rgba(160, 87, 224, 0.829) 0%,
+            rgba(175, 54, 231, 0.726) 29%,
+            rgba(228, 61, 114, 0.651) 48%,
+            rgba(57, 61, 172, 0.788) 74%,
+            rgba(62, 74, 163, 0.733) 100%);           
+    }
+
+    &:hover::before {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+
+
+
+        
+}
+
+.shadow {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    border-radius: var(--border-radius-550);
+    
+    box-shadow:
+        3px -3px 30px #1beabd,
+        -3px 3px 30px #10abff;
 }
 
 .container {
@@ -42,3 +125,4 @@
 
     border-radius: var(--border-radius-550);
 }
+

@@ -46,6 +46,8 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
                         Join Waitlist
                     </button>
                 </div>
+
+                
         </form>
     )
 }
