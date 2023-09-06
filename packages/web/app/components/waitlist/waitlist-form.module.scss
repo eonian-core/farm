@@ -17,6 +17,9 @@
         left: var(--padding-500);
         transition: 0.3s;
         padding: 0 var(--padding-50);
+        border-radius: var(--border-radius-600);
+        background: var(--color-background-start);
+        box-shadow: 10px 0px 8px 1px var(--color-background-start), -5px 0px 5px 1px var(--color-background-start);
     }
 
     &:hover,
@@ -26,7 +29,7 @@
             font-size: var(--font-size-100);
             top: calc(var(--padding-100) * -1);
             left: var(--padding-200);
-            background: var(--color-background-start);
+            
         }
     }
 
