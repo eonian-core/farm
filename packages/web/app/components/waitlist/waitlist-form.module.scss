@@ -7,7 +7,7 @@
     border-radius: var(--border-radius-550);
     max-width: var(--width-500);
 
-    min-height: var(--margin-500);
+    min-height: var (--font-size-850);
     padding: var(--padding-10);
 
     label {
@@ -35,6 +35,7 @@
     position: relative;
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 100%;
     height: 100%;
     min-height: 100%;
