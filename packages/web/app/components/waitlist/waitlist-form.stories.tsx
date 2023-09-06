@@ -21,6 +21,10 @@ const meta: Meta<typeof WaitlistForm> = {
                     
                         max-width: var(--max-width);
                         padding: 0 var(--width-gap);
+
+                        min-height: 5rem;
+                        min-width: 5rem;
+                        z-index: -10;
                     }
             `}</style>
                 </div>

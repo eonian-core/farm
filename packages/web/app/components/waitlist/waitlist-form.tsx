@@ -78,6 +78,6 @@ export const Emaillabel = ({focused, error}: EmailLabelProps) => {
     }
 
     return (
-        <label>Email me when I can access it</label>
+        <label>Email me when I can access app</label>
     )
 }
