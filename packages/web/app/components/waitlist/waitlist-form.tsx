@@ -13,6 +13,8 @@ import clsx from "clsx";
  * Props for the WaitlistForm component.
  */
 export interface WaitlistFormProps {
+    /** Override state of error */
+    error?: FieldError 
     /**
      * Callback function that is invoked when the form is submitted.
      * @param email - The email entered in the form.
@@ -24,7 +26,7 @@ interface WaitlistInputs {
     email: string
 }
 
-export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
+export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
     const {
         register,
         handleSubmit,
@@ -33,21 +35,30 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
     } = useForm<WaitlistInputs>()
 
     const [isHovered, hoverProps] = useOnHover();
+    const [isFocused, focusProps] = useOnFocus();
+    const isActive = isHovered || isFocused || watch("email")?.length > 0;
+
+    const registerProps = register("email", { required: true });
 
     return (
         <form 
             {...hoverProps}
-            className={styles.form}
+            className={clsx(styles.form, {[styles.active]: isActive})}
             onSubmit={handleSubmit((data: WaitlistInputs) => {
                 onSubmit(data.email)
             })}>
 
                 <div className={styles.container}>
                     
-                    <Emaillabel error={errors.email} focused={isHovered} />
+                    <Emaillabel error={errors.email || error} focused={isActive} />
                     <EmailInput 
                         id="email"
-                        {...register("email", { required: true })}
+                        {...focusProps}
+                        {...registerProps}
+                        onBlur={(...args) => {
+                            registerProps.onBlur(...args)
+                            focusProps.onBlur()
+                        }}
                     />
                     
                     <Button 
@@ -64,15 +75,25 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
     )
 }
 
+export const useOnFocus = () => {
+    const [isFocused, setFocused] = useState(false);
+
+    const onFocus = useCallback(() => setFocused(true), []);
+    const onBlur = useCallback(() => setFocused(false), []);
+
+    return [isFocused, { onFocus, onBlur }] as const;
+}
+
 export interface EmailLabelProps {
     focused?: boolean
     error?: FieldError
 }
 
 export const Emaillabel = (props: EmailLabelProps) => {
+    const {error} = props
     const text = genLabel(props)
 
-    return (<label htmlFor="email"><span className={styles.parts}>Email</span>{!text ? '' : ' '}<EmailLabelText {...{text}} /></label>)
+    return (<label className={clsx({[styles.error]: error})} htmlFor="email"><span className={styles.parts}>Email</span>{!text ? '' : ' '}<EmailLabelText {...{text}} /></label>)
 }
 
 export const EmailLabelText = ({text}: {text: string}) => {
@@ -102,7 +123,7 @@ export const EmailLabelText = ({text}: {text: string}) => {
 export const genLabel = ({focused, error}: EmailLabelProps) => {
 
     if (error?.type === 'required') {
-        return `is needed to join the waitlist`
+        return `is need for submit`
     }
 
     if (error?.type === 'validate') {

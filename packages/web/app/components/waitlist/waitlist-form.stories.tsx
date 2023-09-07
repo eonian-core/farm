@@ -66,3 +66,17 @@ export const Focus: Story = {
         onSubmit
     }
 }
+
+export const ErrorRequired: Story = {
+    args: {
+        onSubmit,
+        error: { type: 'required' }
+    }
+}
+
+export const ErrorValidate: Story = {
+    args: {
+        onSubmit,
+        error: { type: 'validate' }
+    }
+}

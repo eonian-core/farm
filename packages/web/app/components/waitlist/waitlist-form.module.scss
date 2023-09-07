@@ -24,16 +24,21 @@ $border-radius: 9999px;
         border-radius: var(--border-radius-600);
         background: var(--color-background-start);
         box-shadow: 10px 0px 8px 1px var(--color-background-start), -5px 0px 5px 1px var(--color-background-start);
+
+        &.error {
+            color: var(--color-error-600);
+        }
     }
 
     &:hover,
     &:focus,
     &:active,
-    &:focus-within {
+    &:focus-within,
+    &.active {
         label {
-            font-size: var(--font-size-100);
-            top: calc(var(--padding-100) * -1);
-            left: var(--padding-200);
+            font-size: var(--font-size-300);
+            top: calc(var(--padding-200) * -1);
+            left: var(--padding-400);
         }
     }
 
