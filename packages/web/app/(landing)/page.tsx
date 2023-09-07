@@ -74,10 +74,6 @@ export default function Home() {
     <main className={styles.main}>
       <MDXProvider components={components}>
         <Content />
-        { 
-          // TODO: move dashboard to proper place
-        }
-        <div className="t-signup"></div>
       </MDXProvider>
     </main>
   );

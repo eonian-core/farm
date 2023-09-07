@@ -22,6 +22,10 @@ export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }
         }}>
             <TuemilioScript />
             {children}
+            { 
+                // Need to make dahsboard work
+            }
+            <div className="t-signup" style={{ display: "none"}}></div>
         </WaitlistContext.Provider>
     );
 }
