@@ -18,7 +18,7 @@ export interface ITumelioWrapper {
      * @param referralId: String The referrer subscriber's ID. 
      *  Will be set automatically, if the parameter is in the URL like example.com?referrerId=xBg3
      */
-    createSubscriber: (address: string, referralId?: String) => void
+    createSubscriber: (address: string, referralId?: String) => Promise<void>
     showDashboard: () => void
     fireConfety: () => void
 }
@@ -114,10 +114,16 @@ export const useTuemilio = (): ITumelioWrapper => {
     }, [])
     
     const result: Omit<ITumelioWrapper, 'subscriber'> =  {
-        createSubscriber: (address, referralId) => {
+        createSubscriber: (address, referralId) => new Promise(resolve => {
+            tuemilio('onSubscriberCreated', function (s: any){
+                console.log('onSubscriberCreated', s)                
+                setSubscriber(s)
+                resolve(s)
+            });
+        
             console.log('createSubscriber', address, referralId)
             tuemilio('createSubscriber', { address, referralId })
-        },
+        }),
         showDashboard: () => {
             // TODO: make it embeded https://docs.tuemilio.com/javascript-api/#show-dashboard
             console.log('showDashboard')

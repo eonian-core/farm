@@ -38,12 +38,7 @@ interface WaitlistInputs {
 }
 
 export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) => {
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState,
-    } = useForm<WaitlistInputs>({
+    const {register, handleSubmit, watch, formState} = useForm<WaitlistInputs>({
         defaultValues: {
             email: value, 
         },
@@ -101,8 +96,6 @@ export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) =
                     {isSubmitted && <span className={styles.submitText}>You are Awesome!</span>}
                 </Button>
             </div>
-
-
         </form>
     )
 }

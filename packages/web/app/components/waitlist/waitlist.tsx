@@ -7,16 +7,16 @@ export interface WaitlistProps {
     children: React.ReactNode
 }
 
-export const Waitlist = ({ children }: WaitlistProps) => {
+export const WaitList = ({ children }: WaitlistProps) => {
 
     const {join, isJoined, openDashboard} = useWaitlist()
 
     if(isJoined) 
-    return (
-        <Card onClick={openDashboard}>
-            {children}
-        </Card>
-    )
+        return (
+            <Card onClick={openDashboard}>
+                {children}
+            </Card>
+        )
 
     return <WaitlistForm onSubmit={join} />
 }

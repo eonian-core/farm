@@ -10,7 +10,7 @@
             </HeroButton>
         }
         {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE !== "true" &&  // TODO: switch to open dashboard when user joined waitlist
-            <HeroButton href="#future-of-investments-is-coming" icon={<IconRobot />} bold>
+            <HeroButton href="#future-of-investments-is-coming" icon={<IconRobot />}>
                 Join the Waitlist
             </HeroButton>
         }
@@ -142,7 +142,7 @@
     By joining our early access waitlist, you'll gain access to our application ahead of the general public. 
     Your feedback and suggestions will be invaluable in shaping the future of our project.
 
-    <Waitlist 
+    <WaitList 
         joinForm={
             <>
                 ### Ready to join us?
@@ -159,7 +159,7 @@
 
         <Target isExternal={false}>Open Dashboard</Target>
           
-    </Waitlist>
+    </WaitList>
 
 </InDevelopment>
 
