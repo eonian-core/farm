@@ -15,22 +15,22 @@ export const WaitList = ({ children }: WaitlistProps) => {
     const {join, isJoined, openDashboard} = useWaitlist()
 
     const joinAndTrack = useCallback(async (email: string) => {
-        if(process.env.NEXT_PUBLIC_MOCK_WAITLIST_SUBMIT === 'true') {
+        if(process.env.NEXT_PUBLIC_MOCK_WAITLIST_SUBMIT === 'true') 
             await timeout(1000)
-        } else {
+         else 
             await join(email)
-        }
+        
 
         setIsJustSubmited(true)
         setTimeout(() => setIsJustSubmited(false), SHOW_DASHBOARD_BUTTON_DELAY);
     }, [join, setIsJustSubmited])
 
     if(isJoined && !isJustSubmited) 
-        return (
+        {return (
             <Card onClick={openDashboard}>
                 {children}
             </Card>
-        )
+        )}
 
     return <WaitlistForm onSubmit={joinAndTrack} />
 }

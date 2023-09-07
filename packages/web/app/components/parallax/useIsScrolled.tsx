@@ -9,9 +9,9 @@ export const useIsScrolled = (): boolean => {
     useMotionValueEvent(scrollY, "change", (latest) => {
         const isCurrentlyScrolled = latest > 0;
 
-        if (isCurrentlyScrolled !== isScrolled) {
+        if (isCurrentlyScrolled !== isScrolled) 
             setIsScrolled(isCurrentlyScrolled);
-        }
+        
     });
 
     return isScrolled;

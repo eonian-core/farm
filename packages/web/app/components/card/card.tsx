@@ -17,14 +17,12 @@ export interface CommonCardProps {
 
 export type CardProps  = LinkCardProps | ButtonCardProps
 
-export const isLinkedCardProps = (props: CardProps): props is LinkCardProps => {
-  return (props as LinkCardProps).href !== undefined;
-}
+export const isLinkedCardProps = (props: CardProps): props is LinkCardProps => (props as LinkCardProps).href !== undefined
 
 export const Card = (props: CardProps) => {
-  if(isLinkedCardProps(props)) {
+  if(isLinkedCardProps(props)) 
     return <LinkCard {...props} />
-  }
+  
 
   return <ButtonCard {...props} />
 }
@@ -63,9 +61,9 @@ export const ButtonCard = ({onClick, children, disabled = false}: ButtonCardProp
   const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.preventDefault();
     
-    if (!disabled) {
+    if (!disabled) 
       onClick();
-    }
+    
   }, [disabled, onClick]);
 
   return (

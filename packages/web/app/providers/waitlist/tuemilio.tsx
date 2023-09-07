@@ -24,7 +24,7 @@ export interface ITumelioWrapper {
 }
 
 export const TuemilioScript = () => (
-    <Script>
+    <Script id="tuemilio-setup-script">
         {`
         (function(t,u,e,m,i,l,io){
             t['TuemilioObject']=m;t[m]=t[m]||function(){(t[m].q=t[m].q||[]).push(arguments);};
@@ -44,6 +44,18 @@ export const TuemilioScript = () => (
     </Script>
 )
 
+// Tuemilio can reference incorrect object during initilisation
+// so need to take it directly from window on each call
+const tuemilio: ITuemilio = (...args: [string, any?]) => {
+    if(!isInBrowser()) 
+        return
+    
+
+    const real = (((window as any).Tuemilio || (() => {})) as ITuemilio)
+
+    return real(...args)
+}
+
 /**
  * Setup Tuemilio provider and adds its script
  * Based on 
@@ -51,20 +63,6 @@ export const TuemilioScript = () => (
  *  https://docs.tuemilio.com/javascript-api/#installation
  */
 export const useTuemilio = (): ITumelioWrapper => {
-    const isBrowser = isInBrowser();
-
-    // Tuemilio can reference incorrect object during initilisation
-    // so need to take it directly from window on each call
-    const tuemilio: ITuemilio = (...args: [string, any?]) => {
-        if(!isBrowser) {
-            return
-        }
-
-        const real = (((window as any).Tuemilio || (() => {})) as ITuemilio)
-
-        return real(...args)
-    }
-
     const [subscriber, setSubscriber] = useState<any>(null)
 
     useEffect(() => {
@@ -111,7 +109,7 @@ export const useTuemilio = (): ITumelioWrapper => {
         tuemilio('onError', function (error: any){
             console.log('onError', error)
         });
-    }, [])
+    })
     
     const result: Omit<ITumelioWrapper, 'subscriber'> =  {
         createSubscriber: (address, referralId) => new Promise(resolve => {
@@ -135,10 +133,10 @@ export const useTuemilio = (): ITumelioWrapper => {
         }
     }
 
-    for (const key of Object.keys(result)) {
+    for (const key of Object.keys(result)) 
+        // eslint-disable-next-line
         result[key] = useCallback(result[key] as any, [tuemilio]);
-    }
-
+    
     return {
         ...result,
         subscriber,

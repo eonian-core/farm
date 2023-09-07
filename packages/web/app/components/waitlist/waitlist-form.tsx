@@ -102,9 +102,9 @@ export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) =
 
 const StateIcon = ({isEmpty}: {isEmpty: boolean}) => {
 
-    if(!isEmpty) {
+    if(!isEmpty) 
         return <IconPencil className={styles.icon} width="2.5rem" height="2.5rem" />
-    }
+    
 
     return <IconEmail className={styles.icon} width="2.5rem" height="2.5rem" />
 }
@@ -116,13 +116,13 @@ interface SubmitIconProps {
 
 
 const SubmitIcon = ({isSubmitting, isSubmitted}: SubmitIconProps) => {
-    if (isSubmitting) {
+    if (isSubmitting) 
         return <Loading aria-label="Loading..." />;
-    }
+    
 
-    if (isSubmitted) {
+    if (isSubmitted) 
         return <IconCheck width="2.5rem" height="2.5rem" />;
-    }
+    
 
     return <IconArrowRightShort width="2.5rem" height="2.5rem" />;
 

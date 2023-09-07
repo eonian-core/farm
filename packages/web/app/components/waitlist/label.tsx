@@ -42,21 +42,21 @@ export const EmailLabelText = ({text}: {text: string}) => {
 // must be function, not a companent to make animation work
 export const genLabel = ({focused, error}: EmailLabelProps) => {
 
-    if (error?.type === 'required') {
+    if (error?.type === 'required') 
         return `is need for submit`
-    }
+    
 
-    if (error?.type === 'validate' || error?.type === 'pattern') {
+    if (error?.type === 'validate' || error?.type === 'pattern') 
         return `must contain "@" and "." characters`
-    }
+    
 
-    if (error) {
+    if (error) 
         return `is incorrect`
-    }
+    
 
-    if(focused) {
+    if(focused) 
         return ``
-    }
+    
 
     return (
         `me when I can access app`

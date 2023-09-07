@@ -18,7 +18,9 @@ export function useInView(
     const [isInView, setInView] = useState(false)
 
     useEffect(() => {
-        if (!ref.current || (once && isInView)) return
+        if (!ref.current || (once && isInView)) 
+            return
+        
 
         const onEnter = () => {
             setInView(true)

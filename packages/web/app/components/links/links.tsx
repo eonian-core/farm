@@ -83,7 +83,7 @@ export const InternalLink = ({
         dispatch(setPageLoading(href.toString()));
       
     },
-    [onClick, dispatch, href]
+    [onClick, dispatch, href, isSamePageLink]
   );
 
   return (
