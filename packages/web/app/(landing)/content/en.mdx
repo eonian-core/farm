@@ -4,16 +4,9 @@
     We build passive investment strategies <Mbr>that cares about your money.</Mbr>
 
     <HeroButtonGroup>
-        {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE === "true" && 
-            <HeroButton href="/earn" bold>
-                Earn
-            </HeroButton>
-        }
-        {process.env.NEXT_PUBLIC_FEATURE_EARN_PAGE !== "true" &&  // TODO: switch to open dashboard when user joined waitlist
-            <HeroButton href="#future-of-investments-is-coming" icon={<IconRobot />}>
-                Join the Waitlist
-            </HeroButton>
-        }
+
+        <MainButton />
+
         <HeroButton href="https://discord.gg/8mcUPPYJmj" bordered icon={<IconDiscord />}>
             Join Discord
         </HeroButton>

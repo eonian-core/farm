@@ -13,14 +13,14 @@ import clsx from "clsx";
 
 interface Props extends ButtonProps {
   children: React.ReactNode;
-  href: string;
+  href?: string;
   icon?: React.ReactNode;
   bold?: boolean;
 }
 
 const HeroButton: React.FC<Props> = ({
   children,
-  href,
+  href = '#',
   icon,
   bold,
   bordered,
