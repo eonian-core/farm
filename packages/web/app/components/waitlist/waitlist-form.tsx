@@ -1,9 +1,10 @@
-import { Input, Button } from "@nextui-org/react";
 import React, { useState, useCallback } from "react";
 
 import { useForm, SubmitHandler } from "react-hook-form"
 import { EmailInput } from "./input";
 import styles from "./waitlist-form.module.scss";
+import Button from "../button/button";
+import IconArrowRightShort from "../icons/icon-arrow-right-short";
 
 /**
  * Props for the WaitlistForm component.
@@ -41,10 +42,13 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
                         {...register("email", { required: true })}
                     />
                     
-
-                    <button color="primary" type="submit" >
-                        Join Waitlist
-                    </button>
+                    <Button 
+                        className={styles.submit} 
+                        round 
+                        gradient
+                        type="submit" 
+                        icon={<IconArrowRightShort  width="2.5rem" height="2.5rem"/>}
+                        ></Button>
                 </div>
 
                 

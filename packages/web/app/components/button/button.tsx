@@ -10,8 +10,10 @@ export interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'size' |
   dark?: boolean;
   wide?: boolean;
   round?: boolean;
+  disabled?: boolean;
   icon?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  type?: "button" | "submit" | "reset";
 }
 
 const Button: React.FC<Props> = ({
@@ -21,17 +23,20 @@ const Button: React.FC<Props> = ({
   dark = false,
   wide = false,
   round = false,
+  disabled = false,
   icon,
   children,
+  className,
   ...restProps
 }) => {
-  const classes = clsx(styles.button, styles[size], {
+  const classes = clsx(styles.button, styles[size], className, {
     [styles["bordered"]]: bordered,
     [styles["gradient"]]: gradient,
     [styles["dark"]]: dark,
     [styles["icon"]]: !!icon,
     [styles["wide"]]: wide,
     [styles["round"]]: round,
+    [styles["disabled"]]: disabled,
   });
   return (
     <button className={classes} {...restProps}>

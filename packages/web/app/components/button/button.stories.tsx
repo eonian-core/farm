@@ -14,6 +14,11 @@ function Component() {
         <Button gradient>Lorem ipsum</Button>
       </div>
       <div className="row">
+        <Button disabled>Lorem ipsum</Button>
+        <Button disabled bordered>Lorem ipsum</Button>
+        <Button disabled gradient>Lorem ipsum</Button>
+      </div>
+      <div className="row">
         <Button icon={<IconExternal />}>Join the Waitlist</Button>
         <Button icon={<IconDiscord />} bordered>
           Lorem ipsum
@@ -78,6 +83,11 @@ function Component() {
         <Button round>Lorem ipsum</Button>
         <Button round bordered>Lorem ipsum</Button>
         <Button round gradient>Lorem ipsum</Button>
+      </div>
+      <div className="row">
+        <Button round disabled>Lorem ipsum</Button>
+        <Button round bordered disabled>Lorem ipsum</Button>
+        <Button round gradient disabled>Lorem ipsum</Button>
       </div>
       <div className="row">
         <Button round icon={<IconExternal />}>Join the Waitlist</Button>

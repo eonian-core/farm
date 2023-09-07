@@ -1,19 +1,22 @@
+$border-radius: 9999px;
+
 .form {
     position: relative;
 
     width: 100%;
 
-    border-radius: var(--border-radius-550);
+    border-radius: $border-radius;
     max-width: var(--width-500);
 
-    min-height: var (--font-size-850);
+    min-height: var(--font-size-850);
     padding: var(--padding-10);
 
     transition: all 1s;
 
     label {
         position: absolute;
-        top: var(--padding-100);
+        top: 30%;
+        // top: calc(var(--font-size-850) * 50% - var(--font-size-500) * 50%);
         left: var(--padding-500);
         transition: 0.3s;
         padding: 0 var(--padding-50);
@@ -109,6 +112,35 @@
         }
     }
 
+    button.submit {
+        font-weight: var(--font-bold);
+        margin: 3px 3px 3px 0;
+        min-width: 2.5rem;
+        padding-left: 0;
+        padding-right: 0;
+        border-radius: none;
+        box-shadow: -2px -2px 15px 3px hsla(308, 27%, 35%, 0.596), 
+                    2px 2px 15px 3px hsla(232, 69%, 37%, 0.623);
+        
+        svg {
+            margin-left: 0;
+            width: 2.5rem;
+        }
+
+        &::after {
+            left: -200%;
+        }
+
+        &:hover {
+            transform: none;
+            box-shadow: -2px -2px 15px 3px hsla(308, 27%, 35%, 0.747), 
+                    2px 2px 15px 3px hsla(232, 69%, 37%, 0.747);
+
+            &::after {
+                left: 200%;
+            }
+        }
+    }
         
 }
 
@@ -125,6 +157,6 @@
     min-height: 100%;
     z-index: 2;
 
-    border-radius: var(--border-radius-550);
+    border-radius: $border-radius;
 }
 

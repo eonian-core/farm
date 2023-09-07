@@ -172,9 +172,17 @@
 
 .gradient {
   background: linear-gradient(
-    112deg,
-    hsl(270, 35%, 50%) -63.59%,
-    hsl(341, 67%, 50%) -20.3%,
-    var(--color-primary-500) 70.46%
-  );
+    112deg,     
+    hsl(308, 27%, 35%) 0%, 
+    hsl(232, 69%, 37%) 100%);
+  color: var(--color-text-200);
+}
+
+.disabled {
+  background: var(--color-neutral-600);
+  color: var(--color-text-200);
+
+  &.bordered {
+    border-color: var(--color-neutral-600);
+  }
 }

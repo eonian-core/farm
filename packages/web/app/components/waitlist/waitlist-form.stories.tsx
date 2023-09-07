@@ -24,7 +24,6 @@ const meta: Meta<typeof WaitlistForm> = {
 
                         min-height: 5rem;
                         min-width: 5rem;
-                        z-index: -10;
                     }
             `}</style>
                 </div>
