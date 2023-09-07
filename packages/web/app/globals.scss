@@ -263,6 +263,7 @@
         --color-success-900: hsl(144, 61%, 20%);
 
   // margin
+    --margin-10: 3px;
     --margin-50: 0.25rem;
     --margin-100: 0.5rem;
     --margin-200: 0.75rem;
@@ -296,6 +297,8 @@
     --padding-1000: 14rem;
 
   // width
+    --min-button-width: 2.5rem;
+
     --width-column: 60px;
     --width-gap: 40px;
 

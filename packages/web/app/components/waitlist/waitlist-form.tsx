@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
+import {Loading} from "@nextui-org/react";
 
 import { useForm, SubmitHandler, FieldError } from "react-hook-form"
 import { EmailInput } from "./input";
@@ -21,20 +22,27 @@ export interface WaitlistFormProps {
      * Callback function that is invoked when the form is submitted.
      * @param email - The email entered in the form.
      */
-    onSubmit: (email: string) => void
+    onSubmit: (email: string) => Promise<void>
+    
+    /** Default value for the input */
+    value?: string
 };
 
 interface WaitlistInputs {
     email: string
 }
 
-export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
+export const WaitlistForm = ({ onSubmit, error, value }: WaitlistFormProps) => {
     const {
         register,
         handleSubmit,
         watch,
-        formState: { errors },
-    } = useForm<WaitlistInputs>()
+        formState: { errors, isSubmitting, isSubmitted },
+    } = useForm<WaitlistInputs>({
+        defaultValues: {
+            email: value, 
+        },
+    })
 
     const [isHovered, hoverProps] = useOnHover();
     const [isFocused, focusProps] = useOnFocus();
@@ -48,9 +56,13 @@ export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
     return (
         <form
             {...hoverProps}
-            className={clsx(styles.form, { [styles.active]: isActive })}
-            onSubmit={handleSubmit((data: WaitlistInputs) => {
-                onSubmit(data.email)
+            className={clsx(styles.form, { 
+                [styles.active]: isActive,
+                [styles.submitting]: isSubmitting,
+                [styles.submitted]: isSubmitted,
+            })}
+            onSubmit={handleSubmit(async (data: WaitlistInputs) => {
+                await onSubmit(data.email)
             })}>
 
             <div className={styles.container}>
@@ -74,7 +86,11 @@ export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
                     round
                     gradient
                     type="submit"
-                    icon={<IconArrowRightShort width="2.5rem" height="2.5rem" />}
+                    icon={
+                        isSubmitting || isSubmitted 
+                            ? <Loading aria-label="Loading..." />
+                            : <IconArrowRightShort width="2.5rem" height="2.5rem" />
+                    }
                 ></Button>
             </div>
 

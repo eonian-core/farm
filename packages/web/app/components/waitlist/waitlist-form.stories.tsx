@@ -35,9 +35,13 @@ const meta: Meta<typeof WaitlistForm> = {
 export default meta;
 type Story = StoryObj<typeof WaitlistForm>;
 
-const onSubmit = (email: string) => {
-    console.log('Submited!', email)
+const onSubmit = async (email: string) => {
+    console.log('Submitting!', email)
+    await timeout(1000)
+    console.log('Submitted!', email)
 }
+
+const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 
 export const Default: Story = {
@@ -78,5 +82,12 @@ export const ErrorValidate: Story = {
     args: {
         onSubmit,
         error: { type: 'validate' }
+    }
+}
+
+export const DefaultEmail: Story = {
+    args: {
+        onSubmit,
+        value: 'default@example.com'
     }
 }
