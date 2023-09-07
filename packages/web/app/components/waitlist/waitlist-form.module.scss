@@ -36,7 +36,7 @@ $border-radius: 9999px;
     &:focus-within,
     &.active {
         label {
-            font-size: var(--font-size-300);
+            font-size: var(--font-size-200);
             top: calc(var(--padding-200) * -1);
             left: var(--padding-400);
         }

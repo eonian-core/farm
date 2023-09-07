@@ -32,14 +32,16 @@ export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<WaitlistInputs>()
+    } = useForm<WaitlistInputs>({ reValidateMode: "onSubmit" })
 
     const [isHovered, hoverProps] = useOnHover();
     const [isFocused, focusProps] = useOnFocus();
     const isActive = isHovered || isFocused || watch("email")?.length > 0;
 
-    const registerProps = register("email", { required: true });
-
+    const registerProps = register("email", { 
+        required: "required",
+        pattern: /\S+@\S+\.\S+/ // validate email format
+     });
     return (
         <form 
             {...hoverProps}
@@ -126,8 +128,12 @@ export const genLabel = ({focused, error}: EmailLabelProps) => {
         return `is need for submit`
     }
 
-    if (error?.type === 'validate') {
+    if (error?.type === 'validate' || error?.type === 'pattern') {
         return `must contain "@" and "." characters`
+    }
+
+    if (error) {
+        return `is incorrect`
     }
 
     if(focused) {
