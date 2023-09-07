@@ -170,6 +170,7 @@ $border-radius: 9999px;
 
     &.submitting,
     &.submitted {
+        cursor: default;
         background: linear-gradient(to right,
                 rgba(129, 47, 201, 0.918) 0%,
                 rgba(114, 39, 212, 0.815) 45%,
@@ -189,7 +190,6 @@ $border-radius: 9999px;
         }
 
 
-
         button.submit {
             position: absolute;
             width: calc(100% - 2 * var(--margin-10));
@@ -197,8 +197,8 @@ $border-radius: 9999px;
             right: 0;
             bottom: 0;
             z-index: 20;
-
             box-shadow: none;
+            cursor: default;
 
             &::after {
                 display: none;
@@ -211,9 +211,46 @@ $border-radius: 9999px;
             animation: none;
             background-size: 100%;
         }
+
+        button.submit {
+            background-position: center;
+            
+            &::after {
+                display: block;
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 5px;
+                height: 5px;
+                background-color: hsla(0, 0%, 64%, 0.411);
+                opacity: 0;
+                border-radius: 100%;
+                transform: scale(1, 1) translate(-50%);
+                transform-origin: 50% 50%;
+                animation: ripple 1s ease-out;
+
+                z-index: 30;
+              }
+        }
     }
 
 }
+
+@keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 0.5;
+    }
+    20% {
+      transform: scale(50, 50);
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(100, 100);
+    }
+  }
 
 
 

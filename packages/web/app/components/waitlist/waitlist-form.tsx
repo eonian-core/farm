@@ -55,6 +55,8 @@ export const WaitlistForm = ({ onSubmit, error, value, ...props }: WaitlistFormP
     const isSubmitting = props.isSubmiting || formState.isSubmitting
     const isSubmitted = props.isSubmitted || formState.isSubmitted
 
+    console.log({isSubmitting, isSubmitted})
+
     const registerProps = register("email", {
         required: "required",
         pattern: /\S+@\S+\.\S+/ // validate email format
@@ -108,13 +110,13 @@ export const WaitlistForm = ({ onSubmit, error, value, ...props }: WaitlistFormP
 }
 
 interface SubmitIconProps {
-    isSubmiting?: boolean;
+    isSubmitting?: boolean;
     isSubmitted?: boolean;
 }
 
 
-const SubmitIcon = ({isSubmiting, isSubmitted}: SubmitIconProps) => {
-    if (isSubmiting) {
+const SubmitIcon = ({isSubmitting, isSubmitted}: SubmitIconProps) => {
+    if (isSubmitting) {
         return <Loading aria-label="Loading..." />;
     }
 
