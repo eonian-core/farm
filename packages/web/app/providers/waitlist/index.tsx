@@ -2,12 +2,12 @@ import React, { createContext, useContext, useState, ReactNode, useCallback } fr
 import { useTuemilio, TuemilioScript } from './tuemilio';
 
 export interface WaitlistState {
-    join: (email: string) => void;
+    join: (email: string) => Promise<void>;
     openDashboard: () => void;
     isJoined: boolean;
 }
 
-const defailtContextState: WaitlistState = { join: () => { }, openDashboard: () => {}, isJoined: false }
+const defailtContextState: WaitlistState = { join: () => Promise.resolve(), openDashboard: () => {}, isJoined: false }
 
 const WaitlistContext = createContext<WaitlistState>(defailtContextState);
 

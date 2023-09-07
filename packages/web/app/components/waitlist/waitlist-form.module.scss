@@ -1,3 +1,5 @@
+@import "../../screen.scss";
+
 $border-radius: 9999px;
 
 @keyframes rotate {
@@ -25,11 +27,11 @@ $border-radius: 9999px;
 
     transition: all 1s;
     margin-top: var(--margin-500);
+    margin-bottom: var(--margin-1200);
 
     label {
         position: absolute;
         top: 30%;
-        // top: calc(var(--font-size-850) * 50% - var(--font-size-500) * 50%);
         left: var(--padding-650);
         transition: 0.3s;
         transition-delay: 0.1s;
@@ -321,3 +323,15 @@ $border-radius: 9999px;
     animation: fadeInWidth 1s;
 }
 
+
+
+@media (max-width: $screen-mobile) {
+
+    .form {
+        margin-bottom: var(--margin-500);
+
+        label {
+            font-size: var(--font-size-200);
+        }
+    }
+}

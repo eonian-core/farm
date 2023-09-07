@@ -12,8 +12,8 @@ import FadeIn from "../../../components/fade-in/fade-in";
 
 const BackgroundTextScreenMap = {
   [ScreenName.ULTRA_WIDE]: { x: 0.3, y: -1.4 },
-  [ScreenName.DESKTOP]: { x: 0.5, y: -1.1 },
-  [ScreenName.LAPTOP]: { x: 0.5, y: -1.1 },
+  [ScreenName.DESKTOP]: { x: 0.3, y: -1.5 },
+  [ScreenName.LAPTOP]: { x: 0.3, y: -1.5 },
   [ScreenName.TABLET]: { x: 0.25, y: -1.55 },
   [ScreenName.MOBILE]: { x: 0.1, y: '-60rem' },
   [ScreenName.SMALL_MOBILE]: { x: -0.05, y: '-27rem' },
@@ -21,6 +21,7 @@ const BackgroundTextScreenMap = {
 
 export const InDevelopmentParallax = () => {
   const screen = useScreenName();
+  console.log(screen)
   const position = BackgroundTextScreenMap[screen || ScreenName.DESKTOP]
   const isSmallMobile = screen === ScreenName.SMALL_MOBILE
 
