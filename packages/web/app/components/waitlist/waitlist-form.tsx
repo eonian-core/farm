@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 
-import { useForm, SubmitHandler } from "react-hook-form"
+import { useForm, SubmitHandler, FieldError } from "react-hook-form"
 import { EmailInput } from "./input";
 import styles from "./waitlist-form.module.scss";
 import Button from "../button/button";
@@ -28,7 +28,7 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
         watch,
         formState: { errors },
     } = useForm<WaitlistInputs>()
-
+    console.log("errors", errors)
     return (
         <form 
             className={styles.form}
@@ -37,7 +37,7 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
             })}>
 
                 <div className={styles.container}>
-                    <Emaillabel error={errors.email as any} />
+                    <Emaillabel error={errors.email} />
                     <EmailInput 
                         {...register("email", { required: true })}
                     />
@@ -56,24 +56,19 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
     )
 }
 
-export enum EmailInputError {
-    Required = 'required',
-    Invalid = 'invalid'
-}
-
 export interface EmailLabelProps {
     focused?: boolean
-    error?: EmailInputError
+    error?: FieldError
 }
 
 
 export const Emaillabel = ({focused, error}: EmailLabelProps) => {
 
-    if (error === EmailInputError.Required) {
+    if (error?.type === 'required') {
         return <label>Email is needed to join the waitlist</label>
     }
 
-    if (error === EmailInputError.Invalid) {
+    if (error?.type === 'validate') {
         return <label>Email must contain "@" and "." characters</label>
     }
 
