@@ -11,6 +11,7 @@ import clsx from "clsx";
 import { EmailLabel } from "./label";
 import { useOnFocus, useOnHover } from "./state-hooks";
 import IconEmail from "../icons/icon-email";
+import IconCheck from "../icons/icon-check";
 
 /**
  * Props for the WaitlistForm component.
@@ -26,18 +27,21 @@ export interface WaitlistFormProps {
     
     /** Default value for the input */
     value?: string
+
+    isSubmiting?: boolean
+    isSubmitted?: boolean
 };
 
 interface WaitlistInputs {
     email: string
 }
 
-export const WaitlistForm = ({ onSubmit, error, value }: WaitlistFormProps) => {
+export const WaitlistForm = ({ onSubmit, error, value, ...props }: WaitlistFormProps) => {
     const {
         register,
         handleSubmit,
         watch,
-        formState: { errors, isSubmitting, isSubmitted },
+        formState,
     } = useForm<WaitlistInputs>({
         defaultValues: {
             email: value, 
@@ -48,10 +52,15 @@ export const WaitlistForm = ({ onSubmit, error, value }: WaitlistFormProps) => {
     const [isFocused, focusProps] = useOnFocus();
     const isActive = isHovered || isFocused || watch("email")?.length > 0;
 
+    const isSubmitting = props.isSubmiting || formState.isSubmitting
+    const isSubmitted = props.isSubmitted || formState.isSubmitted
+
     const registerProps = register("email", {
         required: "required",
         pattern: /\S+@\S+\.\S+/ // validate email format
     });
+
+    const {errors} = formState
     
     return (
         <form
@@ -86,12 +95,11 @@ export const WaitlistForm = ({ onSubmit, error, value }: WaitlistFormProps) => {
                     round
                     gradient
                     type="submit"
-                    icon={
-                        isSubmitting || isSubmitted 
-                            ? <Loading aria-label="Loading..." />
-                            : <IconArrowRightShort width="2.5rem" height="2.5rem" />
-                    }
-                ></Button>
+                    iconPosition="left"
+                    icon={ <SubmitIcon {...{isSubmitting, isSubmitted}} />}
+                >
+                    {isSubmitted && <span className={styles.submitText}>You are Awesome!</span>}
+                </Button>
             </div>
 
 
@@ -99,3 +107,21 @@ export const WaitlistForm = ({ onSubmit, error, value }: WaitlistFormProps) => {
     )
 }
 
+interface SubmitIconProps {
+    isSubmiting?: boolean;
+    isSubmitted?: boolean;
+}
+
+
+const SubmitIcon = ({isSubmiting, isSubmitted}: SubmitIconProps) => {
+    if (isSubmiting) {
+        return <Loading aria-label="Loading..." />;
+    }
+
+    if (isSubmitted) {
+        return <IconCheck width="2.5rem" height="2.5rem" />;
+    }
+
+    return <IconArrowRightShort width="2.5rem" height="2.5rem" />;
+
+}

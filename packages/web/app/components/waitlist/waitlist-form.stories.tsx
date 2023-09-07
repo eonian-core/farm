@@ -91,3 +91,21 @@ export const DefaultEmail: Story = {
         value: 'default@example.com'
     }
 }
+
+export const Submitting: Story = {
+    args: {
+        onSubmit,
+        isSubmiting: true
+    }
+}
+
+export const Submitted: Story = {
+    args: {
+        onSubmit,
+        isSubmitted: true
+    }
+}
+
+
+
+

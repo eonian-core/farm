@@ -12,6 +12,8 @@ export interface Props extends Omit<React.HTMLProps<HTMLButtonElement>, 'size' |
   round?: boolean;
   disabled?: boolean;
   icon?: React.ReactNode;
+  /** Display icon position, default right */
+  iconPosition?: "left" | "right";
   children?: React.ReactNode;
   type?: "button" | "submit" | "reset";
 }
@@ -25,6 +27,7 @@ const Button: React.FC<Props> = ({
   round = false,
   disabled = false,
   icon,
+  iconPosition = "right",
   children,
   className,
   ...restProps
@@ -40,8 +43,9 @@ const Button: React.FC<Props> = ({
   });
   return (
     <button className={classes} {...restProps}>
+      {iconPosition === "left" && icon}
       {children}
-      {icon}
+      {iconPosition === "right" && icon}
     </button>
   );
 };
