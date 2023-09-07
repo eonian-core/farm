@@ -43,8 +43,9 @@ $border-radius: 9999px;
     &.active {
         label {
             font-size: var(--font-size-200);
-            top: calc(var(--padding-200) * -1);
+            top: calc(var(--padding-350) * -1);
             left: var(--padding-100);
+            box-shadow: 3px -2px 3px 1px var(--color-background-start), -3px -2px 3px 1px var(--color-background-start);
         }
     }
 

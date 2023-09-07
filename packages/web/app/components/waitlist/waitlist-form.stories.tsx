@@ -15,17 +15,17 @@ const meta: Meta<typeof WaitlistForm> = {
                 <div className="story-wrapper">
                     <Story />
                     <style global jsx>{`
-                    .story-wrapper {
-                        width: 100%;
-                        height: 100%;
-                    
-                        max-width: var(--max-width);
-                        padding: 0 var(--width-gap);
+                        .story-wrapper {
+                            width: 100%;
+                            height: 100%;
+                        
+                            max-width: var(--max-width);
+                            padding: 5rem var(--width-gap);
 
-                        min-height: 5rem;
-                        min-width: 5rem;
-                    }
-            `}</style>
+                            min-height: 5rem;
+                            min-width: 5rem;
+                        }
+                `}</style>
                 </div>
             </NextThemeProvider>
         ),
