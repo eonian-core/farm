@@ -17,17 +17,23 @@ $border-radius: 9999px;
         position: absolute;
         top: 30%;
         // top: calc(var(--font-size-850) * 50% - var(--font-size-500) * 50%);
-        left: var(--padding-500);
+        left: var(--padding-650);
         transition: 0.3s;
         transition-delay: 0.1s;
         padding: 0 var(--padding-50);
         border-radius: var(--border-radius-600);
         background: var(--color-background-start);
         box-shadow: 10px 0px 8px 1px var(--color-background-start), -5px 0px 5px 1px var(--color-background-start);
+        z-index: 1;
 
         &.error {
             color: var(--color-error-600);
         }
+    }
+
+    .icon {
+        z-index: 2;
+        margin-left: var(--margin-100);
     }
 
     &:hover,
@@ -38,7 +44,7 @@ $border-radius: 9999px;
         label {
             font-size: var(--font-size-200);
             top: calc(var(--padding-200) * -1);
-            left: var(--padding-400);
+            left: var(--padding-100);
         }
     }
 

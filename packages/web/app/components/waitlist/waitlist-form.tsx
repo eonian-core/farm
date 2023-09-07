@@ -9,6 +9,7 @@ import IconArrowRightShort from "../icons/icon-arrow-right-short";
 import clsx from "clsx";
 import { EmailLabel } from "./label";
 import { useOnFocus, useOnHover } from "./state-hooks";
+import IconEmail from "../icons/icon-email";
 
 /**
  * Props for the WaitlistForm component.
@@ -33,7 +34,7 @@ export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<WaitlistInputs>({ reValidateMode: "onSubmit" })
+    } = useForm<WaitlistInputs>()
 
     const [isHovered, hoverProps] = useOnHover();
     const [isFocused, focusProps] = useOnFocus();
@@ -55,6 +56,9 @@ export const WaitlistForm = ({ onSubmit, error }: WaitlistFormProps) => {
             <div className={styles.container}>
 
                 <EmailLabel error={errors.email || error} focused={isActive} />
+
+                <IconEmail className={styles.icon} width="2.5rem" height="2.5rem" />
+
                 <EmailInput
                     id="email"
                     {...focusProps}
