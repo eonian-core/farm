@@ -12,6 +12,7 @@ import { EmailLabel } from "./label";
 import { useOnFocus, useOnHover } from "./state-hooks";
 import IconEmail from "../icons/icon-email";
 import IconCheck from "../icons/icon-check";
+import IconPencil from "../icons/icon-pencil";
 
 /**
  * Props for the WaitlistForm component.
@@ -50,7 +51,8 @@ export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) =
 
     const [isHovered, hoverProps] = useOnHover();
     const [isFocused, focusProps] = useOnFocus();
-    const isActive = isHovered || isFocused || watch("email")?.length > 0;
+    const isEmpty = !(watch("email")?.length > 0);
+    const isActive = isHovered || isFocused || !isEmpty;
 
     const {errors} = formState
     const error = errors.email || props.error
@@ -61,8 +63,6 @@ export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) =
         required: "required",
         pattern: /\S+@\S+\.\S+/ // validate email format
     });
-
-
     
     return (
         <form
@@ -79,9 +79,7 @@ export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) =
             <div className={styles.container}>
 
                 <EmailLabel error={error} focused={isActive} />
-
-                <IconEmail className={styles.icon} width="2.5rem" height="2.5rem" />
-
+                <StateIcon isEmpty={isEmpty} />
                 <EmailInput
                     id="email"
                     {...focusProps}
@@ -107,6 +105,15 @@ export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) =
 
         </form>
     )
+}
+
+const StateIcon = ({isEmpty}: {isEmpty: boolean}) => {
+
+    if(!isEmpty) {
+        return <IconPencil className={styles.icon} width="2.5rem" height="2.5rem" />
+    }
+
+    return <IconEmail className={styles.icon} width="2.5rem" height="2.5rem" />
 }
 
 interface SubmitIconProps {
