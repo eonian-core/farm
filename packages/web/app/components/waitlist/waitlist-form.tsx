@@ -36,7 +36,7 @@ interface WaitlistInputs {
     email: string
 }
 
-export const WaitlistForm = ({ onSubmit, error, value, ...props }: WaitlistFormProps) => {
+export const WaitlistForm = ({ onSubmit, value, ...props }: WaitlistFormProps) => {
     const {
         register,
         handleSubmit,
@@ -52,17 +52,17 @@ export const WaitlistForm = ({ onSubmit, error, value, ...props }: WaitlistFormP
     const [isFocused, focusProps] = useOnFocus();
     const isActive = isHovered || isFocused || watch("email")?.length > 0;
 
-    const isSubmitting = props.isSubmiting || formState.isSubmitting
-    const isSubmitted = props.isSubmitted || formState.isSubmitted
-
-    console.log({isSubmitting, isSubmitted})
+    const {errors} = formState
+    const error = errors.email || props.error
+    const isSubmitting = (props.isSubmiting || formState.isSubmitting) && !error
+    const isSubmitted = (props.isSubmitted || formState.isSubmitSuccessful) && !error
 
     const registerProps = register("email", {
         required: "required",
         pattern: /\S+@\S+\.\S+/ // validate email format
     });
 
-    const {errors} = formState
+
     
     return (
         <form
@@ -78,7 +78,7 @@ export const WaitlistForm = ({ onSubmit, error, value, ...props }: WaitlistFormP
 
             <div className={styles.container}>
 
-                <EmailLabel error={errors.email || error} focused={isActive} />
+                <EmailLabel error={error} focused={isActive} />
 
                 <IconEmail className={styles.icon} width="2.5rem" height="2.5rem" />
 
