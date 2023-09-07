@@ -8,7 +8,6 @@ export interface WaitlistState {
 }
 
 const defailtContextState: WaitlistState = { join: () => Promise.resolve(), openDashboard: () => {}, isJoined: false }
-
 const WaitlistContext = createContext<WaitlistState>(defailtContextState);
 
 export const WaitlistProvider: React.FC<{ children: ReactNode }> = ({ children }) => {

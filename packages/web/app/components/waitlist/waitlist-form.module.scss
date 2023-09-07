@@ -180,6 +180,10 @@ $border-radius: 9999px;
                 rgba(68, 73, 206, 0.856) 75%,
                 rgba(78, 92, 201, 0.842) 100%);
 
+        .container {
+            padding-right: var(--min-button-width);
+        }
+
         label {
             opacity: 0;
         }
@@ -196,7 +200,7 @@ $border-radius: 9999px;
         button.submit {
             position: absolute;
             width: calc(100% - 2 * var(--margin-10));
-            top: 0;
+            top: -1px; // for for strange visual bug
             right: 0;
             bottom: 0;
             z-index: 20;
