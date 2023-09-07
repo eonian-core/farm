@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 
 import { useForm, SubmitHandler, FieldError } from "react-hook-form"
 import { EmailInput } from "./input";
 import styles from "./waitlist-form.module.scss";
 import Button from "../button/button";
 import IconArrowRightShort from "../icons/icon-arrow-right-short";
+import TextTransition, { presets } from "react-text-transition";
+import { SwitchTransition, CSSTransition } from "react-transition-group";
+import clsx from "clsx";
 
 /**
  * Props for the WaitlistForm component.
@@ -28,17 +31,22 @@ export const WaitlistForm = ({ onSubmit }: WaitlistFormProps) => {
         watch,
         formState: { errors },
     } = useForm<WaitlistInputs>()
-    console.log("errors", errors)
+
+    const [isHovered, hoverProps] = useOnHover();
+
     return (
         <form 
+            {...hoverProps}
             className={styles.form}
             onSubmit={handleSubmit((data: WaitlistInputs) => {
                 onSubmit(data.email)
             })}>
 
                 <div className={styles.container}>
-                    <Emaillabel error={errors.email} />
+                    
+                    <Emaillabel error={errors.email} focused={isHovered} />
                     <EmailInput 
+                        id="email"
                         {...register("email", { required: true })}
                     />
                     
@@ -61,22 +69,61 @@ export interface EmailLabelProps {
     error?: FieldError
 }
 
+export const Emaillabel = (props: EmailLabelProps) => {
+    const text = genLabel(props)
 
-export const Emaillabel = ({focused, error}: EmailLabelProps) => {
+    return (<label htmlFor="email"><span className={styles.parts}>Email</span>{!text ? '' : ' '}<EmailLabelText {...{text}} /></label>)
+}
+
+export const EmailLabelText = ({text}: {text: string}) => {
+    const nodeRef = useRef<HTMLElement | null>(null);
+
+    return (
+        <SwitchTransition>
+            <CSSTransition
+                key={text}
+                nodeRef={nodeRef}
+                addEndListener={(done: any) => {
+                    nodeRef.current?.addEventListener?.("transitionend", done, false);
+                  }}
+                classNames={{
+                    enter: styles.partsEnter,
+                    enterActive: styles.partsEnterActive,
+                    enterDone: styles.partsEnterDone,
+                    exit: styles.partsExit,
+                    exitActive: styles.partsExitActive,
+                    exitDone: styles.partsExitDone,
+                }}
+            ><span className={clsx(styles.parts, {[styles.partsFocused]: !text})} ref={nodeRef}>{text}</span></CSSTransition>
+        </SwitchTransition>
+    )
+}
+// must be function, not a companent to make animation work
+export const genLabel = ({focused, error}: EmailLabelProps) => {
 
     if (error?.type === 'required') {
-        return <label>Email is needed to join the waitlist</label>
+        return `is needed to join the waitlist`
     }
 
     if (error?.type === 'validate') {
-        return <label>Email must contain "@" and "." characters</label>
+        return `must contain "@" and "." characters`
     }
 
     if(focused) {
-        return <label>Email</label>
+        return ``
     }
 
     return (
-        <label>Email me when I can access app</label>
+        `me when I can access app`
     )
+}
+
+/** Simple hook to setup and detect hover */
+const useOnHover = () => {
+    const [hover, setHover] = useState(false);
+
+    const onMouseEnter = useCallback(() => setHover(true), []);
+    const onMouseLeave = useCallback(() => setHover(false), []);
+
+    return [hover, { onMouseEnter, onMouseLeave }] as const;
 }
