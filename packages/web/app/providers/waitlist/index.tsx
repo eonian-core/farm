@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import { useTuemilio, TuemilioScript } from './tuemilio';
 
 export interface WaitlistState {

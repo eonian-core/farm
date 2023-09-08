@@ -12,7 +12,7 @@ const SHOW_DASHBOARD_BUTTON_DELAY = 3000
 
 export const WaitList = ({ children }: WaitlistProps) => {
     const [isJustSubmited, setIsJustSubmited] = useState(false)
-    const {join, isJoined, openDashboard} = useWaitlist()
+    const { join, isJoined, openDashboard } = useWaitlist()
 
     const joinAndTrack = useCallback(async (email: string) => {
         await join(email)
@@ -21,15 +21,13 @@ export const WaitList = ({ children }: WaitlistProps) => {
         setTimeout(() => setIsJustSubmited(false), SHOW_DASHBOARD_BUTTON_DELAY);
     }, [join, setIsJustSubmited])
 
-    if(isJoined && !isJustSubmited) 
-        {return (
+    if (isJoined && !isJustSubmited) {
+        return (
             <Card onClick={openDashboard}>
                 {children}
             </Card>
-        )}
+        )
+    }
 
     return <WaitlistForm onSubmit={joinAndTrack} />
 }
-
-
-const timeout = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))

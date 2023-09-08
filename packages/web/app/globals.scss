@@ -1,3 +1,5 @@
+@import './screen.scss';
+
 /**
 * This is default theme values for whole application.
 * It includes, at least:
@@ -362,8 +364,15 @@ a {
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  scroll-padding-top: 10rem;
 }
 
 ul {
   list-style-type: none;
+}
+
+@media (max-width: $screen-mobile) {
+  html {
+    scroll-padding-top: 5rem;
+  }
 }
