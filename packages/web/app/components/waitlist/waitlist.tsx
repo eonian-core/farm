@@ -18,8 +18,9 @@ export const WaitList = ({ children }: WaitlistProps) => {
         if(process.env.NEXT_PUBLIC_MOCK_WAITLIST_SUBMIT === 'true'){ 
             console.log('Mocking waitlist submit')
             await timeout(1000)
-         }else 
+         } else {
             await join(email)
+         }
         
 
         setIsJustSubmited(true)
