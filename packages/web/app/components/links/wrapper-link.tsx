@@ -3,7 +3,7 @@ import { LinkWithIconProps, InternalLink } from "./links";
 
 
 export const WrapperLink = ({ href, children, ...props }: LinkWithIconProps) => {
-    if (href.toString().startsWith('/')) 
+    if (href.toString().startsWith('/') || href.toString().startsWith('#')) 
         return <InternalLink href={href} {...props}>{children}</InternalLink>
     
 

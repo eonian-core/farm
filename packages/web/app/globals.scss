@@ -1,3 +1,5 @@
+@import './screen.scss';
+
 /**
 * This is default theme values for whole application.
 * It includes, at least:
@@ -29,7 +31,9 @@
     --font-size-700: 1.25rem;
     --font-size-750: 1.5rem;
     --font-size-800: 1.875rem;
+    --font-size-850: 2rem;
     --font-size-900: 2.25rem;
+    --font-size-950: 2.8rem;
     --font-size-1000: 3rem;
     --font-size-1100: 3.75rem;
     --font-size-1120: 4rem;
@@ -109,6 +113,7 @@
       --color-text-100: hsl(240, 5%, 96%);
       --color-text-200: hsl(240, 6%, 90%);
       --color-text-300: hsl(240, 5%, 84%);
+      --color-text-350: hsl(240, 5%, 75%);
       --color-text-400: hsl(240, 5%, 65%);
       --color-text-450: hsl(240, 4%, 55%);
       --color-text-500: hsl(240, 4%, 46%); // Default color
@@ -140,19 +145,22 @@
       --color-primary-300: hsl(230, 94%, 82%);
       --color-primary-400: hsl(234, 89%, 74%);
       --color-primary-500: hsl(239, 84%, 67%); // Default color
+      --color-primary-550: hsl(212, 100%, 47%);
       --color-primary-600: hsl(243, 75%, 59%);
       --color-primary-700: hsl(245, 58%, 51%);
+      --color-primary-750: hsl(245, 61%, 44%);
       --color-primary-800: hsl(244, 55%, 41%);
       --color-primary-900: hsl(242, 47%, 34%);
       --color-primary-1000: hsl(242, 49%, 25%);
 
+
       --primary-glow: linear-gradient(
         to bottom right,
         rgba(142, 81, 195, 0.397) 0%,
-         rgba(153, 47, 202, 0.212) 29%, 
-         rgba(195, 55, 99, 0.247) 48%, 
-         rgba(36, 38, 112, 0.384) 74%, 
-         rgba(39, 45, 93, 0.342) 100%
+        rgba(153, 47, 202, 0.212) 29%, 
+        rgba(195, 55, 99, 0.247) 48%, 
+        rgba(36, 38, 112, 0.384) 74%, 
+        rgba(39, 45, 93, 0.342) 100%
       );
 
     // Secondary
@@ -194,8 +202,11 @@
       --color-neutral-600: hsl(0, 0%, 32%);
       --color-neutral-700: hsl(0, 0%, 25%);
       --color-neutral-800: hsl(0, 0%, 15%);
+      --color-neutral-825: hsl(264, 19%, 12%);
       --color-neutral-850: hsl(0, 0%, 12%);
+      --color-neutral-875: hsl(0, 0%, 10%);
       --color-neutral-900: hsl(0, 0%, 9%);
+
 
     // Accent
 
@@ -254,6 +265,7 @@
         --color-success-900: hsl(144, 61%, 20%);
 
   // margin
+    --margin-10: 3px;
     --margin-50: 0.25rem;
     --margin-100: 0.5rem;
     --margin-200: 0.75rem;
@@ -269,6 +281,7 @@
     --margin-1200: 20rem;
 
   // padding
+    --padding-10: 2px;
     --padding-50: 0.25rem;
     --padding-100: 0.5rem;
     --padding-200: 0.75rem;
@@ -278,6 +291,7 @@
     --padding-400: 1.5rem;
     --padding-500: 2rem;
     --padding-600: 2.5rem;
+    --padding-650: 2.75rem;
     --padding-700: 3rem;
     --padding-750: 3.5rem;
     --padding-800: 6rem;
@@ -285,6 +299,8 @@
     --padding-1000: 14rem;
 
   // width
+    --min-button-width: 2.5rem;
+
     --width-column: 60px;
     --width-gap: 40px;
 
@@ -348,8 +364,15 @@ a {
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  scroll-padding-top: 10rem;
 }
 
 ul {
   list-style-type: none;
+}
+
+@media (max-width: $screen-mobile) {
+  html {
+    scroll-padding-top: 5rem;
+  }
 }

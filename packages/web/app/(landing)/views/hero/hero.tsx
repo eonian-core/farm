@@ -1,9 +1,11 @@
 import React from "react";
+import { useScroll, useMotionValueEvent } from "framer-motion"
+import clsx from "clsx";
 import { Inter } from "next/font/google";
 import Container from "../../../components/contrainer/container";
 import styles from "./hero.module.scss";
 import IconScroll from "../../../components/icons/icon-scroll";
-import clsx from "clsx";
+import { useIsScrolled } from "../../../components/parallax/useIsScrolled";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -12,17 +14,19 @@ const inter = Inter({
 
 export interface HeroProps {
   children: React.ReactNode;
-  description: React.ReactNode;
 }
 
-export default function Hero({ children, description }: HeroProps) {
+export default function Hero({ children }: HeroProps) {
+  const isScrolled = useIsScrolled();
+
   return (
     <Container>
       <div className={clsx(styles.hero, inter.className)}>
         {children}
 
-        <IconScroll className={styles.scrollIcon}/>
+        <IconScroll className={clsx(styles.scrollIcon, {[styles.hidden]: isScrolled})}/>
       </div>
     </Container>
   );
 }
+

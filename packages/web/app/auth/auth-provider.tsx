@@ -2,8 +2,8 @@
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 import { useEffect } from 'react';
+import { isInBrowser } from '../providers/browser';
 
-export const isInBrowser = () => typeof window !== "undefined";
 export const isAuthEnabled = () => process.env.NEXT_PUBLIC_AUTH0_ENABLED === "true" && isInBrowser();
 
 /** Wraper for authorisation provider, which enables authentication based on environment */
