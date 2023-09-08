@@ -92,7 +92,7 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      forking: binanceSmartChainFork,
+      forking: process.env.DISABLE_HARDHAT_FORK === 'true' ? undefined : binanceSmartChainFork,
       mining: {
         auto: true,
         interval: 5000,

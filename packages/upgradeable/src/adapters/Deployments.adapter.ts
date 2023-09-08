@@ -18,8 +18,10 @@ export class DeploymentsAdapter implements DeploymentsService {
       throw new Error(`Contract name and artifact name cannot be the same: ${name}`)
     }
 
+    const constructorArgs = [true] // Disable initializers in implementation contract
+
     this.logger.log(`Performing contract validation for "${name}"...`)
-    await this.performValidation({ name, contract })
+    await this.validation.validate(contract, name, constructorArgs)
 
     const {
       getChainId,
@@ -33,7 +35,7 @@ export class DeploymentsAdapter implements DeploymentsService {
       log: true,
       gasLimit: 4000000, // fix for local deployments
       autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks,
-      args: [true], // Disable inititializers in implementation contract
+      args: constructorArgs,
       proxy: {
         owner,
         proxyContract: 'ERC1967Proxy', // base for UUPS, directly from OpenZeppelin
@@ -61,15 +63,5 @@ export class DeploymentsAdapter implements DeploymentsService {
   async isDeployed(name: string): Promise<boolean> {
     const deployment = await this.get(name)
     return !!deployment
-  }
-
-  private async performValidation({ name, contract }: Pick<DeployArgs, 'name' | 'contract'>): Promise<void> {
-    try {
-      await this.validation.validate(contract, name)
-    }
-    catch (error) {
-      const message = error instanceof Error ? error.message : String(error)
-      throw new Error(`Validation failed for "${name}": ${message}`)
-    }
   }
 }
