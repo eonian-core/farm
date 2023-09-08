@@ -15,9 +15,10 @@ export const WaitList = ({ children }: WaitlistProps) => {
     const {join, isJoined, openDashboard} = useWaitlist()
 
     const joinAndTrack = useCallback(async (email: string) => {
-        if(process.env.NEXT_PUBLIC_MOCK_WAITLIST_SUBMIT === 'true') 
+        if(process.env.NEXT_PUBLIC_MOCK_WAITLIST_SUBMIT === 'true'){ 
+            console.log('Mocking waitlist submit')
             await timeout(1000)
-         else 
+         }else 
             await join(email)
         
 
