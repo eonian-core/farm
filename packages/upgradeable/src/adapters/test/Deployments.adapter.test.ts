@@ -3,7 +3,7 @@ import type { DeployResult, Deployment } from 'hardhat-deploy/types'
 import type { DeployArgs, DeploymentsService } from '../../LifecycleDeployment.service'
 import { DeploymentsAdapter } from '../Deployments.adapter'
 import type { Logger } from '../../logger/Logger'
-import type { ValidationProvider } from '../../providers'
+import { ValidationError, type ValidationProvider } from '../../providers'
 
 describe('DeploymentsAdapter', () => {
   let hreMock: HardhatRuntimeEnvironment
@@ -107,11 +107,11 @@ describe('DeploymentsAdapter', () => {
       hreMock.deployments.deploy = jest.fn()
 
       validationMock.validate = jest.fn().mockImplementation(() => {
-        throw new Error('Generic validation error')
+        throw new ValidationError('Generic validation error')
       })
 
       const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs)).rejects.toEqual(
-        new Error(`Validation failed for "${deployArgs.name}": Generic validation error`),
+        new ValidationError('Generic validation error'),
       )
 
       expect(hreMock.deployments.deploy).not.toHaveBeenCalled()
