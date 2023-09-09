@@ -31,7 +31,12 @@ const MAX_RESTART_ATTEMPTS = 30
  */
 task(TASK_TEST, async (_args, env, runSuper) => {
   if (env.network.name !== 'hardhat') {
-    log('Current network is not "hardhat", skipping...')
+    log('Current network is not "hardhat", fork node will not be started')
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return await runSuper()
+  }
+  if (process.env.DISABLE_HARDHAT_FORK === 'true') {
+    log('Variable "DISABLE_HARDHAT_FORK" is true, fork node will not be started')
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await runSuper()
   }

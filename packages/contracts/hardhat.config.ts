@@ -1,37 +1,37 @@
 /* eslint-disable import/first */
-import * as dotenv from 'dotenv';
+import * as dotenv from 'dotenv'
 
-dotenv.config(); // must be before all imports
+dotenv.config() // must be before all imports
 
-import { task } from 'hardhat/config';
-import { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types/config';
-import '@nomiclabs/hardhat-ethers';
-import '@nomiclabs/hardhat-etherscan';
-import '@typechain/hardhat';
-import 'hardhat-gas-reporter';
-import 'solidity-coverage';
-import '@openzeppelin/hardhat-upgrades';
-import 'hardhat-tracer';
-import 'hardhat-deploy';
-import 'hardhat-docgen';
-import '@nomicfoundation/hardhat-chai-matchers';
-import '@nomicfoundation/hardhat-foundry';
+import { task } from 'hardhat/config'
+import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types/config'
+import '@nomiclabs/hardhat-ethers'
+import '@nomiclabs/hardhat-etherscan'
+import '@typechain/hardhat'
+import 'hardhat-gas-reporter'
+import 'solidity-coverage'
+import '@openzeppelin/hardhat-upgrades'
+import 'hardhat-tracer'
+import 'hardhat-deploy'
+import 'hardhat-docgen'
+import '@nomicfoundation/hardhat-chai-matchers'
+import '@nomicfoundation/hardhat-foundry'
 
-import { getTokenBySymbol, ChainSymobls } from '@eonian/upgradeable';
+import type { Address } from 'hardhat-deploy/types'
+import { ChainSymobls, getTokenBySymbol } from '@eonian/upgradeable'
 
-import { ethereumFork, binanceSmartChainFork } from './hardhat/forks';
-import { providers, ProvidersContracts } from './hardhat/providers';
+import { binanceSmartChainFork, ethereumFork } from './hardhat/forks'
+import { ProvidersContracts, providers } from './hardhat/providers'
 
-import './hardhat/tasks/start-hardhat-node.ts';
-import { Address } from 'hardhat-deploy/types';
+import './hardhat/tasks/start-hardhat-node.ts'
 
 task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+  const accounts = await hre.ethers.getSigners()
 
   for (const account of accounts) {
-    console.log(account.address);
+    console.log(account.address)
   }
-});
+})
 
 /** Stage to which contracts is deployed, allow create multiple protocol stages on one blockchain */
 export enum Stage {
@@ -49,19 +49,19 @@ export enum BlockchainType {
 
 export interface NamedAccounts {
   /** Deploy of contracts */
-  deployer: Address;
+  deployer: Address
   /** Address required for setup Gelato Job */
-  gelatoOps: Address;
+  gelatoOps: Address
   /** Address for specific asset */
-  USDT: Address;
+  USDT: Address
   /** Address of Eonian treasury */
-  treasury: Address;
+  treasury: Address
   /** Address of ApeSwap cUSDT token / USDT lending market / Ola Tether USD (oUSDT) */
-  apeSwap__cUSDT: Address;
+  apeSwap__cUSDT: Address
   /** Address of Chainlink BNB/USD price feed */
-  chainlink__BNB_USD_feed: Address;
+  chainlink__BNB_USD_feed: Address
   /** Address of Chainlink USDT/USD price feed */
-  chainlink__USDT_USD_feed: Address;
+  chainlink__USDT_USD_feed: Address
 }
 
 const bscMainnet: NetworkUserConfig = {
@@ -74,11 +74,13 @@ const bscMainnet: NetworkUserConfig = {
       apiKey: process.env.BSCSCAN_API_KEY,
     },
   },
-};
+}
 
-console.log('Current network: ', process.env.HARDHAT_NETWORK);
+const defaultNetwork = 'hardhat'
+console.log(`Current network: "${process.env.HARDHAT_NETWORK || defaultNetwork}"`)
 
 const config: HardhatUserConfig = {
+  defaultNetwork,
   solidity: {
     version: '0.8.19',
     settings: {
@@ -88,10 +90,9 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  defaultNetwork: 'hardhat',
   networks: {
     hardhat: {
-      forking: binanceSmartChainFork,
+      forking: process.env.DISABLE_HARDHAT_FORK === 'true' ? undefined : binanceSmartChainFork,
       mining: {
         auto: true,
         interval: 5000,
@@ -247,6 +248,6 @@ const config: HardhatUserConfig = {
     cache: './cache_hardhat',
     artifacts: './artifacts',
   },
-};
+}
 
-export default config;
+export default config

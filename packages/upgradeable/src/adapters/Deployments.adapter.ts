@@ -4,10 +4,12 @@ import type { DeployResult, Deployment } from 'hardhat-deploy/types'
 
 import type { DeployArgs, DeploymentsService } from '../LifecycleDeployment.service'
 import type { Logger } from '../logger/Logger'
+import type { ValidationProvider } from '../providers'
 
 export class DeploymentsAdapter implements DeploymentsService {
   constructor(
     readonly hre: HardhatRuntimeEnvironment,
+    readonly validation: ValidationProvider,
     readonly logger: Logger,
   ) {}
 
@@ -16,11 +18,16 @@ export class DeploymentsAdapter implements DeploymentsService {
       throw new Error(`Contract name and artifact name cannot be the same: ${name}`)
     }
 
+    const constructorArgs = [true] // Disable initializers in implementation contract
+
+    this.logger.log(`Performing contract validation for "${name}"...`)
+    await this.validation.validate(contract, name, constructorArgs)
+
     const {
       getChainId,
       deployments: { getNetworkName },
     } = this.hre
-    this.logger.log(`Deploying ${name} to network ${getNetworkName()} with chainId ${await getChainId()}`)
+    this.logger.log(`Deploying "${name}" to network "${getNetworkName()}" with chainId "${await getChainId()}"...`)
 
     return this.hre.deployments.deploy(name, {
       contract,
@@ -28,7 +35,7 @@ export class DeploymentsAdapter implements DeploymentsService {
       log: true,
       gasLimit: 4000000, // fix for local deployments
       autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks,
-      args: [true], // Disable inititializers in implementaion contract
+      args: constructorArgs,
       proxy: {
         owner,
         proxyContract: 'ERC1967Proxy', // base for UUPS, directly from OpenZeppelin

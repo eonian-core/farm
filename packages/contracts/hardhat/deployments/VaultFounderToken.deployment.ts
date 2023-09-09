@@ -51,10 +51,10 @@ export class VaultFounderTokenDeployment extends BaseDeploymentService {
     ])
   }
 
-  async afterDeploy(deplyment: DeployResult, [vault]: Array<Deployment>) {
-    this.logger.log('Adding Vault to VaultFounderToken')
+  async afterDeploy(deployment: DeployResult, [vault]: Array<Deployment>) {
+    this.logger.log('Adding VaultFounderToken to Vault')
     const Vault = await this.hre.ethers.getContractAt<Vault>('Vault', vault.address)
-    const VaultFounderToken = await this.hre.ethers.getContractAt('VaultFounderToken', deplyment.address)
+    const VaultFounderToken = await this.hre.ethers.getContractAt('VaultFounderToken', deployment.address)
 
     const txVault = await Vault.setFounders(VaultFounderToken.address)
     const resultAddingVaultFounderToken = await txVault.wait()
