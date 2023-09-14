@@ -18,6 +18,7 @@ contract CTokenMock is ERC20, ICToken {
     uint256 public exchangeRateCurrent;
     uint256 public accrueInterest;
     uint256 public loss;
+    uint256 public fraudLoss;
 
     constructor(ERC20Mock __underlying) ERC20("CToken", "CT") {
         setUnderlying(__underlying);
@@ -59,6 +60,10 @@ contract CTokenMock is ERC20, ICToken {
 
     function setLoss(uint256 _loss) public {
         loss = _loss;
+    }
+
+    function setFraudProtocolLoss(uint256 _fraudLoss) public {
+        fraudLoss = _fraudLoss;
     }
 
     function decimals() public view override(ICToken, ERC20) returns (uint8) {
@@ -201,8 +206,8 @@ contract CTokenMock is ERC20, ICToken {
     function redeemUnderlying(
         uint256 redeemAmount
     ) external override returns (uint256) {
-        _burn(address(msg.sender), redeemAmount);
-        _underlying.transfer(msg.sender, redeemAmount);
+        _burn(address(msg.sender), redeemAmount - fraudLoss);
+        _underlying.transfer(msg.sender, redeemAmount - fraudLoss);
         return 0;
     }
 

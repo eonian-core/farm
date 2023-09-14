@@ -143,7 +143,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     function withdrawFromProtocol(uint256 amount) internal returns (uint256) {
         (uint256 sharesBefore,) = depositedBalanceSnapshot();
 
-        uint256 balanceBefore = _underlyingBalance();
+        uint256 balanceBefore = _freeAssets();
         uint256 deposits = depositedBalance();
         uint256 amountToRedeem = MathUpgradeable.min(deposits, amount);
         uint256 result = cToken.redeemUnderlying(amountToRedeem);
@@ -154,7 +154,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         (uint256 sharesAfter, uint256 underlyingAfter) = depositedBalanceSnapshot();
 
         // underlying protocol can return less than calculated above, so this check is required to avoid manipulations
-        uint256 balanceAfter = _underlyingBalance();
+        uint256 balanceAfter = _freeAssets();
         uint256 redeemedAmount = balanceAfter - balanceBefore;
 
         emit WithdrawnFromProtocol(amountToRedeem, sharesBefore, deposits, sharesAfter, underlyingAfter, redeemedAmount);

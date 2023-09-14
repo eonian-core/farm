@@ -807,6 +807,19 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         assertEq(amountFreed, deposits);
     }
 
+    function testShouldLiquidateAllWithScumLendingProtocol(uint128 deposits) public {
+        vm.assume(deposits > 100);
+        uint256 scumLoss = deposits / 10;
+
+        _setupHarvestData(0, deposits, 0);
+
+        // after setting scumLoss the strategy returns less than requested and liquidateAllPositions must return actual value
+        cToken.setFraudProtocolLoss(scumLoss);
+        uint256 amountFreed = strategy.liquidateAllPositions();
+        // strategy must report real claimed amount regardless documented debt
+        assertEq(amountFreed, deposits - scumLoss);
+    }
+
     function _setupHarvestData(
         uint128 assetBalance,
         uint128 cTokenBalance,
@@ -848,6 +861,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         vault.deposit(amount);
 
         assertEq(vault.freeAssets(), amount);
+        assertEq(strategy.freeAssets(), 0);
         assertEq(strategy.depositedBalance(), 0);
 
         // distribute funds to strategy
@@ -855,6 +869,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
         assertEq(strategy.depositedBalance(), amount);
         assertEq(vault.freeAssets(), 0);
+        assertEq(strategy.freeAssets(), 0);
+        assertEq(strategy.paused(), false);
 
         // check if shutdown triggered
         vm.expectEmit(true, true, true, true);
@@ -865,5 +881,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
         // check if not lost money returned back to vault after shutdown the strategy
         assertEq(vault.freeAssets(), amount - loss);
+        assertEq(strategy.freeAssets(), 0);
+        assertEq(strategy.paused(), true);
     }
 }

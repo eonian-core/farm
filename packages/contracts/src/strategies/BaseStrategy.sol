@@ -268,7 +268,7 @@ abstract contract BaseStrategy is
         )
     {
         _liquidateAllPositions();
-        uint256 freeBalance = _underlyingBalance();
+        uint256 freeBalance = _freeAssets();
 
         if (freeBalance < outstandingDebt) {
             loss = outstandingDebt - freeBalance;
@@ -338,6 +338,7 @@ abstract contract BaseStrategy is
 
     /// @dev Fallback function that is called when the health check fails.
     function healthCheckFailedFallback() internal virtual override{
+        // Prevent cycle of failed health checks on shutdown
         if (!paused()) {
             shutdown();
             _work();
@@ -345,7 +346,7 @@ abstract contract BaseStrategy is
     }
 
     /// @notice Returns free balance of the strategy.
-    function _underlyingBalance()
+    function _freeAssets()
         internal
         virtual
         returns(uint256)
