@@ -25,6 +25,11 @@ export class ValidationProvider {
    */
   async validate(artifactName: string, deploymentName: string, constructorArgs: unknown[]) {
     try {
+      if (process.env.SKIP_UPGRADE_VALIDATION === 'true') {
+        this.logger.warn('Variable "SKIP_UPGRADE_VALIDATION" is set, validation will be skipped')
+        return
+      }
+
       const options = { kind: 'uups', constructorArgs } satisfies StandaloneOptions
 
       this.logger.log('Validating contract implementation...')
