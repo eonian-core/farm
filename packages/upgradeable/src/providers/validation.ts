@@ -25,8 +25,9 @@ export class ValidationProvider {
    */
   async validate(artifactName: string, deploymentName: string, constructorArgs: unknown[]) {
     try {
-      if (process.env.SKIP_UPGRADE_VALIDATION === 'true') {
-        this.logger.warn('Variable "SKIP_UPGRADE_VALIDATION" is set, validation will be skipped')
+      const skipValidation = process.env.SKIP_UPGRADE_VALIDATION?.includes(artifactName)
+      if (skipValidation) {
+        this.logger.warn(`Variable "SKIP_UPGRADE_VALIDATION" contains "${artifactName}", validation will be skipped for this artifact`)
         return
       }
 

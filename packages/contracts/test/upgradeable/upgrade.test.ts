@@ -148,7 +148,7 @@ describe('Upgrade', () => {
 
     await replaceArtifacts('Stub_ContractChildWithInvalidParent', 'Stub_ContractChild')
 
-    process.env.SKIP_UPGRADE_VALIDATION = 'true'
+    process.env.SKIP_UPGRADE_VALIDATION = 'Stub_ContractChild'
 
     await expect(deployContract('Stub_ContractChild', options, hre)).to.not.be.rejectedWith(ValidationError)
   })
@@ -180,7 +180,7 @@ describe('Upgrade', () => {
     await replaceArtifacts('Stub_ContractChildWithInvalidParent', 'Stub_ContractChild')
 
     // Disable validation to be able intentionally deploy invalid implementation and break the contract
-    process.env.SKIP_UPGRADE_VALIDATION = 'true'
+    process.env.SKIP_UPGRADE_VALIDATION = 'Stub_ContractChild'
 
     // Deploy invalid implementation and check that memory layout is broken
     const brokenDeploy = await deployContract('Stub_ContractChild', options, hre)
