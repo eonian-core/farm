@@ -63,7 +63,7 @@
     "typescript": "4.9.4"
   },
   "devDependencies": {
-    "@apollo/server": "^4.7.4",
+    "@apollo/server": "^4.9.3",
     "@eonian/graphql-typescript-scalar-type-policies": "^1.0.6",
     "@graphql-codegen/cli": "3.3.0",
     "@graphql-codegen/client-preset": "3.0.0",
