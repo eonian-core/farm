@@ -1,14 +1,11 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
-import type { Contract } from 'ethers'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
-import type { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
+import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 import type {
   ApeLendingStrategy,
-  ApeLendingStrategy__factory,
   IERC20,
   LossRatioHealthCheck,
-  LossRatioHealthCheck__factory,
   Vault,
   VaultFounderToken,
 } from '../../typechain-types'
@@ -34,16 +31,20 @@ describe('Ape Lending Strategy', () => {
   hre.tracer.nameTags[cToken] = 'cToken'
   hre.tracer.nameTags[rewards] = 'Rewards'
 
-  let owner: SignerWithAddress
-  let holderA: SignerWithAddress
-  let holderB: SignerWithAddress
-  let ops: SignerWithAddress
+  let owner: HardhatEthersSigner
+  let holderA: HardhatEthersSigner
+  let holderB: HardhatEthersSigner
+  let ops: HardhatEthersSigner
 
   let vault: Vault
   let vaultFounderToken: VaultFounderToken
   let healthCheck: LossRatioHealthCheck
   let strategy: ApeLendingStrategy
-  let assetToken: IERC20 & Contract
+  let assetToken: IERC20
+
+  let vaultAddress: string
+  let vaultFounderTokenAddress: string
+  let strategyAddress: string
 
   async function setup() {
     [owner] = await ethers.getSigners()
@@ -60,19 +61,21 @@ describe('Ape Lending Strategy', () => {
     hre.tracer.nameTags[ops.address] = 'Gelato Ops'
 
     vault = await deployVault(hre, { asset, rewards, signer: owner })
-    hre.tracer.nameTags[vault.address] = 'Vault'
+    vaultAddress = await vault.getAddress()
+    hre.tracer.nameTags[vaultAddress] = 'Vault'
 
     vaultFounderToken = await deployVaultFounderToken(hre, {
       maxCountTokens: 100,
       nextTokenPriceMultiplier: 1200,
       initialTokenPrice: 200,
       signer: owner,
-      vault: vault.address,
+      vault: vaultAddress,
     })
-    await vault.setFounders(vaultFounderToken.address)
-    await vaultFounderToken.setVault(vault.address)
+    vaultFounderTokenAddress = await vaultFounderToken.getAddress()
+    await vault.setFounders(vaultFounderTokenAddress)
+    await vaultFounderToken.setVault(vaultAddress)
 
-    await resetBalance(vault.address, { tokens: [asset] })
+    await resetBalance(vaultAddress, { tokens: [asset] })
 
     healthCheck = await deployLossRatioHealthCheck(owner)
     strategy = await deployStrategy({
@@ -81,9 +84,10 @@ describe('Ape Lending Strategy', () => {
       asset,
       healthCheck,
     })
-    hre.tracer.nameTags[strategy.address] = 'Strategy'
+    strategyAddress = await strategy.getAddress()
+    hre.tracer.nameTags[strategyAddress] = 'Strategy'
 
-    await resetBalance(strategy.address, { tokens: [cToken] })
+    await resetBalance(strategyAddress, { tokens: [cToken] })
 
     assetToken = await getToken(asset, owner)
   }
@@ -94,7 +98,7 @@ describe('Ape Lending Strategy', () => {
 
   it('Should deposit and withdraw from the vault', async () => {
     // Vault is empty, no BUSD amount on the token balance
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
     // Make sure that the holder has some amount of BUSD (e.g., >300)
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(300n * 10n ** 18n)
@@ -108,12 +112,12 @@ describe('Ape Lending Strategy', () => {
     await withdraw(holderA, withdrawalAmount)
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount - withdrawalAmount)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount - withdrawalAmount)
   })
 
   it('Should deposit and withdraw from the vault (multiple users)', async () => {
     // Vault is empty, no BUSD amount on the token balance
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
     // Make sure that the holders have some amount of BUSD (e.g., >300)
     const min = 300n * 10n ** 18n
@@ -126,7 +130,7 @@ describe('Ape Lending Strategy', () => {
     await deposit(holderB, depositAmount)
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount * 2n)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount * 2n)
 
     // Withdraw some BUSD from the vault on behalf of the holders
     const withdrawalAmount = 15n * 10n ** 18n
@@ -134,12 +138,12 @@ describe('Ape Lending Strategy', () => {
     await withdraw(holderB, withdrawalAmount)
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount * 2n - withdrawalAmount * 2n)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount * 2n - withdrawalAmount * 2n)
   })
 
   it('Should deposit and withdraw from the vault after investing to the strategy', async () => {
     // Vault is empty, no BUSD amount on the token balance
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
     // Make sure that the holder has some amount of BUSD (e.g., >300)
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(300n * 10n ** 18n)
@@ -152,21 +156,21 @@ describe('Ape Lending Strategy', () => {
     // Track is: Vault -> Strategy -> ApeSwap's cToken contract
     await expect(await strategy.work()).changeTokenBalances(
       assetToken,
-      [vault.address, strategy.address, cToken],
+      [vaultAddress, strategyAddress, cToken],
       [-depositAmount, 0, depositAmount],
     )
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
     await withdraw(holderA, withdrawalAmount, {
-      addresses: [vault.address, strategy.address, cToken, holderA.address],
+      addresses: [vaultAddress, strategyAddress, cToken, holderA.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
   })
 
   it('Should deposit and withdraw from the vault after investing to the strategy (multiple users)', async () => {
     // Vault is empty, no BUSD amount on the token balance
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
     // Make sure that the holders have some amount of BUSD (e.g., >300)
     const min = 300n * 10n ** 18n
@@ -179,31 +183,31 @@ describe('Ape Lending Strategy', () => {
     await deposit(holderB, depositAmount)
 
     // Check the deposits of the Vault
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(depositAmount * 2n)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount * 2n)
 
     // Transfer deposited amount of BUSD from the vault to the strategy
     // Track is: Vault -> Strategy -> ApeSwap's cToken contract
     await expect(await strategy.work()).changeTokenBalances(
       assetToken,
-      [vault.address, strategy.address, cToken],
+      [vaultAddress, strategyAddress, cToken],
       [-depositAmount * 2n, 0, depositAmount * 2n],
     )
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
     await withdraw(holderA, withdrawalAmount, {
-      addresses: [vault.address, strategy.address, cToken, holderA.address],
+      addresses: [vaultAddress, strategyAddress, cToken, holderA.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
     await withdraw(holderB, withdrawalAmount, {
-      addresses: [vault.address, strategy.address, cToken, holderB.address],
+      addresses: [vaultAddress, strategyAddress, cToken, holderB.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
   })
 
   it('Should accumulate rewards', async () => {
     // Vault is empty, no BUSD amount on the token balance
-    expect(await assetToken.balanceOf(vault.address)).to.be.equal(0)
+    expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
     // Rewards address should be empty on start
     expect(await vault.balanceOf(rewards)).to.be.equal(0)
@@ -237,16 +241,16 @@ describe('Ape Lending Strategy', () => {
    * @param changeTokenBalances Params for "changeTokenBalances" check
    */
   async function deposit(
-    holder: SignerWithAddress,
+    holder: HardhatEthersSigner,
     amount: bigint,
     changeTokenBalances?: { addresses: any[]; balanceChanges: any[] },
   ) {
     assetToken = assetToken.connect(holder)
     vault = vault.connect(holder)
-    await assetToken.approve(vault.address, amount)
+    await assetToken.approve(vaultAddress, amount)
     await expect(await vault['deposit(uint256)'](amount)).changeTokenBalances(
       assetToken,
-      changeTokenBalances?.addresses ?? [vault.address, holder.address],
+      changeTokenBalances?.addresses ?? [vaultAddress, holder.address],
       changeTokenBalances?.balanceChanges ?? [amount, -amount],
     )
   }
@@ -258,7 +262,7 @@ describe('Ape Lending Strategy', () => {
    * @param changeTokenBalances Params for "changeTokenBalances" check
    */
   async function withdraw(
-    holder: SignerWithAddress,
+    holder: HardhatEthersSigner,
     amount: bigint,
     changeTokenBalances?: { addresses: any[]; balanceChanges: any[] },
   ) {
@@ -266,16 +270,16 @@ describe('Ape Lending Strategy', () => {
     vault = vault.connect(holder)
     await expect(await vault['withdraw(uint256)'](amount)).changeTokenBalances(
       assetToken,
-      changeTokenBalances?.addresses ?? [vault.address, holder.address],
+      changeTokenBalances?.addresses ?? [vaultAddress, holder.address],
       changeTokenBalances?.balanceChanges ?? [-amount, amount],
     )
   }
 
-  async function deployLossRatioHealthCheck(signer: SignerWithAddress): Promise<LossRatioHealthCheck> {
-    const factory = await ethers.getContractFactory<LossRatioHealthCheck__factory>('LossRatioHealthCheck', signer)
+  async function deployLossRatioHealthCheck(signer: HardhatEthersSigner): Promise<LossRatioHealthCheck> {
+    const factory = await ethers.getContractFactory('LossRatioHealthCheck', signer)
 
     const contract = await factory.deploy(false)
-    await contract.deployed()
+    await contract.waitForDeployment()
 
     const tx = await contract.initialize(
       5_00, // lossRatio = 5%
@@ -286,18 +290,18 @@ describe('Ape Lending Strategy', () => {
   }
 
   async function deployStrategy(options: {
-    signer: SignerWithAddress
+    signer: HardhatEthersSigner
     vault: Vault
     asset: string
     healthCheck: LossRatioHealthCheck
   }): Promise<ApeLendingStrategy> {
     const { signer, vault, asset, healthCheck } = options
-    const factory = await ethers.getContractFactory<ApeLendingStrategy__factory>('ApeLendingStrategy', signer)
+    const factory = await ethers.getContractFactory('ApeLendingStrategy', signer)
     const contract = await factory.deploy(false)
-    await contract.deployed()
+    await contract.waitForDeployment()
 
     let tx = await contract.initialize(
-      vault.address,
+      vaultAddress,
       asset,
       cToken,
       ops.address,
@@ -305,11 +309,11 @@ describe('Ape Lending Strategy', () => {
       assetPriceFeed,
       minReportInterval, // Min report interval
       true, // Job is prepaid,
-      healthCheck.address, //
+      await healthCheck.getAddress(), //
     )
     await tx.wait()
 
-    tx = await vault.addStrategy(contract.address, 10000, {
+    tx = await vault.addStrategy(await contract.getAddress(), 10000, {
       from: signer.address,
     })
     await tx.wait()

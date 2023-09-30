@@ -5,7 +5,7 @@ dotenv.config() // must be before all imports
 
 import { task } from 'hardhat/config'
 import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types/config'
-import '@nomiclabs/hardhat-ethers'
+import '@nomicfoundation/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
 import '@typechain/hardhat'
 import 'hardhat-gas-reporter'
@@ -13,6 +13,7 @@ import 'solidity-coverage'
 import '@openzeppelin/hardhat-upgrades'
 import 'hardhat-tracer'
 import 'hardhat-deploy'
+import 'hardhat-deploy-ethers'
 import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
@@ -23,7 +24,7 @@ import { ChainSymobls, getTokenBySymbol } from '@eonian/upgradeable'
 import { binanceSmartChainFork, ethereumFork } from './hardhat/forks'
 import { ProvidersContracts, providers } from './hardhat/providers'
 
-import './hardhat/tasks/start-hardhat-node.ts'
+import './hardhat/tasks/start-hardhat-node'
 
 task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
   const accounts = await hre.ethers.getSigners()
