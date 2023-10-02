@@ -1,6 +1,7 @@
 import type { DeployResult, Deployment } from 'hardhat-deploy/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { Logger } from './logger/Logger'
+import type { ValidationProvider } from './providers'
 
 export interface DeployArgs {
   /** Name of artifact to deploy, will be used to reference contract in dependencies */
@@ -21,7 +22,7 @@ export interface DeployArgs {
 /**
  * Minimal wrapper around hardhat-deploy/deployments object,
  * provides simplified interface.
- * Allow test deploy call logic without hardhat runtime environment.
+ * Allows to test deploy call logic without using a hardhat runtime environment.
  * */
 export interface DeploymentsService {
   /** Deploy function wrapper */
@@ -39,6 +40,7 @@ export abstract class LifecycleDeploymentService {
     readonly hre: HardhatRuntimeEnvironment,
     readonly deployments: DeploymentsService,
     readonly logger: Logger,
+    readonly validation: ValidationProvider,
   ) {}
 
   async deploy() {
@@ -46,6 +48,9 @@ export abstract class LifecycleDeploymentService {
     this.logger.debug('Resolved dependencies', dependencies)
     const args = await this.onResolveArgs(dependencies)
     this.logger.log('Resolved deployment args', args)
+
+    this.logger.log(`Performing contract validation for "${args.name}"...`)
+    await this.validation.validate(args.contract, args.name)
 
     const isDeployedBefore = await this.deployments.isDeployed(args.name)
 
@@ -60,6 +65,8 @@ export abstract class LifecycleDeploymentService {
       this.logger.log('Contract was deployed before, run afterUpgrade hook')
       await this.afterUpgrade(result, dependencies)
     }
+
+    await this.validation.saveImplementationData(args.contract, result.address)
   }
 
   async onDeploy(args: DeployArgs): Promise<DeployResult> {

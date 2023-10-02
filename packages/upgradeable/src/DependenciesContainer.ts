@@ -17,12 +17,12 @@ implements IDependenciesContainer<Config, Deployment> {
   ): Promise<Deployment> {
     const logger = new Logger(hre)
     const validation = new ValidationProvider(hre, logger)
-    const deployments = new DeploymentsAdapter(hre, validation, logger)
+    const deployments = new DeploymentsAdapter(hre, logger)
     const dependenciesService = new DependenciesAdapter(hre)
     const accounts = new AccountsAdapter(hre)
     const enironment = new EnvironmentAdapter(hre)
     return Promise.resolve(
-      new ServiceClass(config, dependenciesService, accounts, enironment, hre, deployments, logger),
+      new ServiceClass(config, dependenciesService, accounts, enironment, hre, deployments, logger, validation),
     )
   }
 }
