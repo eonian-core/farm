@@ -2,6 +2,7 @@ import { promises } from 'node:fs'
 import path from 'node:path'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
+import { Manifest } from '@openzeppelin/upgrades-core'
 
 /**
  * Testing hooks which are needed to clear deployments data between tests
@@ -23,6 +24,8 @@ export function clearDeployments(hre: HardhatRuntimeEnvironment) {
       await hre.deployments.delete(name)
       await hre.deployments.deleteDotFile(name)
     }
+
+    await deleteOZManifestFile()
   })
 
   /**
@@ -52,4 +55,13 @@ export function clearDeployments(hre: HardhatRuntimeEnvironment) {
     const deployments = await hre.deployments.all()
     return Object.keys(deployments)
   }
+
+  async function deleteOZManifestFile(): Promise<void> {
+    const manifest = await Manifest.forNetwork(hre.ethers.provider)
+    await manifest.lockedRun(async () => {
+      return promises.unlink(manifest.file)
+    })
+  }
+
+  return { deleteOZManifestFile }
 }

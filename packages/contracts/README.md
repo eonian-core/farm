@@ -90,3 +90,10 @@ Deployed contracts addresses can be found in [deployments/deployed.ts](./deploym
 
 * The project mainly utilize Gelato to trigger automated jobs.
 
+## Tips
+- How to enable ALL deploy-related logs in tests?
+```
+export HARDHAT_DEPLOY_LOG=true
+export DEBUG=@openzeppelin:*
+export DEBUG=hardhat:wighawag:*
+```

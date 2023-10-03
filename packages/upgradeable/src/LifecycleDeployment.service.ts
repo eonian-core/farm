@@ -66,6 +66,7 @@ export abstract class LifecycleDeploymentService {
       await this.afterUpgrade(result, dependencies)
     }
 
+    this.logger.log('Creating OpenZepellin data based on the deployed contract (if needed)...')
     await this.validation.saveImplementationData(args.contract, result.address)
   }
 
