@@ -50,9 +50,9 @@ export class ValidationProvider {
   }
 
   /**
- * Creates (or updates) OpenZepellin network data (.openzepellin folder).
- * Required for further contracts validation.
- */
+   * Creates (or updates) OpenZepellin network data (.openzepellin folder).
+   * Required for further contracts validation.
+   */
   async saveImplementationData(contractName: string, proxyAddress: string) {
     try {
       const factory = await this.hre.ethers.getContractFactory(contractName)
@@ -93,16 +93,17 @@ export class ValidationProvider {
       return
     }
 
+    if (!deployment.implementation) {
+      throw new Error(`No implementation address found for ${deploymentName}!`)
+    }
+
     const skipValidationFor = process.env.SKIP_DATA_IN_SYNC_VALIDATION ?? ''
     if (skipValidationFor.includes(artifactName) || skipValidationFor === '*') {
       this.logger.warn(`Variable "SKIP_DATA_IN_SYNC_VALIDATION" contains "${artifactName}", validation will be skipped for this artifact`)
       return
     }
 
-    const implementationAddress = await this.hre.upgrades.erc1967.getImplementationAddress(deployment.address)
-    if (implementationAddress !== deployment.implementation) {
-      throw new Error('The address of the implementation (local, from deployment) is not the same as the address on the blockchain!')
-    }
+    await this.validateImplementationInSyncWithRemote(deployment.address, deployment.implementation)
 
     const manifest = await Manifest.forNetwork(this.hre.network.provider)
     try {
@@ -117,6 +118,18 @@ export class ValidationProvider {
     }
     catch (error) {
       throw new Error(`implementation "${deployment.address}" of "${artifactName}" was not found in OZ network data file!`)
+    }
+  }
+
+  /**
+   * Checks if the local implementation address of the deployment is the same as on the blockchain.
+   * @param proxyAddress Proxy address of the contract.
+   * @param implementationAddress Implementation address to check (local).
+   */
+  public async validateImplementationInSyncWithRemote(proxyAddress: string, implementationAddress: string) {
+    const remoteImplementationAddress = await this.hre.upgrades.erc1967.getImplementationAddress(proxyAddress)
+    if (implementationAddress !== remoteImplementationAddress) {
+      throw new Error(`The address of the implementation (local, from deployment) is not the same as the address on the blockchain! Proxy: ${proxyAddress}`)
     }
   }
 

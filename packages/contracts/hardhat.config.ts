@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv'
 
 dotenv.config() // must be before all imports
 
-import { task } from 'hardhat/config'
 import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types/config'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
@@ -23,15 +22,7 @@ import { ChainSymobls, getTokenBySymbol } from '@eonian/upgradeable'
 import { binanceSmartChainFork, ethereumFork } from './hardhat/forks'
 import { ProvidersContracts, providers } from './hardhat/providers'
 
-import './hardhat/tasks/start-hardhat-node.ts'
-
-task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners()
-
-  for (const account of accounts) {
-    console.log(account.address)
-  }
-})
+import './hardhat/tasks'
 
 /** Stage to which contracts is deployed, allow create multiple protocol stages on one blockchain */
 export enum Stage {
