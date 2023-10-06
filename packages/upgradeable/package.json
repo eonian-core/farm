@@ -56,6 +56,7 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@openzeppelin/hardhat-upgrades": "1.28.0",
+    "@openzeppelin/upgrades-core": "1.30.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.11.37"
@@ -64,6 +65,7 @@
     "@nomicfoundation/hardhat-network-helpers": "^1.0.9",
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers@^0.3.0-beta.13",
     "@openzeppelin/hardhat-upgrades": "1.28.0",
+    "@openzeppelin/upgrades-core": "1.30.0",
     "@uniswap/token-lists": "^1.0.0-beta.33",
     "ethers": "^5.7.2",
     "hardhat-deploy": "^0.11.37"

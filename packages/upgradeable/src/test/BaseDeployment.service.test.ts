@@ -13,6 +13,7 @@ import {
   BaseDeploymentService,
   Stage,
 } from '../BaseDeployment.service'
+import type { ValidationProvider } from '../providers'
 
 describe('BaseDeploymentService', () => {
   let config: BaseDeploymentConfig
@@ -23,6 +24,7 @@ describe('BaseDeploymentService', () => {
   let enironmentMock: EnvironmentService
   let baseDeploymentService: BaseDeploymentService
   let hreMock: HardhatRuntimeEnvironment
+  let validationMock: ValidationProvider
 
   beforeEach(() => {
     config = {
@@ -42,6 +44,10 @@ describe('BaseDeploymentService', () => {
       getStage: jest.fn(async () => Stage.Development),
     } as EnvironmentService
     hreMock = {} as HardhatRuntimeEnvironment
+    validationMock = {
+      validate: jest.fn(),
+      saveImplementationData: jest.fn(),
+    } as unknown as ValidationProvider
     baseDeploymentService = new BaseDeploymentService(
       config,
       dependenciesServiceMock,
@@ -50,6 +56,7 @@ describe('BaseDeploymentService', () => {
       hreMock,
       deploymentsServiceMock,
       loggerMock,
+      validationMock,
     )
   })
 
@@ -67,6 +74,7 @@ describe('BaseDeploymentService', () => {
           hreMock,
           deploymentsServiceMock,
           loggerMock,
+          validationMock,
         )
       }).toThrow('Contract must have at least one tag')
     })

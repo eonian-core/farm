@@ -29,7 +29,7 @@ const MAX_RESTART_ATTEMPTS = 30
  * Starts the node on hardhat "test" command (only if the name of the current network is "hardhat").
  * Kills the RPC server process once all the tests are done.
  */
-task(TASK_TEST, async (_args, env, runSuper) => {
+export const startNodeTask = task(TASK_TEST, async (_args, env, runSuper) => {
   if (env.network.name !== 'hardhat') {
     log('Current network is not "hardhat", fork node will not be started')
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return

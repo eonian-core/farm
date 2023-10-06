@@ -3,11 +3,9 @@ import type { DeployResult, Deployment } from 'hardhat-deploy/types'
 import type { DeployArgs, DeploymentsService } from '../../LifecycleDeployment.service'
 import { DeploymentsAdapter } from '../Deployments.adapter'
 import type { Logger } from '../../logger/Logger'
-import { ValidationError, type ValidationProvider } from '../../providers'
 
 describe('DeploymentsAdapter', () => {
   let hreMock: HardhatRuntimeEnvironment
-  let validationMock: ValidationProvider
   let loggerMock: Logger
   let deploymentsAdapter: DeploymentsService
 
@@ -20,10 +18,7 @@ describe('DeploymentsAdapter', () => {
       log: jest.fn(),
       warn: jest.fn(),
     } as any
-    validationMock = {
-      validate: jest.fn(),
-    } as any
-    deploymentsAdapter = new DeploymentsAdapter(hreMock, validationMock, loggerMock)
+    deploymentsAdapter = new DeploymentsAdapter(hreMock, loggerMock)
   })
 
   describe('deploy', () => {
@@ -89,29 +84,6 @@ describe('DeploymentsAdapter', () => {
 
       const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs)).rejects.toEqual(
         new Error(`Contract name and artifact name cannot be the same: ${deployArgs.name}`),
-      )
-
-      expect(hreMock.deployments.deploy).not.toHaveBeenCalled()
-      expect(deployResult).toBeUndefined()
-    })
-
-    it('should throw exception if validation failed', async () => {
-      const deployArgs: DeployArgs = {
-        name: 'TestContract-1',
-        contract: 'TestContract',
-        deployer: '0x123',
-        owner: '0x456',
-        init: { args: ['arg1', 'arg2'] },
-      }
-
-      hreMock.deployments.deploy = jest.fn()
-
-      validationMock.validate = jest.fn().mockImplementation(() => {
-        throw new ValidationError('Generic validation error')
-      })
-
-      const deployResult = await expect(() => deploymentsAdapter.deploy(deployArgs)).rejects.toEqual(
-        new ValidationError('Generic validation error'),
       )
 
       expect(hreMock.deployments.deploy).not.toHaveBeenCalled()
