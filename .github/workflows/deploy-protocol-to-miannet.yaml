@@ -22,6 +22,7 @@ jobs:
     env:
       HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
       BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
+      SKIP_UPGRADE_VALIDATION: ${{ vars.SKIP_UPGRADE_VALIDATION }}
 
     steps:
       - uses: actions/checkout@v3

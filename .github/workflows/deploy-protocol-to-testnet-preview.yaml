@@ -26,7 +26,8 @@ jobs:
     env:
       HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # sepolia
       ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
-    
+      SKIP_UPGRADE_VALIDATION: ${{ vars.SKIP_UPGRADE_VALIDATION }}
+
     steps:
       - uses: actions/checkout@v3
         with:
