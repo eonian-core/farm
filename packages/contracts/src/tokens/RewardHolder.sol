@@ -19,7 +19,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     event OwnerAdded(address owner, uint index);
 
     /// @notice Accumulator of the total earned interest rate since the opening of the token
-    uint public rewardIndex = 1;
+    uint public rewardIndex;
 
     /// @notice The owners' reward indexes for eachas of the last time they accrued
     mapping(address => uint) public rewardOwnerIndex;
@@ -47,6 +47,8 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     function __RewardHolder_init_unchained() internal onlyInitializing {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+
+        rewardIndex = 1;
     }
 
     /// @dev set vault

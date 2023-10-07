@@ -30,6 +30,12 @@ export class ValidationProvider {
    */
   async validate(artifactName: string, deploymentName: string) {
     try {
+      const skipValidation = process.env.SKIP_UPGRADE_VALIDATION?.includes(artifactName)
+      if (skipValidation) {
+        this.logger.warn(`Variable "SKIP_UPGRADE_VALIDATION" contains "${artifactName}", validation will be skipped for this artifact`)
+        return
+      }
+
       this.logger.log('Validating local deployment data...')
       await this.validateDataInSync(artifactName, deploymentName)
 

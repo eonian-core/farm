@@ -3,12 +3,14 @@ import type { Artifact, HardhatRuntimeEnvironment } from 'hardhat/types'
 export function manageArtifacts(hre: HardhatRuntimeEnvironment) {
   const replacedArtifacts: Artifact[] = []
 
-  // Restore replaced artifacts
-  afterEach(async () => {
+  const resetArtifacts = async () => {
     for (const artifact of replacedArtifacts) {
       await save(artifact.contractName, artifact.sourceName, artifact, hre)
     }
-  })
+  }
+
+  // Restore replaced artifacts
+  afterEach(resetArtifacts)
 
   return {
     replaceArtifacts: async (sourceName: string, targetName: string): Promise<Artifact> => {
@@ -23,6 +25,7 @@ export function manageArtifacts(hre: HardhatRuntimeEnvironment) {
 
       return await hre.artifacts.readArtifact(targetName)
     },
+    resetArtifacts,
   }
 }
 
