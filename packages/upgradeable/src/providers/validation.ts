@@ -1,6 +1,7 @@
 import type { ContractFactory } from 'ethers'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { StandaloneOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
+import { Manifest } from '@openzeppelin/upgrades-core'
 import type { Logger } from '../logger/Logger'
 
 export class ValidationError extends Error {
@@ -12,10 +13,14 @@ export class ValidationError extends Error {
 }
 
 export class ValidationProvider {
+  private options: StandaloneOptions
+
   constructor(
     readonly hre: HardhatRuntimeEnvironment,
     readonly logger: Logger,
-  ) {}
+  ) {
+    this.options = { kind: 'uups', constructorArgs: [true] }
+  }
 
   /**
    * Performs contract validation. Checks implementation contracts and compares storage layout to prevent memory shifts.
@@ -23,7 +28,7 @@ export class ValidationProvider {
    * @param deploymentName Name of the deployed contract. Consist from the actual contract name and tags.
    * @param hre Hardhat runtime environment.
    */
-  async validate(artifactName: string, deploymentName: string, constructorArgs: unknown[]) {
+  async validate(artifactName: string, deploymentName: string) {
     try {
       const skipValidation = process.env.SKIP_UPGRADE_VALIDATION?.includes(artifactName)
       if (skipValidation) {
@@ -31,13 +36,14 @@ export class ValidationProvider {
         return
       }
 
-      const options = { kind: 'uups', constructorArgs } satisfies StandaloneOptions
+      this.logger.log('Validating local deployment data...')
+      await this.validateDataInSync(artifactName, deploymentName)
 
       this.logger.log('Validating contract implementation...')
-      await this.validateImplementation(artifactName, options)
+      await this.validateImplementation(artifactName)
 
       this.logger.log('Validating storage layout for compatibility...')
-      await this.validateUpgrade(artifactName, deploymentName, options)
+      await this.validateUpgrade(artifactName, deploymentName)
     }
     catch (error) {
       if (error instanceof Error) {
@@ -50,13 +56,87 @@ export class ValidationProvider {
   }
 
   /**
+   * Creates (or updates) OpenZepellin network data (.openzepellin folder).
+   * Required for further contracts validation.
+   */
+  async saveImplementationData(contractName: string, proxyAddress: string) {
+    try {
+      const factory = await this.hre.ethers.getContractFactory(contractName)
+      await this.hre.upgrades.forceImport(proxyAddress, factory, this.options)
+    }
+    catch (error) {
+      if (error instanceof Error) {
+        const message = (error.stack || error.message).toLowerCase()
+        const isClashError = message.includes('clash')
+        if (isClashError) {
+          return
+        }
+      }
+      throw error
+    }
+  }
+
+  /**
    * Validates an implementation contract without deploying it.
    * Refer to https://docs.openzeppelin.com/upgrades-plugins/1.x/api-hardhat-upgrades#validate-implementation.
    * @param artifactName Name of the compiled contract.
    */
-  private async validateImplementation(artifactName: string, options: StandaloneOptions) {
+  private async validateImplementation(artifactName: string) {
     const contractFactory = await this.getContractFactory(artifactName)
-    await this.hre.upgrades.validateImplementation(contractFactory, options)
+    await this.hre.upgrades.validateImplementation(contractFactory, this.options)
+  }
+
+  /**
+   * Checks if proxy & implementation addresses in the local deployment cache is the same as remote on the blockchain.
+   * @param artifactName Name of the compiled contract.
+   * @param deploymentName Name of the deployed contract. Consist from the actual contract name and tags.
+   * @param hre Hardhat runtime environment.
+   */
+  private async validateDataInSync(artifactName: string, deploymentName: string) {
+    const deployment = await this.hre.deployments.getOrNull(deploymentName)
+    if (!deployment) {
+      this.logger.debug(`No deployment record found for "${deploymentName}". Has the contract never been deployed?`)
+      return
+    }
+
+    if (!deployment.implementation) {
+      throw new Error(`No implementation address found for ${deploymentName}!`)
+    }
+
+    const skipValidationFor = process.env.SKIP_DATA_IN_SYNC_VALIDATION ?? ''
+    if (skipValidationFor.includes(artifactName) || skipValidationFor === '*') {
+      this.logger.warn(`Variable "SKIP_DATA_IN_SYNC_VALIDATION" contains "${artifactName}", validation will be skipped for this artifact`)
+      return
+    }
+
+    await this.validateImplementationInSyncWithRemote(deployment.address, deployment.implementation)
+
+    const manifest = await Manifest.forNetwork(this.hre.network.provider)
+    try {
+      await manifest.getProxyFromAddress(deployment.address)
+    }
+    catch (error) {
+      throw new Error(`Proxy "${deployment.address}" was not found in OZ network data file!`)
+    }
+
+    try {
+      await manifest.getDeploymentFromAddress(deployment.implementation)
+    }
+    catch (error) {
+      throw new Error(`implementation "${deployment.address}" of "${artifactName}" was not found in OZ network data file!`)
+    }
+  }
+
+  /**
+   * Checks if the local implementation address of the deployment is the same as on the blockchain.
+   * @param proxyAddress Proxy address of the contract.
+   * @param implementationAddress Implementation address to check (local).
+   */
+  public async validateImplementationInSyncWithRemote(proxyAddress: string, implementationAddress: string) {
+    const remoteImplementationAddress = await this.hre.upgrades.erc1967.getImplementationAddress(proxyAddress)
+    if (implementationAddress !== remoteImplementationAddress) {
+      throw new Error(`The address of the implementation (local, from deployment) is not the same as the address on the blockchain! Proxy: ${proxyAddress}`)
+    }
   }
 
   /**
@@ -66,18 +146,15 @@ export class ValidationProvider {
    * @param artifactName Name of the compiled contract.
    * @param deploymentName Name of the deployed contract. Consist from the actual contract name and tags.
    */
-  private async validateUpgrade(artifactName: string, deploymentName: string, options: StandaloneOptions) {
+  private async validateUpgrade(artifactName: string, deploymentName: string) {
     const deployment = await this.hre.deployments.getOrNull(deploymentName)
     if (!deployment) {
-      this.logger.log(`No deployment record found for "${deploymentName}". Has the contract never been deployed?`)
+      this.logger.debug(`No deployment record found for "${deploymentName}". Has the contract never been deployed?`)
       return
     }
 
-    const currentImplementationFactory = await this.getCurrentImplementationFactory(deploymentName)
-    await this.hre.upgrades.forceImport(deployment.address, currentImplementationFactory, options)
-
     const contractFactory = await this.getContractFactory(artifactName)
-    await this.hre.upgrades.validateUpgrade(deployment.address, contractFactory, options)
+    await this.hre.upgrades.validateUpgrade(deployment.address, contractFactory, this.options)
   }
 
   /**
@@ -92,19 +169,5 @@ export class ValidationProvider {
     }
     const artifact = await this.hre.artifacts.readArtifact(artifactName)
     return await this.hre.ethers.getContractFactory(artifact.abi, artifact.bytecode)
-  }
-
-  /**
-   * Returns a contract factory built from the current deployed implementation contract's data.
-   * @param deploymentName Name of the deployment to validate.
-   * @returnsContract factory created from existing implementation data.
-   */
-  private async getCurrentImplementationFactory(deploymentName: string): Promise<ContractFactory> {
-    deploymentName = `${deploymentName}_Implementation`
-    const deployment = await this.hre.deployments.get(deploymentName)
-    if (!deployment.bytecode) {
-      throw new Error(`No bytecode for deployment ${deploymentName}`)
-    }
-    return await this.hre.ethers.getContractFactory(deployment.abi, deployment.bytecode)
   }
 }

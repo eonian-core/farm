@@ -3,6 +3,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { DeployArgs, DeploymentsService } from './LifecycleDeployment.service'
 import { LifecycleDeploymentService } from './LifecycleDeployment.service'
 import type { Logger } from './logger/Logger'
+import type { ValidationProvider } from './providers'
 
 export interface DependenciesService {
   resolve: (names: Array<string>) => Promise<Deployment[]>
@@ -55,11 +56,12 @@ export class BaseDeploymentService extends LifecycleDeploymentService {
     readonly dependencies: DependenciesService,
     readonly accounts: AccountsService,
     readonly environment: EnvironmentService,
-    hre: HardhatRuntimeEnvironment,
-    deployments: DeploymentsService,
-    logger: Logger,
+    readonly hre: HardhatRuntimeEnvironment,
+    readonly deployments: DeploymentsService,
+    readonly logger: Logger,
+    readonly validation: ValidationProvider,
   ) {
-    super(hre, deployments, logger)
+    super(hre, deployments, logger, validation)
 
     if (config.tags.length < 1) {
       throw new Error('Contract must have at least one tag')

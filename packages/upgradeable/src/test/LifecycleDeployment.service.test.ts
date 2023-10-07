@@ -3,6 +3,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { DeployArgs, DeploymentsService } from '../LifecycleDeployment.service'
 import { LifecycleDeploymentService } from '../LifecycleDeployment.service'
 import type { Logger } from '../logger/Logger'
+import { ValidationError, type ValidationProvider } from '../providers'
 
 describe('LifecycleDeploymentService', () => {
   let dependencies: Deployment[]
@@ -17,6 +18,7 @@ describe('LifecycleDeploymentService', () => {
   let logger: Logger
   let args: DeployArgs
   let hreMock: HardhatRuntimeEnvironment
+  let validationMock: ValidationProvider
   let service: LifecycleDeploymentService
 
   class TestImplmenetation extends LifecycleDeploymentService {
@@ -59,10 +61,11 @@ describe('LifecycleDeploymentService', () => {
     afterDeployMock = jest.fn()
     afterUpgradeMock = jest.fn()
     hreMock = {} as any
+    validationMock = { validate: jest.fn(), saveImplementationData: jest.fn() } as any
 
     logger = { log: jest.fn(), warn: jest.fn(), debug: jest.fn() } as any
 
-    service = new TestImplmenetation(hreMock, deployments, logger)
+    service = new TestImplmenetation(hreMock, deployments, logger, validationMock)
   })
 
   afterEach(() => {
@@ -99,5 +102,18 @@ describe('LifecycleDeploymentService', () => {
     expect(afterUpgradeMock).toHaveBeenCalledWith(deployResult)
   })
 
-  // Add more test cases here as needed
+  it('should throw exception if validation failed', async () => {
+    const deployResult: DeployResult = {} as any
+    deployMock.mockResolvedValue(deployResult)
+
+    validationMock.validate = jest.fn().mockImplementation(() => {
+      throw new ValidationError('Generic validation error')
+    })
+
+    await expect(() => service.deploy()).rejects.toEqual(
+      new ValidationError('Generic validation error'),
+    )
+
+    expect(deployMock).not.toHaveBeenCalled()
+  })
 })
