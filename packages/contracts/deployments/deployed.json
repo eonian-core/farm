@@ -60120,7 +60120,7 @@
       "chainId": "11155111",
       "contracts": {
         "LossRatioHealthCheck|Default": {
-          "address": "0x8C69291C05c001889AF69cD196DE1292901e0758",
+          "address": "0x37F07b60d5e7Fc5E4B2342d9A7968c9d1b8D1676",
           "abi": [
             {
               "anonymous": false,
@@ -60440,7 +60440,7 @@
           ]
         },
         "LossRatioHealthCheck|Default_Implementation": {
-          "address": "0x974b30076Ed17117f283129f83CEae103321D4A3",
+          "address": "0xFEA351A235245eE6769a4AdEfcCC95Ce6ED0fdcF",
           "abi": [
             {
               "inputs": [
@@ -60747,7 +60747,7 @@
           ]
         },
         "LossRatioHealthCheck|Default_Proxy": {
-          "address": "0x8C69291C05c001889AF69cD196DE1292901e0758",
+          "address": "0x37F07b60d5e7Fc5E4B2342d9A7968c9d1b8D1676",
           "abi": [
             {
               "inputs": [
@@ -60821,7 +60821,7 @@
           ]
         },
         "VaultFounderToken|Asset[BUSD]": {
-          "address": "0xBE27e1A0Ec761Cec16380e68303a594c65048168",
+          "address": "0xaf653Dcbe62B403D95680F76F552D3005712b833",
           "abi": [
             {
               "anonymous": false,
@@ -62153,7 +62153,7 @@
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Implementation": {
-          "address": "0x2A5028FA35d94Aa74eAbdA3CA2bBcdCB57f9555e",
+          "address": "0xc13225c1098F71F263F1BFD9014d15f95901b9cA",
           "abi": [
             {
               "inputs": [
@@ -63472,7 +63472,7 @@
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Proxy": {
-          "address": "0xBE27e1A0Ec761Cec16380e68303a594c65048168",
+          "address": "0xaf653Dcbe62B403D95680F76F552D3005712b833",
           "abi": [
             {
               "inputs": [
@@ -63546,7 +63546,7 @@
           ]
         },
         "VaultFounderToken|Asset[USDC]": {
-          "address": "0x32DA02021dFB628Fb4a37Bb7dAE454b084dC49a5",
+          "address": "0x264E658931ab81c4B37AFDBF8ad9a877C5BEB861",
           "abi": [
             {
               "anonymous": false,
@@ -64878,7 +64878,7 @@
           ]
         },
         "VaultFounderToken|Asset[USDC]_Implementation": {
-          "address": "0xeD3dEDe229749Cd04Ac00B2107F7A1dFC571b1A2",
+          "address": "0x5DF9353A8B2f7f300f6b91D326766773e5854D6c",
           "abi": [
             {
               "inputs": [
@@ -66197,7 +66197,7 @@
           ]
         },
         "VaultFounderToken|Asset[USDC]_Proxy": {
-          "address": "0x32DA02021dFB628Fb4a37Bb7dAE454b084dC49a5",
+          "address": "0x264E658931ab81c4B37AFDBF8ad9a877C5BEB861",
           "abi": [
             {
               "inputs": [
@@ -66271,7 +66271,7 @@
           ]
         },
         "VaultFounderToken|Asset[USDT]": {
-          "address": "0xC6d642E1BA953D05e2f9d9b76B6cFf8a512818D7",
+          "address": "0x6bD18204621C2ed91d60EbDC33B6E425d3EaB707",
           "abi": [
             {
               "anonymous": false,
@@ -67603,7 +67603,7 @@
           ]
         },
         "VaultFounderToken|Asset[USDT]_Implementation": {
-          "address": "0x9cD0b85028041C484dBbb25d1a40Df3a4FB7b0a5",
+          "address": "0x3133696d6F3F07D033F4AD035C5023aB00434202",
           "abi": [
             {
               "inputs": [
@@ -68922,7 +68922,7 @@
           ]
         },
         "VaultFounderToken|Asset[USDT]_Proxy": {
-          "address": "0xC6d642E1BA953D05e2f9d9b76B6cFf8a512818D7",
+          "address": "0x6bD18204621C2ed91d60EbDC33B6E425d3EaB707",
           "abi": [
             {
               "inputs": [
@@ -68996,7 +68996,7 @@
           ]
         },
         "Vault|Asset[BUSD]": {
-          "address": "0xb47e6449E3af627c682A128e046F9C0903E42BBc",
+          "address": "0x6C8417C42f21567F38925F70dD3374bfFA0a1865",
           "abi": [
             {
               "anonymous": false,
@@ -71288,7 +71288,7 @@
           ]
         },
         "Vault|Asset[BUSD]_Implementation": {
-          "address": "0xC25ba706207ce10f30253EB8Ab32453803e07640",
+          "address": "0x484642c161b81Fde4e5c43a8433B8E9C780176B5",
           "abi": [
             {
               "inputs": [
@@ -73567,7 +73567,7 @@
           ]
         },
         "Vault|Asset[BUSD]_Proxy": {
-          "address": "0xb47e6449E3af627c682A128e046F9C0903E42BBc",
+          "address": "0x6C8417C42f21567F38925F70dD3374bfFA0a1865",
           "abi": [
             {
               "inputs": [
@@ -73641,7 +73641,7 @@
           ]
         },
         "Vault|Asset[USDC]": {
-          "address": "0x01eDbd4Ce7F594383367ea04C71f7672Cd70f14D",
+          "address": "0xE79AE74A752f34Fc37ac42b5AB9Cc38d844904e9",
           "abi": [
             {
               "anonymous": false,
@@ -75933,7 +75933,7 @@
           ]
         },
         "Vault|Asset[USDC]_Implementation": {
-          "address": "0x7dac11dB0010554369D50a8fcaCab429442D7336",
+          "address": "0x602572577C886958F05812ff2C197C3c2Be8a010",
           "abi": [
             {
               "inputs": [
@@ -78212,7 +78212,7 @@
           ]
         },
         "Vault|Asset[USDC]_Proxy": {
-          "address": "0x01eDbd4Ce7F594383367ea04C71f7672Cd70f14D",
+          "address": "0xE79AE74A752f34Fc37ac42b5AB9Cc38d844904e9",
           "abi": [
             {
               "inputs": [
@@ -78286,7 +78286,7 @@
           ]
         },
         "Vault|Asset[USDT]": {
-          "address": "0x1E8bDAfa3067d814F7416763D8e39F168F528aC6",
+          "address": "0xaaF4F4fb77bE4C565826e5F9844E5dDc40990eb5",
           "abi": [
             {
               "anonymous": false,
@@ -80578,7 +80578,7 @@
           ]
         },
         "Vault|Asset[USDT]_Implementation": {
-          "address": "0x9e9Bf1226632697A32Ec2aa51E09DC0f59926bf0",
+          "address": "0xed6E4b732CDF4C206B72131f14A9aA9EC1a8b07F",
           "abi": [
             {
               "inputs": [
@@ -82857,7 +82857,7 @@
           ]
         },
         "Vault|Asset[USDT]_Proxy": {
-          "address": "0x1E8bDAfa3067d814F7416763D8e39F168F528aC6",
+          "address": "0xaaF4F4fb77bE4C565826e5F9844E5dDc40990eb5",
           "abi": [
             {
               "inputs": [
