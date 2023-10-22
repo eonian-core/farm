@@ -78,6 +78,11 @@ jobs:
           default_author: user_info
           message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+
+      - name: Verify deployment result
+        run: |-
+          cd packages/contracts
+          yarn hardhat check-past-deployment-result
           
 
   publish-source-code:

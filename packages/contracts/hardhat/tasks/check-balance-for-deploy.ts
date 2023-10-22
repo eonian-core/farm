@@ -6,7 +6,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { DeployFunction } from 'hardhat-deploy/types'
 
 export const checkBalanceForDeploy = task(TASK_DEPLOY, async (_args, hre: HardhatRuntimeEnvironment, runSuper) => {
-  if (hre.network.name === 'hardhat') {
+  if (hre.network.name === 'hardhat' && !process.env.TEST_DEPLOY) {
     return runSuper(_args)
   }
   const gasUsedTotal = await getEstimatedDeploymentGas(hre)
@@ -52,7 +52,8 @@ async function getGasUsedForDeployment(deployFunction: DeployFunction, hre: Hard
 
   const deploymentName = await getDeploymentName(contractName, hre)
   if (!deploymentName) {
-    return await getEstimatedGasPrice(hre)
+    // If the contract has never been deployed, use the average gas price.
+    return await getAverageGasPrice(hre)
   }
 
   const proxyDeployment = await hre.deployments.get(`${deploymentName}_Proxy`)
@@ -71,7 +72,11 @@ async function getGasUsedForDeployment(deployFunction: DeployFunction, hre: Hard
   return total
 }
 
-async function getEstimatedGasPrice(hre: HardhatRuntimeEnvironment) {
+/**
+ * Returns the average gas price for a single deployment.
+ * Used to obtain an estimate of the value of a contract that has not yet been deployed.
+ */
+async function getAverageGasPrice(hre: HardhatRuntimeEnvironment) {
   const deployments = await hre.deployments.all()
   const deploymentNames = Object.keys(deployments)
   let total = hre.ethers.BigNumber.from(0)
@@ -91,12 +96,12 @@ async function getDeploymentName(contractName: string, hre: HardhatRuntimeEnviro
   const deploymentNames = Object.keys(deployments)
 
   for (const name of deploymentNames) {
-    const isContractRelated = name.split('|').at(0) === contractName
     const hasSuffix = name.endsWith('_Implementation') || name.endsWith('_Proxy')
     if (hasSuffix) {
       continue
     }
 
+    const isContractRelated = name.split('|').at(0) === contractName
     if (isContractRelated) {
       return name
     }

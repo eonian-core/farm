@@ -1,7 +1,7 @@
 import type { DeployResult, Deployment } from 'hardhat-deploy/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { Logger } from './logger/Logger'
-import type { ValidationProvider } from './providers'
+import type { DeployErrorHandler, ValidationProvider } from './providers'
 
 export interface DeployArgs {
   /** Name of artifact to deploy, will be used to reference contract in dependencies */
@@ -41,33 +41,40 @@ export abstract class LifecycleDeploymentService {
     readonly deployments: DeploymentsService,
     readonly logger: Logger,
     readonly validation: ValidationProvider,
+    readonly deployErrorHandler: DeployErrorHandler,
   ) {}
 
   async deploy() {
     const dependencies = await this.onResolveDependencies()
     this.logger.debug('Resolved dependencies', dependencies)
+
     const args = await this.onResolveArgs(dependencies)
     this.logger.log('Resolved deployment args', args)
 
-    this.logger.log(`Performing contract validation for "${args.name}"...`)
-    await this.validation.validate(args.contract, args.name)
+    try {
+      this.logger.log(`Performing contract validation for "${args.name}"...`)
+      await this.validation.validate(args.contract, args.name)
 
-    const isDeployedBefore = await this.deployments.isDeployed(args.name)
+      const isDeployedBefore = await this.deployments.isDeployed(args.name)
 
-    const result = await this.onDeploy(args)
-    this.logger.debug('Deployed contract', result)
+      const result = await this.onDeploy(args)
+      this.logger.debug('Deployed contract', result)
 
-    if (!isDeployedBefore) {
-      this.logger.log('Contract wasn\'t deployed before, run afterDeploy hook')
-      await this.afterDeploy(result, dependencies)
+      if (!isDeployedBefore) {
+        this.logger.log('Contract wasn\'t deployed before, run afterDeploy hook')
+        await this.afterDeploy(result, dependencies)
+      }
+      else {
+        this.logger.log('Contract was deployed before, run afterUpgrade hook')
+        await this.afterUpgrade(result, dependencies)
+      }
+
+      this.logger.log('Creating OpenZepellin data based on the deployed contract (if needed)...')
+      await this.validation.saveImplementationData(args.contract, result.address)
     }
-    else {
-      this.logger.log('Contract was deployed before, run afterUpgrade hook')
-      await this.afterUpgrade(result, dependencies)
+    catch (error) {
+      await this.deployErrorHandler.handleDeployError(error, args.name)
     }
-
-    this.logger.log('Creating OpenZepellin data based on the deployed contract (if needed)...')
-    await this.validation.saveImplementationData(args.contract, result.address)
   }
 
   async onDeploy(args: DeployArgs): Promise<DeployResult> {

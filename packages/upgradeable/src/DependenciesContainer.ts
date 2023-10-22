@@ -20,9 +20,9 @@ implements IDependenciesContainer<Config, Deployment> {
     const deployments = new DeploymentsAdapter(hre, logger)
     const dependenciesService = new DependenciesAdapter(hre)
     const accounts = new AccountsAdapter(hre)
-    const enironment = new EnvironmentAdapter(hre)
+    const environment = new EnvironmentAdapter(hre)
     return Promise.resolve(
-      new ServiceClass(config, dependenciesService, accounts, enironment, hre, deployments, logger, validation),
+      new ServiceClass(config, dependenciesService, accounts, environment, hre, deployments, logger, validation),
     )
   }
 }
