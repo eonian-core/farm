@@ -1,15 +1,24 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
 import { BigNumber } from 'ethers'
-import { ValidationError } from '@eonian/upgradeable'
+import { DeployErrorHandler, ValidationError } from '@eonian/upgradeable'
 import type { Stub_Contract, Stub_ContractChild, Stub_ContractChildSimpleUpgrade, Stub_ContractSimpleUpgrade } from '../../typechain-types'
 import { expectImplementationMatch } from './asserts'
 import { clearDeployments, deployContract, getDeploymentEvents, manageArtifacts } from './helpers'
 
 describe('Upgrade', () => {
+  const deployErrorHandler = new DeployErrorHandler(hre)
   const { replaceArtifacts, resetArtifacts } = manageArtifacts(hre)
 
   clearDeployments(hre)
+
+  beforeEach(async () => {
+    await deployErrorHandler.createErrorManifestFile()
+  })
+
+  afterEach(async () => {
+    await deployErrorHandler.removeErrorManifestFile()
+  })
 
   it('Should deploy and upgrade proxy (check upgrade events)', async () => {
     const options = {
@@ -118,7 +127,9 @@ describe('Upgrade', () => {
 
     await replaceArtifacts('Stub_ContractInvalidUpgrade', 'Stub_Contract')
 
-    await expect(deployContract('Stub_Contract', options, hre)).to.be.rejectedWith(ValidationError)
+    await deployContract('Stub_Contract', options, hre)
+
+    await expect(deployErrorHandler.checkDeployResult()).to.be.rejectedWith(Error)
   })
 
   it('Should validate storage layout before upgrade (with inheritance)', async () => {
@@ -133,7 +144,9 @@ describe('Upgrade', () => {
 
     await replaceArtifacts('Stub_ContractChildWithInvalidParent', 'Stub_ContractChild')
 
-    await expect(deployContract('Stub_ContractChild', options, hre)).to.be.rejectedWith(ValidationError)
+    await deployContract('Stub_ContractChild', options, hre)
+
+    await expect(deployErrorHandler.checkDeployResult()).to.be.rejectedWith(Error)
   })
 
   it('Should skip validation if "SKIP_UPGRADE_VALIDATION" is set', async () => {

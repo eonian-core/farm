@@ -43,6 +43,30 @@ export const startNodeTask = task(TASK_TEST, async (_args, env, runSuper) => {
   await runTask(env, runSuper)
 })
 
+task('run-fork-server')
+  .addParam('time', 'Represents the time in minutes, indicating how long the server will be active')
+  .setAction(async (_args, env) => {
+    if (env.network.name !== 'hardhat') {
+      log('Current network is not "hardhat", fork node will not be started')
+      return
+    }
+    const childProcess = await startNode(env)
+    if (childProcess) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { time = '10' } = _args ?? {}
+      const { url } = env.network.config as HttpNetworkConfig
+      console.log(`Node is up and running on ${url ?? 'http://127.0.0.1:8545'}! TTL is ${time} minutes.`)
+
+      await new Promise(resolve => setTimeout(resolve, +time * 60 * 1000))
+
+      const { pid } = childProcess
+      if (pid) {
+        console.log(`Stopping node (PID: ${pid})...`)
+        await killProcess(pid)
+      }
+    }
+  })
+
 async function runTask(env: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<unknown>, attempt = 0) {
   try {
     console.log(`Starting node... ${attempt ? `Attempt: ${attempt + 1}` : ''}`.trim())

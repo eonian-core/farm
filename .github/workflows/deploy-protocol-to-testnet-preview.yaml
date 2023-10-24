@@ -61,7 +61,7 @@ jobs:
           cd packages/contracts
           yarn hardhat deploy
 
-      # Usefull for automated scripts
+      # Useful for automated scripts
       - name: Export deployments to JSON config
         run: |-
           cd packages/contracts
@@ -80,9 +80,15 @@ jobs:
           message: '[skip ci] Deployed contracts to Preview / Sepolia Testnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
 
+      - name: Verify deployment result
+        run: |-
+          cd packages/contracts
+          yarn hardhat check-past-deployment-result
+
   publish-source-code:
     name: Publish Source Code
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     # Etherscan unstable and can fail, 
     # need publish code separatly from deploy to save deployed contracts
     needs: deploy
