@@ -12,8 +12,6 @@ task(TASK_DEPLOY, async (_args, hre, runSuper) => {
     return runSuper(_args)
   }
 
-  await hre.run('compile')
-
   const deployErrorHandler = new DeployErrorHandler(hre)
   await deployErrorHandler.createErrorManifestFile()
 
