@@ -11,7 +11,7 @@ export const checkBalanceForDeploy = task(TASK_DEPLOY, async (_args, hre: Hardha
   }
   const gasUsedTotal = await getEstimatedDeploymentGas(hre)
   const gasPrice = await hre.ethers.provider.getGasPrice()
-  const estimatedDeploymentPrice = gasPrice.mul(gasUsedTotal).mul(120).div(100)
+  const estimatedDeploymentPrice = gasPrice.mul(gasUsedTotal).mul(120).div(100) // Multiply to extra 20% just for case
   const availableBalance = await getDeployerBalance(hre)
 
   const requiredBalance = hre.ethers.utils.formatEther(estimatedDeploymentPrice)
