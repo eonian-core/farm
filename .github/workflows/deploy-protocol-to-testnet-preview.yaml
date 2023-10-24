@@ -88,6 +88,7 @@ jobs:
   publish-source-code:
     name: Publish Source Code
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     # Etherscan unstable and can fail, 
     # need publish code separatly from deploy to save deployed contracts
     needs: deploy
