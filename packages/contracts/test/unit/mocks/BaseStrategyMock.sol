@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity >=0.8.0;
 
 import "contracts/strategies/BaseStrategy.sol";
@@ -166,5 +166,9 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         returns (uint256 amountFreed)
     {
         return _liquidateAllPositionsReturn;
+    }
+
+    function freeAssets() public returns (uint256) {
+        return _freeAssets();
     }
 }

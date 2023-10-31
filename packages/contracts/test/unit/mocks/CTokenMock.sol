@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
 import {ERC20Mock} from "./ERC20Mock.sol";
@@ -17,6 +17,8 @@ contract CTokenMock is ERC20, ICToken {
     uint256 public supplyRatePerBlock;
     uint256 public exchangeRateCurrent;
     uint256 public accrueInterest;
+    uint256 public loss;
+    uint256 public fraudLoss;
 
     constructor(ERC20Mock __underlying) ERC20("CToken", "CT") {
         setUnderlying(__underlying);
@@ -54,6 +56,14 @@ contract CTokenMock is ERC20, ICToken {
 
     function setAccrueInterest(uint256 _accrueInterest) public {
         accrueInterest = _accrueInterest;
+    }
+
+    function setLoss(uint256 _loss) public {
+        loss = _loss;
+    }
+
+    function setFraudProtocolLoss(uint256 _fraudLoss) public {
+        fraudLoss = _fraudLoss;
     }
 
     function decimals() public view override(ICToken, ERC20) returns (uint8) {
@@ -113,7 +123,7 @@ contract CTokenMock is ERC20, ICToken {
         returns (uint256)
     {
         // For testing purposes let's consider that balance = underlying balance
-        return balanceOf(owner);
+        return balanceOf(owner) - loss;
     }
 
     function getAccountSnapshot(
@@ -177,6 +187,7 @@ contract CTokenMock is ERC20, ICToken {
     function mint(uint256 mintAmount) external override returns (uint256) {
         _mint(address(msg.sender), mintAmount);
         _underlying.mint(address(this), mintAmount);
+        _underlying.burn(msg.sender, mintAmount);
         return 0;
     }
 
@@ -195,8 +206,8 @@ contract CTokenMock is ERC20, ICToken {
     function redeemUnderlying(
         uint256 redeemAmount
     ) external override returns (uint256) {
-        _burn(address(msg.sender), redeemAmount);
-        _underlying.transfer(msg.sender, redeemAmount);
+        _burn(address(msg.sender), redeemAmount - fraudLoss);
+        _underlying.transfer(msg.sender, redeemAmount - fraudLoss);
         return 0;
     }
 

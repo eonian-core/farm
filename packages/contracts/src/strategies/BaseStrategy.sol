@@ -159,6 +159,9 @@ abstract contract BaseStrategy is
 
         uint256 totalDebt = lender.currentDebt();
         uint256 gasCost = _gasCost();
+
+        emit Harvested(profit, loss, debtPayment, outstandingDebt);
+
         performHealthCheck(
             address(this),
             profit,
@@ -168,8 +171,6 @@ abstract contract BaseStrategy is
             totalDebt,
             gasCost
         );
-
-        emit Harvested(profit, loss, debtPayment, outstandingDebt);
     }
 
     /// @inheritdoc Job
@@ -266,11 +267,13 @@ abstract contract BaseStrategy is
             uint256 debtPayment
         )
     {
-        uint256 amountFreed = _liquidateAllPositions();
-        if (amountFreed < outstandingDebt) {
-            loss = outstandingDebt - amountFreed;
-        } else if (amountFreed > outstandingDebt) {
-            profit = amountFreed - outstandingDebt;
+        _liquidateAllPositions();
+        uint256 freeBalance = _freeAssets();
+
+        if (freeBalance < outstandingDebt) {
+            loss = outstandingDebt - freeBalance;
+        } else if (freeBalance > outstandingDebt) {
+            profit = freeBalance - outstandingDebt;
         }
         debtPayment = outstandingDebt - loss;
     }
@@ -335,6 +338,19 @@ abstract contract BaseStrategy is
 
     /// @dev Fallback function that is called when the health check fails.
     function healthCheckFailedFallback() internal virtual override{
-        shutdown();
+        // Prevent cycle of failed health checks on shutdown
+        if (!paused()) {
+            shutdown();
+            _work();
+        }
+    }
+
+    /// @notice Returns free balance of the strategy.
+    function _freeAssets()
+        internal
+        virtual
+        returns(uint256)
+    {
+        return asset.balanceOf(address(this));
     }
 }

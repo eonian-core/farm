@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity >=0.8.0;
 
 import "contracts/strategies/ApeLendingStrategy.sol";
@@ -73,6 +73,14 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
         return super._harvest(outstandingDebt);
     }
 
+    function callWork() external {
+        _work();
+    }
+
+    function emitHealthCheckTriggered(uint8 result) public {
+        emit HealthCheckTriggered(result);
+    }
+
     function adjustPosition(uint256 outstandingDebt) public {
         return super._adjustPosition(outstandingDebt);
     }
@@ -100,5 +108,9 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
 
     function liquidateAllPositions() public returns (uint256 amountFreed) {
         return super._liquidateAllPositions();
+    }
+
+    function freeAssets() public returns (uint256) {
+        return _freeAssets();
     }
 }

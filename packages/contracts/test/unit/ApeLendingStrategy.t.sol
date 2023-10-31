@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
@@ -60,7 +60,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ApeLendingStrategyMock strategy;
 
     event DepositedToProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
-    event WithdrawnFromProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
+    event WithdrawnFromProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter, uint256 redeemedAmount);
 
     function setUp() public {
         vm.label(rewards, "rewards");
@@ -79,7 +79,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             defaultLPRRate,
             defaultFounderFee
         );
-        vault.setFounders(address(vaultFounderToken));
+        vaultFounderToken.setVault(vault);
 
         vm.label(address(vault), "vault");
 
@@ -201,6 +201,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         uint128 cTokenBalance,
         uint32 exchangeRate
     ) public {
+        // Give the required funds to Actor
+        underlying.mint(address(strategy), cTokenBalance);
+        assertEq(underlying.balanceOf(address(strategy)), cTokenBalance);
+
         vm.prank(address(strategy));
         cToken.mint(cTokenBalance);
         cToken.setExchangeRate(exchangeRate);
@@ -211,6 +215,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     }
 
     function testShouldReturnDepositedBalance(uint192 balance) public {
+        // Give the required funds to Actor
+        underlying.mint(address(strategy), balance);
+        assertEq(underlying.balanceOf(address(strategy)), balance);
+
         vm.prank(address(strategy));
         cToken.mint(balance);
 
@@ -230,6 +238,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     function testShouldReturnZeroEstimatedAccruedBananaPerBlockIfRateIsZero(
         uint32 balance
     ) public {
+        // Give the required funds to Actor
+        underlying.mint(address(strategy), balance);
+        assertEq(underlying.balanceOf(address(strategy)), balance);
+
         cToken.setExchangeRate(0);
         vm.prank(address(strategy));
         cToken.mint(balance);
@@ -269,6 +281,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         if (success) {
             totalSupply = uint192(Math.min(newTS, type(uint192).max));
         }
+
+        // Give the required funds to Actors
+        underlying.mint(address(strategy), cTokenBalance);
+        underlying.mint(address(this), totalSupply);
 
         cToken.setExchangeRate(exchangeRate);
         vm.prank(address(strategy));
@@ -502,6 +518,10 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(cTokenBalance > 0);
 
+        // Give the required funds to Actor
+        underlying.mint(address(strategy), cTokenBalance);
+        assertEq(underlying.balanceOf(address(strategy)), cTokenBalance);
+
         vm.prank(address(strategy));
         cToken.mint(cTokenBalance);
         underlying.mint(address(strategy), assetBalance);
@@ -577,7 +597,14 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         uint256 expectAmountToredeem = profit - assetBalance;
 
         vm.expectEmit(true, true, true, true);
-        emit WithdrawnFromProtocol(expectAmountToredeem, cTokenBalance, cTokenBalance, cTokenBalance - expectAmountToredeem, cTokenBalance - expectAmountToredeem);
+        emit WithdrawnFromProtocol(
+            expectAmountToredeem,
+            cTokenBalance,
+            cTokenBalance,
+            cTokenBalance - expectAmountToredeem,
+            cTokenBalance - expectAmountToredeem,
+            expectAmountToredeem
+        );
         (profit, loss, debtPayment) = strategy.harvest(outstandingDebt);
 
         uint256 expectedAssetsBalanceAfter = assetBalance + expectAmountToredeem;
@@ -703,7 +730,8 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
                 cTokenBalanceBefore,
                 cTokenUnderlyingBalance,
                 cTokenBalanceBefore - expectedWithdrawn,
-                cTokenUnderlyingBalance - expectedWithdrawn
+                cTokenUnderlyingBalance - expectedWithdrawn,
+                expectedWithdrawn
             );
         }
 
@@ -736,7 +764,7 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
 
         strategy.adjustPosition(outstandingDebt);
 
-        assertEq(underlying.balanceOf(address(strategy)), assetBalance);
+        assertEq(underlying.balanceOf(address(cToken)), assetBalance - outstandingDebt);
     }
 
     function testShouldNotLiquidatePositionIfHasSufficeBalance(
@@ -779,11 +807,27 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
         assertEq(amountFreed, deposits);
     }
 
+    function testShouldLiquidateAllWithScumLendingProtocol(uint128 deposits) public {
+        vm.assume(deposits > 100);
+        uint256 scumLoss = deposits / 10;
+
+        _setupHarvestData(0, deposits, 0);
+
+        // after setting scumLoss the strategy returns less than requested and liquidateAllPositions must return actual value
+        cToken.setFraudProtocolLoss(scumLoss);
+        uint256 amountFreed = strategy.liquidateAllPositions();
+        // strategy must report real claimed amount regardless documented debt
+        assertEq(amountFreed, deposits - scumLoss);
+    }
+
     function _setupHarvestData(
         uint128 assetBalance,
         uint128 cTokenBalance,
         uint128 currentDebt
     ) internal {
+        // Give the required funds to Actor as prerequisite to mint cToken
+        // because cTokenBalance will be transferred to cToken
+        underlying.mint(address(strategy), cTokenBalance);
         vm.prank(address(strategy));
         cToken.mint(cTokenBalance);
 
@@ -799,5 +843,45 @@ contract ApeLendingStrategyTest is TestWithERC1820Registry {
             abi.encodeWithSelector(IVault(vault).currentDebt.selector),
             abi.encode(currentDebt)
         );
+    }
+
+    function testShutdownStrategyForSignificantLoss(uint256 amount, uint256 loss) public {
+        vm.assume(amount > 100 && amount < 10 ** 22 && loss > amount / 4 && amount > loss);
+
+        // Give the required funds to Actor
+        underlying.mint(alice, amount);
+        assertEq(underlying.balanceOf(alice), amount);
+
+        // Allow to vault to take the Actor's assets
+        vm.prank(alice);
+        underlying.increaseAllowance(address(vault), type(uint256).max);
+
+        // Actor deposits funds to the vault
+        vm.prank(alice);
+        vault.deposit(amount);
+
+        assertEq(vault.freeAssets(), amount);
+        assertEq(strategy.freeAssets(), 0);
+        assertEq(strategy.depositedBalance(), 0);
+
+        // distribute funds to strategy
+        strategy.callWork();
+
+        assertEq(strategy.depositedBalance(), amount);
+        assertEq(vault.freeAssets(), 0);
+        assertEq(strategy.freeAssets(), 0);
+        assertEq(strategy.paused(), false);
+
+        // check if shutdown triggered
+        vm.expectEmit(true, true, true, true);
+        strategy.emitHealthCheckTriggered(2);
+
+        cToken.setLoss(loss);
+        strategy.callWork();
+
+        // check if not lost money returned back to vault after shutdown the strategy
+        assertEq(vault.freeAssets(), amount - loss);
+        assertEq(strategy.freeAssets(), 0);
+        assertEq(strategy.paused(), true);
     }
 }

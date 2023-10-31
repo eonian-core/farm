@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
@@ -398,6 +398,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(freed < outstandingDebt);
 
+        underlying.mint(address(baseStrategy), freed);
         baseStrategy.setLiquidateAllPositionsReturn(freed);
 
         (uint256 profit, uint256 loss, uint256 debtPayment) = baseStrategy
@@ -414,6 +415,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     ) public {
         vm.assume(freed >= outstandingDebt);
 
+        underlying.mint(address(baseStrategy), freed);
         baseStrategy.setLiquidateAllPositionsReturn(freed);
 
         (uint256 profit, uint256 loss, uint256 debtPayment) = baseStrategy
@@ -526,6 +528,7 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         // Give the required funds to Actor
         underlying.mint(alice, amount);
         assertEq(underlying.balanceOf(alice), amount);
+        assertEq(baseStrategy.freeAssets(), 0);
 
         // Allow to vault to take the Actor's assets
         vm.prank(alice);
@@ -536,8 +539,12 @@ contract BaseStrategyTest is TestWithERC1820Registry {
         vault.deposit(amount);
 
         // distribute funds to strategy
+        assertEq(baseStrategy.freeAssets(), 0);
         baseStrategy.setHarvestLoss(0);
         baseStrategy.callWork();
+
+        // expected behavior to have a full amount due to abstract logic in BaseStrategy
+        assertEq(baseStrategy.freeAssets(), amount);
 
         baseStrategy.setHarvestProfit(0);
         // loss should be greater then debt ratio threshold(15%)
