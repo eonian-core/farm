@@ -184,6 +184,12 @@ jobs:
           cd packages/contracts
           forge snapshot
 
+      # intent do force build for contract and having something to me commited at the end of the flow
+      - name: Temporal step to be removed after the fix
+        run: |-
+          cd packages/contracts
+          echo "line to remove later" >> README.md
+
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with: 

@@ -58,6 +58,12 @@ jobs:
 #          cd packages/contracts
 #          yarn hardhat deploy
 
+      # intent do force build for contract and having something to me commited at the end of the flow
+      - name: Temporal step to be removed after the fix
+        run: |-
+          cd packages/contracts
+          echo >> README.md
+
       # Usefull for automated scripts
       - name: Export deployments to JSON config
         run: |-
