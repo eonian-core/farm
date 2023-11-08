@@ -42,11 +42,11 @@
       "kind": "uups"
     },
     {
-      "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
+      "address": "0x0b637fa6fD40B5d0DD2E8Bc466Ec492ad337D4F1",
       "kind": "uups"
     },
     {
-      "address": "0x0b637fa6fD40B5d0DD2E8Bc466Ec492ad337D4F1",
+      "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
       "kind": "uups"
     },
     {
@@ -2820,7 +2820,414 @@
       },
       "allAddresses": [
         "0xA90E2Faca0680bE384d7063151d330A797CFd902",
+        "0xef62E5743b401EAb56e1673BAF53Fb801409cE98",
+        "0xBAeFF147Df201db95B510173a8F28Bd9D01dC14a",
+        "0x519Ea71f3268c7D32a90CF64B65121a895D5F6fb",
         "0x9041e0395611e69a6d705aC3aA45433C4513691A"
+      ]
+    },
+    "48e03e0096bbc0a470e3e0e062272eb2e24966d7c31889f7db6b08d273a8ae7d": {
+      "address": "0x398B9Ac316fb42E82F33B52164F9D6D14A1D72e1",
+      "layout": {
+        "solcVersion": "0.8.19",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC1967UpgradeUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:169"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "UUPSUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:111"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "SafeInitializable",
+            "src": "src/upgradeable/SafeInitializable.sol:15"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "151",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "201",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "202",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol:88"
+          },
+          {
+            "label": "lastWorkTime",
+            "offset": 0,
+            "slot": "251",
+            "type": "t_uint256",
+            "contract": "Job",
+            "src": "src/automation/Job.sol:32"
+          },
+          {
+            "label": "minimumBetweenExecutions",
+            "offset": 0,
+            "slot": "252",
+            "type": "t_uint256",
+            "contract": "Job",
+            "src": "src/automation/Job.sol:37"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "253",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "Job",
+            "src": "src/automation/Job.sol:44"
+          },
+          {
+            "label": "ops",
+            "offset": 0,
+            "slot": "303",
+            "type": "t_contract(IOps)4443",
+            "contract": "OpsReady",
+            "src": "src/automation/gelato/OpsReady.sol:14"
+          },
+          {
+            "label": "gelato",
+            "offset": 0,
+            "slot": "304",
+            "type": "t_address_payable",
+            "contract": "OpsReady",
+            "src": "src/automation/gelato/OpsReady.sol:15"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "305",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "OpsReady",
+            "src": "src/automation/gelato/OpsReady.sol:25"
+          },
+          {
+            "label": "isPrepaid",
+            "offset": 0,
+            "slot": "355",
+            "type": "t_bool",
+            "contract": "GelatoJobAdapter",
+            "src": "src/automation/GelatoJobAdapter.sol:14"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "356",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "GelatoJobAdapter",
+            "src": "src/automation/GelatoJobAdapter.sol:21"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "406",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "407",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "456",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "SafeUUPSUpgradeable",
+            "src": "src/upgradeable/SafeUUPSUpgradeable.sol:19"
+          },
+          {
+            "label": "healthCheck",
+            "offset": 0,
+            "slot": "506",
+            "type": "t_contract(IHealthCheck)4768",
+            "contract": "HealthChecker",
+            "src": "src/healthcheck/HealthChecker.sol:19"
+          },
+          {
+            "label": "healthCheckEnabled",
+            "offset": 20,
+            "slot": "506",
+            "type": "t_bool",
+            "contract": "HealthChecker",
+            "src": "src/healthcheck/HealthChecker.sol:20"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "507",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "HealthChecker",
+            "src": "src/healthcheck/HealthChecker.sol:27"
+          },
+          {
+            "label": "_paused",
+            "offset": 0,
+            "slot": "557",
+            "type": "t_bool",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:29"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "558",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "PausableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol:116"
+          },
+          {
+            "label": "lender",
+            "offset": 0,
+            "slot": "607",
+            "type": "t_contract(IStrategiesLender)4862",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:32"
+          },
+          {
+            "label": "asset",
+            "offset": 0,
+            "slot": "608",
+            "type": "t_contract(IERC20Upgradeable)1136",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:33"
+          },
+          {
+            "label": "debtThreshold",
+            "offset": 0,
+            "slot": "609",
+            "type": "t_uint256",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:36"
+          },
+          {
+            "label": "estimatedWorkGas",
+            "offset": 0,
+            "slot": "610",
+            "type": "t_uint256",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:39"
+          },
+          {
+            "label": "profitFactor",
+            "offset": 0,
+            "slot": "611",
+            "type": "t_uint256",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:42"
+          },
+          {
+            "label": "_nativeTokenPriceFeed",
+            "offset": 0,
+            "slot": "612",
+            "type": "t_contract(AggregatorV3Interface)45",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:45"
+          },
+          {
+            "label": "_assetPriceFeed",
+            "offset": 0,
+            "slot": "613",
+            "type": "t_contract(AggregatorV3Interface)45",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:48"
+          },
+          {
+            "label": "_assetDecimals",
+            "offset": 0,
+            "slot": "614",
+            "type": "t_uint256",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:51"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "615",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "BaseStrategy",
+            "src": "src/strategies/BaseStrategy.sol:58"
+          },
+          {
+            "label": "cToken",
+            "offset": 0,
+            "slot": "665",
+            "type": "t_contract(ICToken)7226",
+            "contract": "CTokenBaseStrategy",
+            "src": "src/strategies/CTokenBaseStrategy.sol:24"
+          },
+          {
+            "label": "rainMaker",
+            "offset": 0,
+            "slot": "666",
+            "type": "t_contract(IRainMaker)7330",
+            "contract": "CTokenBaseStrategy",
+            "src": "src/strategies/CTokenBaseStrategy.sol:26"
+          },
+          {
+            "label": "compToken",
+            "offset": 0,
+            "slot": "667",
+            "type": "t_contract(IERC20Upgradeable)1136",
+            "contract": "CTokenBaseStrategy",
+            "src": "src/strategies/CTokenBaseStrategy.sol:28"
+          },
+          {
+            "label": "secondPerBlock",
+            "offset": 0,
+            "slot": "668",
+            "type": "t_uint256",
+            "contract": "CTokenBaseStrategy",
+            "src": "src/strategies/CTokenBaseStrategy.sol:31"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "669",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "CTokenBaseStrategy",
+            "src": "src/strategies/CTokenBaseStrategy.sol:38"
+          },
+          {
+            "label": "minBananaToSell",
+            "offset": 0,
+            "slot": "719",
+            "type": "t_uint256",
+            "contract": "ApeLendingStrategy",
+            "src": "src/strategies/ApeLendingStrategy.sol:32"
+          },
+          {
+            "label": "pancakeRouter",
+            "offset": 0,
+            "slot": "720",
+            "type": "t_contract(IPancakeRouter)7258",
+            "contract": "ApeLendingStrategy",
+            "src": "src/strategies/ApeLendingStrategy.sol:34"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "721",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ApeLendingStrategy",
+            "src": "src/strategies/ApeLendingStrategy.sol:41"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_address_payable": {
+            "label": "address payable",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(AggregatorV3Interface)45": {
+            "label": "contract AggregatorV3Interface",
+            "numberOfBytes": "20"
+          },
+          "t_contract(ICToken)7226": {
+            "label": "contract ICToken",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IERC20Upgradeable)1136": {
+            "label": "contract IERC20Upgradeable",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IHealthCheck)4768": {
+            "label": "contract IHealthCheck",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IOps)4443": {
+            "label": "contract IOps",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IPancakeRouter)7258": {
+            "label": "contract IPancakeRouter",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IRainMaker)7330": {
+            "label": "contract IRainMaker",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IStrategiesLender)4862": {
+            "label": "contract IStrategiesLender",
+            "numberOfBytes": "20"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      },
+      "allAddresses": [
+        "0x398B9Ac316fb42E82F33B52164F9D6D14A1D72e1",
+        "0xBbA39Fbe0e8b3aec39086a4bDF2fb1E491903C0A",
+        "0x8bff233f9475AE05eDC782cb2258A0376F35dE7d"
       ]
     }
   }
