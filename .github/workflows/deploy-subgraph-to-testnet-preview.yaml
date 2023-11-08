@@ -91,3 +91,4 @@ jobs:
           default_author: github_actions
           message: '[skip ci] Deployed subgraph to Preview / Sepolia Testnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+          pull: '--rebase --autostash'
