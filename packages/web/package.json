@@ -25,6 +25,9 @@
     "release-logrocket": "node release-logrocket.cjs",
     "pre-commit": "lint-staged"
   },
+  "engines": {
+    "node": ">=18.18.0 <19.0.0"
+  },
   "dependencies": {
     "@apollo/client": "3.8.0-rc.0",
     "@apollo/experimental-nextjs-app-support": "0.3.4",

@@ -17,6 +17,9 @@
     "prepublish": "husky install && lerna exec --scope='@eonian/upgradeable' -- yarn prepublish",
     "pre-commit": "lerna run pre-commit --scope='@eonian/*'"
   },
+  "engines": {
+    "node": ">=18.18.0 <19.0.0"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
