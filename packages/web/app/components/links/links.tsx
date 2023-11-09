@@ -67,14 +67,16 @@ export function LinkWithIcon({
 export function InternalLink({ href, className, onClick, ...props }: LinkWithIconProps) {
   const dispatch = useAppDispatch()
 
+  const isSamePageLink = href.toString().startsWith('#')
+
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       onClick?.(e)
-      if (!e.defaultPrevented) {
+      if (!e.defaultPrevented && !isSamePageLink) {
         dispatch(setPageLoading(href.toString()))
       }
     },
-    [onClick, dispatch, href],
+    [onClick, dispatch, href, isSamePageLink],
   )
 
   return <LinkWithIcon href={href} className={clsx(styles.internalLink, className)} onClick={handleClick} {...props} />

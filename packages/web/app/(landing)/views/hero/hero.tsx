@@ -1,8 +1,9 @@
 import React from 'react'
-import { Inter } from 'next/font/google'
 import clsx from 'clsx'
+import { Inter } from 'next/font/google'
 import Container from '../../../components/contrainer/container'
 import IconScroll from '../../../components/icons/icon-scroll'
+import { useIsScrolled } from '../../../components/parallax/useIsScrolled'
 import styles from './hero.module.scss'
 
 const inter = Inter({
@@ -12,16 +13,17 @@ const inter = Inter({
 
 export interface HeroProps {
   children: React.ReactNode
-  description: React.ReactNode
 }
 
 export default function Hero({ children }: HeroProps) {
+  const isScrolled = useIsScrolled()
+
   return (
     <Container>
       <div className={clsx(styles.hero, inter.className)}>
         {children}
 
-        <IconScroll className={styles.scrollIcon} />
+        <IconScroll className={clsx(styles.scrollIcon, { [styles.hidden]: isScrolled })} />
       </div>
     </Container>
   )

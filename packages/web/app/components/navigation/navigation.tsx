@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import LogoWithText from '../logo/logo-with-text'
 import ConnectWallet from '../wallet/connect-wallet'
+import type { ResourceItem } from '../../features'
 import { showEarn } from '../../features'
 import styles from './navigation.module.scss'
 import { MenuItem } from './menu-item'
 import Menu from './menu'
-import type { NavigationItem } from './links'
 import { links, mobileLinks } from './links'
 
 export default function Navigation() {
@@ -42,7 +42,7 @@ export default function Navigation() {
 }
 
 export interface MenuItemListProps {
-  links: Array<NavigationItem>
+  links: Array<ResourceItem>
   onClick: () => void
 }
 

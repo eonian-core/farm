@@ -12,6 +12,7 @@ import { LinkInText } from '../components/links/link-in-text'
 import Mbr from '../components/mobile-break/mobile-break'
 import Card, { Target } from '../components/card/card'
 import IconCoin, { CoinIcon } from '../components/icons/icon-coin'
+import { WaitList } from '../components/waitlist/waitlist'
 import styles from './page.module.css'
 
 import Content from './content/en.mdx'
@@ -27,15 +28,12 @@ import FlowSlider from './views/how-it-works/flow-slider'
 import FlowSliderItem from './views/how-it-works/flow-slider-item'
 import HowItWorks from './views/how-it-works/how-it-works'
 import InDevelopment from './views/in-development/in-development'
-import Roadmap from './views/roadmap/roadmap'
-import RoadmapCheckpoint from './views/roadmap/roadmap-checkpoint'
-import RoadmapContainer from './views/roadmap/roadmap-container'
-import RoadmapDate from './views/roadmap/roadmap-date'
 import SafeInvestments from './views/safe-investments/safe-investments'
 import StableProfit from './views/stable-profit/stable-profit'
 import Founders from './views/founders/founders'
 import FoundersList from './views/founders/founders-list'
 import Founder from './views/founders/founder'
+import { MainButton } from './views/hero/main-button'
 
 const components = {
   Card,
@@ -57,10 +55,6 @@ const components = {
   IconExternal,
   IconRobot,
   IconDiscord,
-  Roadmap,
-  RoadmapCheckpoint,
-  RoadmapContainer,
-  RoadmapDate,
   InDevelopment,
   Target,
   HowItWorks,
@@ -71,6 +65,8 @@ const components = {
   SafeInvestments,
   Features,
   ul: FeaturesList,
+  WaitList,
+  MainButton,
   UsdtIcon: () => <IconCoin symbol={CoinIcon.USDT} width={18} height={18} />,
 }
 

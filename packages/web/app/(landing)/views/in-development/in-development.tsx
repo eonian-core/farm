@@ -1,8 +1,6 @@
 import Container from '../../../components/contrainer/container'
 import FadeInList from '../../../components/fade-in/fade-in-list'
 import { useIsTabletOrSmaller } from '../../../components/resize-hooks/screens'
-import { useLocalSocials } from '../../../socials'
-import { Socials } from '../../../components/socials/socials'
 import InDevelopmentParallax from './in-development-parallax'
 import styles from './in-development.module.scss'
 
@@ -12,7 +10,6 @@ interface ContainerProps {
 }
 
 export function InDevelopment({ children }: ContainerProps) {
-  const socials = useLocalSocials()
   const isTabletOrSmaller = useIsTabletOrSmaller()
 
   return (
@@ -27,8 +24,6 @@ export function InDevelopment({ children }: ContainerProps) {
           initialDelay={0}
         >
           {children}
-
-          <Socials socials={socials} />
         </FadeInList>
       </div>
     </Container>

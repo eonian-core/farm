@@ -1,0 +1,28 @@
+.container { 
+    position: relative;
+
+    &:before {
+        --blur-size: 1rem;
+
+        content: "";
+        position: absolute;
+        top: var(--blur-size);
+        left: var(--blur-size);
+        height: calc(100% - 2 * var(--blur-size));
+        width: calc(100% - 2 * var(--blur-size));
+
+        // expecte background linear gradient assigned by component user
+        border-radius: calc(2 * var(--border-radius-400));
+        z-index: -1;
+        mix-blend-mode: screen;
+        filter: blur(3rem);
+    }
+
+    img {
+        height: auto;
+        box-shadow: 0px 16px 31px -10px rgb(5, 6, 17);
+
+        transform: rotate3d(0, 1, 0, -3deg);
+        border-radius: var(--border-radius-500);
+    }
+}

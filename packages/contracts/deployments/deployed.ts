@@ -1,11 +1,11 @@
 export default {
   "56": [
     {
-      "name": "bsc_mainnet_staging",
+      "name": "bsc_mainnet_dev",
       "chainId": "56",
       "contracts": {
         "ApeLendingStrategy|Asset[BUSD]": {
-          "address": "0xA4F82018b6424FbD6943F29Ba10f4e4E62811E6F",
+          "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
           "abi": [
             {
               "anonymous": false,
@@ -1224,7 +1224,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[BUSD]_Implementation": {
-          "address": "0x0e45Ea75709805747B207C59C46A2d8D7D516D6F",
+          "address": "0xf8cad9341F1A7594778eED7bECB22b4b8a0c04Df",
           "abi": [
             {
               "inputs": [
@@ -2430,7 +2430,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[BUSD]_Proxy": {
-          "address": "0xA4F82018b6424FbD6943F29Ba10f4e4E62811E6F",
+          "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
           "abi": [
             {
               "inputs": [
@@ -2504,7 +2504,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDC]": {
-          "address": "0xf3F917C113E5E1c421c6DD6c071C2730AC977d71",
+          "address": "0x9408EbdAc707FDAC78ae406f10bbBab98cc8c264",
           "abi": [
             {
               "anonymous": false,
@@ -3723,7 +3723,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDC]_Implementation": {
-          "address": "0x7D2bE26A1e88826f7F7cfcC6f52DE5B1425DA16e",
+          "address": "0x0990E41A10d5694aaA16cf587fd92D5E1A167B25",
           "abi": [
             {
               "inputs": [
@@ -4929,7 +4929,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDC]_Proxy": {
-          "address": "0xf3F917C113E5E1c421c6DD6c071C2730AC977d71",
+          "address": "0x9408EbdAc707FDAC78ae406f10bbBab98cc8c264",
           "abi": [
             {
               "inputs": [
@@ -5003,7 +5003,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDT]": {
-          "address": "0x7448A6ef6faefedE25fc46b1274B4D0FBA23074B",
+          "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
           "abi": [
             {
               "anonymous": false,
@@ -6222,7 +6222,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDT]_Implementation": {
-          "address": "0x238e97DC62802928a743Bc6E72d4Ea8a3aA20579",
+          "address": "0xDf122bD0edF090a22aBB8F97A5eE375CF7d4DA08",
           "abi": [
             {
               "inputs": [
@@ -7428,7 +7428,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDT]_Proxy": {
-          "address": "0x7448A6ef6faefedE25fc46b1274B4D0FBA23074B",
+          "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
           "abi": [
             {
               "inputs": [
@@ -7502,7 +7502,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BUSD]": {
-          "address": "0xdbf7d2B84731e34429764a2238B31831b2bE86a3",
+          "address": "0xE896b0Fc1c8393440E937E6acc005BE285C3722E",
           "abi": [
             {
               "anonymous": false,
@@ -8834,7 +8834,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Implementation": {
-          "address": "0x259EAfdfA550969e9CF1aae25e72364DBaA1Fcc8",
+          "address": "0x9dA23008666f69e442CE87B412a9EA42dD6C12Bf",
           "abi": [
             {
               "inputs": [
@@ -10153,7 +10153,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Proxy": {
-          "address": "0xdbf7d2B84731e34429764a2238B31831b2bE86a3",
+          "address": "0xE896b0Fc1c8393440E937E6acc005BE285C3722E",
           "abi": [
             {
               "inputs": [
@@ -10227,7 +10227,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDC]": {
-          "address": "0x15872320624e09075549AD28e63c8B5BE7968885",
+          "address": "0x9c06fa1E80FCb38681635aD8D7BFE75a1b33cf16",
           "abi": [
             {
               "anonymous": false,
@@ -11559,7 +11559,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDC]_Implementation": {
-          "address": "0x9cAd6e95a2CF0a013F97AFa206bA801BFaC60A21",
+          "address": "0xD990E85E5f5fF0Df7059f19E4b701286e35A4EDf",
           "abi": [
             {
               "inputs": [
@@ -12878,7 +12878,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDC]_Proxy": {
-          "address": "0x15872320624e09075549AD28e63c8B5BE7968885",
+          "address": "0x9c06fa1E80FCb38681635aD8D7BFE75a1b33cf16",
           "abi": [
             {
               "inputs": [
@@ -12952,7 +12952,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDT]": {
-          "address": "0x7507c1D2aB81624822B7A8b30a6A94eA62EA3d26",
+          "address": "0x0b637fa6fD40B5d0DD2E8Bc466Ec492ad337D4F1",
           "abi": [
             {
               "anonymous": false,
@@ -14284,7 +14284,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDT]_Implementation": {
-          "address": "0x006e5e8b9c84e4D93bC50392E08A4Af4BA90F6f4",
+          "address": "0x9513d9820963E8a3F49B20eea21e316fC96da012",
           "abi": [
             {
               "inputs": [
@@ -15603,7 +15603,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDT]_Proxy": {
-          "address": "0x7507c1D2aB81624822B7A8b30a6A94eA62EA3d26",
+          "address": "0x0b637fa6fD40B5d0DD2E8Bc466Ec492ad337D4F1",
           "abi": [
             {
               "inputs": [
@@ -15677,7 +15677,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]": {
-          "address": "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058",
+          "address": "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4",
           "abi": [
             {
               "anonymous": false,
@@ -17969,7 +17969,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]_Implementation": {
-          "address": "0x9763264636CBdA03C933b4b093123b2d29A739F0",
+          "address": "0x7fAF26b193474d2002435cC3Df2855889FEB4FFD",
           "abi": [
             {
               "inputs": [
@@ -20248,7 +20248,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]_Proxy": {
-          "address": "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058",
+          "address": "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4",
           "abi": [
             {
               "inputs": [
@@ -20322,7 +20322,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]": {
-          "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
+          "address": "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89",
           "abi": [
             {
               "anonymous": false,
@@ -22614,7 +22614,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Implementation": {
-          "address": "0xbdD3cb34debAd5ECC386426451226F031C09D525",
+          "address": "0x4aa72Bca3042aC3653A963d6A5A91126446DB8BB",
           "abi": [
             {
               "inputs": [
@@ -24893,7 +24893,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Proxy": {
-          "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
+          "address": "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89",
           "abi": [
             {
               "inputs": [
@@ -24967,7 +24967,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]": {
-          "address": "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2",
+          "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
           "abi": [
             {
               "anonymous": false,
@@ -27259,7 +27259,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]_Implementation": {
-          "address": "0xCa3Baae34A6d5Bbf86d9338bD9D94E59FCd5851A",
+          "address": "0x8eBb48d40E6a93b2F0495d950a7F96c534dAfa5E",
           "abi": [
             {
               "inputs": [
@@ -29538,7 +29538,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]_Proxy": {
-          "address": "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2",
+          "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
           "abi": [
             {
               "inputs": [
@@ -29614,11 +29614,11 @@ export default {
       }
     },
     {
-      "name": "bsc_mainnet_dev",
+      "name": "bsc_mainnet_staging",
       "chainId": "56",
       "contracts": {
         "ApeLendingStrategy|Asset[BUSD]": {
-          "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
+          "address": "0xA4F82018b6424FbD6943F29Ba10f4e4E62811E6F",
           "abi": [
             {
               "anonymous": false,
@@ -32117,7 +32117,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[BUSD]_Proxy": {
-          "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
+          "address": "0xA4F82018b6424FbD6943F29Ba10f4e4E62811E6F",
           "abi": [
             {
               "inputs": [
@@ -32191,7 +32191,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDC]": {
-          "address": "0x9408EbdAc707FDAC78ae406f10bbBab98cc8c264",
+          "address": "0xf3F917C113E5E1c421c6DD6c071C2730AC977d71",
           "abi": [
             {
               "anonymous": false,
@@ -34690,7 +34690,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDC]_Proxy": {
-          "address": "0x9408EbdAc707FDAC78ae406f10bbBab98cc8c264",
+          "address": "0xf3F917C113E5E1c421c6DD6c071C2730AC977d71",
           "abi": [
             {
               "inputs": [
@@ -34764,7 +34764,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDT]": {
-          "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
+          "address": "0x7448A6ef6faefedE25fc46b1274B4D0FBA23074B",
           "abi": [
             {
               "anonymous": false,
@@ -37263,7 +37263,7 @@ export default {
           ]
         },
         "ApeLendingStrategy|Asset[USDT]_Proxy": {
-          "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
+          "address": "0x7448A6ef6faefedE25fc46b1274B4D0FBA23074B",
           "abi": [
             {
               "inputs": [
@@ -50784,7 +50784,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]_Proxy": {
-          "address": "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4",
+          "address": "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058",
           "abi": [
             {
               "inputs": [
@@ -50858,7 +50858,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]": {
-          "address": "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89",
+          "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
           "abi": [
             {
               "anonymous": false,
@@ -55429,7 +55429,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Proxy": {
-          "address": "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89",
+          "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
           "abi": [
             {
               "inputs": [
@@ -55503,7 +55503,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]": {
-          "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
+          "address": "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2",
           "abi": [
             {
               "anonymous": false,
