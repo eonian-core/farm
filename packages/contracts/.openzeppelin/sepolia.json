@@ -152,7 +152,11 @@
             "numberOfBytes": "1"
           }
         }
-      }
+      },
+      "allAddresses": [
+        "0xFEA351A235245eE6769a4AdEfcCC95Ce6ED0fdcF",
+        "0xB33Ce75bE0606645c470FFbd480c8001f41eeDD9"
+      ]
     },
     "01d9f36c864b4ffe09b9de245eae7f08f5ac469de835783c54083709d2fe69bc": {
       "address": "0xed6E4b732CDF4C206B72131f14A9aA9EC1a8b07F",
@@ -612,6 +616,9 @@
       },
       "allAddresses": [
         "0xed6E4b732CDF4C206B72131f14A9aA9EC1a8b07F",
+        "0xE62A3E8ac2477d2C74f236Ad7e2a8F97677b8481",
+        "0x2aFf4e3C40e5331907DDF1B9A60Ae851Ab51866B",
+        "0x9a73315C6c89A22a789A4DfD202875f18fFB54cD",
         "0x484642c161b81Fde4e5c43a8433B8E9C780176B5",
         "0x602572577C886958F05812ff2C197C3c2Be8a010"
       ]
@@ -1080,6 +1087,9 @@
       },
       "allAddresses": [
         "0x3133696d6F3F07D033F4AD035C5023aB00434202",
+        "0x093342167436dbfB79b1C704c818eaCDb72382e4",
+        "0xe03cAB61483FE9915db8CBFa786d585C3b72F439",
+        "0x69471d238315c9213eA5e60459fd49104442357b",
         "0xc13225c1098F71F263F1BFD9014d15f95901b9cA",
         "0x5DF9353A8B2f7f300f6b91D326766773e5854D6c"
       ]

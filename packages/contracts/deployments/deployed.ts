@@ -60476,7 +60476,7 @@ export default {
           ]
         },
         "LossRatioHealthCheck|Default_Implementation": {
-          "address": "0xFEA351A235245eE6769a4AdEfcCC95Ce6ED0fdcF",
+          "address": "0xB33Ce75bE0606645c470FFbd480c8001f41eeDD9",
           "abi": [
             {
               "inputs": [
@@ -62189,7 +62189,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Implementation": {
-          "address": "0xc13225c1098F71F263F1BFD9014d15f95901b9cA",
+          "address": "0x093342167436dbfB79b1C704c818eaCDb72382e4",
           "abi": [
             {
               "inputs": [
@@ -64914,7 +64914,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDC]_Implementation": {
-          "address": "0x5DF9353A8B2f7f300f6b91D326766773e5854D6c",
+          "address": "0xe03cAB61483FE9915db8CBFa786d585C3b72F439",
           "abi": [
             {
               "inputs": [
@@ -67639,7 +67639,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDT]_Implementation": {
-          "address": "0x3133696d6F3F07D033F4AD035C5023aB00434202",
+          "address": "0x69471d238315c9213eA5e60459fd49104442357b",
           "abi": [
             {
               "inputs": [
@@ -71324,7 +71324,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]_Implementation": {
-          "address": "0x484642c161b81Fde4e5c43a8433B8E9C780176B5",
+          "address": "0xE62A3E8ac2477d2C74f236Ad7e2a8F97677b8481",
           "abi": [
             {
               "inputs": [
@@ -75969,7 +75969,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Implementation": {
-          "address": "0x602572577C886958F05812ff2C197C3c2Be8a010",
+          "address": "0x2aFf4e3C40e5331907DDF1B9A60Ae851Ab51866B",
           "abi": [
             {
               "inputs": [
@@ -80614,7 +80614,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]_Implementation": {
-          "address": "0xed6E4b732CDF4C206B72131f14A9aA9EC1a8b07F",
+          "address": "0x9a73315C6c89A22a789A4DfD202875f18fFB54cD",
           "abi": [
             {
               "inputs": [
