@@ -1,39 +1,35 @@
-"use client";
+'use client'
 
-import React from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { MOBILE_SCREEN } from "../resize-hooks/screens";
-import { useWindowSize } from "../resize-hooks/useWindowSize";
+import React from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import { MOBILE_SCREEN } from '../resize-hooks/screens'
+import { useWindowSize } from '../resize-hooks/useWindowSize'
 
-import "./toast-container-wrapper.scss";
+import './toast-container-wrapper.scss'
 
-const ToastContainerWrapper = () => {
-  const [navHeight, setNavHeight] = React.useState(0);
-  const { width = 0, height = 0 } = useWindowSize();
+function ToastContainerWrapper() {
+  const [navHeight, setNavHeight] = React.useState(0)
+  const { width = 0, height = 0 } = useWindowSize()
 
   React.useEffect(() => {
-    const navElement = window.document.getElementById("navigation");
-    if (!navElement) 
-      return;
-    
-    const { height } = navElement.getBoundingClientRect();
-    setNavHeight(height);
-  }, [height]);
+    const navElement = window.document.getElementById('navigation')
+    if (!navElement) {
+      return
+    }
+
+    const { height } = navElement.getBoundingClientRect()
+    setNavHeight(height)
+  }, [height])
 
   const toastTopOffset = React.useMemo(() => {
-    if (width < MOBILE_SCREEN) 
-        return 0;
-    
-    return navHeight;
-  }, [width, navHeight]);
+    if (width < MOBILE_SCREEN) {
+      return 0
+    }
 
-  return (
-    <ToastContainer
-      position={toast.POSITION.TOP_LEFT}
-      theme="dark"
-      style={{ top: `${toastTopOffset}px` }}
-    />
-  );
-};
+    return navHeight
+  }, [width, navHeight])
 
-export default ToastContainerWrapper;
+  return <ToastContainer position={toast.POSITION.TOP_LEFT} theme="dark" style={{ top: `${toastTopOffset}px` }} />
+}
+
+export default ToastContainerWrapper

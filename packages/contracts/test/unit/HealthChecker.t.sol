@@ -6,10 +6,11 @@ import "forge-std/Test.sol";
 import "./mocks/HealthCheckerMock.sol";
 
 contract HealthCheckerTest is Test {
-    HealthCheckerMock healthChecker;
-    HealthCheck healthCheck;
+    HealthCheckerMock private healthChecker;
+    HealthCheck private healthCheck;
 
-    address culprit = vm.addr(3);
+    address private culprit = vm.addr(3);
+    address private strategy = vm.addr(4);
 
     function setUp() public {
         healthCheck = new HealthCheck();
@@ -50,52 +51,86 @@ contract HealthCheckerTest is Test {
         assertEq(healthChecker.healthCheckEnabled(), false);
     }
 
-    function testFailShouldNotPerformHealthCheckIfImplementationIsMissing()
-        public
+    function testFailShouldNotPerformHealthCheckIfImplementationIsMissing(
+        uint256 profit,
+        uint256 loss,
+        uint256 debtPayment,
+        uint256 debtOutstanding,
+        uint256 totalDebt,
+        uint256 gasCost
+    ) public
     {
         healthChecker.setHealthCheck(address(0));
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost))
         );
-        healthChecker.performHealthCheckExternal();
+        healthChecker.performHealthCheckExternal(strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost);
     }
 
-    function testFailShouldNotPerformHealthCheckIfDisabled() public {
+    function testFailShouldNotPerformHealthCheckIfDisabled(
+        uint256 profit,
+        uint256 loss,
+        uint256 debtPayment,
+        uint256 debtOutstanding,
+        uint256 totalDebt,
+        uint256 gasCost
+    ) public {
         healthChecker.setHealthCheckEnabled(false);
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost))
         );
-        healthChecker.performHealthCheckExternal();
+        healthChecker.performHealthCheckExternal(strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost);
     }
 
-    function testShouldEnableHealthCheckIfItWasDisabledAfterTheCheck() public {
+    function testShouldEnableHealthCheckIfItWasDisabledAfterTheCheck(
+        uint256 profit,
+        uint256 loss,
+        uint256 debtPayment,
+        uint256 debtOutstanding,
+        uint256 totalDebt,
+        uint256 gasCost
+    ) public {
         healthChecker.setHealthCheckEnabled(false);
-        healthChecker.performHealthCheckExternal();
+        healthChecker.performHealthCheckExternal(strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost);
         assertEq(healthChecker.healthCheckEnabled(), true);
     }
 
-    function testShouldPerformHealthCheck() public {
-        healthCheck.setSuccess(true);
+    function testShouldPerformHealthCheck(
+        uint256 profit,
+        uint256 loss,
+        uint256 debtPayment,
+        uint256 debtOutstanding,
+        uint256 totalDebt,
+        uint256 gasCost
+    ) public {
+        healthCheck.setResult(0);
 
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost))
         );
-        healthChecker.performHealthCheckExternal();
+        healthChecker.performHealthCheckExternal(strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost);
     }
 
-    function testShouldRevertIfHealthCheckIsUnsuccessful() public {
-        healthCheck.setSuccess(false);
+    function testShouldRevertIfHealthCheckIsUnsuccessfu(
+        uint256 profit,
+        uint256 loss,
+        uint256 debtPayment,
+        uint256 debtOutstanding,
+        uint256 totalDebt,
+        uint256 gasCost
+    ) public {
+        healthCheck.setResult(2);
 
         vm.expectCall(
             address(healthCheck),
-            abi.encodeCall(healthCheck.check, (address(0), 0, 0, 0, 0, 0))
+            abi.encodeCall(healthCheck.check, (strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost))
         );
 
         vm.expectRevert(HealthCheckFailed.selector);
 
-        healthChecker.performHealthCheckExternal();
+        healthChecker.performHealthCheckExternal(strategy, profit, loss, debtPayment, debtOutstanding, totalDebt, gasCost);
     }
 }

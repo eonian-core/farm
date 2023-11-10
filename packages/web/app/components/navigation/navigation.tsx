@@ -1,22 +1,23 @@
-"use client";
+'use client'
 
-import styles from "./navigation.module.scss";
-import LogoWithText from "../logo/logo-with-text";
-import { MenuItem } from "./menu-item";
-import { useState, useEffect, useCallback } from "react";
-import Menu from "./menu";
-import { links, mobileLinks } from "./links";
-import ConnectWallet from "../wallet/connect-wallet";
-import { ResourceItem, showEarn } from "../../features";
+import { useCallback, useEffect, useState } from 'react'
+import LogoWithText from '../logo/logo-with-text'
+import ConnectWallet from '../wallet/connect-wallet'
+import type { ResourceItem } from '../../features'
+import { showEarn } from '../../features'
+import styles from './navigation.module.scss'
+import { MenuItem } from './menu-item'
+import Menu from './menu'
+import { links, mobileLinks } from './links'
 
 export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = useCallback(() => setIsOpen(!isOpen), [isOpen]);
-  const closeMenu = useCallback(() => setIsOpen(false), []);
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleMenu = useCallback(() => setIsOpen(!isOpen), [isOpen])
+  const closeMenu = useCallback(() => setIsOpen(false), [])
 
   useEffect(() => {
-    window.document.body.classList.toggle(styles.fixedBody, isOpen);
-  }, [isOpen]);
+    window.document.body.classList.toggle(styles.fixedBody, isOpen)
+  }, [isOpen])
 
   return (
     <nav className={styles.navigation} id="navigation">
@@ -37,20 +38,20 @@ export default function Navigation() {
         </div>
       </div>
     </nav>
-  );
+  )
 }
 
 export interface MenuItemListProps {
-  links: Array<ResourceItem>;
-  onClick: () => void;
+  links: Array<ResourceItem>
+  onClick: () => void
 }
 
-export const MenuItemList = ({ links, onClick }: MenuItemListProps) => (
-  <>
+export function MenuItemList({ links, onClick }: MenuItemListProps) {
+  return <>
     {links.map(({ href, label }) => (
       <MenuItem key={href} href={href} onClick={onClick}>
         {label}
       </MenuItem>
     ))}
   </>
-);
+}

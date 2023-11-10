@@ -1,8 +1,9 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity >=0.8.0;
 
 import "contracts/strategies/BaseStrategy.sol";
 import "./SafeInitializableMock.sol";
+import "./VaultMock.sol";
 
 contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
     event HarvestCalled();
@@ -24,7 +25,8 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         uint256 _minReportInterval,
         bool _isPrepaid,
         AggregatorV3Interface __nativeTokenPriceFeed,
-        AggregatorV3Interface __assetPriceFeed
+        AggregatorV3Interface __assetPriceFeed,
+        address _healthCheck
     ) initializer {
         __BaseStrategy_init(
             _lender,
@@ -34,7 +36,7 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
             _isPrepaid,
             __nativeTokenPriceFeed,
             __assetPriceFeed,
-            address(0)
+            _healthCheck
         );
     }
 
@@ -100,6 +102,10 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         emit UpdatedProfitFactor(profitFactor);
     }
 
+    function emitHealthCheckTriggered(uint8 result) public {
+        emit HealthCheckTriggered(result);
+    }
+
     function _harvestAfterShutdown(
         uint256 outstandingDebt
     )
@@ -160,5 +166,9 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         returns (uint256 amountFreed)
     {
         return _liquidateAllPositionsReturn;
+    }
+
+    function freeAssets() public returns (uint256) {
+        return _freeAssets();
     }
 }

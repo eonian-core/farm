@@ -158,16 +158,19 @@ abstract contract BaseStrategy is
         _adjustPosition(outstandingDebt);
 
         uint256 totalDebt = lender.currentDebt();
+        uint256 gasCost = _gasCost();
+
+        emit Harvested(profit, loss, debtPayment, outstandingDebt);
+
         performHealthCheck(
             address(this),
             profit,
             loss,
             debtPayment,
             outstandingDebt,
-            totalDebt
+            totalDebt,
+            gasCost
         );
-
-        emit Harvested(profit, loss, debtPayment, outstandingDebt);
     }
 
     /// @inheritdoc Job
@@ -205,8 +208,14 @@ abstract contract BaseStrategy is
     /// @return "true" if the gas price (mult. to "profitFactor" is lower than the strategy profit, in USD).
     function _checkGasPriceAgainstProfit(uint256 profit) internal view returns (bool) {
         uint256 credit = lender.availableCredit();
-        uint256 gasCost = _gasPriceUSD() * estimatedWorkGas;
+        uint256 gasCost = _gasCost();
         return profitFactor * gasCost < _convertAmountToUSD(credit + profit);
+    }
+
+    /// @notice Calculates the gas cost for this transaction based on gas price and work
+    /// @return gas price
+    function _gasCost() internal view returns  (uint256) {
+        return _gasPriceUSD() * estimatedWorkGas;
     }
 
     /// @inheritdoc IStrategy
@@ -220,7 +229,7 @@ abstract contract BaseStrategy is
     }
 
     /// @notice Shutdown the strategy and revoke it form the lender.
-    function shutdown() external nonReentrant onlyOwner { // need check nonReentrant to avoid cyclic call
+    function shutdown() public nonReentrant onlyOwner { // need check nonReentrant to avoid cyclic call
         _pause();
         lender.revokeStrategy(address(this));
     }
@@ -258,11 +267,13 @@ abstract contract BaseStrategy is
             uint256 debtPayment
         )
     {
-        uint256 amountFreed = _liquidateAllPositions();
-        if (amountFreed < outstandingDebt) {
-            loss = outstandingDebt - amountFreed;
-        } else if (amountFreed > outstandingDebt) {
-            profit = amountFreed - outstandingDebt;
+        _liquidateAllPositions();
+        uint256 freeBalance = _freeAssets();
+
+        if (freeBalance < outstandingDebt) {
+            loss = outstandingDebt - freeBalance;
+        } else if (freeBalance > outstandingDebt) {
+            profit = freeBalance - outstandingDebt;
         }
         debtPayment = outstandingDebt - loss;
     }
@@ -324,4 +335,22 @@ abstract contract BaseStrategy is
         internal
         virtual
         returns (uint256 amountFreed);
+
+    /// @dev Fallback function that is called when the health check fails.
+    function healthCheckFailedFallback() internal virtual override{
+        // Prevent cycle of failed health checks on shutdown
+        if (!paused()) {
+            shutdown();
+            _work();
+        }
+    }
+
+    /// @notice Returns free balance of the strategy.
+    function _freeAssets()
+        internal
+        virtual
+        returns(uint256)
+    {
+        return asset.balanceOf(address(this));
+    }
 }

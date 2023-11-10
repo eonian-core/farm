@@ -1,26 +1,22 @@
-'use client';
-import React from "react";
-import { HIWContext } from "./context";
-import FlowDiagram from "./flow-diagram";
+'use client'
+import React from 'react'
+import { HIWContext } from './context'
+import FlowDiagram from './flow-diagram'
 
-const FlowDiagramContextListener = () => {
-  const { activeStep, setActiveStep, steps } = React.useContext(HIWContext);
+function FlowDiagramContextListener() {
+  const { activeStep, setActiveStep, steps } = React.useContext(HIWContext)
 
-  const diagramRef = React.useRef<FlowDiagram>(null);
+  const diagramRef = React.useRef<FlowDiagram>(null)
 
   React.useEffect(() => {
-    diagramRef.current?.selectPoint(activeStep);
-  }, [activeStep]);
+    diagramRef.current?.selectPoint(activeStep)
+  }, [activeStep])
 
   return (
     <>
-      <FlowDiagram
-        ref={diagramRef}
-        onActiveStepChanged={setActiveStep}
-        stepLabels={steps}
-      />
+      <FlowDiagram ref={diagramRef} onActiveStepChanged={setActiveStep} stepLabels={steps} />
     </>
-  );
-};
+  )
+}
 
-export default FlowDiagramContextListener;
+export default FlowDiagramContextListener

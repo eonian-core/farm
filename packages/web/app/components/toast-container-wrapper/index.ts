@@ -1,1 +1,1 @@
-export { ToastContainerWrapperDynamic } from './toast-container-wrapper-dynamic';
+export { ToastContainerWrapperDynamic } from './toast-container-wrapper-dynamic'

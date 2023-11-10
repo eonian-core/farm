@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
@@ -210,6 +210,10 @@ contract CTokenBaseStrategyTest is TestWithERC1820Registry {
         uint128 cTokenBalance,
         uint32 exchangeRate
     ) public {
+        // Give the required funds to Actor
+        underlying.mint(address(strategy), cTokenBalance);
+        assertEq(underlying.balanceOf(address(strategy)), cTokenBalance);
+
         vm.prank(address(strategy));
         cToken.mint(cTokenBalance);
         cToken.setExchangeRate(exchangeRate);

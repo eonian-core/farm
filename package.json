@@ -14,7 +14,11 @@
     "test:contracts": "lerna run test --scope='@eonian/contracts'",
     "dev:contracts": "lerna run dev --scope='@eonian/contracts'",
     "serve:contracts": "lerna run serve --scope='@eonian/contracts'",
-    "prepublish": "lerna exec --scope='@eonian/upgradeable' -- yarn prepublish"
+    "prepublish": "husky install && lerna exec --scope='@eonian/upgradeable' -- yarn prepublish",
+    "pre-commit": "lerna run pre-commit --scope='@eonian/*'"
+  },
+  "engines": {
+    "node": ">=18.17.1 <19.0.0"
   },
   "workspaces": {
     "packages": [
@@ -43,6 +47,7 @@
   },
   "devDependencies": {
     "generate-lockfile": "^0.0.12",
+    "husky": "^8.0.3",
     "lerna": "^5.1.6",
     "nx": "^14.3.6"
   },

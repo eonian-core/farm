@@ -41,7 +41,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     event DepositedToProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
 
     /** Emitted when assets are moved from the protocol */
-    event WithdrawnFromProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter);
+    event WithdrawnFromProtocol(uint256 amount, uint256 sharesBefore, uint256 underlyingBefore, uint256 sharesAfter, uint256 underlyingAfter, uint256 redeemedAmount);
 
     // ------------------------------------------ Constructors ------------------------------------------
 
@@ -55,7 +55,8 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         AggregatorV3Interface _nativeTokenPriceFeed,
         AggregatorV3Interface _assetPriceFeed,
         uint256 _minReportInterval,
-        bool _isPrepaid
+        bool _isPrepaid,
+        address _healthCheck
     ) public onlyInitializing {
         __BaseStrategy_init(
             _lender,
@@ -65,7 +66,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
             _isPrepaid,
             _nativeTokenPriceFeed,
             _assetPriceFeed,
-            address(0)
+            _healthCheck
         ); // Ownable is under the hood
 
         __CTokenBaseStrategyinit_unchained(_cToken, _rainMaker, _compToken);
@@ -142,6 +143,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
     function withdrawFromProtocol(uint256 amount) internal returns (uint256) {
         (uint256 sharesBefore,) = depositedBalanceSnapshot();
 
+        uint256 balanceBefore = _freeAssets();
         uint256 deposits = depositedBalance();
         uint256 amountToRedeem = MathUpgradeable.min(deposits, amount);
         uint256 result = cToken.redeemUnderlying(amountToRedeem);
@@ -150,9 +152,14 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         }
 
         (uint256 sharesAfter, uint256 underlyingAfter) = depositedBalanceSnapshot();
-        emit WithdrawnFromProtocol(amountToRedeem, sharesBefore, deposits, sharesAfter, underlyingAfter);
 
-        return amountToRedeem;
+        // underlying protocol can return less than calculated above, so this check is required to avoid manipulations
+        uint256 balanceAfter = _freeAssets();
+        uint256 redeemedAmount = balanceAfter - balanceBefore;
+
+        emit WithdrawnFromProtocol(amountToRedeem, sharesBefore, deposits, sharesAfter, underlyingAfter, redeemedAmount);
+
+        return redeemedAmount;
     }
 
 

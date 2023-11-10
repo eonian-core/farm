@@ -1,6 +1,7 @@
-import clsx from 'clsx';
-import { InputHTMLAttributes, forwardRef } from 'react';
-import styles from './input.module.scss';
+import clsx from 'clsx'
+import type { InputHTMLAttributes } from 'react'
+import { forwardRef } from 'react'
+import styles from './input.module.scss'
 
 export interface EmailInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
@@ -14,4 +15,4 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(({ class
     {...props}
 />)
 
-EmailInput.displayName = 'EmailInput';
+EmailInput.displayName = 'EmailInput'

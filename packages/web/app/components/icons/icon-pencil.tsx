@@ -1,5 +1,5 @@
 // icon:pencil-1 | Radix Icons https://icons.radix-ui.com/ | WorkOS
-import * as React from "react";
+import * as React from 'react'
 
 function IconPencil(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -11,7 +11,7 @@ function IconPencil(props: React.SVGProps<SVGSVGElement>) {
         clipRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
-export default IconPencil;
+export default IconPencil
