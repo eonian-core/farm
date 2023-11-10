@@ -7,6 +7,7 @@ import { store } from '../store/store'
 import NextThemeProvider from './next-theme'
 import { WalletWrapperProvider } from './wallet/wallet-wrapper-provider'
 import { AuthProvider } from './auth'
+import { WaitlistProvider } from './waitlist'
 import { MonitoringProvider } from './monitoring'
 
 interface Props {
@@ -20,7 +21,9 @@ export default function Providers({ children }: Props) {
       <NextThemeProvider>
         <Provider store={store}>
           <WalletWrapperProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <WaitlistProvider>
+              <AuthProvider>{children}</AuthProvider>
+            </WaitlistProvider>
           </WalletWrapperProvider>
         </Provider>
       </NextThemeProvider>

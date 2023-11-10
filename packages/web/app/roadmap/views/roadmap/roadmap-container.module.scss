@@ -9,7 +9,7 @@
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
-    max-width: 100vw;
+    max-width: $screen-ultra-wide;
 
     @media (max-width: $screen-tablet) {
         padding-top: var(--margin-1100);

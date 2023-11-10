@@ -67,7 +67,7 @@ export function useOnMenuClick() {
   const logout = useLogout()
 
   return React.useCallback(
-    (key: string | number) => {
+    (key: any | string | number) => {
       switch (key) {
         case MenuOption.DISCONNECT: {
           void disconnect()

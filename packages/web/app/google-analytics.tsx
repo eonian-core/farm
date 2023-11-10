@@ -1,3 +1,4 @@
+/* eslint-disable import/newline-after-import */
 // Based on https://github.com/MauricioRobayo/nextjs-google-analytics
 // but it currently not have full support for Next.js 13
 // and it uses next/router instead of next/navigation, which not working in `app/`
@@ -6,7 +7,6 @@
 import React from 'react'
 
 import type { ScriptProps } from 'next/script'
-
 import Script from 'next/script' // not allow lazy load component
 
 interface GoogleAnalyticsProps {

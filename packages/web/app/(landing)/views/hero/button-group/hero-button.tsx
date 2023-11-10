@@ -11,17 +11,24 @@ import styles from './hero-button.module.scss'
 
 interface Props extends ButtonProps {
   children: React.ReactNode
-  href: string
+  href?: string
   icon?: React.ReactNode
   bold?: boolean
 }
 
-const HeroButton: React.FC<Props> = ({ children, href, icon, bold, ...restProps }) => {
+const HeroButton: React.FC<Props> = ({
+  children,
+  href = '#',
+  icon,
+  bold,
+  bordered,
+  ...restProps
+}) => {
   const isDesktop = useIsDesktopOrSmaller()
 
   return (
-    <WrapperLink className={clsx(styles.button, { [styles.bold]: bold })} href={href}>
-      <Button size={isDesktop ? 'md' : 'lg'} icon={icon} dark wide {...restProps}>
+    <WrapperLink className={clsx(styles.button, { [styles.bold]: bold }, { [styles.dark]: !bordered })} href={href}>
+      <Button size={isDesktop ? 'md' : 'lg'} icon={icon} dark wide round bordered={bordered} {...restProps}>
         {children}
       </Button>
     </WrapperLink>

@@ -13,6 +13,7 @@
 
 .imageContainer {
     max-width: 60vw;
+    
 }
 
 @media (max-width: $screen-tablet) {
@@ -22,5 +23,12 @@
 
         max-height: 500px;
         max-width: 500px;
+    }
+
+    .imageContainer {
+        img {
+            width: 100%;
+            height: 100%;
+        }
     }
 }
