@@ -54073,7 +54073,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Implementation": {
-          "address": "0xbdD3cb34debAd5ECC386426451226F031C09D525",
+          "address": "0xC15561d91A7544Eb3014b6B59d6571f8EE16a479",
           "abi": [
             {
               "inputs": [
