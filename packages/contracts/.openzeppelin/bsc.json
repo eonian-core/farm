@@ -2,10 +2,6 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
-      "kind": "uups"
-    },
-    {
       "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
       "kind": "uups"
     },
@@ -59,6 +55,10 @@
     },
     {
       "address": "0x7507c1D2aB81624822B7A8b30a6A94eA62EA3d26",
+      "kind": "uups"
+    },
+    {
+      "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
       "kind": "uups"
     },
     {
@@ -1548,7 +1548,9 @@
       "allAddresses": [
         "0xBB70b124a30A2028EE363e4523a221fD77Bd1DdD",
         "0x0eB55adC6907c731462Ae99AB798CEc6de812fab",
+        "0xC15561d91A7544Eb3014b6B59d6571f8EE16a479",
         "0x4C8008baFBdB9eE7431f7D848459552C7aC4a3Df",
+        "0x1490393d1678920CD86f49e6b6c543d899B5B2Ae",
         "0x0f51860eD1b7a1A8eeE0E09Ea2119988a525beA6",
         "0x0Bd10fEC93068BE1dDE27D8de0A204cd7fC1Fb39",
         "0xF26e86Fc52FCB9E9E0Ae3e3b31dA76231fD6E783",
@@ -3247,6 +3249,7 @@
         "0x398B9Ac316fb42E82F33B52164F9D6D14A1D72e1",
         "0xDf92Ba39889c65dA1E3b3ABA2B1844313Bb8fC6e",
         "0xE0da003b787EF57529f391e3D81A53c0c54D5e04",
+        "0x7B2a625aAa85c843da68265C423EBa0107758B01",
         "0x2Dc030c6f639C6BB8bcb60767ffE55EF4E7d6C44",
         "0x290f8EE85Cb2ad31b0Ddf04E3a1dBd1E74cc62a6",
         "0xC380Df576dA46D4fF726e5E4fBF1506D635A00b1",
