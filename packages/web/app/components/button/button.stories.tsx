@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react'
 
-import Button from "./button";
-import IconExternal from "../icons/icon-external";
-import IconDiscord from "../icons/icon-discord";
-import IconTwitter from "../icons/icon-twitter";
+import IconExternal from '../icons/icon-external'
+import IconDiscord from '../icons/icon-discord'
+import IconTwitter from '../icons/icon-twitter'
+import Button from './button'
 
 function Component() {
   return (
@@ -12,6 +12,11 @@ function Component() {
         <Button>Lorem ipsum</Button>
         <Button bordered>Lorem ipsum</Button>
         <Button gradient>Lorem ipsum</Button>
+      </div>
+      <div className="row">
+        <Button disabled>Lorem ipsum</Button>
+        <Button disabled bordered>Lorem ipsum</Button>
+        <Button disabled gradient>Lorem ipsum</Button>
       </div>
       <div className="row">
         <Button icon={<IconExternal />}>Join the Waitlist</Button>
@@ -72,16 +77,87 @@ function Component() {
           Lorem ipsum
         </Button>
       </div>
+
+      {/* ROUDNED */}
+      <div className="row">
+        <Button round>Lorem ipsum</Button>
+        <Button round bordered>Lorem ipsum</Button>
+        <Button round gradient>Lorem ipsum</Button>
+      </div>
+      <div className="row">
+        <Button round disabled>Lorem ipsum</Button>
+        <Button round bordered disabled>Lorem ipsum</Button>
+        <Button round gradient disabled>Lorem ipsum</Button>
+      </div>
+      <div className="row">
+        <Button round icon={<IconExternal />}>Join the Waitlist</Button>
+        <Button round icon={<IconDiscord />} bordered>
+          Lorem ipsum
+        </Button>
+        <Button round icon={<IconTwitter />} gradient>
+          Lorem ipsum
+        </Button>
+      </div>
+      <div className="row">
+        <Button round dark>Lorem ipsum</Button>
+        <Button round dark bordered>
+          Lorem ipsum
+        </Button>
+      </div>
+      <div className="row">
+        <Button round dark icon={<IconExternal />}>
+          Join the Waitlist
+        </Button>
+        <Button round dark icon={<IconDiscord />} bordered>
+          Lorem ipsum
+        </Button>
+      </div>
+      <div className="row">
+        <Button round size="lg">Lorem ipsum</Button>
+        <Button round size="lg" bordered>
+          Lorem ipsum
+        </Button>
+        <Button round size="lg" gradient>
+          Lorem ipsum
+        </Button>
+      </div>
+      <div className="row">
+        <Button round size="lg" icon={<IconExternal />}>
+          Join the Waitlist
+        </Button>
+        <Button round size="lg" icon={<IconDiscord />} bordered>
+          Lorem ipsum
+        </Button>
+        <Button round size="lg" icon={<IconTwitter />} gradient>
+          Lorem ipsum
+        </Button>
+      </div>
+      <div className="row">
+        <Button round size="lg" dark>
+          Lorem ipsum
+        </Button>
+        <Button round size="lg" dark bordered>
+          Lorem ipsum
+        </Button>
+      </div>
+      <div className="row">
+        <Button round size="lg" dark icon={<IconExternal />}>
+          Join the Waitlist
+        </Button>
+        <Button round size="lg" dark icon={<IconDiscord />} bordered>
+          Lorem ipsum
+        </Button>
+      </div>
     </div>
-  );
+  )
 }
 
 const meta: Meta<typeof Component> = {
-  title: "Components/Button",
+  title: 'Components/Button',
   component: Component,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   decorators: [
-    (Story) => (
+    Story => (
       <div className="story-wrapper">
         <Story />
         <style global jsx>{`
@@ -118,9 +194,9 @@ const meta: Meta<typeof Component> = {
       </div>
     ),
   ],
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Component>;
+export default meta
+type Story = StoryObj<typeof Component>
 
-export const Default: Story = {};
+export const Default: Story = {}

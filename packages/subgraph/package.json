@@ -1,6 +1,6 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "scripts": {
     "gen:code": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml",
     "dev": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml --watch",
@@ -17,6 +17,7 @@
     "test:local": "yarn copy:local-schema && yarn test",
     "test:docker": "graph test -d",
     "test:watch": "nodemon",
+    "lint": "eslint . --ext .ts --fix",
     "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments"
   },
   "dependencies": {
@@ -25,9 +26,12 @@
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
+    "@eonian/eslint-config": "^0.0.7",
+    "eslint": "^8.48.0",
     "handlebars": "^4.7.7",
     "matchstick-as": "0.5.0",
     "nodemon": "^2.0.22",
+    "typescript": "^5.2.2",
     "yaml": "^2.3.1"
   },
   "resolutions": {

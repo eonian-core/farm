@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react'
 
 function IconPerson(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -10,7 +10,7 @@ function IconPerson(props: React.SVGProps<SVGSVGElement>) {
         clipRule="evenodd"
       />
     </svg>
-  );
+  )
 }
 
-export default IconPerson;
+export default IconPerson

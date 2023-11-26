@@ -1,23 +1,19 @@
-import { Row, Spacer, Tooltip } from "@nextui-org/react";
-import React from "react";
-import CompactNumber from "../../../components/compact-number/compact-number";
-import { toStringNumberFromDecimals } from "../../../shared";
-import { CellWithDescription } from "./cell-with-description";
+import { Row, Spacer, Tooltip } from '@nextui-org/react'
+import React from 'react'
+import CompactNumber from '../../../components/compact-number/compact-number'
+import { toStringNumberFromDecimals } from '../../../shared'
+import { CellWithDescription } from './cell-with-description'
 
 interface Props {
-  value: bigint;
-  decimals: number;
-  valueUSD: bigint;
-  decimalsUSD: number;
-  symbol: string;
+  value: bigint
+  decimals: number
+  valueUSD: bigint
+  decimalsUSD: number
+  symbol: string
 }
 
-export const CellWithCurrency: React.FC<Props> = ({
-  value,
-  decimals,
-  symbol,
-}) => {
-  const valueUSD = value;
+export const CellWithCurrency: React.FC<Props> = ({ value, decimals, symbol }) => {
+  const valueUSD = value
   return (
     <Tooltip content={<TooltipContent />}>
       <CellWithDescription
@@ -32,11 +28,11 @@ export const CellWithCurrency: React.FC<Props> = ({
         </ValueNumber>
       </CellWithDescription>
     </Tooltip>
-  );
+  )
 
   function TooltipContent() {
-    const valueAccurate = toStringNumberFromDecimals(value, decimals);
-    const valueUSDAccurate = toStringNumberFromDecimals(valueUSD, decimals);
+    const valueAccurate = toStringNumberFromDecimals(value, decimals)
+    const valueUSDAccurate = toStringNumberFromDecimals(valueUSD, decimals)
     return (
       <>
         <Row justify="center">
@@ -45,23 +41,18 @@ export const CellWithCurrency: React.FC<Props> = ({
         <Spacer y={0.25} />
         <Row justify="center">${valueUSDAccurate}</Row>
       </>
-    );
+    )
   }
-};
-
-interface ValueNumberProps extends React.PropsWithChildren {
-  value: bigint;
-  decimals: number;
-  currencyAtStart?: boolean;
 }
 
-function ValueNumber({
-  value,
-  decimals,
-  currencyAtStart,
-  children,
-}: ValueNumberProps) {
-  const threshold = BigInt(1e6) * 10n ** BigInt(decimals);
+interface ValueNumberProps extends React.PropsWithChildren {
+  value: bigint
+  decimals: number
+  currencyAtStart?: boolean
+}
+
+function ValueNumber({ value, decimals, currencyAtStart, children }: ValueNumberProps) {
+  const threshold = BigInt(1e6) * 10n ** BigInt(decimals)
   return (
     <CompactNumber
       value={value}
@@ -73,5 +64,5 @@ function ValueNumber({
     >
       {children}
     </CompactNumber>
-  );
+  )
 }

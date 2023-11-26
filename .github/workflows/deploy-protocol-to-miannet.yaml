@@ -22,6 +22,7 @@ jobs:
     env:
       HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
       BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
+      SKIP_UPGRADE_VALIDATION: ${{ vars.SKIP_UPGRADE_VALIDATION }}
 
     steps:
       - uses: actions/checkout@v3
@@ -35,7 +36,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
           cache: "yarn"
 
       - name: Install dependencies
@@ -77,11 +78,18 @@ jobs:
           default_author: user_info
           message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+          pull: '--rebase --autostash'
+
+      - name: Verify deployment result
+        run: |-
+          cd packages/contracts
+          yarn hardhat check-past-deployment-result
           
 
   publish-source-code:
     name: Publish Source Code
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     # Etherscan unstable and can fail, 
     # need publish code separatly from deploy to save deployed contracts
     needs: deploy
@@ -104,7 +112,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
           cache: "yarn"
 
       - name: Install dependencies

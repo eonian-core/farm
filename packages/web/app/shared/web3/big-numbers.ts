@@ -1,4 +1,4 @@
-import { ethers } from "ethers";
+import { ethers } from 'ethers'
 
 /**
  * Converts normal number value to BigInt with decimals representation.
@@ -7,7 +7,7 @@ import { ethers } from "ethers";
  * @returns A big integer value.
  */
 export function toBigIntWithDecimals(value: number | string, decimals: number): bigint {
-  return ethers.parseUnits(value.toString(), decimals);
+  return ethers.parseUnits(value.toString(), decimals)
 }
 
 /**
@@ -17,5 +17,5 @@ export function toBigIntWithDecimals(value: number | string, decimals: number): 
  * @returns A number value.
  */
 export function toStringNumberFromDecimals(value: bigint | string, decimals: number): string {
-  return ethers.formatUnits(value, decimals);
+  return ethers.formatUnits(value, decimals)
 }

@@ -1,11 +1,11 @@
-import { Badge } from "@nextui-org/react";
-import React from "react";
-import { Vault } from "../../../api";
+import { Badge } from '@nextui-org/react'
+import React from 'react'
+import type { Vault } from '../../../api'
 
-import styles from "./vault-tags-cell.module.scss";
+import styles from './vault-tags-cell.module.scss'
 
 interface Props {
-  vault: Vault;
+  vault: Vault
 }
 
 export const VaultTagsCell: React.FC<Props> = () => (
@@ -20,4 +20,4 @@ export const VaultTagsCell: React.FC<Props> = () => (
       Low risk
     </Badge>
   </div>
-);
+)

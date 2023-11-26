@@ -1,14 +1,8 @@
-import * as React from "react";
+import * as React from 'react'
 
 function IconWarning(props: React.SVGProps<SVGSVGElement>) {
   return (
-    <svg
-      viewBox="0 0 512 512"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
+    <svg viewBox="0 0 512 512" fill="currentColor" height="1em" width="1em" {...props}>
       <path
         fill="none"
         stroke="currentColor"
@@ -27,7 +21,7 @@ function IconWarning(props: React.SVGProps<SVGSVGElement>) {
       />
       <path d="M256 397.25a20 20 0 1120-20 20 20 0 01-20 20z" />
     </svg>
-  );
+  )
 }
 
-export default IconWarning;
+export default IconWarning

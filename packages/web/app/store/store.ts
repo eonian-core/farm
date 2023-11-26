@@ -1,10 +1,10 @@
-import { configureStore, isPlain } from "@reduxjs/toolkit";
+import { configureStore, isPlain } from '@reduxjs/toolkit'
 
-import localeReducer from "./slices/localeSlice";
-import navigationReducer from "./slices/navigationSlice";
-import positionInfoSlice from "./slices/positionInfoSlice";
-import vaultActionReducer from "./slices/vaultActionSlice";
-import vaultUserReducer from "./slices/vaultUserSlice";
+import localeReducer from './slices/localeSlice'
+import navigationReducer from './slices/navigationSlice'
+import positionInfoSlice from './slices/positionInfoSlice'
+import vaultActionReducer from './slices/vaultActionSlice'
+import vaultUserReducer from './slices/vaultUserSlice'
 
 export const store = configureStore({
   reducer: {
@@ -14,14 +14,13 @@ export const store = configureStore({
     vaultAction: vaultActionReducer,
     positionInfo: positionInfoSlice,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
-        isSerializable: (value: any) =>
-          isPlain(value) || typeof value === "bigint",
+        isSerializable: (value: any) => isPlain(value) || typeof value === 'bigint',
       },
     }),
-});
+})
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch

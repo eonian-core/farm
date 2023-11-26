@@ -10,6 +10,7 @@ cache
 artifacts
 
 deployments/localhost
+deployments/*-deploy-errors.json
 
 # Compiler files
 out/
@@ -22,3 +23,4 @@ cache_hardhat/
 /broadcast/*
 /broadcast/*/31337/
 deployments/local.json
+deployments/hardhat
