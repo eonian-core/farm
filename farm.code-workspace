@@ -7,10 +7,8 @@
 	"settings": {
 		"jest.disabledWorkspaceFolders": [
 			"farm",
-			"farm",
 			"contracts",
 			"solmate",
-			"web",
 			".next"
 		]
 	}
