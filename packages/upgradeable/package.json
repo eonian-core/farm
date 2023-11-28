@@ -14,8 +14,7 @@
     "build": "microbundle --target=node",
     "build:watch": "microbundle watch",
     "prepublish": "yarn build",
-    "lint": "eslint . --ext .ts,.js --fix",
-    "pre-commit": "lint-staged"
+    "lint": "eslint . --ext .ts,.js --fix"
   },
   "source": "./src/index.ts",
   "exports": {
@@ -43,7 +42,6 @@
     "hardhat-gas-reporter": "^1.0.9",
     "hardhat-tracer": "^2.5.1",
     "jest": "^29.6.1",
-    "lint-staged": "^14.0.0",
     "microbundle": "^0.15.1",
     "prettier": "^3.0.2",
     "prettier-plugin-solidity": "^1.1.3",
