@@ -42,3 +42,6 @@ yarn
 * `yarn test:contracts` - Test only contracts
 * `dev:contracts` - Set up a development environment for contracts. Watch file changes and rerun tests.
 
+## Deployment
+
+The deployment process focused on implementing GitOps practices. Basically, it means all master (main) builds go to production directly.
