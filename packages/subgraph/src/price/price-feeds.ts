@@ -14,7 +14,7 @@ BNB_ADDRESSES.set(
   Address.fromString('0x51597f405303C4377E36123cBc172b13269EA163'),
 )
 BNB_ADDRESSES.set(
-  'WETH',
+  'ETH',
   Address.fromString('0x9ef1b8c0e4f7dc8bf5719ea496883dc6401d5b2e'),
 )
 BNB_ADDRESSES.set(
