@@ -2,46 +2,6 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
-      "kind": "uups"
-    },
-    {
-      "address": "0xE896b0Fc1c8393440E937E6acc005BE285C3722E",
-      "kind": "uups"
-    },
-    {
-      "address": "0x725b0ef616E29341ee00D05fb1c6F5250d31C534",
-      "kind": "uups"
-    },
-    {
-      "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
-      "kind": "uups"
-    },
-    {
-      "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0b637fa6fD40B5d0DD2E8Bc466Ec492ad337D4F1",
-      "kind": "uups"
-    },
-    {
-      "address": "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89",
-      "kind": "uups"
-    },
-    {
-      "address": "0x9408EbdAc707FDAC78ae406f10bbBab98cc8c264",
-      "kind": "uups"
-    },
-    {
-      "address": "0x9c06fa1E80FCb38681635aD8D7BFE75a1b33cf16",
-      "kind": "uups"
-    },
-    {
-      "address": "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4",
-      "kind": "uups"
-    },
-    {
       "address": "0xAB9Cda2daD37aaA0d64fb1a501538e829Ed8A59E",
       "kind": "uups"
     },
@@ -79,6 +39,70 @@
     },
     {
       "address": "0xdbf7d2B84731e34429764a2238B31831b2bE86a3",
+      "kind": "uups"
+    },
+    {
+      "address": "0x725b0ef616E29341ee00D05fb1c6F5250d31C534",
+      "kind": "uups"
+    },
+    {
+      "address": "0x1D0cC9fa6AcBdD11a9BF1153628A634313496878",
+      "kind": "uups"
+    },
+    {
+      "address": "0xA491CE9642b9Fc38698Dc6c3bBB470aF2E5c4F8a",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0b637fa6fD40B5d0DD2E8Bc466Ec492ad337D4F1",
+      "kind": "uups"
+    },
+    {
+      "address": "0x8450D8f56E68630b37f18B51A09bcFEab5C60A89",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9408EbdAc707FDAC78ae406f10bbBab98cc8c264",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9c06fa1E80FCb38681635aD8D7BFE75a1b33cf16",
+      "kind": "uups"
+    },
+    {
+      "address": "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9C4f75ee411aC80b69217d8Ba2a62e5Ac9e55172",
+      "kind": "uups"
+    },
+    {
+      "address": "0xE896b0Fc1c8393440E937E6acc005BE285C3722E",
+      "kind": "uups"
+    },
+    {
+      "address": "0x5F4Ff008813F78E96fa584Cd35aE8B5610eAe2d5",
+      "kind": "uups"
+    },
+    {
+      "address": "0x3487AAe03e75F4C4ef3aE1B1278980E63E22E32e",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7969e4E564BC55A2358E070539bF3924De5049E0",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9643a2b0629e9087c0733660609fFc389594A6c3",
+      "kind": "uups"
+    },
+    {
+      "address": "0x6aC5c789F8DE99d48051578C5050f7d859fbB2F6",
+      "kind": "uups"
+    },
+    {
+      "address": "0x91037511dee2b5655E7669bF4cbDc5A28759c09C",
       "kind": "uups"
     }
   ],
@@ -614,8 +638,8 @@
       },
       "allAddresses": [
         "0x6CdF149af86f66E397450eCE765D5F1078597C80",
-        "0xAcA8A6548D609d260547A5FBbAB344e70DE55825",
-        "0x2d1e488E982C272F4Efc7b0069620A7b9dC194E8"
+        "0x2d1e488E982C272F4Efc7b0069620A7b9dC194E8",
+        "0xAcA8A6548D609d260547A5FBbAB344e70DE55825"
       ]
     },
     "54475e0fa6cb5761380cb7713cbc62cee1d00cb1d973cce4bda5562b363fee2b": {
@@ -1547,13 +1571,15 @@
       },
       "allAddresses": [
         "0xBB70b124a30A2028EE363e4523a221fD77Bd1DdD",
+        "0xD95bA2a4659901ba152394ae8487167965CbB6f2",
+        "0x1B6F68260E7E155208aD1D35a53Fd6e41E839c38",
+        "0x0f51860eD1b7a1A8eeE0E09Ea2119988a525beA6",
+        "0x0Bd10fEC93068BE1dDE27D8de0A204cd7fC1Fb39",
+        "0xF26e86Fc52FCB9E9E0Ae3e3b31dA76231fD6E783",
         "0x0eB55adC6907c731462Ae99AB798CEc6de812fab",
         "0xC15561d91A7544Eb3014b6B59d6571f8EE16a479",
         "0x4C8008baFBdB9eE7431f7D848459552C7aC4a3Df",
         "0x1490393d1678920CD86f49e6b6c543d899B5B2Ae",
-        "0x0f51860eD1b7a1A8eeE0E09Ea2119988a525beA6",
-        "0x0Bd10fEC93068BE1dDE27D8de0A204cd7fC1Fb39",
-        "0xF26e86Fc52FCB9E9E0Ae3e3b31dA76231fD6E783",
         "0x39578fF985275492765cD247ed7cf746fd14381d",
         "0x5dcb1cc55DA1Cd77DAFa23834F00d7bdc7C1Ba45",
         "0x60c329c96a769ab8Ab42dB51BdCDB959c54FE697",
@@ -2432,11 +2458,14 @@
       },
       "allAddresses": [
         "0xf52910D8f911005350983C4f5e0bf4F753E6c26c",
+        "0x9744fea6Ab5B24247576972dD4C9eded196459aC",
+        "0xB2d21055534dB6240EDAf6e681f0928CCc00671C",
+        "0xc3d2F1a020A4D725e74ead9A4bC170c45b552f27",
+        "0xa59C407984E11122Bb27876dc58DC3Ac82aB9166",
+        "0x5f469B24660831805bbf5Db60B1e46155a3A6432",
         "0xeF99C41BA4ef8Fc09Fce91a1c74a7352453d4105",
         "0x468b4d6ebB196f4D56Dd92a247b9a9B5EB9d3012",
         "0x0235CDE738F167642762d79f274b52eE5cCB093B",
-        "0xa59C407984E11122Bb27876dc58DC3Ac82aB9166",
-        "0x5f469B24660831805bbf5Db60B1e46155a3A6432",
         "0xd10B4e4DA34a51c84FE97A7Ae281781aAA8C9c1C",
         "0xe96d01926Ed729B45262B7195D089961C31B8DaA"
       ]
@@ -3247,13 +3276,15 @@
       },
       "allAddresses": [
         "0x398B9Ac316fb42E82F33B52164F9D6D14A1D72e1",
+        "0x74B57B37c068629b188Ab91F7f8ea818A8709729",
+        "0xd561F3cDD39A6bcE5059A79522d25350b35Ae5B6",
+        "0xBbA39Fbe0e8b3aec39086a4bDF2fb1E491903C0A",
+        "0x290f8EE85Cb2ad31b0Ddf04E3a1dBd1E74cc62a6",
+        "0xC380Df576dA46D4fF726e5E4fBF1506D635A00b1",
         "0xDf92Ba39889c65dA1E3b3ABA2B1844313Bb8fC6e",
         "0xE0da003b787EF57529f391e3D81A53c0c54D5e04",
         "0x7B2a625aAa85c843da68265C423EBa0107758B01",
         "0x2Dc030c6f639C6BB8bcb60767ffE55EF4E7d6C44",
-        "0x290f8EE85Cb2ad31b0Ddf04E3a1dBd1E74cc62a6",
-        "0xC380Df576dA46D4fF726e5E4fBF1506D635A00b1",
-        "0xBbA39Fbe0e8b3aec39086a4bDF2fb1E491903C0A",
         "0x8bff233f9475AE05eDC782cb2258A0376F35dE7d"
       ]
     }
