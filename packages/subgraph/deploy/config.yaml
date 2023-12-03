@@ -14,6 +14,12 @@ files:
         - name: "BUSD Vault"
           address: "0xF4017645775b592Abe0801420eADd17E3585184c"
           startBlock: 3950878
+        - name: "WETH Vault"
+          address: "0x95E1DaFe365ddeF1C16981FBe376Af5610f87af6"
+          startBlock: 4808163
+        - name: "BTCB Vault"
+          address: "0x4D5Fc5F1125bDB0E4f33A1197AcD91c4B1F3d7eb"
+          startBlock: 4808168
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
@@ -36,6 +42,12 @@ files:
         - name: "BUSD Vault"
           address: "0x914b5763cFc6DaA9b7A968AdFf0Cbb0d817326B4"
           startBlock: 30281432
+        - name: "WETH Vault"
+          address: "0x5F4Ff008813F78E96fa584Cd35aE8B5610eAe2d5"
+          startBlock: 34025849
+        - name: "BTCB Vault"
+          address: "0x9643a2b0629e9087c0733660609fFc389594A6c3"
+          startBlock: 34025866
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
@@ -58,6 +70,12 @@ files:
         - name: "BUSD Vault"
           address: "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058"
           startBlock: 30459067
+        - name: "WETH Vault"
+          address: "0x4222Cf49AB74f7f16318e899fd9131569897B566"
+          startBlock: 34028878
+        - name: "BTCB Vault"
+          address: "0xf914E528acA360f748A1A644151d6F5A299Fb5E5"
+          startBlock: 34028890
       abis:
         Vault: ../../abis/VaultImplementation.json
         ERC20: ../../abis/ERC20.json
