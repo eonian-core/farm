@@ -13,6 +13,14 @@ BNB_ADDRESSES.set(
   'USDC',
   Address.fromString('0x51597f405303C4377E36123cBc172b13269EA163'),
 )
+BNB_ADDRESSES.set(
+  'WETH',
+  Address.fromString('0x9ef1b8c0e4f7dc8bf5719ea496883dc6401d5b2e'),
+)
+BNB_ADDRESSES.set(
+  'BTCB',
+  Address.fromString('0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf'),
+)
 
 const SEPOLIA_ADDRESSES = new TypedMap<string, Address>()
 SEPOLIA_ADDRESSES.set(
