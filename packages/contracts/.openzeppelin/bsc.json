@@ -2,46 +2,6 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0xAB9Cda2daD37aaA0d64fb1a501538e829Ed8A59E",
-      "kind": "uups"
-    },
-    {
-      "address": "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2",
-      "kind": "uups"
-    },
-    {
-      "address": "0x7448A6ef6faefedE25fc46b1274B4D0FBA23074B",
-      "kind": "uups"
-    },
-    {
-      "address": "0x7507c1D2aB81624822B7A8b30a6A94eA62EA3d26",
-      "kind": "uups"
-    },
-    {
-      "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
-      "kind": "uups"
-    },
-    {
-      "address": "0xf3F917C113E5E1c421c6DD6c071C2730AC977d71",
-      "kind": "uups"
-    },
-    {
-      "address": "0x15872320624e09075549AD28e63c8B5BE7968885",
-      "kind": "uups"
-    },
-    {
-      "address": "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058",
-      "kind": "uups"
-    },
-    {
-      "address": "0xA4F82018b6424FbD6943F29Ba10f4e4E62811E6F",
-      "kind": "uups"
-    },
-    {
-      "address": "0xdbf7d2B84731e34429764a2238B31831b2bE86a3",
-      "kind": "uups"
-    },
-    {
       "address": "0x725b0ef616E29341ee00D05fb1c6F5250d31C534",
       "kind": "uups"
     },
@@ -103,6 +63,70 @@
     },
     {
       "address": "0x91037511dee2b5655E7669bF4cbDc5A28759c09C",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7448A6ef6faefedE25fc46b1274B4D0FBA23074B",
+      "kind": "uups"
+    },
+    {
+      "address": "0xca30A906Cec52Fa591672eFAD9f88bcB8B105657",
+      "kind": "uups"
+    },
+    {
+      "address": "0xAB9Cda2daD37aaA0d64fb1a501538e829Ed8A59E",
+      "kind": "uups"
+    },
+    {
+      "address": "0xf4d473953B2e559DeF3a5b6a35740CB1E8B4e973",
+      "kind": "uups"
+    },
+    {
+      "address": "0xdbf7d2B84731e34429764a2238B31831b2bE86a3",
+      "kind": "uups"
+    },
+    {
+      "address": "0x15872320624e09075549AD28e63c8B5BE7968885",
+      "kind": "uups"
+    },
+    {
+      "address": "0x7507c1D2aB81624822B7A8b30a6A94eA62EA3d26",
+      "kind": "uups"
+    },
+    {
+      "address": "0x32367339Bf1EA6E08182c1Ab158854b096E688eb",
+      "kind": "uups"
+    },
+    {
+      "address": "0xf914E528acA360f748A1A644151d6F5A299Fb5E5",
+      "kind": "uups"
+    },
+    {
+      "address": "0x0e7a672D7da5FBAeD21d1E4b4cB34D1492422058",
+      "kind": "uups"
+    },
+    {
+      "address": "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4",
+      "kind": "uups"
+    },
+    {
+      "address": "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2",
+      "kind": "uups"
+    },
+    {
+      "address": "0x4222Cf49AB74f7f16318e899fd9131569897B566",
+      "kind": "uups"
+    },
+    {
+      "address": "0x9AC1f62C0A39e7ddDDA72a87Fe58daB7BF405F7F",
+      "kind": "uups"
+    },
+    {
+      "address": "0xA4F82018b6424FbD6943F29Ba10f4e4E62811E6F",
+      "kind": "uups"
+    },
+    {
+      "address": "0xf3F917C113E5E1c421c6DD6c071C2730AC977d71",
       "kind": "uups"
     }
   ],
@@ -638,8 +662,8 @@
       },
       "allAddresses": [
         "0x6CdF149af86f66E397450eCE765D5F1078597C80",
-        "0x2d1e488E982C272F4Efc7b0069620A7b9dC194E8",
-        "0xAcA8A6548D609d260547A5FBbAB344e70DE55825"
+        "0xAcA8A6548D609d260547A5FBbAB344e70DE55825",
+        "0x2d1e488E982C272F4Efc7b0069620A7b9dC194E8"
       ]
     },
     "54475e0fa6cb5761380cb7713cbc62cee1d00cb1d973cce4bda5562b363fee2b": {
@@ -1571,14 +1595,16 @@
       },
       "allAddresses": [
         "0xBB70b124a30A2028EE363e4523a221fD77Bd1DdD",
+        "0x6692729B8f47DE9f334Bc713cc82144D68808829",
+        "0x4C8008baFBdB9eE7431f7D848459552C7aC4a3Df",
+        "0xC15561d91A7544Eb3014b6B59d6571f8EE16a479",
+        "0x0eB55adC6907c731462Ae99AB798CEc6de812fab",
+        "0xbeeB78d979e46CeB75c5175d3055179F3E97f11c",
         "0xD95bA2a4659901ba152394ae8487167965CbB6f2",
         "0x1B6F68260E7E155208aD1D35a53Fd6e41E839c38",
         "0x0f51860eD1b7a1A8eeE0E09Ea2119988a525beA6",
         "0x0Bd10fEC93068BE1dDE27D8de0A204cd7fC1Fb39",
         "0xF26e86Fc52FCB9E9E0Ae3e3b31dA76231fD6E783",
-        "0x0eB55adC6907c731462Ae99AB798CEc6de812fab",
-        "0xC15561d91A7544Eb3014b6B59d6571f8EE16a479",
-        "0x4C8008baFBdB9eE7431f7D848459552C7aC4a3Df",
         "0x1490393d1678920CD86f49e6b6c543d899B5B2Ae",
         "0x39578fF985275492765cD247ed7cf746fd14381d",
         "0x5dcb1cc55DA1Cd77DAFa23834F00d7bdc7C1Ba45",
@@ -2458,14 +2484,16 @@
       },
       "allAddresses": [
         "0xf52910D8f911005350983C4f5e0bf4F753E6c26c",
+        "0x49A0Ea624d28a01c0d19aEA19f658f7314b0c3D8",
+        "0x0235CDE738F167642762d79f274b52eE5cCB093B",
+        "0x468b4d6ebB196f4D56Dd92a247b9a9B5EB9d3012",
+        "0xeF99C41BA4ef8Fc09Fce91a1c74a7352453d4105",
+        "0xC8f37F52F25414054e3038E7167AbFbA6e52174d",
         "0x9744fea6Ab5B24247576972dD4C9eded196459aC",
         "0xB2d21055534dB6240EDAf6e681f0928CCc00671C",
         "0xc3d2F1a020A4D725e74ead9A4bC170c45b552f27",
         "0xa59C407984E11122Bb27876dc58DC3Ac82aB9166",
         "0x5f469B24660831805bbf5Db60B1e46155a3A6432",
-        "0xeF99C41BA4ef8Fc09Fce91a1c74a7352453d4105",
-        "0x468b4d6ebB196f4D56Dd92a247b9a9B5EB9d3012",
-        "0x0235CDE738F167642762d79f274b52eE5cCB093B",
         "0xd10B4e4DA34a51c84FE97A7Ae281781aAA8C9c1C",
         "0xe96d01926Ed729B45262B7195D089961C31B8DaA"
       ]
@@ -3276,14 +3304,16 @@
       },
       "allAddresses": [
         "0x398B9Ac316fb42E82F33B52164F9D6D14A1D72e1",
+        "0xE0da003b787EF57529f391e3D81A53c0c54D5e04",
+        "0xDf92Ba39889c65dA1E3b3ABA2B1844313Bb8fC6e",
+        "0x77eE2b1BaD5C69c3732aBEeCEb5Fe893cd522289",
+        "0x3BD2f966b2eABdB091bB2Ce4347d253DcA69a0F0",
+        "0x7B2a625aAa85c843da68265C423EBa0107758B01",
         "0x74B57B37c068629b188Ab91F7f8ea818A8709729",
         "0xd561F3cDD39A6bcE5059A79522d25350b35Ae5B6",
         "0xBbA39Fbe0e8b3aec39086a4bDF2fb1E491903C0A",
         "0x290f8EE85Cb2ad31b0Ddf04E3a1dBd1E74cc62a6",
         "0xC380Df576dA46D4fF726e5E4fBF1506D635A00b1",
-        "0xDf92Ba39889c65dA1E3b3ABA2B1844313Bb8fC6e",
-        "0xE0da003b787EF57529f391e3D81A53c0c54D5e04",
-        "0x7B2a625aAa85c843da68265C423EBa0107758B01",
         "0x2Dc030c6f639C6BB8bcb60767ffE55EF4E7d6C44",
         "0x8bff233f9475AE05eDC782cb2258A0376F35dE7d"
       ]
