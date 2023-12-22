@@ -81,6 +81,9 @@ const config: HardhatUserConfig = {
       },
     },
   },
+  mocha: {
+      timeout: 200000, // 200 seconds max for running tests
+  },
   networks: {
     hardhat: {
       forking: process.env.DISABLE_HARDHAT_FORK === 'true' ? undefined : binanceSmartChainFork,

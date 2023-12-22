@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-
 /// Base contract for lending protocols, can be used for colletaralized and not colletaralized lending.
 interface ILender {
 

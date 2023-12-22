@@ -5,7 +5,7 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 
-import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
+import {ERC4626Upgradeable, GivenAssetsResultIsZeroShares, GivenSharesResultIsZeroAssets} from "./ERC4626Upgradeable.sol";
 
 /// @title Safier and limited implementation of ERC-4626
 /// @notice ERC-4626 standard allow deposit and withdraw not for message sender.
@@ -67,7 +67,9 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     {
         shares = previewDeposit(assets);
         // Check for rounding error since we round down in previewDeposit.
-        require(shares != 0, "Given assets result in 0 shares.");
+        if(shares == 0) {
+            revert GivenAssetsResultIsZeroShares();
+        }
 
         _receiveAndDeposit(assets, shares, msg.sender);
     }
@@ -129,7 +131,9 @@ abstract contract SafeERC4626Upgradeable is ERC4626Upgradeable {
     {
         assets = previewRedeem(shares);
         // Check for rounding error since we round down in previewRedeem.
-        require(assets != 0, "Given shares result in 0 assets.");
+        if(assets == 0) {
+            revert GivenSharesResultIsZeroAssets();
+        }
 
         _withdrawAndSend(assets, shares, msg.sender, msg.sender);
     }

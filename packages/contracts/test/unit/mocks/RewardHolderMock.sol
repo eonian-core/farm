@@ -13,8 +13,8 @@ contract RewardHolderMock is RewardHolder {
         emit RewardDeposited(msg.sender, plusReward);
     }
 
-    function emitRewardClaimed(uint256 reward, address receiver) external {
-        emit RewardClaimed(reward, receiver);
+    function emitRewardClaimed(uint256 reward, address receiver, bool success) external {
+        emit RewardClaimed(reward, receiver, success);
     }
 
     function setupOwner(address rewardOwner) external {

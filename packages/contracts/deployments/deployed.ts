@@ -101171,7 +101171,7 @@ export default {
           ]
         },
         "LossRatioHealthCheck|Default_Implementation": {
-          "address": "0xB33Ce75bE0606645c470FFbd480c8001f41eeDD9",
+          "address": "0x37Ec1326DBBad22E5CF23237B7f8861F19caED38",
           "abi": [
             {
               "inputs": [
@@ -101608,6 +101608,26 @@ export default {
               "type": "receive"
             },
             {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
+            },
+            {
               "anonymous": false,
               "inputs": [
                 {
@@ -101822,6 +101842,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -102884,7 +102910,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BTCB]_Implementation": {
-          "address": "0x8Ff0fcFf39Bac2a6d80D8E9A3F8235054076C4A1",
+          "address": "0xd48994Ab545d182cf7dE39b4B0232199c87E90e8",
           "abi": [
             {
               "inputs": [
@@ -102896,6 +102922,26 @@ export default {
               ],
               "stateMutability": "nonpayable",
               "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
             },
             {
               "anonymous": false,
@@ -103144,6 +103190,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -104333,6 +104385,26 @@ export default {
               "type": "receive"
             },
             {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
+            },
+            {
               "anonymous": false,
               "inputs": [
                 {
@@ -104547,6 +104619,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -105609,7 +105687,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[BUSD]_Implementation": {
-          "address": "0x093342167436dbfB79b1C704c818eaCDb72382e4",
+          "address": "0x4948885B67bd8Eea9566270C214068a0Be1599bA",
           "abi": [
             {
               "inputs": [
@@ -105621,6 +105699,26 @@ export default {
               ],
               "stateMutability": "nonpayable",
               "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
             },
             {
               "anonymous": false,
@@ -105869,6 +105967,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -107058,6 +107162,26 @@ export default {
               "type": "receive"
             },
             {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
+            },
+            {
               "anonymous": false,
               "inputs": [
                 {
@@ -107272,6 +107396,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -108334,7 +108464,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDC]_Implementation": {
-          "address": "0xe03cAB61483FE9915db8CBFa786d585C3b72F439",
+          "address": "0xF629B7c8E19A4D7887d46bDbC9641ed796fd963D",
           "abi": [
             {
               "inputs": [
@@ -108346,6 +108476,26 @@ export default {
               ],
               "stateMutability": "nonpayable",
               "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
             },
             {
               "anonymous": false,
@@ -108594,6 +108744,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -109783,6 +109939,26 @@ export default {
               "type": "receive"
             },
             {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
+            },
+            {
               "anonymous": false,
               "inputs": [
                 {
@@ -109997,6 +110173,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -111059,7 +111241,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[USDT]_Implementation": {
-          "address": "0x69471d238315c9213eA5e60459fd49104442357b",
+          "address": "0x4C8a7949b281f4515BeE1501f5ca2E6A737d3F1D",
           "abi": [
             {
               "inputs": [
@@ -111071,6 +111253,26 @@ export default {
               ],
               "stateMutability": "nonpayable",
               "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
             },
             {
               "anonymous": false,
@@ -111319,6 +111521,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -112508,6 +112716,26 @@ export default {
               "type": "receive"
             },
             {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
+            },
+            {
               "anonymous": false,
               "inputs": [
                 {
@@ -112722,6 +112950,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -113784,7 +114018,7 @@ export default {
           ]
         },
         "VaultFounderToken|Asset[WETH]_Implementation": {
-          "address": "0xB697481fe3AdA0F35F2Ce5daF103BcB86E07CB87",
+          "address": "0x18a2EE77f7F3aAA4690a85a30434B1e63F53c3df",
           "abi": [
             {
               "inputs": [
@@ -113796,6 +114030,26 @@ export default {
               ],
               "stateMutability": "nonpayable",
               "type": "constructor"
+            },
+            {
+              "inputs": [],
+              "name": "CallerHaveNoReward",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484CanNotBeTransferred",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "ERC5484TokenDoNotExists",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "VaultNotSet",
+              "type": "error"
             },
             {
               "anonymous": false,
@@ -114044,6 +114298,12 @@ export default {
                   "internalType": "address",
                   "name": "receiver",
                   "type": "address"
+                },
+                {
+                  "indexed": false,
+                  "internalType": "bool",
+                  "name": "success",
+                  "type": "bool"
                 }
               ],
               "name": "RewardClaimed",
@@ -115275,6 +115535,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -115319,6 +115589,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -117469,7 +117754,7 @@ export default {
           ]
         },
         "Vault|Asset[BTCB]_Implementation": {
-          "address": "0xC5c203f7AC6Ace51e4B57Ff308e0647C5DACb92A",
+          "address": "0x3dCcc5332f6DBAc54916F33a0Cc4596C8AD8f22B",
           "abi": [
             {
               "inputs": [
@@ -117525,6 +117810,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -117569,6 +117864,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -119920,6 +120230,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -119964,6 +120284,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -122114,7 +122449,7 @@ export default {
           ]
         },
         "Vault|Asset[BUSD]_Implementation": {
-          "address": "0xE62A3E8ac2477d2C74f236Ad7e2a8F97677b8481",
+          "address": "0x36deAbA4087dB807A6f74c808F3Dc5695B1ddb4E",
           "abi": [
             {
               "inputs": [
@@ -122170,6 +122505,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -122214,6 +122559,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -124565,6 +124925,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -124609,6 +124979,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -126759,7 +127144,7 @@ export default {
           ]
         },
         "Vault|Asset[USDC]_Implementation": {
-          "address": "0x2aFf4e3C40e5331907DDF1B9A60Ae851Ab51866B",
+          "address": "0x7d294896B6D07401E4FF7fc243ae585dE4b9f27d",
           "abi": [
             {
               "inputs": [
@@ -126815,6 +127200,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -126859,6 +127254,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -129210,6 +129620,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -129254,6 +129674,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -131404,7 +131839,7 @@ export default {
           ]
         },
         "Vault|Asset[USDT]_Implementation": {
-          "address": "0x9a73315C6c89A22a789A4DfD202875f18fFB54cD",
+          "address": "0x6C1F94705c46eB49a3775f6CAaa2dEcD8AB4b99C",
           "abi": [
             {
               "inputs": [
@@ -131460,6 +131895,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -131504,6 +131949,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -133855,6 +134315,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -133899,6 +134369,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
@@ -136049,7 +136534,7 @@ export default {
           ]
         },
         "Vault|Asset[WETH]_Implementation": {
-          "address": "0x6e2cFAf7aD1D4cBC565e79863F66cEE6cf7E2508",
+          "address": "0x92CD12c130fa71Cd235ba5fe5658aA134Cc29903",
           "abi": [
             {
               "inputs": [
@@ -136105,6 +136590,16 @@ export default {
             },
             {
               "inputs": [],
+              "name": "GivenAssetsResultIsZeroShares",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "GivenSharesResultIsZeroAssets",
+              "type": "error"
+            },
+            {
+              "inputs": [],
               "name": "InappropriateStrategy",
               "type": "error"
             },
@@ -136149,6 +136644,21 @@ export default {
             {
               "inputs": [],
               "name": "ListsDoNotMatch",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "LossIsGreaterThanDebt",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "NotEnoughAssetsForPayment",
+              "type": "error"
+            },
+            {
+              "inputs": [],
+              "name": "StrategiesLenderMustBeOwned",
               "type": "error"
             },
             {
