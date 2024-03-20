@@ -24,11 +24,11 @@ describe('Ape Lending Strategy', () => {
 
   const minReportInterval = 3600
 
-  const asset = '0xe9e7cea3dedca5984780bafc599bd69add087d56' // BUSD
-  const cToken = '0x0096B6B49D13b347033438c4a699df3Afd9d2f96' // oBUSD;
+  const asset = '0x55d398326f99059ff775485246999027b3197955' // USDT
+  const cToken = '0xdBFd516D42743CA3f1C555311F7846095D85F6Fd' // oUSDT;
   const rewards = '0x89C7a4F5dB815dd6EdD81606f95B931B2B82BdCD'
   const nativePriceFeed = '0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee' // Chainlink BNB/USD feed
-  const assetPriceFeed = '0xcbb98864ef56e9042e7d2efef76141f15731b82f' // Chainlink BUSD/USD feed
+  const assetPriceFeed = '0xB97Ad0E74fa7d920791E90258A6E2085088b4320' // Chainlink USDT/USD feed
 
   // hre.tracer.nameTags[asset] = 'BUSD'
   // hre.tracer.nameTags[cToken] = 'cToken'
@@ -230,8 +230,8 @@ describe('Ape Lending Strategy', () => {
       await warp(minReportInterval)
     }
 
-    // Wait 1 day to accumulate the interest
-    await warp(60 * 60 * 24)
+    // Wait 6h to accumulate the interest
+    await warp(6 * 60 * 60)
 
     await strategy.work()
 
