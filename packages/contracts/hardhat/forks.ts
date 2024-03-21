@@ -17,7 +17,7 @@ export const binanceSmartChainFork: ForkData = {
   // hardhat or providers cannot correctly exchange non latest block data
   accounts: {
     holderA: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3', // Holder (Binance: Hot Wallet 6)
-    holderB: '0x3c783c21a0383057d128bae431894a5c19f9cf06', // Holder (Binance Hot Wallet 8)
+    holderB: '0xF977814e90dA44bFA03b6295A0616a897441aceC', // Holder (Binance Hot Wallet 20)
     ops: '0x527a819db1eb0e34426297b03bae11F2f8B3A19E', // Gelato ops
   },
 }

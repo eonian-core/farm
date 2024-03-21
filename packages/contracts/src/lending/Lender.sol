@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
@@ -15,6 +14,8 @@ error BorrowerHasDebt();
 error CallerIsNotABorrower();
 error LenderRatioExceeded(uint256 freeRatio);
 error FalsePositiveReport();
+error NotEnoughAssetsForPayment();
+error LossIsGreaterThanDebt();
 
 abstract contract Lender is
     ILender,
@@ -168,7 +169,9 @@ abstract contract Lender is
         nonReentrant
     {
         // Checking whether the borrower has available funds for debt payment
-        require(_borrowerFreeAssets(msg.sender) >= debtPayment, "Not enough assets for payment");
+        if(_borrowerFreeAssets(msg.sender) < debtPayment) {
+            revert NotEnoughAssetsForPayment();
+        }
 
         // Debt wasn't repaid, we need to decrease the ratio of this borrower
         if (loss > 0) {
@@ -308,7 +311,9 @@ abstract contract Lender is
         uint256 debt = borrowersData[borrower].debt;
 
         // Make sure the borrower's loss is less than his entire debt
-        require(debt >= loss, "Loss is greater than the debt");
+        if(debt < loss) {
+            revert LossIsGreaterThanDebt();
+        }
 
         // To decrease credibility of the borrower we should lower his "debtRatio"
         if (debtRatio > 0) {

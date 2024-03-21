@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
-
 /// @title ERC4626 Vault Token lifecycle hook interface
 interface IVaultHook {
     function afterDepositTrigger(ERC4626HookPayload memory request) external;

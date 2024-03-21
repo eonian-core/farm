@@ -10,7 +10,7 @@ import {IERC721EnumerableUpgradeable} from "@openzeppelin/contracts-upgradeable/
 import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
 import {ERC5484UpgradableMock} from "./mocks/ERC5484UpgradableMock.sol";
-import {ERC5484Upgradeable} from "contracts/tokens/ERC5484Upgradeable.sol";
+import {ERC5484Upgradeable, ERC5484CanNotBeTransferred, ERC5484TokenDoNotExists} from "contracts/tokens/ERC5484Upgradeable.sol";
 import {IERC5484} from "contracts/tokens/IERC5484.sol";
 import {IERC4626} from "contracts/tokens/IERC4626.sol";
 
@@ -83,7 +83,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         token.safeMint(alice, url);
 
         vm.prank(alice);
-        vm.expectRevert("ERC5484: can't be transferred");
+        vm.expectRevert(ERC5484CanNotBeTransferred.selector);
 
         token.transferFrom(alice, bob, 0);
     }
@@ -225,7 +225,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
     }
 
     function testBurnAuthFail() public {
-        vm.expectRevert("ERC5484: token doesn't exists");
+        vm.expectRevert(ERC5484TokenDoNotExists.selector);
         token.burnAuth(0);
     }
 }

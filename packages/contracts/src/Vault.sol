@@ -1,26 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {PausableUpgradeable} from "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 import {IVault} from "./IVault.sol";
 import {ILender} from "./lending/ILender.sol";
-import {Lender, BorrowerDoesNotExist} from "./lending/Lender.sol";
+import {Lender} from "./lending/Lender.sol";
 import {StrategiesLender} from "./lending/StrategiesLender.sol";
 import {SafeERC4626Upgradeable, ERC4626Upgradeable} from "./tokens/SafeERC4626Upgradeable.sol";
 import {IERC4626} from "./tokens/IERC4626.sol";
 import {IStrategy} from "./strategies/IStrategy.sol";
-import {AddressList} from "./structures/AddressList.sol";
 import {SafeInitializable} from "./upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "./upgradeable/SafeUUPSUpgradeable.sol";
 import {IVersionable} from "./upgradeable/IVersionable.sol";
 import {ERC4626Lifecycle} from "./tokens/ERC4626Lifecycle.sol";
 import {IVaultHook} from "./tokens/IVaultHook.sol";
-import {VaultFounderToken} from "./tokens/VaultFounderToken.sol";
 import {RewardHolder} from "./tokens/RewardHolder.sol";
 
 

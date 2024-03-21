@@ -6,6 +6,7 @@ import  "forge-std/Test.sol";
 import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
 import {VaultFounderToken} from "contracts/tokens/VaultFounderToken.sol";
+import {ERC5484CanNotBeTransferred} from "contracts/tokens/ERC5484Upgradeable.sol";
 import "./mocks/VaultFounderTokenMock.sol";
 import {VaultMock} from "./mocks/VaultMock.sol";
 import "./mocks/ERC20Mock.sol";
@@ -99,7 +100,7 @@ contract VaultFounderTokenTest is TestWithERC1820Registry {
         token.tryToMint(alice, url, aliceAmount);
 
         vm.prank(alice);
-        vm.expectRevert("ERC5484: can't be transferred");
+        vm.expectRevert(ERC5484CanNotBeTransferred.selector);
 
         token.transferFrom(alice, bob, 0);
     }

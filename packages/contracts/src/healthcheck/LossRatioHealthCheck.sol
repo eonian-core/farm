@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.19;
 
-import {OwnableUpgradeable} from "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {IHealthCheck, PASS, ACCEPTABLE_LOSS, SIGNIFICANT_LOSS} from "./IHealthCheck.sol";
@@ -56,7 +54,7 @@ contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
     /// @notice Sets the ratio of the loss that will used to stop strategy.
     /// @param _shutdownLossRatio represents percents of loss in comparison with total debt.
     /// @dev Emits the "ShutdownLossRatioChanged" event.
-    function setShutdownLossRatio(uint _shutdownLossRatio) public onlyOwner {
+    function setShutdownLossRatio(uint256 _shutdownLossRatio) public onlyOwner {
         if (_shutdownLossRatio > MAX_BPS) {
             revert ExceededMaximumLossRatioValue();
         }

@@ -10,6 +10,9 @@ import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Ini
 import {CountersUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 import {IERC5484} from "./IERC5484.sol";
 
+error ERC5484CanNotBeTransferred();
+error ERC5484TokenDoNotExists();
+
 // https://eips.ethereum.org/EIPS/eip-5484
 contract ERC5484Upgradeable is
     IERC5484,
@@ -49,23 +52,31 @@ contract ERC5484Upgradeable is
         bool isBurn = !isMint && to == address(0);
         if(_burnAuth == BurnAuth.Neither) {
             // nobody can burn token
-            require(isMint, "ERC5484: can't be transferred");
+            if(!isMint) {
+                revert ERC5484CanNotBeTransferred();
+            }
         } else if(_burnAuth == BurnAuth.IssuerOnly) {
             // only issuer can burn token
             // so we are checking if token is generation with condition from == address(0)
             // or we are checking that token belongs to other user and message sender is owner and it is burn operation
             bool isBurnOperation = isBurner && isBurn;
-            require(isMint || isBurnOperation, "ERC5484: can't be transferred");
+            if(!isMint && !isBurnOperation) {
+                revert ERC5484CanNotBeTransferred();
+            }
         } else if (_burnAuth == BurnAuth.OwnerOnly){
             // only owner can burn token
             // so we are checking if token is generation with condition from == ownerOf(tokenId) and it is burn operation
             bool isOwner = _ownerOf(tokenId) == msg.sender && hasRole(BURNER_ROLE, msg.sender);
-            require(isMint || (isOwner && isBurn), "ERC5484: can't be transferred");
+            if(!isMint && (!isOwner || !isBurn)) {
+                revert ERC5484CanNotBeTransferred();
+            }
         } else if (_burnAuth == BurnAuth.Both) {
             // both owner and issuer can burn token
             // so we are checking if token is minting with condition from == address(0)
             // or we are checking that token belongs to other user and message sender is owner and it is burn operation
-            require(isMint || (isBurn && isBurner), "ERC5484: can't be transferred");
+            if(!isMint && (!isBurn || !isBurner)) {
+                revert ERC5484CanNotBeTransferred();
+            }
         }
         _;
     }
@@ -175,7 +186,9 @@ contract ERC5484Upgradeable is
     /// @dev unassigned tokenIds are invalid, and queries do throw
     /// @param tokenId The identifier for a token.
     function burnAuth(uint256 tokenId) external view virtual returns (BurnAuth){
-        require(_exists(tokenId), "ERC5484: token doesn't exists");
+        if(!_exists(tokenId)) {
+            revert ERC5484TokenDoNotExists();
+        }
         return _burnAuth;
     }
 }

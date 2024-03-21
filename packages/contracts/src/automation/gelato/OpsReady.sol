@@ -8,6 +8,8 @@ import {BackCombatibleTransfer} from "./BackCombatibleTransfer.sol";
 
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 
+error OpsOnlyAllowed();
+
 /// Based on https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
 /// @notice Give basic methods to pay for Gelato operations.
 abstract contract OpsReady is SafeInitializable {
@@ -25,7 +27,9 @@ abstract contract OpsReady is SafeInitializable {
     uint256[50] private __gap;
 
     modifier onlyOps() {
-        require(msg.sender == address(ops), "OpsReady: onlyOps");
+        if(msg.sender != address(ops)) {
+            revert OpsOnlyAllowed();
+        }
         _;
     }
  

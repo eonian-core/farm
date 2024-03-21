@@ -84,7 +84,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
         // Send reward to Alice and check emits
         vm.expectEmit(address(rewardHolder));
-        rewardHolder.emitRewardClaimed(amount, address(alice));
+        rewardHolder.emitRewardClaimed(amount, address(alice), true);
         vm.prank(alice);
         rewardHolder.claimReward();
 
@@ -184,7 +184,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
         // Send reward to Alice and check emits
         vm.expectEmit(address(rewardHolder));
-        rewardHolder.emitRewardClaimed(amount / 2, address(alice));
+        rewardHolder.emitRewardClaimed(amount / 2, address(alice), true);
         vm.prank(alice);
         rewardHolder.claimReward();
 

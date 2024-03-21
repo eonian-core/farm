@@ -10,6 +10,9 @@ import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 import {IERC4626} from "./IERC4626.sol";
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
+error GivenAssetsResultIsZeroShares();
+error GivenSharesResultIsZeroAssets();
+
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
 /// Based on Solmate (https://github.com/Rari-Capital/solmate/blob/main/src/mixins/ERC4626.sol)
@@ -99,7 +102,9 @@ abstract contract ERC4626Upgradeable is
     {
         shares = previewDeposit(assets);
         // Check for rounding error since we round down in previewDeposit.
-        require(shares != 0, "Given assets result in 0 shares.");
+        if(shares == 0) {
+            revert GivenAssetsResultIsZeroShares();
+        }
 
         _receiveAndDeposit(assets, shares, receiver);
     }
@@ -183,7 +188,9 @@ abstract contract ERC4626Upgradeable is
     ) public virtual nonReentrant returns (uint256 assets) {
         assets = previewRedeem(shares);
         // Check for rounding error since we round down in previewRedeem.
-        require(assets != 0, "Given shares result in 0 assets.");
+        if(assets == 0) {
+            revert GivenSharesResultIsZeroAssets();
+        }
 
         _withdrawAndSend(assets, shares, receiver, owner);
     }

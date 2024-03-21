@@ -8,21 +8,24 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {FixedPointMathLib} from "solmate/utils/FixedPointMathLib.sol";
 import {Vault} from "../Vault.sol";
 
+error VaultNotSet();
+error CallerHaveNoReward();
+
 contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     using FixedPointMathLib for uint256;
 
     /// @notice Emitted reward is claimed by a token owner
-    event RewardClaimed(uint256 reward, address receiver);
+    event RewardClaimed(uint256 reward, address receiver, bool success);
     /// @notice Emitted when new rewards are deposited
-    event RewardDeposited(address sender, uint value);
+    event RewardDeposited(address sender, uint256 value);
     /// @notice Emitted when a new owner is added
-    event OwnerAdded(address owner, uint index);
+    event OwnerAdded(address owner, uint256 index);
 
     /// @notice Accumulator of the total earned interest rate since the opening of the token
-    uint public rewardIndex;
+    uint256 public rewardIndex;
 
     /// @notice The owners' reward indexes for eachas of the last time they accrued
-    mapping(address => uint) public rewardOwnerIndex;
+    mapping(address => uint256) public rewardOwnerIndex;
 
     /// @notice
     uint16 public numberCoins;
@@ -72,23 +75,27 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     /// @dev claim reward for token owner
     function claimReward() external nonReentrant {
-        require(vault != Vault(address(0)), "Vault not set.");
-        require(rewardOwnerIndex[msg.sender] != 0, "Caller doesn't have reward.");
+        if(vault == Vault(address(0))) {
+            revert VaultNotSet();
+        }
+        if(rewardOwnerIndex[msg.sender] == 0) {
+            revert CallerHaveNoReward();
+        }
 
         // calculate reward for token owner
         uint256 tokenOwnerReward = calcReward();
         rewardOwnerIndex[msg.sender] = rewardIndex;
 
         // transfer reward to token owner
-        vault.transfer(msg.sender, tokenOwnerReward);
-        emit RewardClaimed(tokenOwnerReward, address(msg.sender));
+        bool success = vault.transfer(msg.sender, tokenOwnerReward);
+        emit RewardClaimed(tokenOwnerReward, address(msg.sender), success);
     }
 
     function calcReward() public view returns (uint256) {
         if(numberCoins == 0 || rewardOwnerIndex[msg.sender] == 0) {
             return 0;
         }
-        uint deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
+        uint256 deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
         return deltaIndex / numberCoins;
     }
 
