@@ -1,16 +1,16 @@
 import type { BigNumberish, Overrides, Signer } from 'ethers'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { VaultFounderToken, VaultFounderToken__factory } from '../../../typechain-types'
+import type { VaultFounderToken } from '../../../typechain-types'
 
 async function _deployVaultFounderToken(
   this: any,
   hre: HardhatRuntimeEnvironment,
-  signer?: Signer | string,
+  signer?: Signer,
   ...params: Parameters<VaultFounderToken['initialize']>
 ): Promise<VaultFounderToken> {
-  const factory = await hre.ethers.getContractFactory<VaultFounderToken__factory>('VaultFounderToken', signer)
+  const factory = await hre.ethers.getContractFactory('VaultFounderToken', signer)
   const contract = await factory.deploy(false)
-  await contract.deployed()
+  await contract.waitForDeployment()
 
   const transaction = await contract.initialize.call(this, ...params)
   await transaction.wait()
@@ -23,7 +23,7 @@ interface Options {
   nextTokenPriceMultiplier: BigNumberish
   initialTokenPrice: BigNumberish
   overrides?: Overrides & { from?: string | Promise<string> }
-  signer?: Signer | string
+  signer?: Signer
   name?: string
   symbol?: string
   vault: string

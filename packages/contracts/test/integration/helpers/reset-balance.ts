@@ -15,7 +15,7 @@ export default async function resetBalance(
 
   const { tokens } = params
 
-  await provider.send('hardhat_setBalance', [address, ethers.utils.hexlify(ethers.utils.parseEther('10'))])
+  await provider.send('hardhat_setBalance', [address, ethers.toBeHex(ethers.parseEther('10'))])
 
   const signer = await ethers.getSigner(address)
   for (const tokenAddress of tokens) {

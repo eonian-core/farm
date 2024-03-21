@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
-import { BigNumber } from 'ethers'
+import { ethers } from 'ethers'
 import type { Stub_Contract, Stub_ContractChild } from '../../typechain-types'
 import { expectImplementationMatch } from './asserts'
 import { clearDeployments, deployContract } from './helpers'
@@ -10,14 +10,14 @@ describe('Deploy', () => {
 
   it('Should deploy proxy and implementation', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
     const { name, implementation } = await deployContract('Stub_Contract', options, hre)
 
     const contract = await hre.ethers.getContract<Stub_Contract>(name)
 
-    await expectImplementationMatch(contract.address, implementation, hre)
+    await expectImplementationMatch(await contract.getAddress(), implementation, hre)
 
     const integerA = await contract.integerA()
     const addressA = await contract.addressA()
@@ -28,16 +28,16 @@ describe('Deploy', () => {
 
   it('Should deploy proxy and implementation (with inheritance)', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: BigNumber.from(200),
+      integerB: ethers.toBigInt(200),
       addressB: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
     }
     const { name, implementation } = await deployContract('Stub_ContractChild', options, hre)
 
     const contract = await hre.ethers.getContract<Stub_ContractChild>(name)
 
-    await expectImplementationMatch(contract.address, implementation, hre)
+    await expectImplementationMatch(await contract.getAddress(), implementation, hre)
 
     const integerA = await contract.integerA()
     const addressA = await contract.addressA()

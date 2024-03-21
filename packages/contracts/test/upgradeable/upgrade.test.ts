@@ -1,8 +1,7 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
-import { BigNumber } from 'ethers'
+import { ethers } from 'ethers'
 import { DeployErrorHandler, ValidationError } from '@eonian/upgradeable'
-import type { Stub_Contract, Stub_ContractChild, Stub_ContractChildSimpleUpgrade, Stub_ContractSimpleUpgrade } from '../../typechain-types'
 import { expectImplementationMatch } from './asserts'
 import { clearDeployments, deployContract, getDeploymentEvents, manageArtifacts } from './helpers'
 
@@ -22,7 +21,7 @@ describe('Upgrade', () => {
 
   it('Should deploy and upgrade proxy (check upgrade events)', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
 
@@ -39,7 +38,7 @@ describe('Upgrade', () => {
     expect(upgradeResult.address).to.be.equal(deployResult.address)
     expect(upgradeResult.implementation).not.to.be.equal(deployResult.implementation)
 
-    const upgradedEvents = await getDeploymentEvents(upgradeResult, 'Upgraded', hre)
+    const upgradedEvents = await getDeploymentEvents(upgradeResult, 'Upgraded', hre) as ethers.EventLog[]
     expect(upgradedEvents.length).to.be.equal(2)
     expect(upgradedEvents[0].args?.[0]).to.be.equal(deployResult.implementation)
     expect(upgradedEvents[1].args?.[0]).to.be.equal(upgradeResult.implementation)
@@ -47,13 +46,13 @@ describe('Upgrade', () => {
 
   it('Should deploy and upgrade proxy', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
 
     const deployResult = await deployContract('Stub_Contract', options, hre)
 
-    const contractBeforeUpgrade = await hre.ethers.getContractAt<Stub_Contract>(deployResult.abi, deployResult.address)
+    const contractBeforeUpgrade = await hre.ethers.getContractAt(deployResult.abi, deployResult.address)
 
     // Contract variables should have initial (initialized) values
     expect(await contractBeforeUpgrade.integerA()).to.be.equal(options.integerA)
@@ -71,7 +70,7 @@ describe('Upgrade', () => {
 
     const upgradeResult = await deployContract('Stub_Contract', options, hre)
 
-    const contractAfterUpgrade = await hre.ethers.getContractAt<Stub_ContractSimpleUpgrade>(upgradeResult.abi, upgradeResult.address)
+    const contractAfterUpgrade = await hre.ethers.getContractAt(upgradeResult.abi, upgradeResult.address)
 
     const newIntegerB = 500
     await contractAfterUpgrade.setIntegerB(newIntegerB)
@@ -84,15 +83,15 @@ describe('Upgrade', () => {
 
   it('Should deploy and upgrade proxy (with inheritance)', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: BigNumber.from(200),
+      integerB: ethers.toBigInt(200),
       addressB: '0x000000000000000000000000000000000000dEaD',
     }
 
     const deployResult = await deployContract('Stub_ContractChild', options, hre)
 
-    const contractBeforeUpgrade = await hre.ethers.getContractAt<Stub_ContractChild>(deployResult.abi, deployResult.address)
+    const contractBeforeUpgrade = await hre.ethers.getContractAt(deployResult.abi, deployResult.address)
 
     // Contract variables should have initial (initialized) values
     expect(await contractBeforeUpgrade.integerA()).to.be.equal(options.integerA)
@@ -104,7 +103,7 @@ describe('Upgrade', () => {
 
     const upgradeResult = await deployContract('Stub_ContractChild', options, hre)
 
-    const contractAfterUpgrade = await hre.ethers.getContractAt<Stub_ContractChildSimpleUpgrade>(upgradeResult.abi, upgradeResult.address)
+    const contractAfterUpgrade = await hre.ethers.getContractAt(upgradeResult.abi, upgradeResult.address)
 
     const newIntegerC = 500
     await contractAfterUpgrade.setIntegerC(newIntegerC)
@@ -119,7 +118,7 @@ describe('Upgrade', () => {
 
   it('Should validate storage layout before upgrade', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
 
@@ -134,9 +133,9 @@ describe('Upgrade', () => {
 
   it('Should validate storage layout before upgrade (with inheritance)', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: BigNumber.from(200),
+      integerB: ethers.toBigInt(200),
       addressB: '0x000000000000000000000000000000000000dEaD',
     }
 
@@ -151,9 +150,9 @@ describe('Upgrade', () => {
 
   it('Should skip validation if "SKIP_UPGRADE_VALIDATION" is set', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: BigNumber.from(200),
+      integerB: ethers.toBigInt(200),
       addressB: '0x000000000000000000000000000000000000dEaD',
     }
 
@@ -172,15 +171,15 @@ describe('Upgrade', () => {
    */
   it('Should return valid memory layout after fixed contract deployed', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: BigNumber.from(200),
+      integerB: ethers.toBigInt(200),
       addressB: '0x000000000000000000000000000000000000dEaD',
     }
 
     // Check if the initially deployed contract is valid
     const initialDeploy = await deployContract('Stub_ContractChild', options, hre)
-    const initialContract = await hre.ethers.getContractAt<Stub_ContractChild>(initialDeploy.abi, initialDeploy.address)
+    const initialContract = await hre.ethers.getContractAt(initialDeploy.abi, initialDeploy.address)
     expect(await initialContract.integerA()).to.be.equal(options.integerA)
     expect(await initialContract.addressA()).to.be.equal(options.addressA)
     expect(await initialContract.integerB()).to.be.equal(options.integerB)
@@ -197,7 +196,7 @@ describe('Upgrade', () => {
 
     // Deploy invalid implementation and check that memory layout is broken
     const brokenDeploy = await deployContract('Stub_ContractChild', options, hre)
-    const brokenContract = await hre.ethers.getContractAt<Stub_ContractChild>(brokenDeploy.abi, brokenDeploy.address)
+    const brokenContract = await hre.ethers.getContractAt(brokenDeploy.abi, brokenDeploy.address)
     expect(await brokenContract.integerA()).to.not.be.equal(newIntegerA)
     expect(await brokenContract.addressA()).to.not.be.equal(options.addressA)
 
@@ -205,7 +204,7 @@ describe('Upgrade', () => {
 
     // Deploy the initially valid contract back and check that memory has been fixed
     const fixedDeploy = await deployContract('Stub_ContractChild', options, hre)
-    const fixedContract = await hre.ethers.getContractAt<Stub_ContractChild>(fixedDeploy.abi, fixedDeploy.address)
+    const fixedContract = await hre.ethers.getContractAt(fixedDeploy.abi, fixedDeploy.address)
     expect(await fixedContract.integerA()).to.be.equal(newIntegerA)
     expect(await fixedContract.addressA()).to.be.equal(options.addressA)
     expect(await fixedContract.integerB()).to.be.equal(options.integerB)

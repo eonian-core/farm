@@ -17,7 +17,7 @@
     "prepublish": "lerna exec --scope='@eonian/upgradeable' -- yarn prepublish"
   },
   "engines": {
-    "node": ">=18.17.1 <19.0.0"
+    "node": ">=20.0.0"
   },
   "workspaces": {
     "packages": [

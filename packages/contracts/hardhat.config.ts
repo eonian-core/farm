@@ -4,14 +4,16 @@ import * as dotenv from 'dotenv'
 dotenv.config() // must be before all imports
 
 import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types/config'
-import '@nomiclabs/hardhat-ethers'
+import '@nomicfoundation/hardhat-ethers'
 import '@nomiclabs/hardhat-etherscan'
 import '@typechain/hardhat'
 import 'hardhat-gas-reporter'
 import 'solidity-coverage'
 import '@openzeppelin/hardhat-upgrades'
-import 'hardhat-tracer'
+
+// import 'hardhat-tracer'
 import 'hardhat-deploy'
+import 'hardhat-deploy-ethers'
 import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'

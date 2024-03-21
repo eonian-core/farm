@@ -1,18 +1,18 @@
 import type { BigNumberish, Overrides, Signer } from 'ethers'
-import { BigNumber } from 'ethers'
+import { toBigInt } from 'ethers'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
-import type { Vault, Vault__factory } from '../../../typechain-types'
+import type { Vault } from '../../../typechain-types'
 
 async function _deployVault(
-  this: any,
+  this: unknown,
   hre: HardhatRuntimeEnvironment,
-  signer?: Signer | string,
+  signer?: Signer,
   ...params: Parameters<Vault['initialize']>
 ): Promise<Vault> {
-  const factory = await hre.ethers.getContractFactory<Vault__factory>('Vault', signer)
+  const factory = await hre.ethers.getContractFactory('Vault', signer)
   const contract = await factory.deploy(false)
-  await contract.deployed()
+  await contract.waitForDeployment()
 
   const transaction = await contract.initialize.call(this, ...params)
   await transaction.wait()
@@ -30,12 +30,12 @@ interface Options {
   defaultOperators?: string[]
   foundersRewardFee?: BigNumberish
   overrides?: Overrides & { from?: string | Promise<string> }
-  signer?: Signer | string
+  signer?: Signer
 }
 
 const defaultOptions: Partial<Options> = {
   managementFee: 1000, // 10%
-  lockedProfitReleaseRate: BigNumber.from(`1${'0'.repeat(18)}`).div(3600), // 6 hours
+  lockedProfitReleaseRate: toBigInt(`1${'0'.repeat(18)}`) / 3600n, // 6 hours
   name: 'Vault Token',
   symbol: 'VTN',
   defaultOperators: [],
