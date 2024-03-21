@@ -1,10 +1,9 @@
 import type { DeployFunction, DeployResult } from 'hardhat-deploy/types'
 import type { DeployArgs, DeployConfig } from '@eonian/upgradeable'
 import { BaseDeploymentService, wrap } from '@eonian/upgradeable'
-import type { BigNumber } from 'ethers'
 import { BlockchainType } from '../../../hardhat.config'
 
-export type StubOptions = Record<string, string | BigNumber>
+export type StubOptions = Record<string, string | bigint>
 
 interface StubDeploymentParams {
   contract: string

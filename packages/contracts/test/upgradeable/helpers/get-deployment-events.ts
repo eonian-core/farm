@@ -16,6 +16,6 @@ export async function getDeploymentEvents(deployResult: DeployResult, eventName:
   // but it's enough to get recent events from deployment.
   const step = 7
 
-  const blockNumber = block.number
+  const blockNumber = block!.number
   return await contract.queryFilter(eventFilter, blockNumber - step, blockNumber)
 }

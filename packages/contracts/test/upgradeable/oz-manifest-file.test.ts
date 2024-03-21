@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
-import { BigNumber } from 'ethers'
+import { ethers } from 'ethers'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import { clearDeployments, deployContract, manageArtifacts } from './helpers'
 
@@ -11,7 +11,7 @@ describe('OZ Manifest file', () => {
 
   it('Should create openzeppelin manifest file', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
     const { address, implementation } = await deployContract('Stub_Contract', options, hre)
@@ -27,7 +27,7 @@ describe('OZ Manifest file', () => {
 
   it('Should not update openzeppelin manifest file if contract did not changed', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
     await deployContract('Stub_Contract', options, hre)
@@ -45,7 +45,7 @@ describe('OZ Manifest file', () => {
 
   it('Should extend openzeppelin manifest file after upgrade', async () => {
     const options = {
-      integerA: BigNumber.from(100),
+      integerA: ethers.toBigInt(100),
       addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
     }
 
