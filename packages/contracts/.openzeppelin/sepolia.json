@@ -6,15 +6,15 @@
       "kind": "uups"
     },
     {
-      "address": "0x37F07b60d5e7Fc5E4B2342d9A7968c9d1b8D1676",
-      "kind": "uups"
-    },
-    {
       "address": "0xaaF4F4fb77bE4C565826e5F9844E5dDc40990eb5",
       "kind": "uups"
     },
     {
       "address": "0x6bD18204621C2ed91d60EbDC33B6E425d3EaB707",
+      "kind": "uups"
+    },
+    {
+      "address": "0x37F07b60d5e7Fc5E4B2342d9A7968c9d1b8D1676",
       "kind": "uups"
     },
     {
