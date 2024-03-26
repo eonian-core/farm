@@ -70,7 +70,6 @@ const bscMainnet: NetworkUserConfig = {
 }
 
 const defaultNetwork = 'hardhat'
-console.log(`Current network: "${process.env.HARDHAT_NETWORK || defaultNetwork}"`)
 
 const config: HardhatUserConfig = {
   defaultNetwork,
@@ -97,9 +96,10 @@ const config: HardhatUserConfig = {
       tags: [Stage.Development, BlockchainType.Local],
     },
     ganache: {
-      url: 'http://127.0.0.1:8545',
-      forking: ethereumFork,
-      tags: [Stage.Development, BlockchainType.Local],
+      url: 'http://127.0.0.1:7545',
+      accounts: [
+        'f6f76673e75fd925d9fe73babbff8e7ffffc80c2767093301140591c3d5597cb',
+      ],
     },
     bsc_testnet: {
       url: 'https://data-seed-prebsc-1-s1.binance.org:8545',
