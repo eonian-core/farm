@@ -179,6 +179,20 @@ const config: HardhatUserConfig = {
       sepolia: '0x6175a8471C2122f778445e7E07A164250a19E661',
       default: getTokenBySymbol(ChainSymobls.BSC, 'BUSD').address, // will use bsc address as default for hardhat network
     },
+    WETH: {
+      bsc_mainnet_dev: getTokenBySymbol(ChainSymobls.BSC, 'WETH').address,
+      bsc_mainnet_staging: getTokenBySymbol(ChainSymobls.BSC, 'WETH').address,
+      bsc_mainnet_prod: getTokenBySymbol(ChainSymobls.BSC, 'WETH').address,
+      sepolia: '0xD0dF82dE051244f04BfF3A8bB1f62E1cD39eED92', // Sepolia's WETH contract address
+      default: getTokenBySymbol(ChainSymobls.BSC, 'WETH').address, // will use bsc address as default for hardhat network
+    },
+    BTCB: {
+      bsc_mainnet_dev: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+      bsc_mainnet_staging: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+      bsc_mainnet_prod: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+      sepolia: '0xB2a6874c2F71fD4481674BaC945D5407A2318b3E', // Sepolia's WBTC contract address
+      default: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+    },
     treasury: {
       bsc_mainnet_dev: 0,
       bsc_mainnet_staging: 0,
@@ -207,6 +221,20 @@ const config: HardhatUserConfig = {
       default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBUSD], // will use bsc address as default for hardhat network
     },
 
+    apeSwap__cWETH: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cWETH],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cWETH],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cWETH],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cWETH], // will use bsc address as default for hardhat network
+    },
+
+    apeSwap__cBTCB: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBTCB],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBTCB],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBTCB],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.apeSwap__cBTCB], // will use bsc address as default for hardhat network
+    },
+
     chainlink__BNB_USD_feed: {
       bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed],
       bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BNB_USD_feed],
@@ -233,6 +261,20 @@ const config: HardhatUserConfig = {
       bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed],
       bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed],
       default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BUSD_USD_feed], // will use bsc address as default for hardhat network
+    },
+
+    chainlink__WETH_USD_feed: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__WETH_USD_feed],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__WETH_USD_feed],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__WETH_USD_feed],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__WETH_USD_feed], // will use bsc address as default for hardhat network
+    },
+
+    chainlink__BTCB_USD_feed: {
+      bsc_mainnet_dev: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BTCB_USD_feed],
+      bsc_mainnet_staging: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BTCB_USD_feed],
+      bsc_mainnet_prod: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BTCB_USD_feed],
+      default: providers[ChainSymobls.BSC][ProvidersContracts.chainlink__BTCB_USD_feed], // will use bsc address as default for hardhat network
     },
   },
   paths: {
