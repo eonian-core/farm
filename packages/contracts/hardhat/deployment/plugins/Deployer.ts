@@ -2,7 +2,7 @@ import debug from 'debug'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
-import { DeploymentData } from './DeploymentData'
+import { extendEnvironment } from 'hardhat/config'
 
 export enum DeployStatus {
   DEPLOYED = 'DEPLOYED',
@@ -16,19 +16,31 @@ export interface DeployResult {
   status: DeployStatus
 }
 
-export class Deployer {
+type Tail<T extends any[]> = T extends [infer _A, ...infer R] ? R : never
+type DeployFunction = (...args: Tail<ConstructorParameters<typeof Deployer>>) => Promise<DeployResult>
+
+declare module 'hardhat/types/runtime' {
+  export interface HardhatRuntimeEnvironment {
+    deploy: DeployFunction
+  }
+}
+
+extendEnvironment((hre) => {
+  hre.deploy = Deployer.createDeployer(hre)
+})
+
+class Deployer {
   private logger: debug.Debugger = debug(Deployer.name)
 
   private contractFactory: ContractFactory | null = null
   private deployStatus: DeployStatus = DeployStatus.NONE
 
   constructor(
+    private hre: HardhatRuntimeEnvironment,
     private contractName: string,
     private deploymentId: string | null,
     private initArgs: unknown[],
-    private hre: HardhatRuntimeEnvironment,
     private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
-    private deploymentData: DeploymentData = new DeploymentData(hre),
   ) {
     this.upgradeOptions = {
       kind: 'uups',
@@ -37,8 +49,8 @@ export class Deployer {
     }
   }
 
-  public static performDeploy(...args: ConstructorParameters<typeof Deployer>): Promise<DeployResult> {
-    return new Deployer(...args).deploy()
+  public static createDeployer = (hre: HardhatRuntimeEnvironment): DeployFunction => {
+    return (...args: Parameters<DeployFunction>) => new Deployer(hre, ...args).deploy()
   }
 
   /**
@@ -70,7 +82,7 @@ export class Deployer {
    * Returns the proxy address from the cache (deployment data file) or deploys a new proxy first.
    */
   private async getOrCreateProxy(): Promise<string> {
-    const proxyAddressFromCache = await this.deploymentData.getProxyAddress(this.contractName, this.deploymentId)
+    const proxyAddressFromCache = await this.hre.deploymentRegister.getProxyAddress(this.contractName, this.deploymentId)
     if (proxyAddressFromCache) {
       this.log(`Proxy address "${proxyAddressFromCache} was found in the deployment file (deploy is skipped)`)
       return proxyAddressFromCache
@@ -88,7 +100,7 @@ export class Deployer {
     const address = await contract.getAddress()
 
     this.log(`Saving proxy address "${address}" to the deployment data file...`)
-    await this.deploymentData.saveProxy(this.contractName, this.deploymentId, address)
+    await this.hre.deploymentRegister.saveProxy(this.contractName, this.deploymentId, address)
 
     this.changeDeployStatus(DeployStatus.DEPLOYED)
 

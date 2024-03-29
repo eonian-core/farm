@@ -10,7 +10,7 @@ export type AvailableHardhatNetwork = 'hardhat' | 'ganache' | `${Lowercase<Exclu
 
 declare module 'hardhat/types/config' {
   interface HardhatUserConfig {
-    typedNetworks: Partial<{
+    availableNetworks: Partial<{
       [T in AvailableHardhatNetwork]: T extends 'hardhat' ? HardhatNetworkUserConfig : NetworkUserConfig | undefined
     }>
   }

@@ -2,7 +2,6 @@ import { promises } from 'node:fs'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
 import type { Manifest } from '@openzeppelin/upgrades-core'
-import { DeploymentData } from '../../../hardhat/deployment/helpers/DeploymentData'
 
 /**
  * Testing hooks which are needed to clear deployments data between tests
@@ -10,10 +9,8 @@ import { DeploymentData } from '../../../hardhat/deployment/helpers/DeploymentDa
 export function clearDeployments(hre: HardhatRuntimeEnvironment) {
   let manifest!: Manifest
 
-  const deploymentData = new DeploymentData(hre)
-
   beforeEach(async () => {
-    manifest = await deploymentData.validator.getOpenZeppelinManifest()
+    manifest = await hre.deploymentRegister.validator.getOpenZeppelinManifest()
     await manifest.lockedRun(async () => {
       await manifest.write({
         manifestVersion: '3.2',
@@ -27,7 +24,7 @@ export function clearDeployments(hre: HardhatRuntimeEnvironment) {
    * Clears ".json" deployments data between each test
    */
   afterEach(async () => {
-    await deploymentData.deleteFile()
+    await hre.deploymentRegister.deleteFile()
     await deleteOZManifestFile()
   })
 

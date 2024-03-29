@@ -17,6 +17,7 @@ import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
 
 import './hardhat/types'
+import './hardhat/deployment/plugins'
 import './hardhat/tasks'
 
 import { resolveHardhatForkConfig } from './hardhat/forks'
@@ -33,10 +34,8 @@ const bscMainnet: NetworkUserConfig = {
   },
 }
 
-const defaultNetwork = 'hardhat'
-
 const config: HardhatUserConfig = {
-  defaultNetwork,
+  defaultNetwork: 'hardhat',
   solidity: {
     version: '0.8.19',
     settings: {
@@ -46,7 +45,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  typedNetworks: {
+  availableNetworks: {
     hardhat: resolveHardhatForkConfig(),
     ganache: {
       url: 'http://127.0.0.1:7545',
@@ -76,6 +75,6 @@ const config: HardhatUserConfig = {
   },
 }
 
-config.networks = config.typedNetworks
+config.networks = config.availableNetworks
 
 export default config

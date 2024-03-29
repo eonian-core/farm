@@ -1,7 +1,7 @@
 import { task } from 'hardhat/config'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { TokenSymbol } from '../types'
-import { type DeployResult, DeployStatus } from '../deployment/helpers/Deployer'
+import { type DeployResult, DeployStatus } from '../deployment/plugins/Deployer'
 import deployHealthCheck from '../deployment/deployHealthCheck'
 import deployVault from '../deployment/deployVault'
 import deployApeLendingStrategy from '../deployment/deployApeLendingStrategy'

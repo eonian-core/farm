@@ -3,7 +3,7 @@ import { getProviders } from '../providers'
 import type { VaultFounderToken } from '../../typechain-types'
 import type { TokenSymbol } from '../types'
 import { ContractGroup } from '../types'
-import { type DeployResult, DeployStatus, Deployer } from './helpers/Deployer'
+import { type DeployResult, DeployStatus } from './plugins/Deployer'
 
 export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)
@@ -15,7 +15,7 @@ export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeE
     `VFT.eon${token}`, // symbol
     addresses.vault, // vault
   ]
-  const deployResult = await Deployer.performDeploy('VaultFounderToken', token, initializeArguments, hre)
+  const deployResult = await hre.deploy('VaultFounderToken', token, initializeArguments)
 
   if (deployResult.status === DeployStatus.DEPLOYED) {
     await attachToVault(deployResult.proxyAddress, addresses.vault, hre)

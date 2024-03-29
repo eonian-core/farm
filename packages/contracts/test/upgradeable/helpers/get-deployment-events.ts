@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { DeploymentData } from '../../../hardhat/deployment/helpers/DeploymentData'
 
 export async function getDeploymentEvents(contractAddress: string, eventName: string, hre: HardhatRuntimeEnvironment) {
   const contractName = await getContractNameByAddress(contractAddress, hre)
@@ -17,8 +16,7 @@ export async function getDeploymentEvents(contractAddress: string, eventName: st
 }
 
 async function getContractNameByAddress(contractAddress: string, hre: HardhatRuntimeEnvironment): Promise<string> {
-  const deploymentData = new DeploymentData(hre)
-  const deploymentDataContent = await deploymentData.read()
+  const deploymentDataContent = await hre.deploymentRegister.read()
   const contractNames = Object.keys(deploymentDataContent)
   return contractNames.find(contractName => Object.values(deploymentDataContent[contractName].proxies).includes(contractAddress))!
 }

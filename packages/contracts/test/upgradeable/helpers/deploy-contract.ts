@@ -1,6 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { type DeployResult, Deployer } from '../../../hardhat/deployment/helpers/Deployer'
+import { type DeployResult } from '../../../hardhat/deployment/plugins/Deployer'
 
 export async function deployContract(contractName: string, args: unknown[], hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
-  return await Deployer.performDeploy(contractName, null, args, hre)
+  return await hre.deploy(contractName, null, args)
 }

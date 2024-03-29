@@ -2,7 +2,7 @@ import type { ManifestData } from '@openzeppelin/upgrades-core'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import { difference } from 'lodash'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { DeploymentFile } from './DeploymentData'
+import type { DeploymentFile } from './DeploymentRegister'
 
 export class DeploymentDataValidator {
   constructor(private hre: HardhatRuntimeEnvironment) {}

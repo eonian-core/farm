@@ -3,7 +3,7 @@ import { getProviders } from '../providers'
 import type { Vault } from '../../typechain-types'
 import type { TokenSymbol } from '../types'
 import { ContractGroup, NetworkEnvironment, resolveNetworkEnvironment } from '../types'
-import { type DeployResult, Deployer } from './helpers/Deployer'
+import { type DeployResult } from './plugins/Deployer'
 
 export default async function deployVault(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)
@@ -19,7 +19,7 @@ export default async function deployVault(token: TokenSymbol, hre: HardhatRuntim
     [], // Parameter: "defaultOperators"
     100, // Vault founder tokens fee (1%)
   ]
-  return await Deployer.performDeploy('Vault', token, initializeArguments, hre)
+  return await hre.deploy('Vault', token, initializeArguments)
 }
 
 async function getAddreses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {

@@ -4,6 +4,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { networkNames } from '@openzeppelin/upgrades-core'
 import debug from 'debug'
 import { merge } from 'lodash'
+import { extendEnvironment } from 'hardhat/config'
 import { DeploymentDataValidator } from './DeploymentDataValidator'
 
 /**
@@ -29,12 +30,22 @@ export interface ContractDeploymentData {
 const DEPLOYMENT_DATA_DIR = '.deployments'
 const DEFAULT_DEPLOYMENT_ID = 'default'
 
+declare module 'hardhat/types/runtime' {
+  export interface HardhatRuntimeEnvironment {
+    deploymentRegister: DeploymentRegister
+  }
+}
+
+extendEnvironment((hre) => {
+  hre.deploymentRegister = new DeploymentRegister(hre)
+})
+
 /**
  * A utility class that is used to keep track of each deployed proxy with
  * a separate .json file for each network in the {@link DEPLOYMENT_DATA_DIR} directory.
  */
-export class DeploymentData {
-  private log = debug(DeploymentData.name)
+class DeploymentRegister {
+  private log = debug(DeploymentRegister.name)
 
   public readonly validator: DeploymentDataValidator
 

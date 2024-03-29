@@ -2,7 +2,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { ContractGroup, TokenSymbol } from '../types'
 import { getProviders } from '../providers'
 import { type ApeLendingStrategy } from '../../typechain-types'
-import { type DeployResult, DeployStatus, Deployer } from './helpers/Deployer'
+import { type DeployResult, DeployStatus } from './plugins/Deployer'
 
 export default async function deployApeLendingStrategy(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)
@@ -19,7 +19,7 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
     addresses.healthCheck,
   ]
 
-  const deployResult = await Deployer.performDeploy('ApeLendingStrategy', token, initializeArguments, hre)
+  const deployResult = await hre.deploy('ApeLendingStrategy', token, initializeArguments)
 
   if (deployResult.status === DeployStatus.DEPLOYED) {
     await attachToVault(deployResult.proxyAddress, addresses.vault, hre)
