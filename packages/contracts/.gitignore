@@ -24,3 +24,7 @@ cache_hardhat/
 /broadcast/*/31337/
 deployments/local.json
 deployments/hardhat
+
+.deployments/hardhat-*.json
+.deployments/ganache-*.json
+.openzeppelin/unknown-*.json

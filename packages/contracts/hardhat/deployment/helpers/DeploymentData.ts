@@ -26,7 +26,7 @@ export interface ContractDeploymentData {
   proxies: Record<string, string>
 }
 
-const DEPLOYMENT_DATA_DIR = '.deployment'
+const DEPLOYMENT_DATA_DIR = '.deployments'
 const DEFAULT_DEPLOYMENT_ID = 'default'
 
 /**

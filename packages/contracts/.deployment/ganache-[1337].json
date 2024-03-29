@@ -1,7 +1,0 @@
-{
-  "LossRatioHealthCheck": {
-    "proxies": {
-      "default": "0x796AaFA7f5EB64D5d43aa3a0B95a27B3675d2a73"
-    }
-  }
-}
