@@ -1,7 +1,7 @@
 import { promises } from 'node:fs'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
-import type { Manifest } from '@openzeppelin/upgrades-core'
+import { Manifest } from '@openzeppelin/upgrades-core'
 
 /**
  * Testing hooks which are needed to clear deployments data between tests
@@ -10,7 +10,7 @@ export function clearDeployments(hre: HardhatRuntimeEnvironment) {
   let manifest!: Manifest
 
   beforeEach(async () => {
-    manifest = await hre.deploymentRegister.validator.getOpenZeppelinManifest()
+    manifest ??= await Manifest.forNetwork(hre.ethers.provider)
     await manifest.lockedRun(async () => {
       await manifest.write({
         manifestVersion: '3.2',

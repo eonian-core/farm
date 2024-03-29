@@ -5,7 +5,6 @@ import { networkNames } from '@openzeppelin/upgrades-core'
 import debug from 'debug'
 import { merge } from 'lodash'
 import { extendEnvironment } from 'hardhat/config'
-import { DeploymentDataValidator } from './DeploymentDataValidator'
 
 /**
  * Due to the fact that the OpenZeppelin manifest file does not contain information about
@@ -47,10 +46,7 @@ extendEnvironment((hre) => {
 class DeploymentRegister {
   private log = debug(DeploymentRegister.name)
 
-  public readonly validator: DeploymentDataValidator
-
   constructor(private hre: HardhatRuntimeEnvironment) {
-    this.validator = new DeploymentDataValidator(hre)
   }
 
   /**
@@ -111,8 +107,6 @@ class DeploymentRegister {
    */
   public async write(data: DeploymentFile): Promise<void> {
     try {
-      await this.validator.validate(data)
-
       const deploymentFilePath = await this.ensureFileExists()
       const content = JSON.stringify(data, null, 2)
       await fs.writeFile(deploymentFilePath, content, { encoding: 'utf-8' })
