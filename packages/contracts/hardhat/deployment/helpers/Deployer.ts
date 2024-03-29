@@ -24,10 +24,10 @@ export class Deployer {
 
   constructor(
     private contractName: string,
-    private deploymentId: string,
+    private deploymentId: string | null,
     private initArgs: unknown[],
     private hre: HardhatRuntimeEnvironment,
-    private upgradeOptions: UpgradeOptions = {},
+    private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
     private deploymentData: DeploymentData = new DeploymentData(hre),
   ) {
     this.upgradeOptions = {

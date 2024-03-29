@@ -14,12 +14,12 @@
     "./deploy",
     "./test",
     "./typechain-types",
-    "./hardhat"
+    "./hardhat",
   ],
   "exclude": [
     "./deployments"
   ],
   "files": [
-    "./hardhat.config.ts"
+    "./hardhat.config.ts",
   ]
 }

@@ -35,11 +35,6 @@ export const startNodeTask = task(TASK_TEST, async (_args, env, runSuper) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await runSuper()
   }
-  if (process.env.DISABLE_HARDHAT_FORK === 'true') {
-    log('Variable "DISABLE_HARDHAT_FORK" is true, fork node will not be started')
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return await runSuper()
-  }
   await runTask(env, runSuper)
 })
 

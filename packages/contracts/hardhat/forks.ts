@@ -1,30 +1,48 @@
-import type { HardhatNetworkForkingUserConfig } from 'hardhat/types'
+import type { HardhatNetworkUserConfig } from 'hardhat/types'
+import { Chain } from './types'
 
-export type ForkData = HardhatNetworkForkingUserConfig & {
-  accounts: Record<string, string>
+const chainToURL: Record<Chain, string | undefined> = {
+  [Chain.UNKNOWN]: 'http://127.0.0.1:8545/',
+  [Chain.BSC]: process.env.BSC_MAINNET_RPC_URL,
 }
 
-const bscRpcUrl = process.env.BSC_MAINNET_RPC_URL
-if (!bscRpcUrl) {
-  throw new Error('Missing BSC_MAINNET_RPC_URL environment variable')
+export function resolveHardhatForkConfig() {
+  const forkChain = getChainForFork()
+  const url = chainToURL[forkChain]
+  if (!url) {
+    throw new Error(`Fork RPC URL is not found for chain: ${forkChain}`)
+  }
+  return forkChain === Chain.UNKNOWN ? noFork() : fork(url)
 }
 
-/** Binance Smart Chain Mainnet */
-export const binanceSmartChainFork: ForkData = {
-  // official BSC RPC unstable use unofficail instead
-  url: bscRpcUrl,
-  // do not use blockNumber for BSC,
-  // hardhat or providers cannot correctly exchange non latest block data
-  accounts: {
-    holderA: '0x8894e0a0c962cb723c1976a4421c95949be2d4e3', // Holder (Binance: Hot Wallet 6)
-    holderB: '0xF977814e90dA44bFA03b6295A0616a897441aceC', // Holder (Binance Hot Wallet 20)
-    ops: '0x527a819db1eb0e34426297b03bae11F2f8B3A19E', // Gelato ops
-  },
+export function getChainForFork(): Chain {
+  const forkOf = process.env.HARDHAT_FORK_NETWORK
+  if (!forkOf || forkOf.toLowerCase() === 'false') {
+    return Chain.UNKNOWN
+  }
+  const chain = Object.values(Chain).find(chain => forkOf.toUpperCase() === chain)
+  if (!chain) {
+    throw new Error(`Chain "${forkOf}" is not valid, possible values: ${Object.values(Chain).join(', ')}`)
+  }
+  return chain
 }
 
-/** Ethereum Mainnet */
-export const ethereumFork: ForkData = {
-  url: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-  blockNumber: 14668845, // 27.04.2021
-  accounts: {},
+/** Setup is compatible with BSC mainnet */
+function fork(url: string): HardhatNetworkUserConfig {
+  return {
+    forking: {
+      url,
+    },
+    mining: {
+      auto: true,
+      interval: 5000,
+      mempool: {
+        order: 'fifo',
+      },
+    },
+  }
+}
+
+function noFork(): HardhatNetworkUserConfig {
+  return {}
 }

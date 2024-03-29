@@ -2,15 +2,15 @@
   "manifestVersion": "3.2",
   "proxies": [
     {
-      "address": "0x2882D4E59e350207FB83EA011a2C425E778D0F93",
-      "txHash": "0x05aba3d8a28289bb61d98594cb9559d3bf42303ce35dd2e4272a98794db70edb",
+      "address": "0x022f3bBa3395665FdFe0C7c09c4aCA5aB03B6980",
+      "txHash": "0xdfae881e3ff9b94c802e3c28390fbb8e28ed6244be133e4f28a31e7c5ffc6cd9",
       "kind": "uups"
     }
   ],
   "impls": {
-    "7194771c67d54ab1524d823f20a3c5142c9b283538720edb4e0148aed111c3a0": {
-      "address": "0x32e1d42522eDF25f149b81FE48d3E0e2c8fACAE3",
-      "txHash": "0x859c69c1568db6116b8265ee9acb4aa543f1e6cd59742f0469f37f59b1b3d217",
+    "2eab54885d41ee256e498931838393dd19251a20c22a65e8878bc35cf2966dd5": {
+      "address": "0x39fE8Ea82A1153B2Af4d530E13a6226B7A721Fe6",
+      "txHash": "0x263ae7ab6402d790304fe922232271c3c0337fa6db5adefc1563169e34a25fe1",
       "layout": {
         "solcVersion": "0.8.19",
         "storage": [
@@ -52,114 +52,13 @@
             "offset": 0,
             "slot": "101",
             "type": "t_array(t_uint256)50_storage",
-            "contract": "ContextUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:40"
+            "contract": "SafeInitializable",
+            "src": "src/upgradeable/SafeInitializable.sol:15"
           },
           {
-            "label": "_owner",
+            "label": "__gap",
             "offset": 0,
             "slot": "151",
-            "type": "t_address",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "152",
-            "type": "t_array(t_uint256)49_storage",
-            "contract": "OwnableUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
-          },
-          {
-            "label": "num",
-            "offset": 0,
-            "slot": "201",
-            "type": "t_uint256",
-            "contract": "Counter",
-            "src": "src/Counter.sol:9"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "202",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "Counter",
-            "src": "src/Counter.sol:11"
-          }
-        ],
-        "types": {
-          "t_address": {
-            "label": "address",
-            "numberOfBytes": "20"
-          },
-          "t_array(t_uint256)49_storage": {
-            "label": "uint256[49]",
-            "numberOfBytes": "1568"
-          },
-          "t_array(t_uint256)50_storage": {
-            "label": "uint256[50]",
-            "numberOfBytes": "1600"
-          },
-          "t_bool": {
-            "label": "bool",
-            "numberOfBytes": "1"
-          },
-          "t_uint256": {
-            "label": "uint256",
-            "numberOfBytes": "32"
-          },
-          "t_uint8": {
-            "label": "uint8",
-            "numberOfBytes": "1"
-          }
-        },
-        "namespaces": {}
-      }
-    },
-    "92c221a007dd772d51c15597be92c780db279ec4fc31682a261cee3689e07747": {
-      "address": "0x571cf70c3afa883b10F1B01489C86BEcA0e2c823",
-      "txHash": "0xa8330c0f929cc795a58b2fc7d074508f50c117c91c5cd30cec56d706acc7c84a",
-      "layout": {
-        "solcVersion": "0.8.19",
-        "storage": [
-          {
-            "label": "_initialized",
-            "offset": 0,
-            "slot": "0",
-            "type": "t_uint8",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:63",
-            "retypedFrom": "bool"
-          },
-          {
-            "label": "_initializing",
-            "offset": 1,
-            "slot": "0",
-            "type": "t_bool",
-            "contract": "Initializable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:68"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "1",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "ERC1967UpgradeUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/ERC1967/ERC1967UpgradeUpgradeable.sol:169"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "51",
-            "type": "t_array(t_uint256)50_storage",
-            "contract": "UUPSUpgradeable",
-            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol:111"
-          },
-          {
-            "label": "__gap",
-            "offset": 0,
-            "slot": "101",
             "type": "t_array(t_uint256)50_storage",
             "contract": "ContextUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:40"
@@ -167,7 +66,7 @@
           {
             "label": "_owner",
             "offset": 0,
-            "slot": "151",
+            "slot": "201",
             "type": "t_address",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
@@ -175,26 +74,34 @@
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "152",
+            "slot": "202",
             "type": "t_array(t_uint256)49_storage",
             "contract": "OwnableUpgradeable",
             "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
           },
           {
-            "label": "num",
+            "label": "__gap",
             "offset": 0,
-            "slot": "201",
+            "slot": "251",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "SafeUUPSUpgradeable",
+            "src": "src/upgradeable/SafeUUPSUpgradeable.sol:19"
+          },
+          {
+            "label": "shutdownLossRatio",
+            "offset": 0,
+            "slot": "301",
             "type": "t_uint256",
-            "contract": "Counter2",
-            "src": "src/Counter2.sol:9"
+            "contract": "LossRatioHealthCheck",
+            "src": "src/healthcheck/LossRatioHealthCheck.sol:21"
           },
           {
             "label": "__gap",
             "offset": 0,
-            "slot": "202",
+            "slot": "302",
             "type": "t_array(t_uint256)50_storage",
-            "contract": "Counter2",
-            "src": "src/Counter2.sol:11"
+            "contract": "LossRatioHealthCheck",
+            "src": "src/healthcheck/LossRatioHealthCheck.sol:28"
           }
         ],
         "types": {

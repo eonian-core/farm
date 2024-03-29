@@ -27,6 +27,7 @@ export interface ContractDeploymentData {
 }
 
 const DEPLOYMENT_DATA_DIR = '.deployment'
+const DEFAULT_DEPLOYMENT_ID = 'default'
 
 /**
  * A utility class that is used to keep track of each deployed proxy with
@@ -44,7 +45,8 @@ export class DeploymentData {
   /**
    * Returns proxy address from the deployment data file.
    */
-  public async getProxyAddress(contractName: string, deploymentId: string): Promise<string | null> {
+  public async getProxyAddress(contractName: string, deploymentId: string | null): Promise<string | null> {
+    deploymentId ??= DEFAULT_DEPLOYMENT_ID
     const data = await this.read()
     const contractData = data[contractName]
     if (!contractData) {
@@ -62,7 +64,8 @@ export class DeploymentData {
   /**
    * Saves the specified proxy address to the deployment data file.
    */
-  public async saveProxy(contractName: string, deploymentId: string, address: string): Promise<void> {
+  public async saveProxy(contractName: string, deploymentId: string | null, address: string): Promise<void> {
+    deploymentId ??= DEFAULT_DEPLOYMENT_ID
     const currentProxyAddress = await this.getProxyAddress(contractName, deploymentId)
     if (currentProxyAddress !== null && currentProxyAddress !== address) {
       throw new Error(
@@ -161,7 +164,8 @@ export class DeploymentData {
    */
   private async getDeploymentFilePath(): Promise<string> {
     const chainId = await this.getChainId()
-    return path.join(DEPLOYMENT_DATA_DIR, `chain-${networkNames[chainId] ?? chainId}.json`)
+    const chainInfo = networkNames[chainId] ? `${chainId}-${networkNames[chainId]}` : String(chainId)
+    return path.join(DEPLOYMENT_DATA_DIR, `${this.hre.network.name}-[${chainInfo}].json`)
   }
 
   /**
