@@ -1,18 +1,14 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
-import type { Contract } from 'ethers'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 import type {
   ApeLendingStrategy,
-  ApeLendingStrategy__factory,
   IERC20,
   LossRatioHealthCheck,
-  LossRatioHealthCheck__factory,
   Vault,
   VaultFounderToken,
 } from '../../typechain-types'
-import { binanceSmartChainFork } from '../../hardhat/forks'
 import deployVault from './helpers/deploy-vault'
 import warp from './helpers/warp'
 import getToken from './helpers/get-erc20-token'
@@ -51,9 +47,9 @@ describe('Ape Lending Strategy', () => {
 
   async function setup() {
     [owner] = await ethers.getSigners()
-    holderA = await ethers.getSigner(binanceSmartChainFork.accounts.holderA)
-    holderB = await ethers.getSigner(binanceSmartChainFork.accounts.holderB)
-    ops = await ethers.getSigner(binanceSmartChainFork.accounts.ops)
+    holderA = await ethers.getSigner('0x8894e0a0c962cb723c1976a4421c95949be2d4e3') // Binance Hot Wallet #6
+    holderB = await ethers.getSigner('0xF977814e90dA44bFA03b6295A0616a897441aceC') // Binance Hot Wallet #20
+    ops = await ethers.getSigner('0x527a819db1eb0e34426297b03bae11F2f8B3A19E') // Gelato OPS
 
     await helpers.impersonateAccount(holderA.address)
     // hre.tracer.nameTags[holderA.address] = 'Holder A'

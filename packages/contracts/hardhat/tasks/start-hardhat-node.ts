@@ -66,10 +66,6 @@ async function runTask(env: HardhatRuntimeEnvironment, runSuper: RunSuperFunctio
   try {
     console.log(`Starting node... ${attempt ? `Attempt: ${attempt + 1}` : ''}`.trim())
     const childProcess = await startNode(env)
-    if (!childProcess?.pid) {
-      throw new Error('Unable to start node!')
-    }
-
     const { url } = env.network.config as HttpNetworkConfig
     console.log(`Node is up and running on ${url ?? 'http://127.0.0.1:8545'}!`)
 
@@ -100,22 +96,18 @@ async function runTask(env: HardhatRuntimeEnvironment, runSuper: RunSuperFunctio
  * @param hre Hardhat runtime environment (configuration)
  * @returns Spawned child process of the RPC server
  */
-async function startNode(hre: HardhatRuntimeEnvironment): Promise<ChildProcessWithoutNullStreams | null> {
+async function startNode(hre: HardhatRuntimeEnvironment): Promise<ChildProcessWithoutNullStreams> {
   const { forking } = hre.network.config as HardhatNetworkConfig
   if (!forking) {
-    logError('Fork configuration is not specified')
-    return null
+    throw new Error('Fork configuration is not specified!')
   }
 
   // Don't spawn the node if the fork is not needed ("undefined" is considered "true").
   if (forking.enabled === false) {
-    logError('Fork is disabled')
-    return null
+    throw new Error('Fork is disabled')
   }
 
-  const processOptions = ['hardhat', 'node', '--no-deploy']
-
-  const childProcess = spawn('yarn', processOptions)
+  const childProcess = spawn('yarn', ['hardhat', 'node'])
 
   // We should kill the node process when the main process has been stopped.
   process.on('exit', () => {
@@ -134,7 +126,7 @@ async function startNode(hre: HardhatRuntimeEnvironment): Promise<ChildProcessWi
   let errorMessage: string | null = null
   let isNodeStarted: boolean = false
 
-  return new Promise<ChildProcessWithoutNullStreams | null>((resolve, reject) => {
+  return new Promise<ChildProcessWithoutNullStreams>((resolve, reject) => {
     childProcess.stdout.on('data', (data: object) => {
       const message = data.toString()
 
@@ -167,7 +159,7 @@ async function startNode(hre: HardhatRuntimeEnvironment): Promise<ChildProcessWi
       log(`Node stopped with code: ${code ?? -1}`)
 
       if (code === 0) {
-        resolve(null)
+        resolve(childProcess)
         return
       }
 

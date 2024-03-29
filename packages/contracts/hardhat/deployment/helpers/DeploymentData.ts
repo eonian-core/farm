@@ -36,10 +36,10 @@ const DEFAULT_DEPLOYMENT_ID = 'default'
 export class DeploymentData {
   private log = debug(DeploymentData.name)
 
-  private validator: DeploymentDataValidator
+  public readonly validator: DeploymentDataValidator
 
   constructor(private hre: HardhatRuntimeEnvironment) {
-    this.validator = new DeploymentDataValidator(this)
+    this.validator = new DeploymentDataValidator(hre)
   }
 
   /**
@@ -144,9 +144,17 @@ export class DeploymentData {
   }
 
   /**
+   * Deletes the current chain file, used in tests.
+   */
+  public async deleteFile(): Promise<void> {
+    const deploymentFilePath = await this.getDeploymentFilePath()
+    await fs.rm(deploymentFilePath, { force: true })
+  }
+
+  /**
    * Returns id of the current chain.
    */
-  public async getChainId(): Promise<number> {
+  private async getChainId(): Promise<number> {
     const network = await this.hre.ethers.provider.getNetwork()
     return Number(network.chainId)
   }

@@ -1,21 +1,24 @@
-import type { DeployResult } from 'hardhat-deploy/types'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { DeploymentData } from '../../../hardhat/deployment/helpers/DeploymentData'
 
-export async function getDeploymentEvents(deployResult: DeployResult, eventName: string, hre: HardhatRuntimeEnvironment) {
-  const [singer] = await hre.ethers.getSigners()
-  const contract = new hre.ethers.Contract(
-    deployResult.address,
-    deployResult.abi,
-    singer,
-  )
+export async function getDeploymentEvents(contractAddress: string, eventName: string, hre: HardhatRuntimeEnvironment) {
+  const contractName = await getContractNameByAddress(contractAddress, hre)
+  const contract = await hre.ethers.getContractAt(contractName, contractAddress)
   const eventFilter = contract.filters[eventName]()
   const block = await hre.ethers.provider.getBlock('latest')
 
   // Specify lookup page size to prevent "limit exceeded" error.
-  // 7 blocks is the maximum value that the BSC endpoint allows you to look past,
+  // This is the maximum value that the BSC endpoint allows you to look past,
   // but it's enough to get recent events from deployment.
-  const step = 7
+  const step = 4
 
   const blockNumber = block!.number
   return await contract.queryFilter(eventFilter, blockNumber - step, blockNumber)
+}
+
+async function getContractNameByAddress(contractAddress: string, hre: HardhatRuntimeEnvironment): Promise<string> {
+  const deploymentData = new DeploymentData(hre)
+  const deploymentDataContent = await deploymentData.read()
+  const contractNames = Object.keys(deploymentDataContent)
+  return contractNames.find(contractName => Object.values(deploymentDataContent[contractName].proxies).includes(contractAddress))!
 }

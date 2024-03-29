@@ -1,16 +1,16 @@
 import type { ManifestData } from '@openzeppelin/upgrades-core'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import { difference } from 'lodash'
-import type { DeploymentData, DeploymentFile } from './DeploymentData'
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import type { DeploymentFile } from './DeploymentData'
 
 export class DeploymentDataValidator {
-  constructor(private deploymentData: DeploymentData) {}
+  constructor(private hre: HardhatRuntimeEnvironment) {}
 
   /**
    * Validates the deployment data.
    */
-  public async validate(data?: DeploymentFile): Promise<void> {
-    data ??= await this.deploymentData.read()
+  public async validate(data: DeploymentFile): Promise<void> {
     await this.validateSyncWithManifest(data)
   }
 
@@ -41,10 +41,16 @@ export class DeploymentDataValidator {
   /**
    * Reads the OpenZeppelin's manifest file and returns its content.
    */
-  private async getManifestData(): Promise<ManifestData> {
-    const chainId = await this.deploymentData.getChainId()
-    const manifest = new Manifest(chainId)
+  public async getManifestData(): Promise<ManifestData> {
+    const manifest = await this.getOpenZeppelinManifest()
     const manifestData = await manifest.read(3)
     return manifestData
+  }
+
+  /**
+   * Returns active OZ manifest.
+   */
+  public async getOpenZeppelinManifest() {
+    return await Manifest.forNetwork(this.hre.ethers.provider)
   }
 }

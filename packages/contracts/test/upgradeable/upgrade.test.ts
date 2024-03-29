@@ -1,62 +1,58 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
 import { ethers } from 'ethers'
-import { DeployErrorHandler, ValidationError } from '@eonian/upgradeable'
+import { DeployStatus } from '../../hardhat/deployment/helpers/Deployer'
 import { expectImplementationMatch } from './asserts'
 import { clearDeployments, deployContract, getDeploymentEvents, manageArtifacts } from './helpers'
 
 describe('Upgrade', () => {
-  const deployErrorHandler = new DeployErrorHandler(hre)
-  const { replaceArtifacts, resetArtifacts } = manageArtifacts(hre)
+  const { replaceArtifacts } = manageArtifacts(hre)
 
   clearDeployments(hre)
 
-  beforeEach(async () => {
-    await deployErrorHandler.createErrorManifestFile()
-  })
-
-  afterEach(async () => {
-    await deployErrorHandler.removeErrorManifestFile()
-  })
-
   it('Should deploy and upgrade proxy (check upgrade events)', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-    }
+    const contractName = 'Stub_Contract'
 
-    const deployResult = await deployContract('Stub_Contract', options, hre)
-
-    await expectImplementationMatch(deployResult.address, deployResult.implementation, hre)
+    const options = new Map<string, any>([
+      ['integerA', ethers.toBigInt(100)],
+      ['addressA', '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'],
+    ])
+    const deployResult = await deployContract(contractName, Array.from(options.values()), hre)
+    const contract = await hre.ethers.getContractAt(contractName, deployResult.proxyAddress)
+    await expectImplementationMatch(await contract.getAddress(), deployResult.implementationAddress, hre)
 
     await replaceArtifacts('Stub_ContractSimpleUpgrade', 'Stub_Contract')
 
-    const upgradeResult = await deployContract('Stub_Contract', options, hre)
+    const upgradeResult = await deployContract(contractName, Array.from(options.values()), hre)
+    await expectImplementationMatch(upgradeResult.proxyAddress, upgradeResult.implementationAddress, hre)
 
-    await expectImplementationMatch(upgradeResult.address, upgradeResult.implementation, hre)
+    expect(deployResult.status).to.be.equal(DeployStatus.DEPLOYED)
+    expect(upgradeResult.status).to.be.equal(DeployStatus.UPGRADED)
 
-    expect(upgradeResult.address).to.be.equal(deployResult.address)
-    expect(upgradeResult.implementation).not.to.be.equal(deployResult.implementation)
+    expect(upgradeResult.proxyAddress).to.be.equal(deployResult.proxyAddress)
+    expect(upgradeResult.implementationAddress).not.to.be.equal(deployResult.implementationAddress)
 
-    const upgradedEvents = await getDeploymentEvents(upgradeResult, 'Upgraded', hre) as ethers.EventLog[]
+    const upgradedEvents = await getDeploymentEvents(upgradeResult.proxyAddress, 'Upgraded', hre) as ethers.EventLog[]
     expect(upgradedEvents.length).to.be.equal(2)
-    expect(upgradedEvents[0].args?.[0]).to.be.equal(deployResult.implementation)
-    expect(upgradedEvents[1].args?.[0]).to.be.equal(upgradeResult.implementation)
+    expect(upgradedEvents[0].args?.[0]).to.be.equal(deployResult.implementationAddress)
+    expect(upgradedEvents[1].args?.[0]).to.be.equal(upgradeResult.implementationAddress)
   })
 
   it('Should deploy and upgrade proxy', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-    }
+    const contractName = 'Stub_Contract'
 
-    const deployResult = await deployContract('Stub_Contract', options, hre)
+    const options = new Map<string, any>([
+      ['integerA', ethers.toBigInt(100)],
+      ['addressA', '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'],
+    ])
+    const deployResult = await deployContract(contractName, Array.from(options.values()), hre)
+    expect(deployResult.status).to.be.equal(DeployStatus.DEPLOYED)
 
-    const contractBeforeUpgrade = await hre.ethers.getContractAt(deployResult.abi, deployResult.address)
+    const contractBeforeUpgrade = await hre.ethers.getContractAt(contractName, deployResult.proxyAddress)
 
     // Contract variables should have initial (initialized) values
-    expect(await contractBeforeUpgrade.integerA()).to.be.equal(options.integerA)
-    expect(await contractBeforeUpgrade.addressA()).to.be.equal(options.addressA)
+    expect(await contractBeforeUpgrade.integerA()).to.be.equal(options.get('integerA'))
+    expect(await contractBeforeUpgrade.addressA()).to.be.equal(options.get('addressA'))
 
     // Set values to new ones
     const newIntegerA = 333
@@ -68,9 +64,10 @@ describe('Upgrade', () => {
 
     await replaceArtifacts('Stub_ContractSimpleUpgrade', 'Stub_Contract')
 
-    const upgradeResult = await deployContract('Stub_Contract', options, hre)
+    const upgradeResult = await deployContract(contractName, Array.from(options.values()), hre)
+    expect(upgradeResult.status).to.be.equal(DeployStatus.UPGRADED)
 
-    const contractAfterUpgrade = await hre.ethers.getContractAt(upgradeResult.abi, upgradeResult.address)
+    const contractAfterUpgrade = await hre.ethers.getContractAt('Stub_ContractSimpleUpgrade', upgradeResult.proxyAddress)
 
     const newIntegerB = 500
     await contractAfterUpgrade.setIntegerB(newIntegerB)
@@ -82,136 +79,70 @@ describe('Upgrade', () => {
   })
 
   it('Should deploy and upgrade proxy (with inheritance)', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: ethers.toBigInt(200),
-      addressB: '0x000000000000000000000000000000000000dEaD',
-    }
+    const contractName = 'Stub_ContractChild'
+    const options = new Map<string, any>([
+      ['integerA', ethers.toBigInt(100)],
+      ['addressA', '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'],
+      ['integerB', ethers.toBigInt(200)],
+      ['addressB', '0x000000000000000000000000000000000000dEaD'],
+    ])
 
-    const deployResult = await deployContract('Stub_ContractChild', options, hre)
+    const deployResult = await deployContract(contractName, Array.from(options.values()), hre)
+    expect(deployResult.status).to.be.equal(DeployStatus.DEPLOYED)
 
-    const contractBeforeUpgrade = await hre.ethers.getContractAt(deployResult.abi, deployResult.address)
+    const contractBeforeUpgrade = await hre.ethers.getContractAt(contractName, deployResult.proxyAddress)
 
     // Contract variables should have initial (initialized) values
-    expect(await contractBeforeUpgrade.integerA()).to.be.equal(options.integerA)
-    expect(await contractBeforeUpgrade.addressA()).to.be.equal(options.addressA)
-    expect(await contractBeforeUpgrade.integerB()).to.be.equal(options.integerB)
-    expect(await contractBeforeUpgrade.addressB()).to.be.equal(options.addressB)
+    expect(await contractBeforeUpgrade.integerA()).to.be.equal(options.get('integerA'))
+    expect(await contractBeforeUpgrade.addressA()).to.be.equal(options.get('addressA'))
+    expect(await contractBeforeUpgrade.integerB()).to.be.equal(options.get('integerB'))
+    expect(await contractBeforeUpgrade.addressB()).to.be.equal(options.get('addressB'))
 
     await replaceArtifacts('Stub_ContractChildSimpleUpgrade', 'Stub_ContractChild')
 
-    const upgradeResult = await deployContract('Stub_ContractChild', options, hre)
+    const upgradeResult = await deployContract(contractName, Array.from(options.values()), hre)
+    expect(upgradeResult.status).to.be.equal(DeployStatus.UPGRADED)
 
-    const contractAfterUpgrade = await hre.ethers.getContractAt(upgradeResult.abi, upgradeResult.address)
+    const contractAfterUpgrade = await hre.ethers.getContractAt('Stub_ContractChildSimpleUpgrade', upgradeResult.proxyAddress)
 
     const newIntegerC = 500
     await contractAfterUpgrade.setIntegerC(newIntegerC)
 
     // Ensure contract still has correct values (along with the new "integerB" variable)
-    expect(await contractAfterUpgrade.integerA()).to.be.equal(options.integerA)
-    expect(await contractAfterUpgrade.addressA()).to.be.equal(options.addressA)
-    expect(await contractAfterUpgrade.integerB()).to.be.equal(options.integerB)
-    expect(await contractAfterUpgrade.addressB()).to.be.equal(options.addressB)
+    expect(await contractAfterUpgrade.integerA()).to.be.equal(options.get('integerA'))
+    expect(await contractAfterUpgrade.addressA()).to.be.equal(options.get('addressA'))
+    expect(await contractAfterUpgrade.integerB()).to.be.equal(options.get('integerB'))
+    expect(await contractAfterUpgrade.addressB()).to.be.equal(options.get('addressB'))
     expect(await contractAfterUpgrade.integerC()).to.be.equal(newIntegerC)
   })
 
   it('Should validate storage layout before upgrade', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-    }
+    const options = new Map<string, any>([
+      ['integerA', ethers.toBigInt(100)],
+      ['addressA', '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'],
+    ])
 
-    await deployContract('Stub_Contract', options, hre)
+    await deployContract('Stub_Contract', Array.from(options.values()), hre)
 
     await replaceArtifacts('Stub_ContractInvalidUpgrade', 'Stub_Contract')
 
-    await deployContract('Stub_Contract', options, hre)
-
-    await expect(deployErrorHandler.checkDeployResult()).to.be.rejectedWith(Error)
+    await expect(deployContract('Stub_Contract', Array.from(options.values()), hre))
+      .to.be.rejectedWith(/.*New storage layout is incompatible.*/)
   })
 
   it('Should validate storage layout before upgrade (with inheritance)', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: ethers.toBigInt(200),
-      addressB: '0x000000000000000000000000000000000000dEaD',
-    }
+    const options = new Map<string, any>([
+      ['integerA', ethers.toBigInt(100)],
+      ['addressA', '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'],
+      ['integerB', ethers.toBigInt(200)],
+      ['addressB', '0x000000000000000000000000000000000000dEaD'],
+    ])
 
-    await deployContract('Stub_ContractChild', options, hre)
-
-    await replaceArtifacts('Stub_ContractChildWithInvalidParent', 'Stub_ContractChild')
-
-    await deployContract('Stub_ContractChild', options, hre)
-
-    await expect(deployErrorHandler.checkDeployResult()).to.be.rejectedWith(Error)
-  })
-
-  it('Should skip validation if "SKIP_UPGRADE_VALIDATION" is set', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: ethers.toBigInt(200),
-      addressB: '0x000000000000000000000000000000000000dEaD',
-    }
-
-    await deployContract('Stub_ContractChild', options, hre)
+    await deployContract('Stub_ContractChild', Array.from(options.values()), hre)
 
     await replaceArtifacts('Stub_ContractChildWithInvalidParent', 'Stub_ContractChild')
 
-    process.env.SKIP_UPGRADE_VALIDATION = 'Stub_ContractChild'
-
-    await expect(deployContract('Stub_ContractChild', options, hre)).to.not.be.rejectedWith(ValidationError)
-  })
-
-  /**
-   * Simulates the case where we accidentally violated the contract by upgrading with an unnecessary reduced gap,
-   * and then try to fix it by upgrading with a fixed (originally correct) implementation.
-   */
-  it('Should return valid memory layout after fixed contract deployed', async () => {
-    const options = {
-      integerA: ethers.toBigInt(100),
-      addressA: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
-      integerB: ethers.toBigInt(200),
-      addressB: '0x000000000000000000000000000000000000dEaD',
-    }
-
-    // Check if the initially deployed contract is valid
-    const initialDeploy = await deployContract('Stub_ContractChild', options, hre)
-    const initialContract = await hre.ethers.getContractAt(initialDeploy.abi, initialDeploy.address)
-    expect(await initialContract.integerA()).to.be.equal(options.integerA)
-    expect(await initialContract.addressA()).to.be.equal(options.addressA)
-    expect(await initialContract.integerB()).to.be.equal(options.integerB)
-    expect(await initialContract.addressB()).to.be.equal(options.addressB)
-
-    const newIntegerA = 333
-    await initialContract.setIntegerA(newIntegerA)
-    expect(await initialContract.integerA()).to.be.equal(newIntegerA)
-
-    await replaceArtifacts('Stub_ContractChildWithInvalidParent', 'Stub_ContractChild')
-
-    // Disable validation to be able intentionally deploy invalid implementation and break the contract
-    process.env.SKIP_UPGRADE_VALIDATION = 'Stub_ContractChild'
-
-    // Deploy invalid implementation and check that memory layout is broken
-    const brokenDeploy = await deployContract('Stub_ContractChild', options, hre)
-    const brokenContract = await hre.ethers.getContractAt(brokenDeploy.abi, brokenDeploy.address)
-    expect(await brokenContract.integerA()).to.not.be.equal(newIntegerA)
-    expect(await brokenContract.addressA()).to.not.be.equal(options.addressA)
-
-    await resetArtifacts()
-
-    // Deploy the initially valid contract back and check that memory has been fixed
-    const fixedDeploy = await deployContract('Stub_ContractChild', options, hre)
-    const fixedContract = await hre.ethers.getContractAt(fixedDeploy.abi, fixedDeploy.address)
-    expect(await fixedContract.integerA()).to.be.equal(newIntegerA)
-    expect(await fixedContract.addressA()).to.be.equal(options.addressA)
-    expect(await fixedContract.integerB()).to.be.equal(options.integerB)
-    expect(await fixedContract.addressB()).to.be.equal(options.addressB)
-
-    // Just verifying that the upgrade has been done (not a new deploy)
-    expect(initialDeploy.address).to.be.equal(brokenDeploy.address)
-    expect(initialDeploy.address).to.be.equal(fixedDeploy.address)
+    await expect(deployContract('Stub_ContractChild', Array.from(options.values()), hre))
+      .to.be.rejectedWith(/.*New storage layout is incompatible.*/)
   })
 })
