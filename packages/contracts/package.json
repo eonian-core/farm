@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "hardhat compile && forge build",
-    "test:hardhat": "hardhat test",
+    "test:hardhat": "yarn test:hardhat:bsc",
+    "test:hardhat:bsc": "HARDHAT_FORK_NETWORK=BSC hardhat test",
     "test:forge": "forge test -vvv",
     "test:forge:watch": "forge test -vvv -w",
     "test": "yarn clean && yarn build && yarn test:hardhat && yarn test:forge",

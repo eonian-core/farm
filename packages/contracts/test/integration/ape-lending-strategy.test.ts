@@ -9,14 +9,16 @@ import type {
   Vault,
   VaultFounderToken,
 } from '../../typechain-types'
+import { Chain } from '../../hardhat/types'
 import deployVault from './helpers/deploy-vault'
 import warp from './helpers/warp'
 import getToken from './helpers/get-erc20-token'
 import resetBalance from './helpers/reset-balance'
 import deployVaultFounderToken from './helpers/deploy-vault-founder-token'
 import * as addresses from './helpers/addresses'
+import { describeOnChain } from './helpers/describeOnChain'
 
-describe('Ape Lending Strategy', () => {
+describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
   const { ethers } = hre
 
   const minReportInterval = 3600
