@@ -1,5 +1,4 @@
-import { Chain, ContractGroup, TokenSymbol } from '../../types'
-import { getTokenAddress } from '../tokenList'
+import { Chain, ContractGroup, TokenSymbol, getTokenAddress } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 

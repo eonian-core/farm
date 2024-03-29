@@ -1,6 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { ContractGroup, TokenSymbol } from '../types'
-import { getProviders } from '../providers/addresses'
+import { getProviders } from '../providers'
 import { type ApeLendingStrategy } from '../../typechain-types'
 import { type DeployResult, DeployStatus, Deployer } from './helpers/Deployer'
 

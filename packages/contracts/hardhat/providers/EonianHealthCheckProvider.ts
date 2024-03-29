@@ -1,6 +1,6 @@
-import { LossRatioHealthCheck__factory } from '../../../typechain-types'
-import { DeploymentData } from '../../deployment/helpers/DeploymentData'
-import { ContractGroup, resolveChain, resolveNetworkEnvironment } from '../../types'
+import { LossRatioHealthCheck__factory } from '../../typechain-types'
+import { DeploymentData } from '../deployment/helpers/DeploymentData'
+import { ContractGroup, resolveChain, resolveNetworkEnvironment } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 

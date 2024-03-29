@@ -1,5 +1,5 @@
 import { ZeroAddress } from 'ethers'
-import { ContractGroup, resolveChain, resolveNetworkEnvironment } from '../../types'
+import { ContractGroup, resolveChain, resolveNetworkEnvironment } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 

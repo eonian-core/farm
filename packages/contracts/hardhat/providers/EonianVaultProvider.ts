@@ -1,6 +1,6 @@
-import { Vault__factory } from '../../../typechain-types'
-import { DeploymentData } from '../../deployment/helpers/DeploymentData'
-import { Chain, ContractGroup, TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../../types'
+import { Vault__factory } from '../../typechain-types'
+import { DeploymentData } from '../deployment/helpers/DeploymentData'
+import { Chain, ContractGroup, TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 

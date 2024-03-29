@@ -1,5 +1,5 @@
 import type { HardhatNetworkUserConfig } from 'hardhat/types'
-import { Chain } from './types'
+import { Chain, getChainForFork } from './types'
 
 const chainToURL: Record<Chain, string | undefined> = {
   [Chain.UNKNOWN]: 'http://127.0.0.1:8545/',
@@ -13,18 +13,6 @@ export function resolveHardhatForkConfig() {
     throw new Error(`Fork RPC URL is not found for chain: ${forkChain}`)
   }
   return forkChain === Chain.UNKNOWN ? noFork() : fork(url)
-}
-
-export function getChainForFork(): Chain {
-  const forkOf = process.env.HARDHAT_FORK_NETWORK
-  if (!forkOf || forkOf.toLowerCase() === 'false') {
-    return Chain.UNKNOWN
-  }
-  const chain = Object.values(Chain).find(chain => forkOf.toUpperCase() === chain)
-  if (!chain) {
-    throw new Error(`Chain "${forkOf}" is not valid, possible values: ${Object.values(Chain).join(', ')}`)
-  }
-  return chain
 }
 
 /** Setup is compatible with BSC mainnet */

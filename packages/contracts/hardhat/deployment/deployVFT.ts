@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { getProviders } from '../providers/addresses'
+import { getProviders } from '../providers'
 import type { VaultFounderToken } from '../../typechain-types'
 import type { TokenSymbol } from '../types'
 import { ContractGroup } from '../types'

@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { AvailableHardhatNetwork } from '.'
 
 export enum NetworkEnvironment {
   LOCAL = 'LOCAL',
@@ -9,7 +8,10 @@ export enum NetworkEnvironment {
 }
 
 export function resolveNetworkEnvironment(hre: HardhatRuntimeEnvironment): NetworkEnvironment {
-  const hardhatNetwork = hre.network.name as AvailableHardhatNetwork
+  const hardhatNetwork = hre.network.name
+  if (hardhatNetwork === 'ganache' || hardhatNetwork === 'hardhat') {
+    return NetworkEnvironment.LOCAL
+  }
   const environmentString = hardhatNetwork.split('_').at(-1)
   const environment = Object.values(NetworkEnvironment).find(env => env.toLowerCase() === environmentString)
   if (!environment) {

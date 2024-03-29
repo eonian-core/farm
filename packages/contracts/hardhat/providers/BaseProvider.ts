@@ -1,6 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { TokenSymbol } from '../../types'
-import { Chain, NetworkEnvironment } from '../../types'
+import type { Chain, NetworkEnvironment, TokenSymbol } from '../types'
+import { resolveChain, resolveNetworkEnvironment } from '../types'
 
 type Lookup<T> = Partial<Record<Chain, Partial<Record<NetworkEnvironment | 'ANY', T>>>>
 export type LookupMap = Lookup<string> | Lookup<Partial<Record<TokenSymbol, string>>>
@@ -51,7 +51,7 @@ export abstract class BaseProvider {
   }
 
   private async resolveLookupValue(): Promise<string | Partial<Record<TokenSymbol, string>>> {
-    const [chain, networkEnvironment] = this.parseHardhatNetworkName(this.hre.network.name)
+    const [chain, networkEnvironment] = this.resolveChainAndEnvironment()
     const map = await this.getLookupMap()
     const chainData = map[chain]
     const lookupValue = chainData?.[networkEnvironment] ?? chainData?.[this.ANY_ENVIRONMENT]
@@ -61,23 +61,9 @@ export abstract class BaseProvider {
     return lookupValue
   }
 
-  private parseHardhatNetworkName(network: string): [Chain, NetworkEnvironment] {
-    const parts = network.split('_')
-    if (parts.length !== 3) {
-      throw new Error(`Invalid network format: ${network}!`)
-    }
-
-    const [chainString,, environmentString] = parts
-    const chain = Object.values(Chain).find(chain => chain.toLowerCase() === chainString)
-    if (!chain) {
-      throw new Error(`Unable to resolve chain from: ${network}, got: ${chainString}!`)
-    }
-
-    const environment = Object.values(NetworkEnvironment).find(env => env.toLowerCase() === environmentString)
-    if (!environment) {
-      throw new Error(`Unable to resolve environment from: ${network}, got: ${environmentString}!`)
-    }
-
+  private resolveChainAndEnvironment(): [Chain, NetworkEnvironment] {
+    const chain = resolveChain(this.hre)
+    const environment = resolveNetworkEnvironment(this.hre)
     return [this.chain = chain, this.environment = environment]
   }
 }

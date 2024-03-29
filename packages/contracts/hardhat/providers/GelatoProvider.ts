@@ -1,4 +1,4 @@
-import { Chain, ContractGroup } from '../../types'
+import { Chain, ContractGroup } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 

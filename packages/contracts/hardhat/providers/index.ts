@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { ContractGroup } from '../../types'
+import { ContractGroup } from '../types'
 import type { BaseProvider } from './BaseProvider'
 import { ApeSwapProvider } from './ApeSwapProvider'
 import { ChainLinkProvider } from './ChainLinkProvider'

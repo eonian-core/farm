@@ -16,10 +16,10 @@ import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
 
-import { resolveHardhatForkConfig } from './hardhat/forks'
-
+import './hardhat/types'
 import './hardhat/tasks'
-import type { AvailableHardhatNetwork } from './hardhat/types'
+
+import { resolveHardhatForkConfig } from './hardhat/forks'
 
 const bscMainnet: NetworkUserConfig = {
   url: 'https://bsc-dataseed.binance.org/',
@@ -46,7 +46,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  networks: {
+  typedNetworks: {
     hardhat: resolveHardhatForkConfig(),
     ganache: {
       url: 'http://127.0.0.1:7545',
@@ -63,7 +63,7 @@ const config: HardhatUserConfig = {
     bsc_mainnet_prod: {
       ...bscMainnet,
     },
-  } satisfies Record<AvailableHardhatNetwork, unknown>,
+  },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
     currency: 'USD',
@@ -75,5 +75,7 @@ const config: HardhatUserConfig = {
     artifacts: './artifacts',
   },
 }
+
+config.networks = config.typedNetworks
 
 export default config
