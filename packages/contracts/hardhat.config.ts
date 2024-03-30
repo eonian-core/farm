@@ -5,13 +5,13 @@ dotenv.config() // must be before all imports
 
 import type { HardhatUserConfig, NetworkUserConfig } from 'hardhat/types/config'
 import '@nomicfoundation/hardhat-ethers'
-import '@nomiclabs/hardhat-etherscan'
+import '@nomicfoundation/hardhat-verify'
 import '@typechain/hardhat'
 import 'hardhat-gas-reporter'
 import 'solidity-coverage'
 import '@openzeppelin/hardhat-upgrades'
 
-// import 'hardhat-tracer'
+// import 'hardhat-tracer' -> Disabled, does not work with the recent version of Hardhat & ethers.
 import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
@@ -26,12 +26,6 @@ const bscMainnet: NetworkUserConfig = {
   url: 'https://bsc-dataseed.binance.org/',
   chainId: 56,
   accounts: [process.env.BSC_MAINNET_PRIVATE_KEY].filter(Boolean) as Array<string>,
-  verify: {
-    etherscan: {
-      apiUrl: 'https://api.bscscan.com/',
-      apiKey: process.env.BSCSCAN_API_KEY,
-    },
-  },
 }
 
 const config: HardhatUserConfig = {
@@ -62,6 +56,14 @@ const config: HardhatUserConfig = {
     bsc_mainnet_prod: {
       ...bscMainnet,
     },
+  },
+  etherscan: {
+    apiKey: {
+      bsc: process.env.BSCSCAN_API_KEY!,
+    },
+  },
+  sourcify: {
+    enabled: false,
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

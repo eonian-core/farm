@@ -3,6 +3,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory, Signer } from 'ethers'
 import { extendEnvironment } from 'hardhat/config'
+import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
 
 export enum DeployStatus {
   DEPLOYED = 'DEPLOYED',
@@ -14,6 +15,7 @@ export interface DeployResult {
   proxyAddress: string
   implementationAddress: string
   status: DeployStatus
+  verified: boolean
 }
 
 type Tail<T extends any[]> = T extends [infer _A, ...infer R] ? R : never
@@ -71,11 +73,42 @@ class Deployer {
       await this.upgradeProxy(proxyAddress)
     }
 
+    const successfullyVerified = await this.verifyIfNeeded(proxyAddress)
+
     return {
       proxyAddress,
       implementationAddress,
       status: this.deployStatus,
+      verified: successfullyVerified,
     }
+  }
+
+  private async verifyIfNeeded(proxyAddress: string): Promise<boolean> {
+    if (this.deployStatus === DeployStatus.NONE) {
+      this.log('No need to verify, the proxy was not upgraded!')
+      return false
+    }
+
+    const networkEnvironment = resolveNetworkEnvironment(this.hre)
+    if (networkEnvironment === NetworkEnvironment.LOCAL) {
+      this.log(`Verification is disabled on "${networkEnvironment}" environment!`)
+      return false
+    }
+
+    this.log('Starting to verify deployed (or upgraded) contracts...')
+    try {
+      await this.interceptOutput(this.verifyIfNeeded.name, async () => {
+        await this.hre.run('verify:verify', {
+          address: proxyAddress,
+          constructorArguments: this.upgradeOptions.constructorArgs,
+        })
+      })
+      return true
+    }
+    catch (e) {
+      this.log(`An error occurred during verification. Set "DEBUG=${Deployer.name}:${this.verifyIfNeeded.name}" to see the details`)
+    }
+    return false
   }
 
   /**
@@ -164,7 +197,51 @@ class Deployer {
     this.deployStatus = newStatus
   }
 
-  private log(message: string) {
-    this.logger(`[${this.contractName}.${this.deploymentId}] - ${message}`)
+  /**
+   * Prints the debug message using specified logger.
+   */
+  private log(message: string, logger: debug.Debugger = this.logger) {
+    logger(`[${this.contractName}.${this.deploymentId}] - ${message}`)
+  }
+
+  /**
+   * Overrides console.* methods to prevent messages from code executed in {@param callback} from being output to stdout.
+   * After the callback is executed, the "console" object will be reset,
+   * and all messages that were passed to the console.* method will be output as debug messages.
+   *
+   * Used to prevent the hardhat subtask from sending unwanted messages to the console.
+   */
+  private async interceptOutput(taskName: string, callback: () => Promise<any>) {
+    const fields = ['log', 'trace', 'debug', 'info', 'warn', 'error'] as const
+
+    const messages: string[] = []
+    function accumulateLogs(...input: string[]) {
+      const message = input.join(' ')
+      messages.push(message)
+    }
+
+    const temp: Array<Console[keyof Console]> = []
+    for (const field of fields) {
+      temp.push(console[field])
+      console[field] = accumulateLogs.bind(this)
+    }
+
+    try {
+      await callback()
+    }
+    // eslint-disable-next-line no-useless-catch
+    catch (e) {
+      throw e
+    }
+    finally {
+      for (let i = 0; i < fields.length; i++) {
+        console[fields[i]] = temp[i] as VoidFunction
+      }
+
+      const innerLogger = this.logger.extend(taskName)
+      for (const message of messages) {
+        this.log(message, innerLogger)
+      }
+    }
   }
 }
