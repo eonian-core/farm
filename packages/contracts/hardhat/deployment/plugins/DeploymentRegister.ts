@@ -1,10 +1,12 @@
 import fs from 'node:fs/promises'
+import os from 'node:os'
 import path from 'node:path'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { networkNames } from '@openzeppelin/upgrades-core'
 import debug from 'debug'
 import { merge } from 'lodash'
 import { extendEnvironment } from 'hardhat/config'
+import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
 
 /**
  * Due to the fact that the OpenZeppelin manifest file does not contain information about
@@ -46,8 +48,9 @@ extendEnvironment((hre) => {
 class DeploymentRegister {
   private log = debug(DeploymentRegister.name)
 
-  constructor(private hre: HardhatRuntimeEnvironment) {
-  }
+  private registerFilePath: string | null = null
+
+  constructor(private hre: HardhatRuntimeEnvironment) {}
 
   /**
    * Returns proxy address from the deployment data file.
@@ -87,7 +90,7 @@ class DeploymentRegister {
   }
 
   /**
-   * Reads the chain file (populated from {@link getDeploymentFilePath}) and returns its content.
+   * Reads the chain file (populated from {@link getRegisterFilePath}) and returns its content.
    * @returns The content of deployment data file.
    */
   public async read(): Promise<DeploymentFile> {
@@ -130,7 +133,7 @@ class DeploymentRegister {
    * @returns The chain file path.
    */
   public async ensureFileExists(): Promise<string> {
-    const deploymentFilePath = await this.getDeploymentFilePath()
+    const deploymentFilePath = await this.getRegisterFilePath()
     try {
       await fs.access(deploymentFilePath, fs.constants.F_OK)
     }
@@ -152,7 +155,7 @@ class DeploymentRegister {
    * Deletes the current chain file, used in tests.
    */
   public async deleteFile(): Promise<void> {
-    const deploymentFilePath = await this.getDeploymentFilePath()
+    const deploymentFilePath = await this.ensureFileExists()
     await fs.rm(deploymentFilePath, { force: true })
   }
 
@@ -174,11 +177,23 @@ class DeploymentRegister {
 
   /**
    * Builds the path to for the chain file.
+   * If the hardhat script is executed locally, the registry file will be saved in the tmp directory.
    */
-  private async getDeploymentFilePath(): Promise<string> {
+  private async getRegisterFilePath(): Promise<string> {
+    if (this.registerFilePath !== null) {
+      return this.registerFilePath
+    }
+
     const chainId = await this.getChainId()
     const chainInfo = networkNames[chainId] ? `${chainId}-${networkNames[chainId]}` : String(chainId)
-    return path.join(DEPLOYMENT_DATA_DIR, `${this.hre.network.name}-[${chainInfo}].json`)
+    const fileName = `${this.hre.network.name}-[${chainInfo}].json`
+    let filePath = path.join(DEPLOYMENT_DATA_DIR, fileName)
+
+    const networkEnvironment = resolveNetworkEnvironment(this.hre)
+    if (networkEnvironment === NetworkEnvironment.LOCAL) {
+      filePath = path.join(os.tmpdir(), DEPLOYMENT_DATA_DIR, `${Date.now()}-${fileName}`)
+    }
+    return (this.registerFilePath = filePath)
   }
 
   /**
