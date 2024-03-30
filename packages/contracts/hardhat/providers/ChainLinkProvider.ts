@@ -1,4 +1,4 @@
-import { Chain, ContractGroup, TokenSymbol } from '../types'
+import { Chain, TokenSymbol } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 
@@ -6,7 +6,7 @@ export class ChainLinkProvider extends BaseProvider {
   protected getLookupMap(): LookupMap {
     return {
       [Chain.BSC]: {
-        [this.ANY_ENVIRONMENT]: {
+        ANY_ENVIRONMENT: {
           [TokenSymbol.BNB]: '0x0567f2323251f0aab15c8dfb1967e4e8a7d42aee', // https://data.chain.link/bsc/mainnet/crypto-usd/bnb-usd
           [TokenSymbol.USDT]: '0xb97ad0e74fa7d920791e90258a6e2085088b4320', // https://data.chain.link/bsc/mainnet/crypto-usd/usdt-usd
           [TokenSymbol.USDC]: '0x51597f405303c4377e36123cbc172b13269ea163', // https://data.chain.link/bsc/mainnet/crypto-usd/usdc-usd
@@ -16,9 +16,5 @@ export class ChainLinkProvider extends BaseProvider {
         },
       },
     }
-  }
-
-  protected get name(): string {
-    return ContractGroup.CHAINLINK_FEED
   }
 }

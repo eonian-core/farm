@@ -1,4 +1,4 @@
-import { ContractGroup, TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../types'
+import { TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 
@@ -24,9 +24,5 @@ export class EonianVaultProvider extends BaseProvider {
     const assetAddress = await contract.asset()
     const assetContract = await this.hre.ethers.getContractAt('IERC20Metadata', assetAddress)
     return await assetContract.symbol() === token
-  }
-
-  protected get name(): string {
-    return ContractGroup.CHAINLINK_FEED
   }
 }

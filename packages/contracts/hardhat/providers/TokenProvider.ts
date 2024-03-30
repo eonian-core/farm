@@ -6,7 +6,7 @@ export class TokenProvider extends BaseProvider {
   protected getLookupMap(): LookupMap {
     return {
       [Chain.BSC]: {
-        [this.ANY_ENVIRONMENT]: {
+        ANY_ENVIRONMENT: {
           [TokenSymbol.USDT]: getTokenAddress(Chain.BSC, TokenSymbol.USDT),
           [TokenSymbol.USDC]: getTokenAddress(Chain.BSC, TokenSymbol.USDC),
           [TokenSymbol.BUSD]: getTokenAddress(Chain.BSC, TokenSymbol.BUSD),

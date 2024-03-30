@@ -1,4 +1,4 @@
-import { ContractGroup, resolveChain, resolveNetworkEnvironment } from '../types'
+import { resolveChain, resolveNetworkEnvironment } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 
@@ -11,9 +11,5 @@ export class EonianHealthCheckProvider extends BaseProvider {
         [networkEnvironment]: await this.hre.deploymentRegister.getProxyAddress('LossRatioHealthCheck', null),
       },
     }
-  }
-
-  protected get name(): string {
-    return ContractGroup.CHAINLINK_FEED
   }
 }

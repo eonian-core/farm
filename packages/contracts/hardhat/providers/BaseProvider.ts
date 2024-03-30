@@ -2,16 +2,12 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { Chain, NetworkEnvironment, TokenSymbol } from '../types'
 import { resolveChain, resolveNetworkEnvironment } from '../types'
 
-type Lookup<T> = Partial<Record<Chain, Partial<Record<NetworkEnvironment | 'ANY', T>>>>
+type Lookup<T> = Partial<Record<Chain, Partial<Record<NetworkEnvironment | 'ANY_ENVIRONMENT', T>>>>
 export type LookupMap = Lookup<string> | Lookup<Partial<Record<TokenSymbol, string>>>
 
 export abstract class BaseProvider {
-  protected readonly ANY_ENVIRONMENT = 'ANY'
-
   protected chain!: Chain
   protected environment!: NetworkEnvironment
-
-  protected abstract get name(): string
 
   constructor(protected hre: HardhatRuntimeEnvironment) {}
 
@@ -54,9 +50,9 @@ export abstract class BaseProvider {
     const [chain, networkEnvironment] = this.resolveChainAndEnvironment()
     const map = await this.getLookupMap()
     const chainData = map[chain]
-    const lookupValue = chainData?.[networkEnvironment] ?? chainData?.[this.ANY_ENVIRONMENT]
+    const lookupValue = chainData?.[networkEnvironment] ?? chainData?.ANY_ENVIRONMENT
     if (!lookupValue) {
-      throw new Error(`Unable to resolve address of ${this.name} (chain: ${chain}, environment: ${networkEnvironment})!`)
+      throw new Error(`Unable to resolve address of ${this.constructor.name} (chain: ${chain}, environment: ${networkEnvironment})!`)
     }
     return lookupValue
   }

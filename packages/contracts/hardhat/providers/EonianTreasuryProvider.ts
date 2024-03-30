@@ -1,5 +1,5 @@
 import { ZeroAddress } from 'ethers'
-import { ContractGroup, resolveChain, resolveNetworkEnvironment } from '../types'
+import { resolveChain, resolveNetworkEnvironment } from '../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 
@@ -12,9 +12,5 @@ export class EonianTreasuryProvider extends BaseProvider {
         [networkEnvironment]: ZeroAddress,
       },
     }
-  }
-
-  protected get name(): string {
-    return ContractGroup.CHAINLINK_FEED
   }
 }
