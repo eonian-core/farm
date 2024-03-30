@@ -1,7 +1,7 @@
 import debug from 'debug'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
-import type { ContractFactory } from 'ethers'
+import type { ContractFactory, Signer } from 'ethers'
 import { extendEnvironment } from 'hardhat/config'
 
 export enum DeployStatus {
@@ -40,6 +40,7 @@ class Deployer {
     private contractName: string,
     private deploymentId: string | null,
     private initArgs: unknown[],
+    private signer?: Signer,
     private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
   ) {
     this.upgradeOptions = {
@@ -146,7 +147,7 @@ class Deployer {
    * Returns the contract factory.
    */
   private async getContractFactory(): Promise<ContractFactory> {
-    return this.contractFactory ??= await this.hre.ethers.getContractFactory(this.contractName)
+    return this.contractFactory ??= await this.hre.ethers.getContractFactory(this.contractName, { signer: this.signer })
   }
 
   /**

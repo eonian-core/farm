@@ -9,7 +9,7 @@ import type {
   Vault,
   VaultFounderToken,
 } from '../../typechain-types'
-import { Chain } from '../../hardhat/types'
+import { Chain, TokenSymbol } from '../../hardhat/types'
 import deployVault from './helpers/deploy-vault'
 import warp from './helpers/warp'
 import getToken from './helpers/get-erc20-token'
@@ -57,7 +57,7 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     await helpers.impersonateAccount(ops.address)
     // hre.tracer.nameTags[ops.address] = 'Gelato Ops'
 
-    vault = await deployVault(hre, { asset: addresses.assetAddress, rewards: addresses.rewardsAddress, signer: owner })
+    vault = await deployVault(hre, TokenSymbol.USDT, { asset: addresses.assetAddress, rewards: addresses.rewardsAddress, signer: owner })
 
     vaultAddress = await vault.getAddress()
     // hre.tracer.nameTags[vaultAddress] = 'Vault'

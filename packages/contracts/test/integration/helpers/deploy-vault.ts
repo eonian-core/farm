@@ -3,22 +3,7 @@ import { toBigInt } from 'ethers'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
 import type { Vault } from '../../../typechain-types'
-
-async function _deployVault(
-  this: unknown,
-  hre: HardhatRuntimeEnvironment,
-  signer?: Signer,
-  ...params: Parameters<Vault['initialize']>
-): Promise<Vault> {
-  const factory = await hre.ethers.getContractFactory('Vault', signer)
-  const contract = await factory.deploy(false)
-  await contract.waitForDeployment()
-
-  const transaction = await contract.initialize.call(this, ...params)
-  await transaction.wait()
-
-  return contract
-}
+import type { TokenSymbol } from '../../../hardhat/types'
 
 interface Options {
   asset: string
@@ -42,8 +27,17 @@ const defaultOptions: Partial<Options> = {
   foundersRewardFee: 100, // 1%
 }
 
-export default async function deployVault(hre: HardhatRuntimeEnvironment, options: Options): Promise<Vault> {
+export default async function deployVault(hre: HardhatRuntimeEnvironment, token: TokenSymbol, options: Options): Promise<Vault> {
   const { signer, ...specifiedParams } = _.defaults(options, defaultOptions)
-  const params = [...Object.values(specifiedParams)] as Parameters<Vault['initialize']>
-  return await _deployVault(hre, signer, ...params)
+  const deployResult = await hre.deploy('Vault', token, [
+    specifiedParams.asset,
+    specifiedParams.rewards,
+    specifiedParams.managementFee,
+    specifiedParams.lockedProfitReleaseRate,
+    specifiedParams.name,
+    specifiedParams.symbol,
+    specifiedParams.defaultOperators,
+    specifiedParams.foundersRewardFee,
+  ] as Parameters<Vault['initialize']>, signer)
+  return await hre.ethers.getContractAt('Vault', deployResult.proxyAddress)
 }
