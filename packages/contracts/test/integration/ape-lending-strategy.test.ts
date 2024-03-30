@@ -2,93 +2,72 @@ import hre from 'hardhat'
 import { expect } from 'chai'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
+import type { BaseContract } from 'ethers'
 import type {
   ApeLendingStrategy,
   IERC20,
-  LossRatioHealthCheck,
   Vault,
-  VaultFounderToken,
 } from '../../typechain-types'
-import { Chain, TokenSymbol } from '../../hardhat/types'
-import deployVault from './helpers/deploy-vault'
+import { Chain, ContractGroup, TokenSymbol } from '../../hardhat/types'
+import { deployTaskAction } from '../../hardhat/tasks'
+import { getProviders } from '../../hardhat/providers'
 import warp from './helpers/warp'
-import getToken from './helpers/get-erc20-token'
 import resetBalance from './helpers/reset-balance'
-import deployVaultFounderToken from './helpers/deploy-vault-founder-token'
-import * as addresses from './helpers/addresses'
 import { describeOnChain } from './helpers/describeOnChain'
 
 describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
   const { ethers } = hre
 
+  const token = TokenSymbol.USDT
   const minReportInterval = 3600
 
-  // hre.tracer.nameTags[asset] = 'BUSD'
-  // hre.tracer.nameTags[cToken] = 'cToken'
-  // hre.tracer.nameTags[rewards] = 'Rewards'
-
-  let owner: HardhatEthersSigner
   let holderA: HardhatEthersSigner
   let holderB: HardhatEthersSigner
-  let ops: HardhatEthersSigner
 
   let vault: Vault
-  let vaultFounderToken: VaultFounderToken
-  let healthCheck: LossRatioHealthCheck
   let strategy: ApeLendingStrategy
   let assetToken: IERC20
 
   let vaultAddress: string
-  let vaultFounderTokenAddress: string
   let strategyAddress: string
+  let cTokenAddress: string
+  let rewardsAddress: string
 
   async function setup() {
-    [owner] = await ethers.getSigners()
+    await deployTaskAction([token], hre)
 
-    holderA = await ethers.getSigner(addresses.holderAAddress) // Binance Hot Wallet #6
-    holderB = await ethers.getSigner(addresses.holderBAddress) // Binance Hot Wallet #20
-    ops = await ethers.getSigner(addresses.gelatoOpsAddress) // Gelato OPS
-
-    await helpers.impersonateAccount(holderA.address)
-    // hre.tracer.nameTags[holderA.address] = 'Holder A'
-    await helpers.impersonateAccount(holderB.address)
-    // hre.tracer.nameTags[holderB.address] = 'Holder B'
-
-    await helpers.impersonateAccount(ops.address)
-    // hre.tracer.nameTags[ops.address] = 'Gelato Ops'
-
-    vault = await deployVault(hre, TokenSymbol.USDT, { asset: addresses.assetAddress, rewards: addresses.rewardsAddress, signer: owner })
-
+    vault = await getContractAt<Vault>('Vault')
     vaultAddress = await vault.getAddress()
     // hre.tracer.nameTags[vaultAddress] = 'Vault'
 
-    vaultFounderToken = await deployVaultFounderToken(hre, {
-      maxCountTokens: 100,
-      nextTokenPriceMultiplier: 1200,
-      initialTokenPrice: 200,
-      signer: owner,
-      vault: vaultAddress,
-    })
-    vaultFounderTokenAddress = await vaultFounderToken.getAddress()
-    await vault.setFounders(vaultFounderTokenAddress)
-    await vaultFounderToken.setVault(vaultAddress)
+    holderA = await ethers.getSigner('0x8894e0a0c962cb723c1976a4421c95949be2d4e3') // Binance Hot Wallet #6
+    await helpers.impersonateAccount(holderA.address)
+    // hre.tracer.nameTags[holderA.address] = 'Holder A'
 
-    await resetBalance(vaultAddress, { tokens: [addresses.assetAddress] })
+    holderB = await ethers.getSigner('0xF977814e90dA44bFA03b6295A0616a897441aceC') // Binance Hot Wallet #20
+    await helpers.impersonateAccount(holderB.address)
+    // hre.tracer.nameTags[holderB.address] = 'Holder B'
 
-    healthCheck = await deployLossRatioHealthCheck(owner)
-    strategy = await deployStrategy({
-      signer: owner,
-      vault,
-      asset: addresses.assetAddress,
-      healthCheck,
-    })
+    const gelatoAddress = await getAddress(ContractGroup.GELATO)
+    await helpers.impersonateAccount(gelatoAddress)
+    // hre.tracer.nameTags[gelatoAddress] = 'Gelato Ops'
 
+    strategy = await getContractAt<ApeLendingStrategy>('ApeLendingStrategy')
     strategyAddress = await strategy.getAddress()
     // hre.tracer.nameTags[strategyAddress] = 'Strategy'
 
-    await resetBalance(strategyAddress, { tokens: [addresses.cTokenAddress] })
+    const assetAddress = await getAddress(ContractGroup.TOKEN)
+    assetToken = await hre.ethers.getContractAt('IERC20', assetAddress)
+    // hre.tracer.nameTags[assetAddress] = 'BUSD'
 
-    assetToken = await getToken(addresses.assetAddress, owner)
+    cTokenAddress = await strategy.cToken()
+    // hre.tracer.nameTags[cTokenAddress] = 'cToken'
+
+    rewardsAddress = await vault.rewards()
+    // hre.tracer.nameTags[rewardsAddress] = 'Rewards'
+
+    await resetBalance(vaultAddress, { tokens: [await vault.asset()] })
+    await resetBalance(strategyAddress, { tokens: [cTokenAddress] })
   }
 
   beforeEach(async () => {
@@ -155,14 +134,14 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     // Track is: Vault -> Strategy -> ApeSwap's cToken contract
     await expect(await strategy.work()).changeTokenBalances(
       assetToken,
-      [vaultAddress, strategyAddress, addresses.cTokenAddress],
+      [vaultAddress, strategyAddress, cTokenAddress],
       [-depositAmount, 0, depositAmount],
     )
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
     await withdraw(holderA, withdrawalAmount, {
-      addresses: [vaultAddress, strategyAddress, addresses.cTokenAddress, holderA.address],
+      addresses: [vaultAddress, strategyAddress, cTokenAddress, holderA.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
   })
@@ -188,18 +167,18 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     // Track is: Vault -> Strategy -> ApeSwap's cToken contract
     await expect(await strategy.work()).changeTokenBalances(
       assetToken,
-      [vaultAddress, strategyAddress, addresses.cTokenAddress],
+      [vaultAddress, strategyAddress, cTokenAddress],
       [-depositAmount * 2n, 0, depositAmount * 2n],
     )
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
     await withdraw(holderA, withdrawalAmount, {
-      addresses: [vaultAddress, strategyAddress, addresses.cTokenAddress, holderA.address],
+      addresses: [vaultAddress, strategyAddress, cTokenAddress, holderA.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
     await withdraw(holderB, withdrawalAmount, {
-      addresses: [vaultAddress, strategyAddress, addresses.cTokenAddress, holderB.address],
+      addresses: [vaultAddress, strategyAddress, cTokenAddress, holderB.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
   })
@@ -209,7 +188,7 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
     // Rewards address should be empty on start
-    expect(await vault.balanceOf(addresses.rewardsAddress)).to.be.equal(0)
+    expect(await vault.balanceOf(rewardsAddress)).to.be.equal(0)
 
     // Make sure that the holders have some amount of BUSD (e.g., >300)
     const min = 3000n * 5n * 10n ** 18n
@@ -274,49 +253,31 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     )
   }
 
-  async function deployLossRatioHealthCheck(signer: HardhatEthersSigner): Promise<LossRatioHealthCheck> {
-    const factory = await ethers.getContractFactory('LossRatioHealthCheck', signer)
-
-    const contract = await factory.deploy(false)
-    await contract.waitForDeployment()
-
-    const tx = await contract.initialize(
-      5_00, // lossRatio = 5%
-    )
-    await tx.wait()
-
-    return contract
+  async function getAddress(contractName: string) {
+    const address = await hre.deploymentRegister.getProxyAddress(contractName, token)
+    if (address) {
+      return address
+    }
+    const addressProviders = getProviders(hre)
+    const addressProvider = addressProviders[contractName as ContractGroup]
+    if (addressProvider) {
+      try {
+        return await addressProvider.getAddressForToken(token)
+      }
+      catch (_e) {
+        try {
+          return await addressProvider.getAddress()
+        }
+        catch (_e) {
+          // Ignore
+        }
+      }
+    }
+    throw new Error(`No address found for: ${contractName} (token: ${token})`)
   }
 
-  async function deployStrategy(options: {
-    signer: HardhatEthersSigner
-    vault: Vault
-    asset: string
-    healthCheck: LossRatioHealthCheck
-  }): Promise<ApeLendingStrategy> {
-    const { signer, vault, asset, healthCheck } = options
-    const factory = await ethers.getContractFactory('ApeLendingStrategy', signer)
-    const contract = await factory.deploy(false)
-    await contract.waitForDeployment()
-
-    let tx = await contract.initialize(
-      vaultAddress,
-      asset,
-      addresses.cTokenAddress,
-      ops.address,
-      addresses.nativePriceFeedAddress,
-      addresses.assetPriceFeedAddress,
-      minReportInterval, // Min report interval
-      true, // Job is prepaid,
-      await healthCheck.getAddress(), //
-    )
-    await tx.wait()
-
-    tx = await vault.addStrategy(await contract.getAddress(), 10000, {
-      from: signer.address,
-    })
-    await tx.wait()
-
-    return contract
+  async function getContractAt<R extends BaseContract>(contractName: string) {
+    const address = await getAddress(contractName)
+    return await hre.ethers.getContractAt(contractName, address) as unknown as R
   }
 })

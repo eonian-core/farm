@@ -7,19 +7,26 @@ import deployVault from '../deployment/deployVault'
 import deployApeLendingStrategy from '../deployment/deployApeLendingStrategy'
 import deployVFT from '../deployment/deployVFT'
 
-const tokens = [
-  TokenSymbol.USDC,
-  TokenSymbol.USDT,
-  TokenSymbol.BTCB,
-  TokenSymbol.WETH,
-]
+export const deployTask = task('deploy', 'Deploy (or upgade) production contracts', async (args: unknown[], hre: HardhatRuntimeEnvironment) => {
+  const tokens = [
+    TokenSymbol.USDC,
+    TokenSymbol.USDT,
+    TokenSymbol.BTCB,
+    TokenSymbol.WETH,
+  ]
+  return await deployTaskAction(tokens, hre)
+})
 
-export async function deployTaskAction(args: unknown, hre: HardhatRuntimeEnvironment) {
+export async function deployTaskAction(tokens: TokenSymbol[], hre: HardhatRuntimeEnvironment) {
+  console.log('Deploying common contracts...\n')
+
   await execute(deployHealthCheck, hre)
 
   for (const token of tokens) {
     await deployForToken(token, hre)
   }
+
+  console.log('\nDeployment is done!\n')
 }
 
 async function deployForToken(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {
@@ -51,5 +58,3 @@ async function execute<R extends DeployResult, T extends (...args: any) => Promi
 
   return result
 }
-
-export const deployTask = task('deploy', 'Deploy (or upgade) production contracts', deployTaskAction)

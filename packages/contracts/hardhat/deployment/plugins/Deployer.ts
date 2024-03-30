@@ -40,7 +40,6 @@ class Deployer {
     private contractName: string,
     private deploymentId: string | null,
     private initArgs: unknown[],
-    private signer?: Signer,
     private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
   ) {
     this.upgradeOptions = {
@@ -147,7 +146,7 @@ class Deployer {
    * Returns the contract factory.
    */
   private async getContractFactory(): Promise<ContractFactory> {
-    return this.contractFactory ??= await this.hre.ethers.getContractFactory(this.contractName, { signer: this.signer })
+    return this.contractFactory ??= await this.hre.ethers.getContractFactory(this.contractName)
   }
 
   /**
