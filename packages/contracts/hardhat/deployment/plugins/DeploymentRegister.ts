@@ -2,7 +2,6 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { networkNames } from '@openzeppelin/upgrades-core'
 import debug from 'debug'
 import { merge } from 'lodash'
 import { extendEnvironment } from 'hardhat/config'
@@ -18,15 +17,7 @@ import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
 /**
  * Represents a lookup map ("contract name" to "{@link ContractDeploymentData}")
  */
-export type DeploymentFile = Record<string, ContractDeploymentData>
-
-export interface ContractDeploymentData {
-  /**
-   * Represents a path: <Deployment ID> -> Address.
-   * Example: { BUSD: 0x... }
-   */
-  proxies: Record<string, string>
-}
+export type DeploymentFile = Record<string, Record<string, string>>
 
 const DEPLOYMENT_DATA_DIR = '.deployments'
 const DEFAULT_DEPLOYMENT_ID = 'default'
@@ -63,7 +54,7 @@ class DeploymentRegister {
       this.log(`Missing deployment data for contract "${contractName}"`)
       return null
     }
-    const proxy = contractData.proxies[deploymentId]
+    const proxy = contractData[deploymentId]
     if (!proxy) {
       this.log(`Missing proxy address for contract "${contractName}", deployment: "${deploymentId}"`)
       return null
@@ -83,9 +74,7 @@ class DeploymentRegister {
       )
     }
     await this.writePatch({
-      [contractName]: {
-        proxies: { [deploymentId]: address },
-      },
+      [contractName]: { [deploymentId]: address },
     })
   }
 
@@ -133,7 +122,7 @@ class DeploymentRegister {
    * @returns The chain file path.
    */
   public async ensureFileExists(): Promise<string> {
-    const deploymentFilePath = await this.getRegisterFilePath()
+    const deploymentFilePath = this.getRegisterFilePath()
     try {
       await fs.access(deploymentFilePath, fs.constants.F_OK)
     }
@@ -160,14 +149,6 @@ class DeploymentRegister {
   }
 
   /**
-   * Returns id of the current chain.
-   */
-  private async getChainId(): Promise<number> {
-    const network = await this.hre.ethers.provider.getNetwork()
-    return Number(network.chainId)
-  }
-
-  /**
    * Constructs the default content for chain file.
    */
   private getDefaultFileContent(): string {
@@ -179,14 +160,12 @@ class DeploymentRegister {
    * Builds the path to for the chain file.
    * If the hardhat script is executed locally, the registry file will be saved in the tmp directory.
    */
-  private async getRegisterFilePath(): Promise<string> {
+  private getRegisterFilePath(): string {
     if (this.registerFilePath !== null) {
       return this.registerFilePath
     }
 
-    const chainId = await this.getChainId()
-    const chainInfo = networkNames[chainId] ? `${chainId}-${networkNames[chainId]}` : String(chainId)
-    const fileName = `${this.hre.network.name}-[${chainInfo}].json`
+    const fileName = `${this.hre.network.name}.json`
     let filePath = path.join(DEPLOYMENT_DATA_DIR, fileName)
 
     const networkEnvironment = resolveNetworkEnvironment(this.hre)
