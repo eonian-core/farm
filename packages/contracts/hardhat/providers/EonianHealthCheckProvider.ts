@@ -8,7 +8,7 @@ export class EonianHealthCheckProvider extends BaseProvider {
     const networkEnvironment = resolveNetworkEnvironment(this.hre)
     return {
       [chain]: {
-        [networkEnvironment]: await this.hre.deploymentRegister.getProxyAddress('LossRatioHealthCheck', null),
+        [networkEnvironment]: await this.hre.proxyRegister.getProxyAddress('LossRatioHealthCheck', null),
       },
     }
   }

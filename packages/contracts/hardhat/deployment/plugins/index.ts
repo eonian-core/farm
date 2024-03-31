@@ -1,5 +1,5 @@
 import './Deployer'
-import './DeploymentRegister'
+import './ProxyRegister'
 
 export * from './Deployer'
-export * from './DeploymentRegister'
+export * from './ProxyRegister'

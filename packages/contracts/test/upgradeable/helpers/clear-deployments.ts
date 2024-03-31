@@ -24,7 +24,7 @@ export function clearDeployments(hre: HardhatRuntimeEnvironment) {
    * Clears ".json" deployments data between each test
    */
   afterEach(async () => {
-    await hre.deploymentRegister.deleteFile()
+    await hre.proxyRegister.deleteFile()
     await deleteOZManifestFile()
   })
 

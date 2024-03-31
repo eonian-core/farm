@@ -115,7 +115,7 @@ class Deployer {
    * Returns the proxy address from the cache (deployment data file) or deploys a new proxy first.
    */
   private async getOrCreateProxy(): Promise<string> {
-    const proxyAddressFromCache = await this.hre.deploymentRegister.getProxyAddress(this.contractName, this.deploymentId)
+    const proxyAddressFromCache = await this.hre.proxyRegister.getProxyAddress(this.contractName, this.deploymentId)
     if (proxyAddressFromCache) {
       this.log(`Proxy address "${proxyAddressFromCache} was found in the deployment file (deploy is skipped)`)
       return proxyAddressFromCache
@@ -133,7 +133,7 @@ class Deployer {
     const address = await contract.getAddress()
 
     this.log(`Saving proxy address "${address}" to the deployment data file...`)
-    await this.hre.deploymentRegister.saveProxy(this.contractName, this.deploymentId, address)
+    await this.hre.proxyRegister.saveProxy(this.contractName, this.deploymentId, address)
 
     this.changeDeployStatus(DeployStatus.DEPLOYED)
 

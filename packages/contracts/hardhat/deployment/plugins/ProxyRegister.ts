@@ -15,39 +15,40 @@ import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
  */
 
 /**
- * Represents a lookup map ("contract name" to "{@link ContractDeploymentData}")
+ * Represents a lookup map.
+ * E.g.: Contract name (Vault) -> Proxy ID (USDT) -> Address (0x...)
  */
-export type DeploymentFile = Record<string, Record<string, string>>
+export type ProxyRegisterFileContent = Record<string, Record<string, string>>
 
-const DEPLOYMENT_DATA_DIR = '.deployments'
-const DEFAULT_DEPLOYMENT_ID = 'default'
+const DATA_DIR = '.proxies'
+const DEFAULT_PROXY_ID = 'default'
 
 declare module 'hardhat/types/runtime' {
   export interface HardhatRuntimeEnvironment {
-    deploymentRegister: DeploymentRegister
+    proxyRegister: ProxyRegister
   }
 }
 
 extendEnvironment((hre) => {
-  hre.deploymentRegister = new DeploymentRegister(hre)
+  hre.proxyRegister = new ProxyRegister(hre)
 })
 
 /**
  * A utility class that is used to keep track of each deployed proxy with
- * a separate .json file for each network in the {@link DEPLOYMENT_DATA_DIR} directory.
+ * a separate .json file for each network in the {@link DATA_DIR} directory.
  */
-class DeploymentRegister {
-  private log = debug(DeploymentRegister.name)
+class ProxyRegister {
+  private log = debug(ProxyRegister.name)
 
   private registerFilePath: string | null = null
 
   constructor(private hre: HardhatRuntimeEnvironment) {}
 
   /**
-   * Returns proxy address from the deployment data file.
+   * Returns proxy address from the data file.
    */
   public async getProxyAddress(contractName: string, deploymentId: string | null): Promise<string | null> {
-    deploymentId ??= DEFAULT_DEPLOYMENT_ID
+    deploymentId ??= DEFAULT_PROXY_ID
     const data = await this.read()
     const contractData = data[contractName]
     if (!contractData) {
@@ -63,10 +64,10 @@ class DeploymentRegister {
   }
 
   /**
-   * Saves the specified proxy address to the deployment data file.
+   * Saves the specified proxy address to the data file.
    */
   public async saveProxy(contractName: string, deploymentId: string | null, address: string): Promise<void> {
-    deploymentId ??= DEFAULT_DEPLOYMENT_ID
+    deploymentId ??= DEFAULT_PROXY_ID
     const currentProxyAddress = await this.getProxyAddress(contractName, deploymentId)
     if (currentProxyAddress !== null && currentProxyAddress !== address) {
       throw new Error(
@@ -80,13 +81,13 @@ class DeploymentRegister {
 
   /**
    * Reads the chain file (populated from {@link getRegisterFilePath}) and returns its content.
-   * @returns The content of deployment data file.
+   * @returns The content of data file.
    */
-  public async read(): Promise<DeploymentFile> {
+  public async read(): Promise<ProxyRegisterFileContent> {
     try {
       const deploymentFilePath = await this.ensureFileExists()
       const content = await fs.readFile(deploymentFilePath, 'utf-8')
-      return JSON.parse(content) as DeploymentFile
+      return JSON.parse(content) as ProxyRegisterFileContent
     }
     catch (error) {
       throw new Error(`Unable to read deployment file: ${String(error)}`)
@@ -97,7 +98,7 @@ class DeploymentRegister {
    * Writes the data to the chain file.
    * @param data The fiile content.
    */
-  public async write(data: DeploymentFile): Promise<void> {
+  public async write(data: ProxyRegisterFileContent): Promise<void> {
     try {
       const deploymentFilePath = await this.ensureFileExists()
       const content = JSON.stringify(data, null, 2)
@@ -112,7 +113,7 @@ class DeploymentRegister {
    * Combines the passed delta with existing data in the chain file and saves it.
    * @param patch The file content delta.
    */
-  public async writePatch(patch: Partial<DeploymentFile>): Promise<void> {
+  public async writePatch(patch: Partial<ProxyRegisterFileContent>): Promise<void> {
     const data = merge(await this.read(), patch)
     await this.write(data)
   }
@@ -152,7 +153,7 @@ class DeploymentRegister {
    * Constructs the default content for chain file.
    */
   private getDefaultFileContent(): string {
-    const content: DeploymentFile = {}
+    const content: ProxyRegisterFileContent = {}
     return JSON.stringify(content, null, 2)
   }
 
@@ -166,11 +167,11 @@ class DeploymentRegister {
     }
 
     const fileName = `${this.hre.network.name}.json`
-    let filePath = path.join(DEPLOYMENT_DATA_DIR, fileName)
+    let filePath = path.join(DATA_DIR, fileName)
 
     const networkEnvironment = resolveNetworkEnvironment(this.hre)
     if (networkEnvironment === NetworkEnvironment.LOCAL) {
-      filePath = path.join(os.tmpdir(), DEPLOYMENT_DATA_DIR, `${Date.now()}-${fileName}`)
+      filePath = path.join(os.tmpdir(), DATA_DIR, `${Date.now()}-${fileName}`)
     }
     return (this.registerFilePath = filePath)
   }

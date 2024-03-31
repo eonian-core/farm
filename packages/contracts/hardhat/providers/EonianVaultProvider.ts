@@ -9,11 +9,11 @@ export class EonianVaultProvider extends BaseProvider {
     return {
       [chain]: {
         [networkEnvironment]: {
-          [TokenSymbol.USDT]: await this.hre.deploymentRegister.getProxyAddress('Vault', TokenSymbol.USDT),
-          [TokenSymbol.USDC]: await this.hre.deploymentRegister.getProxyAddress('Vault', TokenSymbol.USDC),
-          [TokenSymbol.BUSD]: await this.hre.deploymentRegister.getProxyAddress('Vault', TokenSymbol.BUSD),
-          [TokenSymbol.BTCB]: await this.hre.deploymentRegister.getProxyAddress('Vault', TokenSymbol.BTCB),
-          [TokenSymbol.WETH]: await this.hre.deploymentRegister.getProxyAddress('Vault', TokenSymbol.WETH),
+          [TokenSymbol.USDT]: await this.hre.proxyRegister.getProxyAddress('Vault', TokenSymbol.USDT),
+          [TokenSymbol.USDC]: await this.hre.proxyRegister.getProxyAddress('Vault', TokenSymbol.USDC),
+          [TokenSymbol.BUSD]: await this.hre.proxyRegister.getProxyAddress('Vault', TokenSymbol.BUSD),
+          [TokenSymbol.BTCB]: await this.hre.proxyRegister.getProxyAddress('Vault', TokenSymbol.BTCB),
+          [TokenSymbol.WETH]: await this.hre.proxyRegister.getProxyAddress('Vault', TokenSymbol.WETH),
         },
       },
     }

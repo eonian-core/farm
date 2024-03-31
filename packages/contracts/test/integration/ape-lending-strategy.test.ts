@@ -254,7 +254,7 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
   }
 
   async function getAddress(contractName: string) {
-    const address = await hre.deploymentRegister.getProxyAddress(contractName, token)
+    const address = await hre.proxyRegister.getProxyAddress(contractName, token)
     if (address) {
       return address
     }
