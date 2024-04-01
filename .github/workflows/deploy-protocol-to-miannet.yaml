@@ -81,12 +81,6 @@ jobs:
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
           pull: '--rebase --autostash'
 
-      - name: Verify deployment result
-        run: |-
-          cd packages/contracts
-          yarn hardhat check-past-deployment-result
-          
-
   publish-source-code:
     name: Publish Source Code
     runs-on: ubuntu-latest

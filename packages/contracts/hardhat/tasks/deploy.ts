@@ -31,6 +31,8 @@ export async function deployTaskAction(tokens: TokenSymbol[], hre: HardhatRuntim
     await execute(deployVFT, token, hre)
   }
 
+  await hre.proxyValidator.validate()
+
   console.log('\nDeployment is done!\n')
 }
 

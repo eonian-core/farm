@@ -29,6 +29,13 @@ declare module 'hardhat/types/runtime' {
   }
 }
 
+interface ProxyRecord {
+  address: string
+  contractName: string
+  id: string
+  implementationAddress: string
+}
+
 extendEnvironment((hre) => {
   hre.proxyRegister = new ProxyRegister(hre)
 })
@@ -147,6 +154,25 @@ class ProxyRegister {
   public async deleteFile(): Promise<void> {
     const deploymentFilePath = await this.ensureFileExists()
     await fs.rm(deploymentFilePath, { force: true })
+  }
+
+  /**
+   * Returns all existing proxy records from the file.
+   */
+  public async getAll(): Promise<ProxyRecord[]> {
+    const records: ProxyRecord[] = []
+    const data = await this.read()
+    const contractNames = Object.keys(data)
+    for (const contractName of contractNames) {
+      const proxies = data[contractName]
+      const ids = Object.keys(proxies)
+      for (const id of ids) {
+        const proxyAddress = proxies[id]
+        const implementationAddress = await this.hre.upgrades.erc1967.getImplementationAddress(proxyAddress)
+        records.push({ address: proxies[id], contractName, id, implementationAddress })
+      }
+    }
+    return records
   }
 
   /**
