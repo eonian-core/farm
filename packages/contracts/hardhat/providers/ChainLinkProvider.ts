@@ -17,4 +17,9 @@ export class ChainLinkProvider extends BaseProvider {
       },
     }
   }
+
+  protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
+    const contract = await this.hre.ethers.getContractAt('AggregatorV3Interface', address)
+    return await contract.description() === `${token} / USD`
+  }
 }
