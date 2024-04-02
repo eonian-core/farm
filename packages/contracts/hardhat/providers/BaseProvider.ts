@@ -16,7 +16,7 @@ export abstract class BaseProvider {
   public async getAddress(): Promise<string> {
     const address = await this.resolveLookupValue()
     if (typeof address !== 'string') {
-      throw new TypeError(`Expected "string" value, but got "${typeof address}. Use "${this.getAddressForToken.name}" function instead!`)
+      throw new TypeError(`Expected "string" value, but got "${typeof address}". Use "${this.getAddressForToken.name}" function instead!`)
     }
     const isValid = await this.validateAddress(address, null)
     if (!isValid) {
@@ -28,7 +28,7 @@ export abstract class BaseProvider {
   public async getAddressForToken(token: TokenSymbol): Promise<string> {
     const addresses = await this.resolveLookupValue()
     if (typeof addresses !== 'object') {
-      throw new TypeError(`Expected "object" value, but got "${typeof addresses}. Use "${this.getAddress.name}" function instead!`)
+      throw new TypeError(`Expected "object" value, but got "${typeof addresses}". Use "${this.getAddress.name}" function instead!`)
     }
     const address = addresses[token]
     if (!address) {
