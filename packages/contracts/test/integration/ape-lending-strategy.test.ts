@@ -255,11 +255,8 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
   }
 
   async function getAddress(source: ContractName | Addresses) {
-    const address = await hre.proxyRegister.getProxyAddress(source, token)
-    if (address) {
-      return address
-    }
-    if (source in Addresses) {
+    const isPartOfAddresses = isInAddresses(source)
+    if (isPartOfAddresses) {
       try {
         return await hre.addresses.getForToken(source as Addresses, token)
       }
@@ -272,11 +269,21 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
         }
       }
     }
+    else {
+      const address = await hre.proxyRegister.getProxyAddress(source, token)
+      if (address) {
+        return address
+      }
+    }
     throw new Error(`No address found for: ${source} (token: ${token})`)
   }
 
   async function getContractAt<R extends BaseContract>(contractName: ContractName) {
     const address = await getAddress(contractName)
     return await hre.ethers.getContractAt(contractName, address) as unknown as R
+  }
+
+  function isInAddresses(value: string): value is Addresses {
+    return Object.values(Addresses).includes(value as Addresses)
   }
 })

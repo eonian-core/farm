@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import type { ContractName, HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
 import { merge } from 'lodash'
 import { extendEnvironment } from 'hardhat/config'
@@ -18,7 +18,7 @@ import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
  * Represents a lookup map.
  * E.g.: Contract name (Vault) -> Proxy ID (USDT) -> Address (0x...)
  */
-export type ProxyRegisterFileContent = Record<string, Record<string, string>>
+export type ProxyRegisterFileContent = Partial<Record<ContractName, Record<string, string>>>
 
 const DATA_DIR = '.proxies'
 const DEFAULT_PROXY_ID = 'default'
@@ -31,7 +31,7 @@ declare module 'hardhat/types/runtime' {
 
 interface ProxyRecord {
   address: string
-  contractName: string
+  contractName: ContractName
   id: string
   implementationAddress: string
 }
@@ -54,7 +54,7 @@ class ProxyRegister {
   /**
    * Returns proxy address from the data file.
    */
-  public async getProxyAddress(contractName: string, deploymentId: string | null): Promise<string | null> {
+  public async getProxyAddress(contractName: ContractName, deploymentId: string | null): Promise<string | null> {
     deploymentId ??= DEFAULT_PROXY_ID
     const data = await this.read()
     const contractData = data[contractName]
@@ -73,7 +73,7 @@ class ProxyRegister {
   /**
    * Saves the specified proxy address to the data file.
    */
-  public async saveProxy(contractName: string, deploymentId: string | null, address: string): Promise<void> {
+  public async saveProxy(contractName: ContractName, deploymentId: string | null, address: string): Promise<void> {
     deploymentId ??= DEFAULT_PROXY_ID
     const currentProxyAddress = await this.getProxyAddress(contractName, deploymentId)
     if (currentProxyAddress !== null && currentProxyAddress !== address) {
@@ -162,9 +162,9 @@ class ProxyRegister {
   public async getAll(): Promise<ProxyRecord[]> {
     const records: ProxyRecord[] = []
     const data = await this.read()
-    const contractNames = Object.keys(data)
+    const contractNames = Object.keys(data) as ContractName[]
     for (const contractName of contractNames) {
-      const proxies = data[contractName]
+      const proxies = data[contractName]!
       const ids = Object.keys(proxies)
       for (const id of ids) {
         const proxyAddress = proxies[id]
