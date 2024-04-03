@@ -1,7 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { ContractGroup, TokenSymbol } from '../types'
-import { getProviders } from '../providers'
 import { type ApeLendingStrategy } from '../../typechain-types'
+import { getProviders } from './providers'
 import { type DeployResult, DeployStatus } from './plugins/Deployer'
 
 export default async function deployApeLendingStrategy(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {

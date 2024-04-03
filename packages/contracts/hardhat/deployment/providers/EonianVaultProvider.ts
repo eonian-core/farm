@@ -1,4 +1,4 @@
-import { TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../types'
+import { TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 

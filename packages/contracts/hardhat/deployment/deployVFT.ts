@@ -1,8 +1,8 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { getProviders } from '../providers'
 import type { VaultFounderToken } from '../../typechain-types'
 import type { TokenSymbol } from '../types'
 import { ContractGroup } from '../types'
+import { getProviders } from './providers'
 import { type DeployResult, DeployStatus } from './plugins/Deployer'
 
 export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {

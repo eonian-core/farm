@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { LookupMap } from '../BaseProvider'
 import { BaseProvider } from '../BaseProvider'
-import { type AvailableHardhatNetwork, Chain, NetworkEnvironment, TokenSymbol } from '../../types'
+import { type AvailableHardhatNetwork, Chain, NetworkEnvironment, TokenSymbol } from '../../../types'
 
 describe(BaseProvider.name, () => {
   it('Should provide single (default) address', async () => {

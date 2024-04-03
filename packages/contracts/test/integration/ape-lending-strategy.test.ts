@@ -10,7 +10,7 @@ import type {
 } from '../../typechain-types'
 import { Chain, ContractGroup, TokenSymbol } from '../../hardhat/types'
 import { deployTaskAction } from '../../hardhat/tasks'
-import { getProviders } from '../../hardhat/providers'
+import { getProviders } from '../../hardhat/deployment/providers'
 import warp from './helpers/warp'
 import resetBalance from './helpers/reset-balance'
 import { describeOnChain } from './helpers/describeOnChain'

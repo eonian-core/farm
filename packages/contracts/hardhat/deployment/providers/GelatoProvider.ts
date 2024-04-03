@@ -1,4 +1,4 @@
-import { Chain } from '../types'
+import { Chain } from '../../types'
 import type { LookupMap } from './BaseProvider'
 import { BaseProvider } from './BaseProvider'
 
