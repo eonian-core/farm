@@ -1,8 +1,8 @@
-import { Chain, ContractGroup, TokenSymbol, getTokenAddress } from '../../types'
-import type { LookupMap } from './BaseProvider'
-import { BaseProvider } from './BaseProvider'
+import { Chain, TokenSymbol, getTokenAddress } from '../../types'
+import type { LookupMap } from './BaseAddresses'
+import { BaseAddresses } from './BaseAddresses'
 
-export class TokenProvider extends BaseProvider {
+export class ERC20 extends BaseAddresses {
   protected getLookupMap(): LookupMap {
     return {
       [Chain.BSC]: {
@@ -20,9 +20,5 @@ export class TokenProvider extends BaseProvider {
   protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
     const contract = await this.hre.ethers.getContractAt('IERC20Metadata', address)
     return token === await contract.symbol()
-  }
-
-  protected get name(): string {
-    return ContractGroup.TOKEN
   }
 }

@@ -1,9 +1,9 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { Vault } from '../../typechain-types'
 import type { TokenSymbol } from '../types'
-import { ContractGroup, NetworkEnvironment, resolveNetworkEnvironment } from '../types'
-import { getProviders } from './providers'
+import { NetworkEnvironment, resolveNetworkEnvironment } from '../types'
 import { type DeployResult } from './plugins/Deployer'
+import { Addresses } from '.'
 
 export default async function deployVault(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)
@@ -23,9 +23,8 @@ export default async function deployVault(token: TokenSymbol, hre: HardhatRuntim
 }
 
 async function getAddreses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {
-  const providers = getProviders(hre)
   return {
-    asset: await providers[ContractGroup.TOKEN].getAddressForToken(token),
-    treasury: await providers[ContractGroup.EONIAN_TREASURY].getAddress(),
+    asset: await hre.addresses.getForToken(Addresses.TOKEN, token),
+    treasury: await hre.addresses.get(Addresses.TREASURY),
   }
 }

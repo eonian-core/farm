@@ -1,8 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { VaultFounderToken } from '../../typechain-types'
 import type { TokenSymbol } from '../types'
-import { ContractGroup } from '../types'
-import { getProviders } from './providers'
+import { Addresses } from './addresses'
 import { type DeployResult, DeployStatus } from './plugins/Deployer'
 
 export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
@@ -31,8 +30,7 @@ async function attachToVault(vftAddress: string, vaultAddress: string, hre: Hard
 }
 
 async function getAddreses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {
-  const providers = getProviders(hre)
   return {
-    vault: await providers[ContractGroup.EONIAN_VAULT].getAddressForToken(token),
+    vault: await hre.addresses.getForToken(Addresses.VAULT, token),
   }
 }

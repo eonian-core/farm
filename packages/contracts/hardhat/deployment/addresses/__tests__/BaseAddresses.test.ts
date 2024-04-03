@@ -1,10 +1,10 @@
 import { expect } from 'chai'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { LookupMap } from '../BaseProvider'
-import { BaseProvider } from '../BaseProvider'
+import type { LookupMap } from '../BaseAddresses'
+import { BaseAddresses } from '../BaseAddresses'
 import { type AvailableHardhatNetwork, Chain, NetworkEnvironment, TokenSymbol } from '../../../types'
 
-describe(BaseProvider.name, () => {
+describe(BaseAddresses.name, () => {
   it('Should provide single (default) address', async () => {
     const hre = mockHRE('bsc_mainnet_dev')
     const provider = mockProvider(hre, {
@@ -176,8 +176,8 @@ describe(BaseProvider.name, () => {
   })
 })
 
-function mockProvider(hre: HardhatRuntimeEnvironment, map: LookupMap | PromiseLike<LookupMap>, validate?: (address: string, token: TokenSymbol | null) => boolean): BaseProvider {
-  class StubProvider extends BaseProvider {
+function mockProvider(hre: HardhatRuntimeEnvironment, map: LookupMap | PromiseLike<LookupMap>, validate?: (address: string, token: TokenSymbol | null) => boolean): BaseAddresses {
+  class StubProvider extends BaseAddresses {
     protected getLookupMap(): LookupMap | PromiseLike<LookupMap> {
       return map
     }

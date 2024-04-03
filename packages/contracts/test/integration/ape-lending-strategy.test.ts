@@ -3,14 +3,15 @@ import { expect } from 'chai'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 import type { BaseContract } from 'ethers'
+import type { ContractName } from 'hardhat/types'
 import type {
   ApeLendingStrategy,
   IERC20,
   Vault,
 } from '../../typechain-types'
-import { Chain, ContractGroup, TokenSymbol } from '../../hardhat/types'
+import { Chain, TokenSymbol } from '../../hardhat/types'
 import { deployTaskAction } from '../../hardhat/tasks'
-import { getProviders } from '../../hardhat/deployment/providers'
+import { Addresses } from '../../hardhat/deployment/addresses'
 import warp from './helpers/warp'
 import resetBalance from './helpers/reset-balance'
 import { describeOnChain } from './helpers/describeOnChain'
@@ -48,7 +49,7 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     await helpers.impersonateAccount(holderB.address)
     // hre.tracer.nameTags[holderB.address] = 'Holder B'
 
-    const gelatoAddress = await getAddress(ContractGroup.GELATO)
+    const gelatoAddress = await getAddress(Addresses.GELATO)
     await helpers.impersonateAccount(gelatoAddress)
     // hre.tracer.nameTags[gelatoAddress] = 'Gelato Ops'
 
@@ -56,7 +57,7 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     strategyAddress = await strategy.getAddress()
     // hre.tracer.nameTags[strategyAddress] = 'Strategy'
 
-    const assetAddress = await getAddress(ContractGroup.TOKEN)
+    const assetAddress = await getAddress(Addresses.TOKEN)
     assetToken = await hre.ethers.getContractAt('IERC20', assetAddress)
     // hre.tracer.nameTags[assetAddress] = 'BUSD'
 
@@ -253,30 +254,28 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     )
   }
 
-  async function getAddress(contractName: string) {
-    const address = await hre.proxyRegister.getProxyAddress(contractName, token)
+  async function getAddress(source: ContractName | Addresses) {
+    const address = await hre.proxyRegister.getProxyAddress(source, token)
     if (address) {
       return address
     }
-    const addressProviders = getProviders(hre)
-    const addressProvider = addressProviders[contractName as ContractGroup]
-    if (addressProvider) {
+    if (source in Addresses) {
       try {
-        return await addressProvider.getAddressForToken(token)
+        return await hre.addresses.getForToken(source as Addresses, token)
       }
       catch (_e) {
         try {
-          return await addressProvider.getAddress()
+          return await hre.addresses.get(source as Addresses)
         }
         catch (_e) {
           // Ignore
         }
       }
     }
-    throw new Error(`No address found for: ${contractName} (token: ${token})`)
+    throw new Error(`No address found for: ${source} (token: ${token})`)
   }
 
-  async function getContractAt<R extends BaseContract>(contractName: string) {
+  async function getContractAt<R extends BaseContract>(contractName: ContractName) {
     const address = await getAddress(contractName)
     return await hre.ethers.getContractAt(contractName, address) as unknown as R
   }

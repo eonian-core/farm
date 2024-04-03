@@ -4,7 +4,6 @@ import type { NetworkEnvironment } from './NetworkEnvironment'
 export * from './Chain'
 export * from './NetworkEnvironment'
 export * from './TokenSymbol'
-export * from './ContractGroup'
 
 export type AvailableHardhatNetwork = 'hardhat' | 'ganache' | `${Lowercase<Exclude<Chain, Chain.UNKNOWN>>}_${string}_${Lowercase<Exclude<NetworkEnvironment, NetworkEnvironment.LOCAL>>}`
 

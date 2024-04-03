@@ -1,8 +1,8 @@
 import { resolveChain, resolveNetworkEnvironment } from '../../types'
-import type { LookupMap } from './BaseProvider'
-import { BaseProvider } from './BaseProvider'
+import type { LookupMap } from './BaseAddresses'
+import { BaseAddresses } from './BaseAddresses'
 
-export class EonianHealthCheckProvider extends BaseProvider {
+export class EonianHealthCheck extends BaseAddresses {
   protected async getLookupMap(): Promise<LookupMap> {
     const chain = resolveChain(this.hre)
     const networkEnvironment = resolveNetworkEnvironment(this.hre)

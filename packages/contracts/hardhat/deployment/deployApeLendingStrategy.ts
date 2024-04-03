@@ -1,11 +1,11 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { ContractGroup, TokenSymbol } from '../types'
+import { TokenSymbol } from '../types'
 import { type ApeLendingStrategy } from '../../typechain-types'
-import { getProviders } from './providers'
 import { type DeployResult, DeployStatus } from './plugins/Deployer'
+import { Addresses } from './addresses'
 
 export default async function deployApeLendingStrategy(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
-  const addresses = await getAddreses(token, hre)
+  const addresses = await getAddresses(token, hre)
 
   const initializeArguments: Parameters<ApeLendingStrategy['initialize']> = [
     addresses.vault,
@@ -34,15 +34,14 @@ async function attachToVault(strategyAddress: string, vaultAddress: string, hre:
   await tx.wait()
 }
 
-async function getAddreses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {
-  const providers = getProviders(hre)
+async function getAddresses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {
   return {
-    asset: await providers[ContractGroup.TOKEN].getAddressForToken(token),
-    cToken: await providers[ContractGroup.APESWAP].getAddressForToken(token),
-    assetPriceFeed: await providers[ContractGroup.CHAINLINK_FEED].getAddressForToken(token),
-    gelato: await providers[ContractGroup.GELATO].getAddress(),
-    vault: await providers[ContractGroup.EONIAN_VAULT].getAddressForToken(token),
-    nativePriceFeed: await providers[ContractGroup.CHAINLINK_FEED].getAddressForToken(TokenSymbol.BNB),
-    healthCheck: await providers[ContractGroup.EONIAN_HEALTH_CHECK].getAddress(),
+    asset: await hre.addresses.getForToken(Addresses.TOKEN, token),
+    cToken: await hre.addresses.getForToken(Addresses.APESWAP, token),
+    assetPriceFeed: await hre.addresses.getForToken(Addresses.CHAINLINK, token),
+    gelato: await hre.addresses.get(Addresses.GELATO),
+    vault: await hre.addresses.getForToken(Addresses.VAULT, token),
+    nativePriceFeed: await hre.addresses.getForToken(Addresses.CHAINLINK, TokenSymbol.BNB),
+    healthCheck: await hre.addresses.get(Addresses.HEALTH_CHECK),
   }
 }

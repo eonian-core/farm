@@ -5,7 +5,7 @@ import { resolveChain, resolveNetworkEnvironment } from '../../types'
 type Lookup<T> = Partial<Record<Chain, Partial<Record<NetworkEnvironment | 'ANY_ENVIRONMENT', T>>>>
 export type LookupMap = Lookup<string> | Lookup<Partial<Record<TokenSymbol, string>>>
 
-export abstract class BaseProvider {
+export abstract class BaseAddresses {
   protected chain!: Chain
   protected environment!: NetworkEnvironment
 

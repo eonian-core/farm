@@ -17,7 +17,7 @@ import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
 
 import './hardhat/types'
-import './hardhat/deployment/plugins'
+import './hardhat/deployment'
 import './hardhat/tasks'
 import './hardhat/overrides'
 

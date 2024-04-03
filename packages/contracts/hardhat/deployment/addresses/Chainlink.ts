@@ -1,8 +1,8 @@
 import { Chain, TokenSymbol } from '../../types'
-import type { LookupMap } from './BaseProvider'
-import { BaseProvider } from './BaseProvider'
+import type { LookupMap } from './BaseAddresses'
+import { BaseAddresses } from './BaseAddresses'
 
-export class ChainLinkProvider extends BaseProvider {
+export class Chainlink extends BaseAddresses {
   protected getLookupMap(): LookupMap {
     return {
       [Chain.BSC]: {

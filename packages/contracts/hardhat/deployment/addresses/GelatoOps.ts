@@ -1,9 +1,9 @@
 import { Chain } from '../../types'
-import type { LookupMap } from './BaseProvider'
-import { BaseProvider } from './BaseProvider'
+import type { LookupMap } from './BaseAddresses'
+import { BaseAddresses } from './BaseAddresses'
 
 // More contract addresses at https://docs.gelato.network/developer-products/gelato-ops-smart-contract-automation-hub/contract-addresses
-export class GelatoProvider extends BaseProvider {
+export class GelatoOps extends BaseAddresses {
   protected getLookupMap(): LookupMap {
     return {
       [Chain.BSC]: {
