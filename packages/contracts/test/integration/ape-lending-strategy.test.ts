@@ -2,7 +2,7 @@ import hre from 'hardhat'
 import { expect } from 'chai'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
-import type { BaseContract } from 'ethers'
+import { type BaseContract, ZeroAddress } from 'ethers'
 import type { ContractName } from 'hardhat/types'
 import type {
   ApeLendingStrategy,
@@ -184,7 +184,7 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     })
   })
 
-  it('Should accumulate rewards', async () => {
+  const shouldAccumulateRewards = async () => {
     // Vault is empty, no BUSD amount on the token balance
     expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(0)
 
@@ -211,6 +211,25 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
 
     // Rewards address should have some vault shares
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(0)
+  }
+
+  it('Should accumulate rewards', shouldAccumulateRewards)
+
+  it('Should accumulate rewards in treasury', async () => {
+    const treasuryAddress = await vault.rewards()
+    expect(treasuryAddress).not.to.be.equal(ZeroAddress)
+
+    // Treasury is an owner by default
+    const [owner] = await ethers.getSigners()
+    expect(treasuryAddress).to.be.equal(owner.address)
+
+    // Treasury is empty at start
+    expect(await vault.balanceOf(treasuryAddress)).to.be.equal(0)
+
+    await shouldAccumulateRewards()
+
+    // Some rewards (vault shares) were accumulated in treasury
+    expect(await vault.balanceOf(treasuryAddress)).to.be.greaterThan(1)
   })
 
   /**
@@ -258,11 +277,11 @@ describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
     const isPartOfAddresses = isInAddresses(source)
     if (isPartOfAddresses) {
       try {
-        return await hre.addresses.getForToken(source as Addresses, token)
+        return await hre.addresses.getForToken(source, token)
       }
       catch (_e) {
         try {
-          return await hre.addresses.get(source as Addresses)
+          return await hre.addresses.get(source)
         }
         catch (_e) {
           // Ignore
