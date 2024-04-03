@@ -19,6 +19,7 @@ import '@nomicfoundation/hardhat-foundry'
 import './hardhat/types'
 import './hardhat/deployment/plugins'
 import './hardhat/tasks'
+import './hardhat/overrides'
 
 import { resolveHardhatForkConfig } from './hardhat/forks'
 
