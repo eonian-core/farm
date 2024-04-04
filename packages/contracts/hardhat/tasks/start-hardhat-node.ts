@@ -6,6 +6,7 @@ import kill from 'tree-kill'
 import { task } from 'hardhat/config'
 import { TASK_TEST } from 'hardhat/builtin-tasks/task-names'
 import type { HardhatNetworkConfig, HardhatRuntimeEnvironment, HttpNetworkConfig, RunSuperFunction } from 'hardhat/types'
+import { Chain, getChainForFork } from '../types'
 
 enum ErrorReason {
   RESOURCE_NOT_AVAILABLE = 'RESOURCE_NOT_AVAILABLE',
@@ -32,6 +33,11 @@ const MAX_RESTART_ATTEMPTS = 30
 export const startNodeTask = task(TASK_TEST, async (_args, env, runSuper) => {
   if (env.network.name !== 'hardhat') {
     log('Current network is not "hardhat", fork node will not be started')
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return await runSuper()
+  }
+  if (getChainForFork() === Chain.UNKNOWN) {
+    log('No fork chain selected, node will not be started')
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await runSuper()
   }

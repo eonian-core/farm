@@ -8,15 +8,14 @@ import type {
   ApeLendingStrategy,
   IERC20,
   Vault,
-} from '../../typechain-types'
-import { Chain, TokenSymbol } from '../../hardhat/types'
-import { deployTaskAction } from '../../hardhat/tasks'
-import { Addresses } from '../../hardhat/deployment/addresses'
-import warp from './helpers/warp'
-import resetBalance from './helpers/reset-balance'
-import { describeOnChain } from './helpers/describeOnChain'
+} from '../../../typechain-types'
+import { Chain, TokenSymbol } from '../../../hardhat/types'
+import { deployTaskAction } from '../../../hardhat/tasks'
+import { Addresses } from '../../../hardhat/deployment/addresses'
+import warp from '../helpers/warp'
+import resetBalance from '../helpers/reset-balance'
 
-describeOnChain(Chain.BSC, 'Ape Lending Strategy', () => {
+describe('Ape Lending Strategy', () => {
   const { ethers } = hre
 
   const token = TokenSymbol.USDT

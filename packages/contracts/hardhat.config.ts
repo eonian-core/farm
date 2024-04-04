@@ -16,7 +16,7 @@ import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
 
-import './hardhat/types'
+import { Chain, getChainForFork } from './hardhat/types'
 import './hardhat/deployment'
 import './hardhat/tasks'
 import './hardhat/overrides'
@@ -42,12 +42,6 @@ const config: HardhatUserConfig = {
   },
   availableNetworks: {
     hardhat: resolveHardhatForkConfig(),
-    ganache: {
-      url: 'http://127.0.0.1:7545',
-      accounts: [
-        'ddf2c3d3e92baf6c868bccb6594559c46e1f6da05914a5d7e940cba8fd96fc01',
-      ],
-    },
     bsc_mainnet_dev: {
       ...bscMainnet,
     },
@@ -72,10 +66,15 @@ const config: HardhatUserConfig = {
   },
   paths: {
     sources: './src',
-    tests: './test',
+    tests: getPathForTests(),
     cache: './cache_hardhat',
     artifacts: './artifacts',
   },
+}
+
+function getPathForTests(root = './test') {
+  const chain = getChainForFork()
+  return chain === Chain.UNKNOWN ? root : `${root}/integration/${chain.toLowerCase()}`
 }
 
 config.networks = config.availableNetworks
