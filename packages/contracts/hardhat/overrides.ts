@@ -1,4 +1,7 @@
 import * as hardhatTypechain from '@typechain/ethers-v6/dist/codegen/hardhat'
+import { extendEnvironment } from 'hardhat/config'
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { type AvailableHardhatNetwork, Chain, getChainForFork } from './types'
 
 const generateHardhatHelper = hardhatTypechain.generateHardhatHelper
 
@@ -11,3 +14,16 @@ hardhatTypechain.generateHardhatHelper = function (names: string[]) {
     }
   `
 }
+
+// Just prints the information about current network at the start.
+extendEnvironment((hre: HardhatRuntimeEnvironment) => {
+  const network = hre.network.name as AvailableHardhatNetwork
+
+  let label: string = network
+  if (network === 'hardhat') {
+    const chainFork = getChainForFork()
+    label = chainFork === Chain.UNKNOWN ? label : `${label} (fork: ${chainFork})`
+  }
+
+  console.log(`Using "${label}" network...`)
+})
