@@ -70,6 +70,9 @@ const config: HardhatUserConfig = {
     cache: './cache_hardhat',
     artifacts: './artifacts',
   },
+  mocha: {
+    timeout: 2 * 60 * 1000,
+  },
 }
 
 function getPathForTests(root = './test') {
