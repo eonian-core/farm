@@ -49,6 +49,11 @@ jobs:
       - name: Link packages
         run: yarn bootstrap
 
+      - name: Build contracts
+        run: |-
+          cd packages/contracts
+          yarn build
+
       - name: Deploy Protocol
         env:
           BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
