@@ -107,5 +107,3 @@ export DEBUG=hardhat:wighawag:*
 4) Write a new (or adjust an existing) deploy task for your contracts.
 5) Write tests for the new chain/contracts in the `/test/integration/<chain>` directory. Do not forget to add a new `npm` script for the test, like `test:hardhat:<chain>` and set the RPC url in `/hardhat/forks.ts`.
 6) Adjust CI/CD deployment if necessary (create a new GitHub action).
-
-

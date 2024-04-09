@@ -1,6 +1,13 @@
 name: Deploy Protocol to Mainnet
 
 on:
+  workflow_dispatch:
+    inputs:
+      debug:
+        description: 'Value for DEBUG variable'
+        required: false
+        type: string
+
   push:
     branches:
       - staging
@@ -56,6 +63,7 @@ jobs:
 
       - name: Deploy Protocol
         env:
+          DEBUG: ${{ inputs.debug }}
           BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
