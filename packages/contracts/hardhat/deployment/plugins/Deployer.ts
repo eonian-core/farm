@@ -1,5 +1,6 @@
 import debug from 'debug'
 import type { ContractName, HardhatRuntimeEnvironment } from 'hardhat/types'
+import { Manifest } from '@openzeppelin/upgrades-core'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
 import { extendEnvironment } from 'hardhat/config'
@@ -68,7 +69,8 @@ class Deployer {
     const proxyImplementationAddress = await this.getImplementation(proxyAddress)
     const implementationAddress = await this.deployImplementationIfNeeded(proxyAddress)
 
-    if (proxyImplementationAddress !== implementationAddress) {
+    const sameImplementationCode = await this.haveSameBytecode(proxyImplementationAddress, implementationAddress)
+    if (!sameImplementationCode) {
       this.log(`Implementation changed: ${implementationAddress} (new) != ${proxyImplementationAddress} (old)!`)
       await this.upgradeProxy(proxyAddress)
     }
@@ -243,5 +245,18 @@ class Deployer {
         this.log(message, innerLogger)
       }
     }
+  }
+
+  private async haveSameBytecode(implementationA: string, implementationB: string): Promise<boolean> {
+    if (implementationA === implementationB) {
+      return true
+    }
+    const manifest = await Manifest.forNetwork(this.hre.ethers.provider)
+    const data = await manifest.read(3)
+    const implementations = Object.values(data.impls)
+    return implementations.some((implementationData) => {
+      const addresses = [implementationData!.address, ...(implementationData!.allAddresses ?? [])]
+      return addresses.includes(implementationA) && addresses.includes(implementationB)
+    })
   }
 }
