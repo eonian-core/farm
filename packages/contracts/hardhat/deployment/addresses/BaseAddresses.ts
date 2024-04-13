@@ -16,11 +16,11 @@ export abstract class BaseAddresses {
   public async getAddress(): Promise<string> {
     const address = await this.resolveLookupValue()
     if (typeof address !== 'string') {
-      throw new TypeError(`Expected "string" value, but got "${typeof address}". Use "${this.getAddressForToken.name}" function instead!`)
+      this.throwError(`Expected "string" value, but got "${typeof address}". Use "${this.getAddressForToken.name}" function instead!`)
     }
     const isValid = await this.validateAddress(address, null)
     if (!isValid) {
-      throw new Error(`Declared address ${address} is not valid!`)
+      this.throwError(`Declared address ${address} is not valid!`)
     }
     return address
   }
@@ -28,15 +28,15 @@ export abstract class BaseAddresses {
   public async getAddressForToken(token: TokenSymbol): Promise<string> {
     const addresses = await this.resolveLookupValue()
     if (typeof addresses !== 'object') {
-      throw new TypeError(`Expected "object" value, but got "${typeof addresses}". Use "${this.getAddress.name}" function instead!`)
+      this.throwError(`Expected "object" value, but got "${typeof addresses}". Use "${this.getAddress.name}" function instead!`)
     }
     const address = addresses[token]
     if (!address) {
-      throw new Error(`There is no address defined for token ${token}, available addresses: ${JSON.stringify(addresses)}!`)
+      this.throwError(`There is no address defined for token ${token}, available addresses: ${JSON.stringify(addresses)}!`)
     }
     const isValid = await this.validateAddress(address, token)
     if (!isValid) {
-      throw new Error(`Declared address ${address} for token ${token} is not valid!`)
+      this.throwError(`Declared address ${address} for token ${token} is not valid!`)
     }
     return address
   }
@@ -46,13 +46,17 @@ export abstract class BaseAddresses {
     return Promise.resolve(true)
   }
 
+  protected throwError(message: string): never {
+    throw new Error(`[${this.constructor.name}] ${message}`)
+  }
+
   private async resolveLookupValue(): Promise<string | Partial<Record<TokenSymbol, string>>> {
     const [chain, networkEnvironment] = this.resolveChainAndEnvironment()
     const map = await this.getLookupMap()
     const chainData = map[chain]
     const lookupValue = chainData?.[networkEnvironment] ?? chainData?.ANY_ENVIRONMENT
     if (!lookupValue) {
-      throw new Error(`Unable to resolve address of ${this.constructor.name} (chain: ${chain}, environment: ${networkEnvironment})!`)
+      this.throwError(`Unable to resolve address (chain: ${chain}, environment: ${networkEnvironment})!`)
     }
     return lookupValue
   }

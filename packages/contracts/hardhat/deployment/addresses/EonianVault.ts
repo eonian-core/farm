@@ -23,6 +23,15 @@ export class EonianVault extends BaseAddresses {
     const contract = await this.hre.ethers.getContractAt('Vault', address)
     const assetAddress = await contract.asset()
     const assetContract = await this.hre.ethers.getContractAt('IERC20Metadata', assetAddress)
-    return await assetContract.symbol() === token
+    return await assetContract.symbol() === this.renameSymbol(token)
+  }
+
+  private renameSymbol(token: TokenSymbol | null): string | null {
+    switch (token) {
+      case TokenSymbol.WETH:
+        return 'ETH'
+      default:
+        return token
+    }
   }
 }

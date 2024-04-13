@@ -20,6 +20,15 @@ export class ApeSwap extends BaseAddresses {
   protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
     const contract = await this.hre.ethers.getContractAt('IERC20Metadata', address)
     const cTokenSymbol = await contract.symbol()
-    return cTokenSymbol === `o${token}`
+    return cTokenSymbol === `o${this.renameSymbol(token)}`
+  }
+
+  private renameSymbol(token: TokenSymbol | null): string | null {
+    switch (token) {
+      case TokenSymbol.WETH:
+        return 'ETH'
+      default:
+        return token
+    }
   }
 }
