@@ -75,6 +75,11 @@ jobs:
       - name: Link packages
         run: yarn bootstrap
 
+      - name: Run tests (tools)
+        run: |-
+          cd packages/contracts
+          yarn test:tools
+
       - name: Run tests (foundry)
         run: |-
           cd packages/contracts
