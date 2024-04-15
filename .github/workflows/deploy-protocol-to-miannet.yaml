@@ -78,3 +78,8 @@ jobs:
           message: '[skip ci] Deployed contracts to ${{ vars.HARDHAT_NETWORK }} Mainnet'
           fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
           pull: '--rebase --autostash'
+
+      - name: Verify deployment result
+        run: |-
+          cd packages/contracts
+          yarn hardhat check-deploy-error
