@@ -19,6 +19,15 @@ export class ERC20 extends BaseAddresses {
 
   protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
     const contract = await this.hre.ethers.getContractAt('IERC20Metadata', address)
-    return token === await contract.symbol()
+    return this.renameSymbol(token) === await contract.symbol()
+  }
+
+  private renameSymbol(token: TokenSymbol | null): string | null {
+    switch (token) {
+      case TokenSymbol.WETH:
+        return 'ETH'
+      default:
+        return token
+    }
   }
 }

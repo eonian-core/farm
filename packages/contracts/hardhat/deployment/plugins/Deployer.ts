@@ -3,7 +3,6 @@ import type { ContractName, HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
-import { extendEnvironment } from 'hardhat/config'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
 
 export enum DeployStatus {
@@ -13,6 +12,8 @@ export enum DeployStatus {
 }
 
 export interface DeployResult {
+  contractName: string
+  deploymentId: string | null
   proxyAddress: string
   implementationAddress: string
   status: DeployStatus
@@ -20,19 +21,9 @@ export interface DeployResult {
 }
 
 type Tail<T extends any[]> = T extends [infer _A, ...infer R] ? R : never
-type DeployFunction = (...args: Tail<ConstructorParameters<typeof Deployer>>) => Promise<DeployResult>
+export type DeployFunction = (...args: Tail<ConstructorParameters<typeof Deployer>>) => Promise<DeployResult>
 
-declare module 'hardhat/types/runtime' {
-  export interface HardhatRuntimeEnvironment {
-    deploy: DeployFunction
-  }
-}
-
-extendEnvironment((hre) => {
-  hre.deploy = Deployer.createDeployer(hre)
-})
-
-class Deployer {
+export class Deployer {
   private logger: debug.Debugger = debug(Deployer.name)
 
   private contractFactory: ContractFactory | null = null
@@ -77,12 +68,14 @@ class Deployer {
 
     const successfullyVerified = await this.verifyIfNeeded(proxyAddress)
 
-    return {
+    return (this.hre.lastDeployments[proxyAddress] = {
       proxyAddress,
       implementationAddress,
+      contractName: this.contractName,
+      deploymentId: this.deploymentId,
       status: this.deployStatus,
       verified: successfullyVerified,
-    }
+    })
   }
 
   private async verifyIfNeeded(proxyAddress: string): Promise<boolean> {

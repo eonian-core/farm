@@ -20,6 +20,17 @@ export class Chainlink extends BaseAddresses {
 
   protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
     const contract = await this.hre.ethers.getContractAt('AggregatorV3Interface', address)
-    return await contract.description() === `${token} / USD`
+    return await contract.description() === `${this.renameSymbol(token)} / USD`
+  }
+
+  private renameSymbol(token: TokenSymbol | null): string | null {
+    switch (token) {
+      case TokenSymbol.BTCB:
+        return 'BTC'
+      case TokenSymbol.WETH:
+        return 'ETH'
+      default:
+        return token
+    }
   }
 }

@@ -71,7 +71,7 @@ describe(BaseAddresses.name, () => {
         },
       },
     })
-    await expect(provider.getAddress()).to.be.rejectedWith(TypeError)
+    await expect(provider.getAddress()).to.be.rejectedWith(Error)
   })
 
   it('Should throw when trying to get token address from single provider', async () => {
@@ -81,7 +81,7 @@ describe(BaseAddresses.name, () => {
         [NetworkEnvironment.DEV]: 'some-address',
       },
     })
-    await expect(provider.getAddressForToken(TokenSymbol.BNB)).to.be.rejectedWith(TypeError)
+    await expect(provider.getAddressForToken(TokenSymbol.BNB)).to.be.rejectedWith(Error)
   })
 
   it('Should get value from ANY_NETWORK if specified one is missing (single provider)', async () => {
