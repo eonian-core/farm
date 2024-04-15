@@ -28,3 +28,5 @@ deployments/hardhat
 .deployments/hardhat-*.json
 .deployments/ganache-*.json
 .openzeppelin/unknown-*.json
+
+.errors/deploy.json
