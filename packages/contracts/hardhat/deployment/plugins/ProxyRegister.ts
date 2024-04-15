@@ -4,7 +4,6 @@ import path from 'node:path'
 import type { ContractName, HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
 import { merge } from 'lodash'
-import { extendEnvironment } from 'hardhat/config'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
 
 /**
@@ -23,12 +22,6 @@ export type ProxyRegisterFileContent = Partial<Record<ContractName, Record<strin
 const DATA_DIR = '.proxies'
 const DEFAULT_PROXY_ID = 'default'
 
-declare module 'hardhat/types/runtime' {
-  export interface HardhatRuntimeEnvironment {
-    proxyRegister: ProxyRegister
-  }
-}
-
 interface ProxyRecord {
   address: string
   contractName: ContractName
@@ -36,15 +29,11 @@ interface ProxyRecord {
   implementationAddress: string
 }
 
-extendEnvironment((hre) => {
-  hre.proxyRegister = new ProxyRegister(hre)
-})
-
 /**
  * A utility class that is used to keep track of each deployed proxy with
  * a separate .json file for each network in the {@link DATA_DIR} directory.
  */
-class ProxyRegister {
+export class ProxyRegister {
   private log = debug(ProxyRegister.name)
 
   private registerFilePath: string | null = null
