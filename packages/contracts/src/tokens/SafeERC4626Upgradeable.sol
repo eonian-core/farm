@@ -10,7 +10,7 @@ import {ERC4626Upgradeable, GivenAssetsResultIsZeroShares, GivenSharesResultIsZe
 /// @title Safier and limited implementation of ERC-4626
 /// @notice ERC-4626 standard allow deposit and withdraw not for message sender.
 ///  It commonly known issue, which hardly to test and much error prune.
-///  Such interfaces caused vulnarabilities, which resulted in million dollars hacks.
+///  Such interfaces caused vulnerabilities, which resulted in million dollars hacks.
 ///  On anther hand, this interfaces not have any use cases which cannot be implemented without `transferFrom` method.
 ///  This implementation prevent spends and allowances from any methods except transferFrom/send
 ///  Also main business logic simplified to reduce gas consumption.
