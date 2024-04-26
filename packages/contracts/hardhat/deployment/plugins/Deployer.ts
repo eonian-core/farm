@@ -55,6 +55,8 @@ export class Deployer {
    * @returns The result of the deploy (@see DeployResult).
    */
   public async deploy(): Promise<DeployResult> {
+    await this.executePreDeployHook()
+
     const proxyAddress = await this.getOrCreateProxy()
 
     const proxyImplementationAddress = await this.getImplementation(proxyAddress)
@@ -76,6 +78,13 @@ export class Deployer {
       status: this.deployStatus,
       verified: successfullyVerified,
     })
+  }
+
+  private async executePreDeployHook(): Promise<void> {
+    const onBeforeDeploy = this.hre.onBeforeDeploy
+    if (onBeforeDeploy) {
+      await onBeforeDeploy(this.contractName, this.deploymentId)
+    }
   }
 
   private async verifyIfNeeded(proxyAddress: string): Promise<boolean> {

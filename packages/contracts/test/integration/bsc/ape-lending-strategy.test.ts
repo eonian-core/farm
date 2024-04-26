@@ -9,13 +9,16 @@ import type {
   IERC20,
   Vault,
 } from '../../../typechain-types'
-import { Chain, TokenSymbol } from '../../../hardhat/types'
+import { TokenSymbol } from '../../../hardhat/types'
 import { deployTaskAction } from '../../../hardhat/tasks'
 import { Addresses } from '../../../hardhat/deployment/addresses'
 import warp from '../helpers/warp'
 import resetBalance from '../helpers/reset-balance'
+import { clearDeployments } from '../../deploy/helpers'
 
 describe('Ape Lending Strategy', () => {
+  clearDeployments(hre)
+
   const { ethers } = hre
 
   const token = TokenSymbol.USDT

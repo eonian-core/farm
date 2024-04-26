@@ -1,22 +1,23 @@
 import { task } from 'hardhat/config'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { TokenSymbol } from '../types'
-import { type DeployResult, DeployStatus } from '../deployment/plugins/Deployer'
+import { DeployStatus } from '../deployment/plugins/Deployer'
+import type { DeployResult } from '../deployment/plugins/Deployer'
 import deployHealthCheck from '../deployment/deployHealthCheck'
 import deployVault from '../deployment/deployVault'
 import deployApeLendingStrategy from '../deployment/deployApeLendingStrategy'
 import deployVFT from '../deployment/deployVFT'
 
-export const deployTask = task('deploy', 'Deploy (or upgade) production contracts', async (args: unknown[], hre: HardhatRuntimeEnvironment) => {
-  return await deployTaskAction(
-    [
-      TokenSymbol.USDC,
-      TokenSymbol.USDT,
-      TokenSymbol.BTCB,
-      TokenSymbol.WETH,
-    ],
-    hre,
-  )
+const defaultTokens = [
+  TokenSymbol.USDC,
+  TokenSymbol.USDT,
+  TokenSymbol.BTCB,
+  TokenSymbol.WETH,
+]
+
+export const deployTask = task('deploy', 'Deploy (or upgade) production contracts', async (args, hre) => {
+  const tokens = parseTokens(args) ?? defaultTokens
+  return await deployTaskAction(tokens, hre)
 })
 
 export async function deployTaskAction(tokens: TokenSymbol[], hre: HardhatRuntimeEnvironment) {
@@ -56,4 +57,18 @@ async function execute<R extends DeployResult, T extends (...args: any) => Promi
   }
 
   return result
+}
+
+function parseTokens(args: unknown): TokenSymbol[] | null {
+  if (typeof args !== 'object' || !args) {
+    return null
+  }
+  if (!('tokens' in args)) {
+    return null
+  }
+  const tokens = args.tokens ? String(args.tokens) : null
+  if (!tokens) {
+    return null
+  }
+  return tokens.split(',') as TokenSymbol[]
 }

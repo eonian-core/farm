@@ -5,7 +5,7 @@ import { task } from 'hardhat/config'
 const errorFilePath = path.join('.errors', 'deploy.json')
 
 task('deploy', async (_args, hre, runSuper) => {
-  if (hre.network.name === 'hardhat' || process.env.CI !== 'true') {
+  if (process.env.CI !== 'true') {
     return runSuper(_args)
   }
 
@@ -58,7 +58,7 @@ async function getError(): Promise<string | null> {
   }
 }
 
-async function deleteErrorFile() {
+export async function deleteErrorFile() {
   await fs.rm(dirname(errorFilePath), { recursive: true, force: true })
 }
 
