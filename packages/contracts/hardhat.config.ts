@@ -27,6 +27,7 @@ const bscMainnet: NetworkUserConfig = {
   url: 'https://bsc-dataseed.binance.org/',
   chainId: 56,
   accounts: [process.env.BSC_MAINNET_PRIVATE_KEY].filter(Boolean) as Array<string>,
+  gasMultiplier: 1.1,
 }
 
 const config: HardhatUserConfig = {
