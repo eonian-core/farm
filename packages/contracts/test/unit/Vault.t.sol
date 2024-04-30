@@ -11,6 +11,7 @@ import {IVaultHookMock} from"./mocks/IVaultHookMock.sol";
 
 import "contracts/lending/Lender.sol";
 import "contracts/lending/StrategiesLender.sol";
+import {GivenAssetsResultIsZeroShares} from "contracts/tokens/ERC4626Upgradeable.sol";
 
 import "./helpers/TestWithERC1820Registry.sol";
 import "./mocks/VaultFounderTokenMock.sol";
@@ -793,11 +794,9 @@ contract VaultTest is TestWithERC1820Registry {
         underlying.increaseAllowance(address(vault), type(uint256).max);
 
         vm.expectRevert(
-            bytes(
-                deposit > 0
-                    ? "ERC20: transfer amount exceeds balance"
-                    : "Given assets result in 0 shares."
-            )
+            deposit > 0
+                ? bytes("ERC20: transfer amount exceeds balance")
+                : abi.encodePacked(GivenAssetsResultIsZeroShares.selector)
         );
 
         vm.prank(alice);

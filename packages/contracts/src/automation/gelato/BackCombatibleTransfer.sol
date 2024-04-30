@@ -3,6 +3,8 @@ pragma solidity ^0.8.19;
 
 import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
+error NativeTransferFailed();
+
 /// @notice Library that adding support for ERC20 and native tokens transfers.
 /// @dev Based of https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/FGelato.sol
 library BackCombatibleTransfer {
@@ -26,6 +28,8 @@ library BackCombatibleTransfer {
     function safeNativeTransfer(address payable to, uint256 amount) internal {
         // We don't use `transfer` or `send`, as they are considered bad practices after the Istanbul hardfork.
         (bool success, ) = to.call{value: amount}("");
-        require(success, "Native transfer failed");
+        if(!success) {
+            revert NativeTransferFailed();
+        }
     }
 }
