@@ -3,14 +3,11 @@ pragma solidity ^0.8.19;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
-import {ERC721Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
-import {ERC721URIStorageUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721URIStorageUpgradeable.sol";
 
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
 import {IVersionable} from "../upgradeable/IVersionable.sol";
 import {ERC5484Upgradeable} from "./ERC5484Upgradeable.sol";
-import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultFounderToken} from "./IVaultFounderToken.sol";
 import {IVaultHook, ERC4626HookPayload} from "./IVaultHook.sol";
 import {RewardHolder} from "./RewardHolder.sol";

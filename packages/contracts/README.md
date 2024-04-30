@@ -91,9 +91,19 @@ Deployed contracts addresses can be found in [deployments/deployed.ts](./deploym
 * The project mainly utilize Gelato to trigger automated jobs.
 
 ## Tips
-- How to enable ALL deploy-related logs in tests?
+
+#### How to enable ALL deploy-related logs in tests?
 ```
 export HARDHAT_DEPLOY_LOG=true
 export DEBUG=@openzeppelin:*
 export DEBUG=hardhat:wighawag:*
 ```
+
+#### How to add new chain support?
+
+1) Add a new chain item to `/hardhat/types/Chain.ts`.
+2) Add new networks (for each environment: dev, staging, production) to the Hardhat config, using this format: `<chain>_<label>_<env>`.
+3) Add new (or extend an existing) address providers in the `/hardhat/deployment/addresses` directory.
+4) Write a new (or adjust an existing) deploy task for your contracts.
+5) Write tests for the new chain/contracts in the `/test/integration/<chain>` directory. Do not forget to add a new `npm` script for the test, like `test:hardhat:<chain>` and set the RPC url in `/hardhat/forks.ts`.
+6) Adjust CI/CD deployment if necessary (create a new GitHub action).
