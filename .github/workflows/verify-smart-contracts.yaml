@@ -32,7 +32,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "yarn"
 
       - name: Install dependencies
@@ -60,7 +60,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "yarn"
 
       - name: Install dependencies
@@ -71,9 +71,22 @@ jobs:
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
+      - name: Check for vulnerabilities
+        working-directory: ./packages/contracts
+        run: |-
+          chmod +x slither.sh 
+          ./slither.sh .
+          cat slither-result.json
+          echo "Static analyzer check finished"
+
       # Need for hardhat scripts
       - name: Link packages
         run: yarn bootstrap
+
+      - name: Run tests (tools)
+        run: |-
+          cd packages/contracts
+          yarn test:tools
 
       - name: Run tests (foundry)
         run: |-

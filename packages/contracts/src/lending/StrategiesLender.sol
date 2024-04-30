@@ -14,6 +14,7 @@ error UnexpectedZeroAddress();
 error StrategyNotFound();
 error StrategyAlreadyExists();
 error AccessDeniedForCaller(address caller);
+error StrategiesLenderMustBeOwned();
 
 /// Lender contract which targeted to lend specifically for investments strategies.
 /// Basically represent specific case of implementation of whitelist not colletaraized lending contract.
@@ -67,7 +68,9 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
 
     /// Init only direct constructors of business logic, ignore Ownable and simular common contracts
     function __StrategiesLender_init_lenderSpecific() internal onlyInitializing {
-        require(owner() != address(0), "StrategiesLender must be ownable");
+        if(owner() == address(0)) {
+            revert StrategiesLenderMustBeOwned();
+        }
 
         __Lender_init();
     }
@@ -227,7 +230,8 @@ abstract contract StrategiesLender is IStrategiesLender, Lender, OwnableUpgradea
             return (0, 0);
         }
 
-        for (uint256 i = 0; i < withdrawalQueue.length; i++) {
+        uint256 withdrawalQueueLength = withdrawalQueue.length;
+        for (uint256 i = 0; i < withdrawalQueueLength; i++) {
             IStrategy strategy = IStrategy(withdrawalQueue[i]);
 
             uint256 utilisationRate = utilizationRate(address(strategy)); // in BPS
