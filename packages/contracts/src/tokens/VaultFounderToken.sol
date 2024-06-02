@@ -100,7 +100,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
             return false;
         }
 
-        setupNewOwner(to);
+        addOwner(to);
         uint256 _nextTokenPrice = amount * nextTokenPriceMultiplier / MAX_BPS;
 
         // Will be used to record price of current holder token in The Graph

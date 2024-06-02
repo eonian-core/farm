@@ -10,6 +10,8 @@ import {Vault} from "../Vault.sol";
 
 error VaultNotSet();
 error CallerHaveNoReward();
+error CallerHaveZeroReward();
+error OwnerCountExceeded();
 
 contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     using FixedPointMathLib for uint256;
@@ -28,7 +30,8 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     mapping(address => uint256) public rewardOwnerIndex;
 
     /// @notice
-    uint16 public numberCoins;
+    uint16 public ownersCount;
+    uint16 public constant MAX_OWNERS_COUNT = 100;
 
     Vault public vault;
 
@@ -83,26 +86,39 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
         }
 
         // calculate reward for token owner
-        uint256 tokenOwnerReward = calcReward();
-        rewardOwnerIndex[msg.sender] = rewardIndex;
+        (uint256 tokenOwnerReward, uint256 claimableIndex) = previewReward(msg.sender);
+        if(tokenOwnerReward == 0) {
+            revert CallerHaveZeroReward();
+        }
+        rewardOwnerIndex[msg.sender] = claimableIndex;
 
         // transfer reward to token owner
         bool success = vault.transfer(msg.sender, tokenOwnerReward);
         emit RewardClaimed(tokenOwnerReward, address(msg.sender), success);
     }
 
-    function calcReward() public view returns (uint256) {
-        if(numberCoins == 0 || rewardOwnerIndex[msg.sender] == 0) {
-            return 0;
+    /// @dev calculate reward for token owner and last claimable index
+    function previewReward(address owner) public view returns (uint256, uint256) {
+        if(ownersCount == 0 || rewardOwnerIndex[owner] == 0) {
+            return (0, rewardIndex);
         }
-        uint256 deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
-        return deltaIndex / numberCoins;
+        
+        uint256 deltaIndex = rewardIndex - rewardOwnerIndex[owner];
+        // Division rounds down to the nearest integer
+        // As a result we exclude the remainder from the owner index
+        // So he will be able to claim left over reward in the future
+        return (deltaIndex / ownersCount, rewardIndex - deltaIndex % ownersCount);
     }
 
     /// @dev setup new owner for reward usually called when minting new token
-    function setupNewOwner(address rewardOwner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
-        rewardOwnerIndex[rewardOwner] = rewardIndex;
-        numberCoins++;
-        emit OwnerAdded(rewardOwner, rewardIndex);
+    function addOwner(address owner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
+        if(ownersCount >= MAX_OWNERS_COUNT) {
+            revert OwnerCountExceeded();
+        }
+
+        rewardOwnerIndex[owner] = rewardIndex;
+        ownersCount++;
+
+        emit OwnerAdded(owner, rewardIndex);
     }
 }
