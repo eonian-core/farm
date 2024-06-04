@@ -139,13 +139,6 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
         tryToMint(request.requestSender, "", request.senderMaxWithdraw);
     }
 
-    /* solhint-disable no-empty-blocks */
-    function beforeWithdrawTrigger(ERC4626HookPayload memory request) external override
-    {
-        //empty code
-    }
-    /* solhint-disable no-empty-blocks */
-
     /// @dev See {IERC165-supportsInterface}.
     function supportsInterface(bytes4 interfaceId)
         public

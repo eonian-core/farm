@@ -95,16 +95,8 @@ contract VaultMock is Vault {
         addDepositHook(hook);
     }
 
-    function registerWithdrawHook(IVaultHook hook) public {
-        addWithdrawHook(hook);
-    }
-
     function unregisterDepositHook(IVaultHook hook) public {
         removeDepositHook(hook);
-    }
-
-    function unregisterWithdrawHook(IVaultHook hook) public {
-        removeWithdrawHook(hook);
     }
 
     function increaseDebt(address borrower, uint256 amount) public {

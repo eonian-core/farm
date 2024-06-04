@@ -6,8 +6,15 @@ import {ERC4626Upgradeable} from "./ERC4626Upgradeable.sol";
 import {IVaultHook, ERC4626HookPayload} from "./IVaultHook.sol";
 
 abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
-    // list of hooks
+    
+    /// @dev deprecated: Not used anymore
+    /// Initially this hooks were created to add additional functionality outside of main contract.
+    /// But they also can increase gas usage and attack surface
     IVaultHook[] public withdrawHooks;
+    
+    /// Currently used by VaultFoundersToken to react on deposit operations.
+    /// Migratation away from them require much more complex arcihtecture,
+    /// but will be implmented in future versions in favor of decreased gas usage and attack surface.
     IVaultHook[] public depositHooks;
 
     /// @dev This empty reserved space is put in place to allow future versions to add new
@@ -18,11 +25,6 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
     /// @dev Adds hook to the list of deposit hooks
     function addDepositHook(IVaultHook hook) internal {
         depositHooks.push(hook);
-    }
-
-    /// @dev Adds hook to the list of withdraw hooks
-    function addWithdrawHook(IVaultHook hook) internal {
-        withdrawHooks.push(hook);
     }
 
     /// @dev Removes hook from the list of deposit hooks
@@ -41,44 +43,6 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         return false;
     }
 
-    /// @dev Removes hook from the list of withdraw hooks
-    function removeWithdrawHook(IVaultHook hook) internal returns (bool) {
-        // find hook
-        for (uint256 i = 0; i < withdrawHooks.length; i++)
-        {
-            if (withdrawHooks[i] == hook)
-            {
-                // remove hook
-                withdrawHooks[i] = withdrawHooks[withdrawHooks.length - 1];
-                withdrawHooks.pop();
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// @inheritdoc ERC4626Upgradeable
-    function beforeWithdraw(uint256 assets, uint256 shares)
-        internal virtual override(ERC4626Upgradeable)
-    {
-        // if there are no hooks, then return to save gas
-        if(withdrawHooks.length == 0) {
-            return;
-        }
-        ERC4626HookPayload memory request = ERC4626HookPayload({
-            assets: assets,
-            shares: shares,
-            requestSender: msg.sender,
-            senderMaxWithdraw: maxWithdraw(msg.sender)
-        });
-        // iterate over hooks and call it
-        for (uint256 i = 0; i < withdrawHooks.length; i++)
-        {
-            IVaultHook hook = withdrawHooks[i];
-            hook.beforeWithdrawTrigger(request);
-        }
-    }
-
     /// @inheritdoc ERC4626Upgradeable
     function afterDeposit(uint256 assets, uint256 shares)
         internal virtual override(ERC4626Upgradeable)
@@ -93,9 +57,13 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
             requestSender: msg.sender,
             senderMaxWithdraw: maxWithdraw(msg.sender)
         });
+
         // iterate over depositHooks and call it
-        for (uint256 i = 0; i < depositHooks.length; i++)
-        {
+        // 
+        // length of array controlled directly by owner
+        // used only by VaultFoundersToken contract,
+        // as a result there no risk of gas limit attack
+        for (uint256 i = 0; i < depositHooks.length; i++) {
             IVaultHook hook = depositHooks[i];
             hook.afterDepositTrigger(request);
         }

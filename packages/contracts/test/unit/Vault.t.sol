@@ -1404,7 +1404,7 @@ contract VaultTest is TestWithERC1820Registry {
         IVaultHookMock hook3 = new IVaultHookMock();
 
         vault.registerDepositHook(hook1);
-        vault.registerWithdrawHook(hook2);
+        vault.registerDepositHook(hook2);
 
         assertEq(vault.unregisterLifecycleHook(hook1), true);
         assertEq(vault.unregisterLifecycleHook(hook2), true);

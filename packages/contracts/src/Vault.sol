@@ -116,7 +116,7 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
 
     /// @notice Hook that is used before withdrawals to release assets from strategies if necessary.
     /// @inheritdoc ERC4626Upgradeable
-    function beforeWithdraw(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
+    function beforeWithdraw(uint256 assets, uint256 shares) internal override {
         // There is no need to withdraw assets from strategies, the vault has sufficient funds
         if (_freeAssets() >= assets) {
             return;
@@ -133,9 +133,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         if (_freeAssets() < assets) {
             revert InsufficientVaultBalance(assets, shares);
         }
-
-        // apply the hook
-        ERC4626Lifecycle.beforeWithdraw(assets, shares);
     }
 
     /// Check that all new strategies refer to this vault and has the same underlying asset
@@ -307,6 +304,6 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     /// @notice Removes the registered hook from the lifecycle.
     /// @param hook the hook address to remove.
     function unregisterLifecycleHook(IVaultHook hook) external onlyOwner returns (bool) {
-        return removeDepositHook(hook) || removeWithdrawHook(hook);
+        return removeDepositHook(hook);
     }
 }
