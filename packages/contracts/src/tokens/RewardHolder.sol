@@ -78,10 +78,10 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     /// @dev claim reward for token owner
     function claimReward() external nonReentrant {
-        if(vault == Vault(address(0))) {
+        if (vault == Vault(address(0))) {
             revert VaultNotSet();
         }
-        if(rewardOwnerIndex[msg.sender] == 0) {
+        if (rewardOwnerIndex[msg.sender] == 0) {
             revert CallerHaveNoReward();
         }
 
