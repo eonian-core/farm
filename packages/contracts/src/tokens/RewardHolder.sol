@@ -87,7 +87,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
         // calculate reward for token owner
         (uint256 tokenOwnerReward, uint256 claimableIndex) = previewReward(msg.sender);
-        if(tokenOwnerReward == 0) {
+        if (tokenOwnerReward == 0) {
             revert CallerHaveZeroReward();
         }
         rewardOwnerIndex[msg.sender] = claimableIndex;
@@ -99,7 +99,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     /// @dev calculate reward for token owner and last claimable index
     function previewReward(address owner) public view returns (uint256, uint256) {
-        if(ownersCount == 0 || rewardOwnerIndex[owner] == 0) {
+        if (ownersCount == 0 || rewardOwnerIndex[owner] == 0) {
             return (0, rewardIndex);
         }
         
@@ -112,7 +112,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     /// @dev setup new owner for reward usually called when minting new token
     function addOwner(address owner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
-        if(ownersCount >= MAX_OWNERS_COUNT) {
+        if (ownersCount >= MAX_OWNERS_COUNT) {
             revert OwnerCountExceeded();
         }
 

@@ -138,7 +138,7 @@ abstract contract ERC4626Upgradeable is
     ) internal {
         // In child contracts this case impossible, 
         // but in context of this contract zero receiver can be user mistake
-        if(receiver == address(0)) {
+        if (receiver == address(0)) {
             // If someone want to deposit to zero address, 
             // better to make deposit to itself and then transfer to zero address
             revert GivenReceiverIsZeroAddress();

@@ -9,12 +9,12 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
     
     /// @dev deprecated: Not used anymore
     /// Initially this hooks were created to add additional functionality outside of main contract.
-    /// But they also can increase gas usage and attack surface
+    /// But they can also increase gas usage and attack surface.
     IVaultHook[] public withdrawHooks;
     
     /// Currently used by VaultFoundersToken to react on deposit operations.
-    /// Migratation away from them require much more complex arcihtecture,
-    /// but will be implmented in future versions in favor of decreased gas usage and attack surface.
+    /// Getting rid of them requires a much more complex architecture,
+    /// but this will be implemented later in future versions in favor of reducing gas usage and attack surface.
     IVaultHook[] public depositHooks;
 
     /// @dev This empty reserved space is put in place to allow future versions to add new
@@ -62,7 +62,7 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
         // 
         // length of array controlled directly by owner
         // used only by VaultFoundersToken contract,
-        // as a result there no risk of gas limit attack
+        // as a result there is no risk of gas limit attack
         for (uint256 i = 0; i < depositHooks.length; i++) {
             IVaultHook hook = depositHooks[i];
             hook.afterDepositTrigger(request);
