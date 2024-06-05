@@ -24,16 +24,8 @@ contract ERC4626LifecycleMock is ERC4626Lifecycle, SafeInitializableMock {
         addDepositHook(hook);
     }
 
-    function registerWithdrawHook(IVaultHook hook) public {
-        addWithdrawHook(hook);
-    }
-
     function unregisterDepositHook(IVaultHook hook) public {
         removeDepositHook(hook);
-    }
-
-    function unregisterWithdrawHook(IVaultHook hook) public {
-        removeWithdrawHook(hook);
     }
 
     function mint(address to, uint256 amount) external {

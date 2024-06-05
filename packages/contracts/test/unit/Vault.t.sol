@@ -1212,11 +1212,9 @@ contract VaultTest is TestWithERC1820Registry {
 
         // check alice has balance
 
-        vm.prank(alice);
-        uint256 aliceReward = vaultFounderToken.calcReward();
+        (uint256 aliceReward, ) = vaultFounderToken.previewReward(alice);
         assertGt(aliceReward, 0);
-        vm.prank(bob);
-        uint256 bobReward = vaultFounderToken.calcReward();
+        (uint256 bobReward, ) = vaultFounderToken.previewReward(bob);
         assertGt(bobReward, 0);
 
         uint256 aliceBalanceBefore = vault.balanceOf(address(alice));
@@ -1233,10 +1231,10 @@ contract VaultTest is TestWithERC1820Registry {
 
 
         // check alice has empty balance after claim and bob still has balance
-        vm.prank(alice);
-        assertEq(vaultFounderToken.calcReward(), 0);
-        vm.prank(bob);
-        assertEq(vaultFounderToken.calcReward(), bobReward);
+        (uint256 aliceReward1, ) = vaultFounderToken.previewReward(alice);
+        assertEq(aliceReward1, 0);
+        (uint256 bobReward1, ) = vaultFounderToken.previewReward(bob);
+        assertEq(bobReward1, bobReward);
     }
 
     function testLockedProfitReleaseWithNegativeReport() public {
@@ -1406,7 +1404,7 @@ contract VaultTest is TestWithERC1820Registry {
         IVaultHookMock hook3 = new IVaultHookMock();
 
         vault.registerDepositHook(hook1);
-        vault.registerWithdrawHook(hook2);
+        vault.registerDepositHook(hook2);
 
         assertEq(vault.unregisterLifecycleHook(hook1), true);
         assertEq(vault.unregisterLifecycleHook(hook2), true);

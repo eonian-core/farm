@@ -40,42 +40,6 @@ contract SafeERC4626LifecycleTest is TestWithERC1820Registry {
         assertEq(vault.decimals(), 18);
     }
 
-    function testRegisterAndRunBeforeWithdrawalHook(uint128 withdrawAmount) public {
-        vm.assume(withdrawAmount > 0);
-
-        //create a hook mock to be able check if the hook was called
-        IVaultHookMock hook1 = new IVaultHookMock();
-        IVaultHookMock hook2 = new IVaultHookMock();
-        vault.registerWithdrawHook(hook1);
-        vault.registerWithdrawHook(hook2);
-        assertEq(IVaultHookMock(hook1).beforeWithdrawHookCalledCounter(), 0);
-        assertEq(IVaultHookMock(hook2).beforeWithdrawHookCalledCounter(), 0);
-
-        // Mint some initial funds for the vault
-        underlying.mint(address(vault), withdrawAmount);
-
-        // Provide 1:1 shares of this amount to Alice
-        vault.mint(alice, withdrawAmount);
-        assertEq(vault.balanceOf(alice), withdrawAmount);
-
-        // Alice withdraws half of her shares
-        vm.prank(alice);
-        vault.withdraw(withdrawAmount / 2);
-
-        assertEq(hook1.beforeWithdrawHookCalledCounter(), 1);
-        assertEq(hook2.beforeWithdrawHookCalledCounter(), 1);
-
-        // unregister hook2 to check if it wasn't called second time
-        vault.unregisterWithdrawHook(hook2);
-
-        // Alice withdraws the second half of her shares
-        vm.prank(alice);
-        vault.withdraw(withdrawAmount / 2);
-
-        assertEq(hook1.beforeWithdrawHookCalledCounter(), 2);
-        assertEq(hook2.beforeWithdrawHookCalledCounter(), 1);
-    }
-
     function testRegisterAndRunAfterDepositTriggerHook(uint128 depositAmount) public {
         vm.assume(depositAmount > 2);
 
