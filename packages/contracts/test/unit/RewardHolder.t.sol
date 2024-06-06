@@ -80,7 +80,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         rewardHolder.emitRewardDeposited(amount);
         rewardHolder.depositReward(amount);
 
-        assertEq(rewardHolder.ownersCount(), 1);
+        assertEq(rewardHolder.numberCoins(), 1);
         assertEq(rewardHolder.rewardIndex(), amount + 1);
 
         // Send reward to Alice and check emits
@@ -131,7 +131,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
 
     function testSetupNewsOwner() public {
         rewardHolder.setupOwner(address(alice));
-        assertEq(rewardHolder.ownersCount(), 1);
+        assertEq(rewardHolder.numberCoins(), 1);
     }
 
     function testSetupNewOwnerFail() public {
@@ -181,7 +181,7 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         // Put funds on vault to be able to move them to token owners from the reward holder
         rewardHolder.setupOwner(address(alice));
         rewardHolder.setupOwner(address(bob));
-        assertEq(rewardHolder.ownersCount(), 2);
+        assertEq(rewardHolder.numberCoins(), 2);
         assertEq(rewardHolder.rewardOwnerIndex(alice), 1);
         assertEq(rewardHolder.rewardOwnerIndex(bob), 1);
 

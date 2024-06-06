@@ -29,8 +29,8 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     /// @notice The owners' reward indexes for eachas of the last time they accrued
     mapping(address => uint256) public rewardOwnerIndex;
 
-    /// @notice
-    uint16 public ownersCount;
+    /// @notice Amount of token owners
+    uint16 public numberCoins;
     uint16 public constant MAX_OWNERS_COUNT = 100;
 
     Vault public vault;
@@ -99,7 +99,7 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     /// @dev calculate reward for token owner and last claimable index
     function previewReward(address owner) public view returns (uint256, uint256) {
-        if (ownersCount == 0 || rewardOwnerIndex[owner] == 0) {
+        if (numberCoins == 0 || rewardOwnerIndex[owner] == 0) {
             return (0, rewardIndex);
         }
         
@@ -107,17 +107,17 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
         // Division rounds down to the nearest integer
         // As a result we exclude the remainder from the owner index
         // So he will be able to claim left over reward in the future
-        return (deltaIndex / ownersCount, rewardIndex - deltaIndex % ownersCount);
+        return (deltaIndex / numberCoins, rewardIndex - deltaIndex % numberCoins);
     }
 
     /// @dev setup new owner for reward usually called when minting new token
     function addOwner(address owner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
-        if (ownersCount >= MAX_OWNERS_COUNT) {
+        if (numberCoins >= MAX_OWNERS_COUNT) {
             revert OwnerCountExceeded();
         }
 
         rewardOwnerIndex[owner] = rewardIndex;
-        ownersCount++;
+        numberCoins++;
 
         emit OwnerAdded(owner, rewardIndex);
     }
