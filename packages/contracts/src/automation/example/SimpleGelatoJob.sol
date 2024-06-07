@@ -7,17 +7,25 @@ import {SafeUUPSUpgradeable} from "../../upgradeable/SafeUUPSUpgradeable.sol";
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 import {IVersionable} from "../../upgradeable/IVersionable.sol";
 
+/// Example of a simple Gelato job implementation
 contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.1.1";
+        return "0.1.2";
     }
 
     // allow sending eth to the test contract
     receive() external payable {} // solhint-disable-line no-empty-blocks
+    
+    /// @dev not need in real job
+    /// This method added only because the OpenZepplin Defender marks it as a security issue
+    function withdraw(uint256 amount) public onlyOwner {
+        require(address(this).balance >= amount, "Insufficient balance in the contract");
+        payable(msg.sender).transfer(amount);
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
@@ -59,4 +67,6 @@ contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     function refreshLastWorkTime() public onlyOwner {
         _refreshLastWorkTime();
     }
+
+
 }
