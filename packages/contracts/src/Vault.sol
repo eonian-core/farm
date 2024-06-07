@@ -26,6 +26,7 @@ error InsufficientVaultBalance(uint256 assets, uint256 shares);
 error InvalidLockedProfitReleaseRate(uint256 durationInSeconds);
 error InappropriateStrategy();
 error FoundersNotSet();
+error TransferFromTriggeredNotByBorrower();
 
 contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, StrategiesLender, ERC4626Lifecycle {
     using SafeERC20Upgradeable for IERC20Upgradeable;
@@ -294,7 +295,13 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         internal
         override
     {
-        asset.safeTransferFrom(borrower, address(this), amount);
+        // In general, another case cannot happen, 
+        // but we keep this check because transferFrom commonly abused
+        if(borrower != msg.sender) {
+            revert TransferFromTriggeredNotByBorrower();
+        }
+
+        asset.safeTransferFrom(msg.sender, address(this), amount);
     }
 
     function afterDeposit(uint256 assets, uint256 shares) internal override(ERC4626Upgradeable, ERC4626Lifecycle) {
