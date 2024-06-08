@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 /// Base contract for lending protocols, can be used for colletaralized and not colletaralized lending.
 interface ILender {
