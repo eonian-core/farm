@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 interface IERC5484 {
     /// A guideline to standardlize burn-authorization's number coding

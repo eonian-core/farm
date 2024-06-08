@@ -81,7 +81,7 @@ jobs:
 
       # Need for hardhat scripts
       - name: Link packages
-        run: yarn bootstrap
+        run: yarn
 
       - name: Run tests (tools)
         run: |-

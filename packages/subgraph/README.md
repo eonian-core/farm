@@ -16,7 +16,7 @@ This is Subgraph package for Eonian yield aggregator.
 yarn
 ```
 
-2. Test subgraph
+2. Test subgraph, by default will run in Docker
 
 ```bash
 yarn test
