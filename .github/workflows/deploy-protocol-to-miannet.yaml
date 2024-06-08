@@ -54,7 +54,7 @@ jobs:
 
       # Need for hardhat scripts
       - name: Link packages
-        run: yarn bootstrap
+        run: yarn
 
       - name: Build contracts
         run: |-
