@@ -15,7 +15,7 @@ import {IStrategiesLender} from "../lending/IStrategiesLender.sol";
 error IncompatibleCTokenContract();
 error UnsupportedDecimals();
 error MintError(uint256 code);
-error RedeemError(uint256 code);
+error RedeemError(uint256 code, uint256 triedToRedeem);
 
 /** Base for implementation of strategy on top of CToken (Compound-like market)  */
 abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
@@ -148,7 +148,7 @@ abstract contract CTokenBaseStrategy is ICInterestRate, BaseStrategy {
         uint256 amountToRedeem = MathUpgradeable.min(deposits, amount);
         uint256 result = cToken.redeemUnderlying(amountToRedeem);
         if (result > 0) {
-            revert RedeemError(result);
+            revert RedeemError(result, amountToRedeem);
         }
 
         (uint256 sharesAfter, uint256 underlyingAfter) = depositedBalanceSnapshot();
