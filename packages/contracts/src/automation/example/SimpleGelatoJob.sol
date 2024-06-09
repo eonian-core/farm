@@ -17,11 +17,12 @@ contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
         return "0.1.2";
     }
 
-    // allow sending eth to the test contract
+    /// @dev allow sending eth to the test contract
+    /// Can be removed in real contract
     receive() external payable {} // solhint-disable-line no-empty-blocks
     
-    /// @dev not need in real job
-    /// This method added only because the OpenZepplin Defender marks it as a security issue
+    /// @dev Payable contracts must always have withdrawal method
+    /// Also can be removed in real contract
     function withdraw(uint256 amount) public onlyOwner {
         require(address(this).balance >= amount, "Insufficient balance in the contract");
         payable(msg.sender).transfer(amount);
