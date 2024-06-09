@@ -7,6 +7,8 @@ import {SafeUUPSUpgradeable} from "../../upgradeable/SafeUUPSUpgradeable.sol";
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 import {IVersionable} from "../../upgradeable/IVersionable.sol";
 
+error InsufficientBalance();
+
 /// Example of a simple Gelato job implementation
 contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     uint256 public workMethodCalledCounter;
@@ -24,7 +26,10 @@ contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     /// @dev Payable contracts must always have withdrawal method
     /// Also can be removed in real contract
     function withdraw(uint256 amount) public onlyOwner {
-        require(address(this).balance >= amount, "Insufficient balance in the contract");
+        if (address(this).balance < amount) {
+            revert InsufficientBalance();
+        }
+        
         payable(msg.sender).transfer(amount);
     }
 
