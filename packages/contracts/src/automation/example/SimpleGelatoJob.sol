@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 import {GelatoJobAdapter, IOps} from "../GelatoJobAdapter.sol";
 
@@ -7,17 +7,31 @@ import {SafeUUPSUpgradeable} from "../../upgradeable/SafeUUPSUpgradeable.sol";
 import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 import {IVersionable} from "../../upgradeable/IVersionable.sol";
 
+error InsufficientBalance();
+
+/// Example of a simple Gelato job implementation
 contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     uint256 public workMethodCalledCounter;
     bool public canWorkResult = false;
 
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.1.1";
+        return "0.1.2";
     }
 
-    // allow sending eth to the test contract
+    /// @dev allow sending eth to the test contract
+    /// Can be removed in real contract
     receive() external payable {} // solhint-disable-line no-empty-blocks
+    
+    /// @dev Payable contracts must always have withdrawal method
+    /// Also can be removed in real contract
+    function withdraw(uint256 amount) public onlyOwner {
+        if (address(this).balance < amount) {
+            revert InsufficientBalance();
+        }
+        
+        payable(msg.sender).transfer(amount);
+    }
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
@@ -59,4 +73,6 @@ contract SimpleGelatoJob is GelatoJobAdapter, SafeUUPSUpgradeable {
     function refreshLastWorkTime() public onlyOwner {
         _refreshLastWorkTime();
     }
+
+
 }

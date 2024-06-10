@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -10,6 +10,8 @@ import {Vault} from "../Vault.sol";
 
 error VaultNotSet();
 error CallerHaveNoReward();
+error CallerHaveZeroReward();
+error OwnerCountExceeded();
 
 contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
     using FixedPointMathLib for uint256;
@@ -27,8 +29,9 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
     /// @notice The owners' reward indexes for eachas of the last time they accrued
     mapping(address => uint256) public rewardOwnerIndex;
 
-    /// @notice
+    /// @notice Amount of token owners
     uint16 public numberCoins;
+    uint16 public constant MAX_OWNERS_COUNT = 100;
 
     Vault public vault;
 
@@ -75,34 +78,47 @@ contract RewardHolder is Initializable, AccessControlUpgradeable, ReentrancyGuar
 
     /// @dev claim reward for token owner
     function claimReward() external nonReentrant {
-        if(vault == Vault(address(0))) {
+        if (vault == Vault(address(0))) {
             revert VaultNotSet();
         }
-        if(rewardOwnerIndex[msg.sender] == 0) {
+        if (rewardOwnerIndex[msg.sender] == 0) {
             revert CallerHaveNoReward();
         }
 
         // calculate reward for token owner
-        uint256 tokenOwnerReward = calcReward();
-        rewardOwnerIndex[msg.sender] = rewardIndex;
+        (uint256 tokenOwnerReward, uint256 claimableIndex) = previewReward(msg.sender);
+        if (tokenOwnerReward == 0) {
+            revert CallerHaveZeroReward();
+        }
+        rewardOwnerIndex[msg.sender] = claimableIndex;
 
         // transfer reward to token owner
         bool success = vault.transfer(msg.sender, tokenOwnerReward);
         emit RewardClaimed(tokenOwnerReward, address(msg.sender), success);
     }
 
-    function calcReward() public view returns (uint256) {
-        if(numberCoins == 0 || rewardOwnerIndex[msg.sender] == 0) {
-            return 0;
+    /// @dev calculate reward for token owner and last claimable index
+    function previewReward(address owner) public view returns (uint256, uint256) {
+        if (numberCoins == 0 || rewardOwnerIndex[owner] == 0) {
+            return (0, rewardIndex);
         }
-        uint256 deltaIndex = rewardIndex - rewardOwnerIndex[msg.sender];
-        return deltaIndex / numberCoins;
+        
+        uint256 deltaIndex = rewardIndex - rewardOwnerIndex[owner];
+        // Division rounds down to the nearest integer
+        // As a result we exclude the remainder from the owner index
+        // So he will be able to claim left over reward in the future
+        return (deltaIndex / numberCoins, rewardIndex - deltaIndex % numberCoins);
     }
 
     /// @dev setup new owner for reward usually called when minting new token
-    function setupNewOwner(address rewardOwner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
-        rewardOwnerIndex[rewardOwner] = rewardIndex;
+    function addOwner(address owner) internal virtual onlyRole(BALANCE_UPDATER_ROLE) {
+        if (numberCoins >= MAX_OWNERS_COUNT) {
+            revert OwnerCountExceeded();
+        }
+
+        rewardOwnerIndex[owner] = rewardIndex;
         numberCoins++;
-        emit OwnerAdded(rewardOwner, rewardIndex);
+
+        emit OwnerAdded(owner, rewardIndex);
     }
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity >=0.8.19;
 
-import "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 
 import {TestWithERC1820Registry} from "./helpers/TestWithERC1820Registry.sol";
 import {AccessTestHelper} from "./helpers/AccessTestHelper.sol";
@@ -50,8 +50,9 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         rewardHolder.setVault(vault);
     }
 
-    function testDepositReward(uint192 amount) public {
-        vm.assume(amount > 10**11 && amount < address(this).balance);
+    function testDepositReward(uint192 _amount) public {
+        uint256 amount = _amount;
+        vm.assume(amount > 0);
 
         // Allow the vault to take funds from Alice
         vm.prank(alice);
@@ -145,8 +146,11 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         rewardHolder.setupOwner(address(alice));
     }
 
-    function testCorrectRewardClaimed() public {
-        uint256 amount = 30000000;
+    function testCorrectRewardClaimed(uint128 _aliceAmount, uint128 _bobAmount, uint128 _reward) public {
+        uint256 aliceAmount = _aliceAmount;
+        uint256 bobAmount = _bobAmount;
+        uint256 reward = _reward;
+        vm.assume(aliceAmount > 0 && bobAmount > 0 && reward > 0);
 
         // Allow the vault to take funds from Alice, Bob
         vm.prank(alice);
@@ -154,19 +158,19 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         vm.prank(bob);
         underlying.increaseAllowance(address(vault), type(uint256).max);
 
-        // Give the required funds to Alice
-        underlying.mint(alice, amount);
-        underlying.mint(bob, amount);
+        // Give the required funds to Alice, Bob
+        underlying.mint(alice, aliceAmount);
+        underlying.mint(bob, bobAmount);
 
-        // Check if Alice has the initial balance
-        assertEq(underlying.balanceOf(alice), amount);
-        assertEq(underlying.balanceOf(bob), amount);
+        // Check if they has the initial balance
+        assertEq(underlying.balanceOf(alice), aliceAmount);
+        assertEq(underlying.balanceOf(bob), bobAmount);
 
         // Put the funds in the vault to be able move them in to the reward holder
         vm.prank(alice);
-        vault.deposit(amount);
+        vault.deposit(aliceAmount);
         vm.prank(bob);
-        vault.deposit(amount);
+        vault.deposit(bobAmount);
 
         assertEq(underlying.balanceOf(alice), 0);
         assertEq(underlying.balanceOf(bob), 0);
@@ -177,28 +181,70 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         // Put funds on vault to be able to move them to token owners from the reward holder
         rewardHolder.setupOwner(address(alice));
         rewardHolder.setupOwner(address(bob));
-        vault.mint(address(rewardHolder), amount);
-        rewardHolder.depositReward(amount);
+        assertEq(rewardHolder.numberCoins(), 2);
+        assertEq(rewardHolder.rewardOwnerIndex(alice), 1);
+        assertEq(rewardHolder.rewardOwnerIndex(bob), 1);
 
-        assertEq(rewardHolder.rewardIndex(), amount + 1);
+        vault.mint(address(rewardHolder), reward);
+        rewardHolder.depositReward(reward);
+        assertEq(rewardHolder.rewardIndex(), reward + 1);
+
+        uint256 aliceReward = reward / 2;
+        uint256 bobReward = aliceReward;
+        uint256 claimableIndex = (reward + 1) - reward % 2;
+
+        (uint256 _aliceReward1, uint256 aliceIndex1) = rewardHolder.previewReward(alice);
+        // same for bob
+        (uint256 _bobReward1, uint256 bobIndex1) = rewardHolder.previewReward(bob);
+
+        // before claim all rewards are equal are smaller one
+        assertEq(_aliceReward1, _bobReward1);
+        assertEq(_aliceReward1, aliceReward);
+        assertEq(aliceIndex1, bobIndex1);
+        assertEq(aliceIndex1, claimableIndex);
+        if(aliceReward == 0) {
+            return;
+        }
 
         // Send reward to Alice and check emits
         vm.expectEmit(address(rewardHolder));
-        rewardHolder.emitRewardClaimed(amount / 2, address(alice), true);
+        rewardHolder.emitRewardClaimed(aliceReward, address(alice), true);
         vm.prank(alice);
         rewardHolder.claimReward();
 
-        assertEq(vault.balanceOf(alice), aliceBalanceBefore + amount / 2);
+        assertEq(vault.balanceOf(alice), aliceBalanceBefore + aliceReward);
         assertEq(vault.balanceOf(bob), bobBalanceBefore);
+        assertEq(rewardHolder.rewardOwnerIndex(alice), claimableIndex);
+        assertEq(rewardHolder.rewardOwnerIndex(bob), 1);
+
+        // after first reward claimed, bob will receive same reward
+        (uint256 _bobReward2, uint256 bobIndex2) = rewardHolder.previewReward(bob);
+        assertEq(_bobReward2, bobReward);
+        assertEq(bobIndex2, claimableIndex);
+
+        // Send reward to Bob and check emits
+        vm.expectEmit(address(rewardHolder));
+        rewardHolder.emitRewardClaimed(bobReward, address(bob), true);
+        vm.prank(bob);
+        rewardHolder.claimReward();
+
+        assertEq(vault.balanceOf(alice), aliceBalanceBefore + aliceReward);
+        assertEq(vault.balanceOf(bob), bobBalanceBefore + bobReward);
+
+        assertEq(rewardHolder.rewardOwnerIndex(alice), claimableIndex);
+        assertEq(rewardHolder.rewardOwnerIndex(bob), claimableIndex);
     }
 
-    function testCorrectRewardClaimed2(uint256 reward) public {
-        vm.assume(reward > 0 && reward < type(uint256).max / 2);
+    function testCorrectRewardClaimed2(uint128 _reward) public {
+        uint256 reward = _reward;
+        vm.assume(reward > 0);
 
         rewardHolder.depositReward(reward);
 
         // to users set and reward have to be zero
-        assertEq(rewardHolder.calcReward(), 0);
+        (uint256 previewReward1, uint256 previewIndex1) = rewardHolder.previewReward(msg.sender);
+        assertEq(previewReward1, 0);
+        assertEq(previewIndex1, reward + 1);
 
         // setup new token owners and reward still have to be zero
         rewardHolder.setupOwner(address(alice));
@@ -206,15 +252,20 @@ contract ERC5484UpgradeableTest is TestWithERC1820Registry {
         rewardHolder.setupOwner(address(culprit));
 
         // check for contract owner
-        assertEq(rewardHolder.calcReward(), 0);
+        (uint256 previewReward2, uint256 previewIndex2) = rewardHolder.previewReward(msg.sender);
+        assertEq(previewReward2, 0);
+        assertEq(previewIndex2, reward + 1);
         // check for alice
-        vm.prank(alice);
-        assertEq(rewardHolder.calcReward(), 0);
+        (uint256 previewReward3, uint256 previewIndex3) = rewardHolder.previewReward(alice);
+        assertEq(previewReward3, 0);
+        assertEq(previewIndex3, reward + 1);
 
         // deposit additional reward
         rewardHolder.depositReward(reward);
 
-        vm.prank(alice);
-        assertEq(rewardHolder.calcReward(), reward / 3);
+        // check for alice
+        (uint256 previewReward4, uint256 previewIndex4) = rewardHolder.previewReward(alice);
+        assertEq(previewReward4, reward / 3);
+        assertEq(previewIndex4, (reward * 2 + 1) - reward % 3);
     }
 }

@@ -33,7 +33,7 @@ const bscMainnet: NetworkUserConfig = {
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   solidity: {
-    version: '0.8.19',
+    version: '0.8.26',
     settings: {
       optimizer: {
         enabled: true,

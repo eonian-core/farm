@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 import {IVersionable} from "../IVersionable.sol";
 import {SafeInitializable} from "../SafeInitializable.sol";

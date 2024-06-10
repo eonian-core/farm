@@ -18,7 +18,7 @@ contract RewardHolderMock is RewardHolder {
     }
 
     function setupOwner(address rewardOwner) external {
-        setupNewOwner(rewardOwner);
+        addOwner(rewardOwner);
     }
 
     function checkRole(bytes32 role, address account) onlyRole(BALANCE_UPDATER_ROLE) external view returns (bool) {

@@ -40,6 +40,16 @@ yarn test
 * `npx hardhat --network <networkName> deploy` - deploy contracts to specific network
 * `npx hardhat --network <networkName> deploy --gasprice <number>` - deploy contracts to specific network with gas price
 
+#### Verify Contracts Locally
+
+In case of failure to verify during deployment, the contract is possible to verify this way locally
+
+```shell
+npx hardhat console --network bsc_mainnet_dev
+await hre.etherscanVerifier.verifyIfNeeded('<address>', [true]) 
+# Second parameter is array of arguments used during initialization
+```
+
 #### Rest of commands
 
 ```shell

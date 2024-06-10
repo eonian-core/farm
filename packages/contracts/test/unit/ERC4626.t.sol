@@ -137,6 +137,46 @@ contract ERC4626Test is TestWithERC1820Registry {
         assertEq(underlying.balanceOf(address(vault)), 0);
     }
 
+    function testFailSingleDepositToZeroReceiver(
+        uint96 _depositAmount,
+        uint96 _depositAlowance,
+        uint128 _keepInBalance
+    ) public {
+        vm.assume(_depositAmount > 0);
+        vm.assume(_depositAlowance >= _depositAmount);
+
+        // prevent overflow
+        uint256 depositAmount = _depositAmount;
+        uint256 keepInBalance = _keepInBalance;
+        uint256 depositAlowance = _depositAlowance;
+
+        underlying.mint(alice, depositAlowance + keepInBalance);
+
+        vm.prank(alice);
+        underlying.approve(address(vault), depositAlowance);
+        assertEq(underlying.allowance(alice, address(vault)), depositAlowance);
+
+        uint256 alicePreDepositBal = underlying.balanceOf(alice);
+        uint256 expectedShares = vault.previewDeposit(depositAmount);
+        assertEq(vault.convertToShares(depositAmount), expectedShares);
+
+        // Alise tring to deposit money to zero receiver
+        vm.prank(alice);
+        uint256 aliceShareAmount = vault.deposit(depositAmount, address(0));
+        
+        assertEq(aliceShareAmount, 0);
+        assertEq(vault.afterDepositHookCalledCounter(), 0);
+        assertEq(vault.beforeWithdrawHookCalledCounter(), 0);
+        assertEq(vault.totalSupply(), 0);
+        assertEq(vault.totalAssets(), 0);
+        assertEq(vault.balanceOf(alice), 0);
+        assertEq(vault.convertToAssets(vault.balanceOf(alice)), 0);
+        assertEq(vault.convertToShares(0), vault.balanceOf(alice));
+        assertEq(underlying.balanceOf(alice),alicePreDepositBal);
+        assertEq(underlying.balanceOf(address(vault)), 0);
+    }
+
+
     function testSingleMintRedeem(
         uint96 _shareAmount,
         uint96 _depositAlowance,

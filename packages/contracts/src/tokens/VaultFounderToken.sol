@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 import {AccessControlUpgradeable} from "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 import {IERC165Upgradeable} from "@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol";
@@ -100,7 +100,7 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
             return false;
         }
 
-        setupNewOwner(to);
+        addOwner(to);
         uint256 _nextTokenPrice = amount * nextTokenPriceMultiplier / MAX_BPS;
 
         // Will be used to record price of current holder token in The Graph
@@ -138,13 +138,6 @@ contract VaultFounderToken is IVaultFounderToken, SafeUUPSUpgradeable, ERC5484Up
     {
         tryToMint(request.requestSender, "", request.senderMaxWithdraw);
     }
-
-    /* solhint-disable no-empty-blocks */
-    function beforeWithdrawTrigger(ERC4626HookPayload memory request) external override
-    {
-        //empty code
-    }
-    /* solhint-disable no-empty-blocks */
 
     /// @dev See {IERC165-supportsInterface}.
     function supportsInterface(bytes4 interfaceId)
