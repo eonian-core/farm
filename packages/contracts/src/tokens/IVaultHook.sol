@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 /// @title ERC4626 Vault Token lifecycle hook interface
 interface IVaultHook {
     function afterDepositTrigger(ERC4626HookPayload memory request) external;
-    function beforeWithdrawTrigger(ERC4626HookPayload memory request) external;
 }
 
 struct ERC4626HookPayload {

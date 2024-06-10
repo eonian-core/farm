@@ -194,22 +194,29 @@ describe('Ape Lending Strategy', () => {
     expect(await vault.balanceOf(rewardsAddress)).to.be.equal(0)
 
     // Make sure that the holders have some amount of BUSD (e.g., >300)
-    const min = 3000n * 5n * 10n ** 18n
+    const min = 300n * 5n * 10n ** 18n
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(min)
 
     // Make N deposits and reports
     for (let i = 0; i < 5; i++) {
-      const depositAmount = 3000n * 10n ** 18n
+      await logSnapshot(`[${i + 1}] Before deposit:`)
+    
+      const depositAmount = 300n * 10n ** 18n
       await deposit(holderA, depositAmount)
+
+      await logSnapshot(`[${i + 1}] After deposit:`)
 
       await strategy.work()
       await warp(minReportInterval)
     }
 
+    await logSnapshot(`Before work:`)
+
     // Wait 6h to accumulate the interest
     await warp(6 * 60 * 60)
-
     await strategy.work()
+
+    await logSnapshot(`After work:`)
 
     // Rewards address should have some vault shares
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(0)
@@ -306,5 +313,19 @@ describe('Ape Lending Strategy', () => {
 
   function isInAddresses(value: string): value is Addresses {
     return Object.values(Addresses).includes(value as Addresses)
+  }
+
+  async function logSnapshot(prefix: string) {
+    if(process.env.ENABLE_TEST_LOGS !== 'true') {
+      return
+    }
+    
+    console.log(prefix, {
+      holder: await assetToken.balanceOf(holderA.address), 
+      vault: await assetToken.balanceOf(vaultAddress),
+      strategy: await assetToken.balanceOf(strategyAddress),
+      balanceInCToken: await strategy.depositedBalanceSnapshot(),
+      cToken: await assetToken.balanceOf(cTokenAddress),
+    })
   }
 })

@@ -48,7 +48,7 @@ jobs:
       - name: Run tests 
         run: |-
           cd packages/subgraph
-          yarn test
+          yarn test:only
 
 
 

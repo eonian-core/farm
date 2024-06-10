@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.26;
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import {SafeERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
@@ -12,6 +12,7 @@ import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
 
 error GivenAssetsResultIsZeroShares();
 error GivenSharesResultIsZeroAssets();
+error GivenReceiverIsZeroAddress();
 
 /// @title ERC4626 upgradable tokenized Vault implementation based on ERC-777.
 /// More info in [EIP](https://eips.ethereum.org/EIPS/eip-4626)
@@ -135,6 +136,13 @@ abstract contract ERC4626Upgradeable is
         uint256 shares,
         address receiver
     ) internal {
+        // In child contracts this case impossible, 
+        // but in context of this contract zero receiver can be user mistake
+        if (receiver == address(0)) {
+            // If someone want to deposit to zero address, 
+            // better to make deposit to itself and then transfer to zero address
+            revert GivenReceiverIsZeroAddress();
+        }
         // cases when msg.sender != receiver are error prone
         // but they are allowed by the standard... we need take care of it ourselves
 
