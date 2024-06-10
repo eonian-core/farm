@@ -1,6 +1,6 @@
 # Eonian Farm
 
-Yield Aggregator dApp and protocol for safe and high reward liquidity mining
+Decentralized savings account protocol and subgraph. More info in [docs](docs.eonian.finance).
 
 ## Development
 
@@ -11,6 +11,8 @@ For a list of known development issues related to Lerna monorepo, see [developme
 ### Structure
 
 * `packages/contracts` - Protocol contracts.
+* `packages/subgraph` - GraphQl API for protocol.
+* `packages/eslint-config` - Shared JS code linting config.
 
 ### Requirements
 
