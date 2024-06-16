@@ -71,14 +71,6 @@ jobs:
         with:
           version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
 
-      - name: Check for vulnerabilities
-        working-directory: ./packages/contracts
-        run: |-
-          chmod +x slither.sh 
-          ./slither.sh .
-          cat slither-result.json
-          echo "Static analyzer check finished"
-
       # Need for hardhat scripts
       - name: Link packages
         run: yarn
@@ -100,3 +92,49 @@ jobs:
           cd packages/contracts
           USE_BSC_FORK=true yarn test:hardhat
 
+  analysis:
+    name: Analyse for vulnerabilities
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+          # fix for EndBug/add-and-commit
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.CI_GITHUB_TOKEN }}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.4.0
+        id: slither
+        with:
+          target: 'packages/contracts'
+          fail-on: none
+          slither-args: --checklist
+      
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with: 
+          author_name: Eonian CI/CD Bot
+          author_email: automation@eonian.finance
+          default_author: user_info
+          message: '[skip ci] Contracts analysed for vulnerabilities'
+          fetch: --no-tags --recurse-submodules=no # Prevent failure due to submodules
+          pull: '--rebase --autostash'
