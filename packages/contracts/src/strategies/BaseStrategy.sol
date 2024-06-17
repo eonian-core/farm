@@ -174,22 +174,22 @@ abstract contract BaseStrategy is
     }
 
     /// @inheritdoc Job
-    function _canWork() internal view override returns (bool) {
+    function _canWork() internal view override returns (bool canExec, bytes memory reason) {
         if (!lender.isActivated()) {
-            return false;
+            return (false, bytes("Strategy is not activated"));
         }
 
         // Trigger this job if the strategy has the outstanding debt to repay
         uint256 outstanding = lender.outstandingDebt();
         if (outstanding > debtThreshold) {
-            return true;
+            return (true, bytes(""));
         }
 
         // Trigger this job if the strategy has some loss to report
         uint256 total = estimatedTotalAssets();
         uint256 debt = lender.currentDebt();
         if (total + debtThreshold < debt) {
-            return true;
+            return (true, bytes(""));
         }
 
         // Estimate accumulated profit
@@ -200,7 +200,7 @@ abstract contract BaseStrategy is
 
         // Check the gas cost againts the profit and available credit.
         // There is no sense to call the "work" function, if we don't have decent amount of funds to move.
-        return _checkGasPriceAgainstProfit(profit);
+        return _checkGasPriceAgainstProfit(profit) ? (true, bytes("")) : (false, bytes("Not profitable to execute"));
     }
 
     /// @notice Calculates the gas price of this transaction and compares it againts the specified profit.
