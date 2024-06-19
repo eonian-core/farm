@@ -18,8 +18,8 @@ contract JobMock is Job, SafeInitializableMock {
         workMethodCalledCounter++;
     }
 
-    function _canWork() internal view override returns (bool) {
-        return canWorkResult;
+    function _canWork() internal view override returns (bool canExec, bytes memory reason) {
+        return (canWorkResult, bytes(""));
     }
 
     function setCanWorkResult(bool _canWorkResult) public {

@@ -65,42 +65,51 @@ contract JobTest is Test {
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // _canWork is false + time is true before first work
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time is true before first work
         job.setCanWorkResult(true);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         // Set current block as last work time
         job.refreshLastWorkTime();
         assertEq(job.lastWorkTime(), initialTime);
         // _canWork is true + time not came
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time came
         vm.warp(initialTime + time);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         // _canWork is false + time came
         job.setCanWorkResult(false);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time came
         job.setCanWorkResult(true);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         // _canWork is true + time not came again
         job.setMinimumBetweenExecutions(time + 1);
         assertEq(job.minimumBetweenExecutions(), time + 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time not came
         vm.warp(initialTime + time + 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time came
         vm.warp(initialTime + time + 2);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
     }
 
     function testWorkCallsRefreshTheTimeout(
@@ -129,7 +138,8 @@ contract JobTest is Test {
         assertEq(job.timeFromLastExecution(), block.timestamp);
 
         // Will try first call immidiatly after deploy
-        assertTrue(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertTrue(_canWork);
         assertEq(job.workMethodCalledCounter(), 0);
 
         vm.expectEmit(true, true, true, true);
@@ -139,12 +149,14 @@ contract JobTest is Test {
         job.work();
 
         assertEq(job.workMethodCalledCounter(), 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime);
 
         // Will try second call after some time
         vm.warp(initialTime + secondCall);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         vm.expectEmit(true, true, true, true);
         job.emitWorked(alice);
@@ -153,13 +165,15 @@ contract JobTest is Test {
         job.work();
 
         assertEq(job.workMethodCalledCounter(), 2);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime + secondCall);
 
         // Will try third call after some time
         vm.warp(initialTime + secondCall + thirdCall);
 
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         vm.expectEmit(true, true, true, true);
         job.emitWorked(bob);
@@ -168,7 +182,8 @@ contract JobTest is Test {
         job.work();
 
         assertEq(job.workMethodCalledCounter(), 3);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime + secondCall + thirdCall);
     }
 
@@ -191,7 +206,8 @@ contract JobTest is Test {
         assertEq(job.timeFromLastExecution(), block.timestamp);
 
         // Will try first call immidiatly after deploy
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         vm.expectRevert(CannotWorkNow.selector);
         job.work();
@@ -213,7 +229,8 @@ contract JobTest is Test {
 
         // _canWork is false + time came
         vm.warp(initialTime + time);
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         vm.expectRevert(CannotWorkNow.selector);
         job.work();
@@ -237,7 +254,8 @@ contract JobTest is Test {
 
         // _canWork is true + time not came
         vm.warp(initialTime + time - 1);
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         vm.expectRevert(CannotWorkNow.selector);
         job.work();
