@@ -1,7 +1,13 @@
 # Gelato interface library
 
-Gelato not provide with proper library for interacting with his contracts and implementing communication interfaces.
-But it provide example [Ops repo](https://github.com/gelatodigital/ops), which contain part of interfaces and base classes.
+Gelato does not provide a proper library for interacting with his contracts and implementing communication interfaces.
+But it provides a few example repositories, which contain part of interfaces and base classes.
 
-They can be used by forge as gitmodules library, but they not compatible with OpenZeppelin upgradable contracts.
-We rewrited them in a way that support upgradable contracts.
+* <https://github.com/gelatodigital/automate-unit-testing/tree/main>
+* <https://github.com/gelatodigital/w3f-use-cases-demos>
+* <https://github.com/gelatodigital/w3f-solidity-synthetix/tree/main>
+
+## Gelato docs
+
+* <https://docs.gelato.network/web3-services/web3-functions/quick-start/initiate-an-automated-transaction>
+* <https://docs.gelato.network/web3-services/automate-legacy/legacy-automate-migration-guide>
