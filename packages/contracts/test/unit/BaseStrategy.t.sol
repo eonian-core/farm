@@ -226,7 +226,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
             abi.encode(false)
         );
 
-        assertFalse(baseStrategy.callCanWork());
+        (bool _canWork,) = baseStrategy.callCanWork();
+        assertFalse(_canWork);
     }
 
     function testCanWorkIfDebtGreaterThanThreshold(
@@ -254,7 +255,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         baseStrategy.setDebtThreshold(threshold);
 
-        assertEq(baseStrategy.callCanWork(), passThreshold);
+        (bool _canWork,) = baseStrategy.callCanWork();
+        assertEq(_canWork, passThreshold);
     }
 
     function testCanWorkIfStrategyHasLoss(
@@ -274,7 +276,8 @@ contract BaseStrategyTest is TestWithERC1820Registry {
 
         baseStrategy.setDebtThreshold(debtThreshold);
 
-        assertEq(baseStrategy.callCanWork(), true);
+        (bool _canWork,) = baseStrategy.callCanWork();
+        assertEq(_canWork, true);
     }
 
     function testCheckGasPriceAgainstProfit(
