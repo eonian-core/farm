@@ -65,7 +65,7 @@ contract CTokenBaseStrategyMock is CTokenBaseStrategy, SafeInitializableMock {
         _work();
     }
 
-    function callCanWork() external view returns (bool) {
+    function callCanWork() external view returns (bool canExec, bytes memory reason) {
         return _canWork();
     }
 

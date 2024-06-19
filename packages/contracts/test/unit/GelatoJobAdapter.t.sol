@@ -7,7 +7,7 @@ import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20
 
 import {GelatoJobAdapterMock} from "./mocks/GelatoJobAdapterMock.sol";
 import {TimeMinimumBetweenExecutionsIncorrect, Job, CannotWorkNow} from "contracts/automation/Job.sol";
-import {GelatoJobAdapter, PayableWorkNotAllowed} from "contracts/automation/GelatoJobAdapter.sol";
+import {GelatoJobAdapter, PayableWorkNotAllowed, IJob, IPayableJob} from "contracts/automation/GelatoJobAdapter.sol";
 import {ERC20Mock} from "./mocks/ERC20Mock.sol";
 import {BackCombatibleTransfer} from "contracts/automation/gelato/BackCombatibleTransfer.sol";
 import {OpsMock} from "./mocks/OpsMock.sol";
@@ -59,8 +59,10 @@ contract GelatoJobAdapterTest is Test {
         assertEq(canExec1, _canWork);
         assertEq(
             execPayload1,
-            abi.encodeWithSelector(
-                _isPrepaid ? job.work.selector : job.payableWork.selector
+            !_canWork ? bytes("") : (
+                _isPrepaid 
+                ? abi.encodeCall(IJob.work, ()) 
+                : abi.encodeCall(IPayableJob.payableWork, ())
             )
         );
 
@@ -71,19 +73,27 @@ contract GelatoJobAdapterTest is Test {
         assertEq(canExec2, false);
         assertEq(
             execPayload2,
-            abi.encodeWithSelector(
-                _isPrepaid ? job.work.selector : job.payableWork.selector
-            )
+            bytes("Minimum time between executions not passed")
         );
 
         vm.warp(initialTime + time);
         (bool canExec3, bytes memory execPayload3) = job.checker();
 
         assertEq(canExec3, time > 1001 && _canWork);
+        if(time <= 1001) {
+            assertEq(
+                execPayload3,
+                bytes("Minimum time between executions not passed")
+            );
+            return;
+        }
+
         assertEq(
             execPayload3,
-            abi.encodeWithSelector(
-                _isPrepaid ? job.work.selector : job.payableWork.selector
+            !_canWork ? bytes("") : (
+                _isPrepaid 
+                ? abi.encodeCall(IJob.work, ()) 
+                : abi.encodeCall(IPayableJob.payableWork, ())
             )
         );
     }
@@ -99,42 +109,51 @@ contract GelatoJobAdapterTest is Test {
         assertEq(job.minimumBetweenExecutions(), 1001);
 
         // _canWork is false + time is true before first work
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time is true before first work
         job.setCanWorkResult(true);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         // Set current block as last work time
         job.refreshLastWorkTime();
         assertEq(job.lastWorkTime(), initialTime);
         // _canWork is true + time not came
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time came
         vm.warp(initialTime + time);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         // _canWork is false + time came
         job.setCanWorkResult(false);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time came
         job.setCanWorkResult(true);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         // _canWork is true + time not came again
         job.setMinimumBetweenExecutions(time + 1);
         assertEq(job.minimumBetweenExecutions(), time + 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time not came
         vm.warp(initialTime + time + 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         // _canWork is true + time came
         vm.warp(initialTime + time + 2);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
     }
 
     function testWorkCallsRefreshTheTimeout(
@@ -163,7 +182,8 @@ contract GelatoJobAdapterTest is Test {
         assertEq(job.timeFromLastExecution(), block.timestamp);
 
         // Will try first call immidiatly after deploy
-        assertTrue(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertTrue(_canWork);
         assertEq(job.workMethodCalledCounter(), 0);
 
         vm.expectEmit(true, true, true, true);
@@ -173,12 +193,14 @@ contract GelatoJobAdapterTest is Test {
         job.work();
 
         assertEq(job.workMethodCalledCounter(), 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime);
 
         // Will try second call after some time
         vm.warp(initialTime + secondCall);
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         vm.expectEmit(true, true, true, true);
         job.emitWorked(alice);
@@ -187,13 +209,15 @@ contract GelatoJobAdapterTest is Test {
         job.work();
 
         assertEq(job.workMethodCalledCounter(), 2);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime + secondCall);
 
         // Will try third call after some time
         vm.warp(initialTime + secondCall + thirdCall);
 
-        assertTrue(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertTrue(_canWork);
 
         vm.expectEmit(true, true, true, true);
         job.emitWorked(bob);
@@ -202,7 +226,8 @@ contract GelatoJobAdapterTest is Test {
         job.work();
 
         assertEq(job.workMethodCalledCounter(), 3);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime + secondCall + thirdCall);
     }
 
@@ -222,7 +247,8 @@ contract GelatoJobAdapterTest is Test {
 
         // _canWork is false + time came
         vm.warp(initialTime + time);
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         vm.expectRevert(CannotWorkNow.selector);
         job.work();
@@ -246,7 +272,8 @@ contract GelatoJobAdapterTest is Test {
 
         // _canWork is true + time not came
         vm.warp(initialTime + time - 1);
-        assertFalse(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertFalse(_canWork);
 
         vm.expectRevert(CannotWorkNow.selector);
         job.work();
@@ -279,7 +306,8 @@ contract GelatoJobAdapterTest is Test {
 
         vm.warp(initialTime + time + 1);
 
-        assertTrue(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertTrue(_canWork);
         assertFalse(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 
@@ -295,7 +323,8 @@ contract GelatoJobAdapterTest is Test {
         uint256 postBalance = address(job).balance;
 
         assertEq(job.workMethodCalledCounter(), 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime + time + 1);
         assertEq(postBalance, preBalance - amount);
         assertEq(alice.balance, alicePreBalance + amount);
@@ -326,7 +355,8 @@ contract GelatoJobAdapterTest is Test {
 
         vm.warp(initialTime + time + 1);
 
-        assertTrue(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertTrue(_canWork);
         assertEq(job.workMethodCalledCounter(), 0);
 
         uint256 preBalance = token.balanceOf(address(job));
@@ -341,7 +371,8 @@ contract GelatoJobAdapterTest is Test {
         uint256 postBalance = token.balanceOf(address(job));
 
         assertEq(job.workMethodCalledCounter(), 1);
-        assertFalse(job.canWork());
+        (_canWork, ) = job.canWork();
+        assertFalse(_canWork);
         assertEq(job.lastWorkTime(), initialTime + time + 1);
         assertEq(postBalance, preBalance - amount);
         assertEq(token.balanceOf(alice), alicePreBalance + amount);
@@ -377,7 +408,8 @@ contract GelatoJobAdapterTest is Test {
 
         vm.warp(initialTime + time + 1);
 
-        assertTrue(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertTrue(_canWork);
         assertTrue(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
         vm.expectRevert(PayableWorkNotAllowed.selector);
@@ -413,7 +445,8 @@ contract GelatoJobAdapterTest is Test {
 
         vm.warp(initialTime + time + 1);
 
-        assertTrue(job.canWork());
+        (bool _canWork, ) = job.canWork();
+        assertTrue(_canWork);
         assertFalse(job.isPrepaid());
         assertEq(job.workMethodCalledCounter(), 0);
 

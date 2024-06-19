@@ -10,8 +10,20 @@ import {SafeInitializable} from "../../upgradeable/SafeInitializable.sol";
 
 error OpsOnlyAllowed();
 
-/// Based on https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
-/// @notice Give basic methods to pay for Gelato operations.
+/**
+ * @notice Give basic methods to pay for Gelato operations.
+ * @dev Inherit this contract to allow your smart contract to
+ * - Make synchronous fee payments.
+ * - Have call restrictions for functions to be automated.
+ * 
+ * In gelato docs and codebase named as AutomateReady, 
+ * but it fully match with legacy OpsReady that we used in our contracts
+ * To avoid unnecesary changes we will use OpsReady name
+ * 
+ * Based on 
+ * - https://github.com/gelatodigital/automate-unit-testing/blob/main/contracts/gelato/AutomateReady.sol
+ * - https://github.com/gelatodigital/ops/blob/9a9cde6ab2f1b132b949f9244fd59a1de4da4123/contracts/vendor/gelato/OpsReady.sol
+ */
 abstract contract OpsReady is SafeInitializable {
     IOps public ops;
     address payable public gelato;
@@ -26,6 +38,11 @@ abstract contract OpsReady is SafeInitializable {
      */
     uint256[50] private __gap;
 
+    /**
+     * @dev
+     * Only tasks from ops, defined in constructor, can call
+     * the functions with this modifier.
+     */
     modifier onlyOps() {
         if(msg.sender != address(ops)) {
             revert OpsOnlyAllowed();
@@ -43,10 +60,20 @@ abstract contract OpsReady is SafeInitializable {
         gelato = ops.gelato();
     }
 
-    /// @notice Will pay bot for executed task through galato
+    /**
+     * @notice Will pay bot for executed task through galato
+     * @dev
+     * Transfers fee to gelato for synchronous fee payments.
+     *
+     * fee & feeToken should be queried from IAutomate.getFeeDetails()
+     */
     function _payGalatoFee() internal {
-        (uint256 fee, address feeToken) = ops.getFeeDetails();
+        (uint256 fee, address feeToken) = _getFeeDetails();
 
         gelato.backCombatibleTransfer(feeToken, fee);
+    }
+
+    function _getFeeDetails() internal view returns (uint256 fee, address feeToken) {
+        (fee, feeToken) = ops.getFeeDetails();
     }
 }

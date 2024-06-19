@@ -1,15 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity ^0.8.26;
 
+import {IJob} from "./IJob.sol";
 import {Job} from "./Job.sol";
-import {IResolver} from "./gelato/IResolver.sol";
 import {OpsReady, IOps} from "./gelato/OpsReady.sol";
+import {IChecker} from "./gelato/IChecker.sol";
+import {IPayableJob} from "./IPayableJob.sol";
 
 /// @notice Contract expect work will be prepayd, so it cannot pay for work
 error PayableWorkNotAllowed();
 
 /// @title Implementation of the mixin that adds support for Gelato (keepers operator)
-abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
+abstract contract GelatoJobAdapter is Job, IChecker, OpsReady, IPayableJob {
     /// @notice If job is prepaid, then it not will try to pay on executed work.
     bool public isPrepaid;
 
@@ -56,11 +58,14 @@ abstract contract GelatoJobAdapter is Job, IResolver, OpsReady {
         view
         returns (bool canExec, bytes memory execPayload)
     {
-        canExec = canWork();
+        (canExec, execPayload) = canWork();
+        if(!canExec) {
+            return (canExec, execPayload);
+        }
 
-        execPayload = abi.encodeWithSelector(
-            isPrepaid ? this.work.selector : this.payableWork.selector
-        );
+        execPayload = isPrepaid 
+            ? abi.encodeCall(IJob.work, ()) 
+            : abi.encodeCall(IPayableJob.payableWork, ());
     }
 
     /// @notice Bot will call this method when `checker` returns `true`.

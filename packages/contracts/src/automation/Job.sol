@@ -5,6 +5,7 @@ import {ReentrancyGuardUpgradeable} from "@openzeppelin/contracts-upgradeable/se
 import {ContextUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
 import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
+import {IJob} from "./IJob.sol";
 
 /// Someone tried to execute work function while `canWork` is `false`
 error CannotWorkNow();
@@ -19,7 +20,8 @@ error TimeMinimumBetweenExecutionsIncorrect(uint256 _givenTime);
 abstract contract Job is
     SafeInitializable,
     ContextUpgradeable,
-    ReentrancyGuardUpgradeable
+    ReentrancyGuardUpgradeable,
+    IJob
 {
     /// Job work function was executed by worker bot
     event Worked(address indexed worker);
@@ -77,15 +79,22 @@ abstract contract Job is
 
     /// @notice If work can be executed by keeper at this moment returns true
     /// @dev Will be executed by keeper and before `work` method execution.
-    function canWork() public view returns (bool) {
+    function canWork() public view returns (bool canExec, bytes memory reason) {
         // TODO: Check the maximum delay between job executions (?)
-        return
-            isTimePassFromLastExecution(minimumBetweenExecutions) && _canWork();
+        if(isTimePassFromLastExecution(minimumBetweenExecutions) == false) {
+            return (false, bytes("Minimum time between executions not passed"));
+        }
+
+        // TODO: possible to add check for high gas price 
+        // https://docs.gelato.network/web3-services/web3-functions/quick-start/writing-solidity-functions#id-6.-limit-the-gas-price-of-your-execution
+        
+        return _canWork();
     }
 
     /// @notice allow execution only if `canWork` return true
     modifier onlyWhenCanWork() {
-        if (!canWork()) {
+        (bool canExec, ) = canWork();
+        if (!canExec) {
             revert CannotWorkNow();
         }
         _;
@@ -153,6 +162,7 @@ abstract contract Job is
 
     /// @notice Method which identify if work can be executed at this moment.
     /// @dev Will be executed by keeper and before `work` method execution.
-    /// @return true if `work` method can be called.
-    function _canWork() internal view virtual returns (bool);
+    /// @return canExec - true if `work` method can be called.
+    /// @return reason - if `canExec` is false, then reason why work can't be executed.
+    function _canWork() internal view virtual returns (bool canExec, bytes memory reason);
 }
