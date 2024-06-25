@@ -1,7 +1,7 @@
 import type { TokenInfo } from '@uniswap/token-lists'
 import { tokens } from './tokenList.json'
-import type { Chain } from './Chain'
-import { getChainId } from './Chain'
+import type { Chain } from '../chains/Chain'
+import { getChainId } from '../chains/Chain'
 
 export enum TokenSymbol {
   BNB = 'BNB',
@@ -29,3 +29,18 @@ function getTokenInfo(chain: Chain, symbol: TokenSymbol): TokenInfo {
   }
   return tokenInfo
 }
+
+export function parseTokens(args: unknown): TokenSymbol[] | null {
+  if (typeof args !== 'object' || !args) {
+    return null
+  }
+  if (!('tokens' in args)) {
+    return null
+  }
+  const tokens = args.tokens ? String(args.tokens) : null
+  if (!tokens) {
+    return null
+  }
+  return tokens.split(',') as TokenSymbol[]
+}
+

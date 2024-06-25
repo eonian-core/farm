@@ -1,5 +1,5 @@
 import debug from 'debug'
-import type { ContractName, HardhatRuntimeEnvironment } from 'hardhat/types'
+import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
@@ -30,7 +30,7 @@ export class Deployer {
 
   constructor(
     private hre: HardhatRuntimeEnvironment,
-    private contractName: ContractName,
+    private contractName: string,
     private deploymentId: string | null,
     private initArgs: unknown[],
     private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers

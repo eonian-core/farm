@@ -16,12 +16,12 @@ import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
 
-import { Chain, getChainForFork } from './hardhat/types'
+import '@eonian/upgradeable'
+
+import { Chain, getChainForFork, resolveHardhatForkConfig } from '@eonian/upgradeable'
 import './hardhat/deployment'
 import './hardhat/tasks'
 import './hardhat/overrides'
-
-import { resolveHardhatForkConfig } from './hardhat/forks'
 
 const bscMainnet: NetworkUserConfig = {
   url: 'https://bsc-dataseed.binance.org/',

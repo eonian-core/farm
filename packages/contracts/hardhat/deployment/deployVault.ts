@@ -1,9 +1,8 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { Vault } from '../../typechain-types'
-import type { TokenSymbol } from '../types'
-import { NetworkEnvironment, resolveNetworkEnvironment } from '../types'
-import { type DeployResult } from './plugins/Deployer'
-import { Addresses } from '.'
+import type { TokenSymbol, DeployResult } from '@eonian/upgradeable'
+import { NetworkEnvironment, resolveNetworkEnvironment } from '@eonian/upgradeable'
+import { Addresses } from './addresses'
 
 export default async function deployVault(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)

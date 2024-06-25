@@ -1,7 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import { ZeroAddress, ZeroHash } from 'ethers'
-import { expect } from 'chai'
 import _ from 'lodash'
 import { ProxyValidator } from '../ProxyValidator'
 import { DeployStatus } from '../Deployer'
@@ -14,7 +13,7 @@ describe('ProxyValidator', () => {
     const hre = await createHRE()
 
     const validator = new ProxyValidator(hre)
-    await expect(validator.validateLastDeployments()).to.be.rejectedWith(Error)
+    await expect(validator.validateLastDeployments()).rejects.toThrow()
   })
 
   it('Should not throw if all deployments were skipped', async () => {
@@ -46,7 +45,7 @@ describe('ProxyValidator', () => {
       },
     })
     const validator = new ProxyValidator(hre)
-    expect(() => validator.validateThatProxiesAreInSync()).to.throw(Error)
+    expect(() => validator.validateThatProxiesAreInSync()).toThrow(Error)
   })
 
   it('Should validate that proxies are registered', async () => {
@@ -72,7 +71,7 @@ describe('ProxyValidator', () => {
       inManifest: [addressA],
     })
     const validator = new ProxyValidator(hre)
-    await expect(validator.validateThatProxiesWereSaved()).to.be.rejectedWith(Error)
+    await expect(validator.validateThatProxiesWereSaved()).rejects.toThrow()
   })
 
   it('Should validate that proxy is in register', async () => {
@@ -88,7 +87,7 @@ describe('ProxyValidator', () => {
       inRegister: [addressA],
     })
     const validator = new ProxyValidator(hre)
-    await expect(validator.validateThatProxiesWereSavedInRegister([{ proxyAddress: addressB } as any])).to.be.rejectedWith(Error)
+    await expect(validator.validateThatProxiesWereSavedInRegister([{ proxyAddress: addressB } as any])).rejects.toThrow()
   })
 
   it('Should validate that proxy is in OZ Manifest', async () => {
@@ -104,7 +103,7 @@ describe('ProxyValidator', () => {
       inManifest: [addressA],
     })
     const validator = new ProxyValidator(hre)
-    await expect(validator.validateThatProxiesWereSavedInManifest([{ proxyAddress: addressB }] as any)).to.be.rejectedWith(Error)
+    await expect(validator.validateThatProxiesWereSavedInManifest([{ proxyAddress: addressB }] as any)).rejects.toThrow()
   })
 })
 

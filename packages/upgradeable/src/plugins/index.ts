@@ -1,3 +1,5 @@
+import 'hardhat/types/runtime';
+
 import { extendEnvironment } from 'hardhat/config'
 import type { DeployFunction, DeployResult } from './Deployer'
 import { Deployer } from './Deployer'
@@ -12,7 +14,7 @@ export { ProxyValidator } from './ProxyValidator'
 declare module 'hardhat/types/runtime' {
   export interface HardhatRuntimeEnvironment {
     lastDeployments: Record<string, DeployResult>
-    onBeforeDeploy?: (contractName: ContractName, deploymentId: string | null) => Promise<void> // For testing purposes
+    onBeforeDeploy?: (contractName: string, deploymentId: string | null) => Promise<void> // For testing purposes
     deploy: DeployFunction
     etherscanVerifier: EtherscanVerifier
     proxyRegister: ProxyRegister

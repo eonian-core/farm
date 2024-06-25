@@ -1,8 +1,6 @@
 import { task } from 'hardhat/config'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { TokenSymbol } from '../types'
-import { DeployStatus } from '../deployment/plugins/Deployer'
-import type { DeployResult } from '../deployment/plugins/Deployer'
+import { TokenSymbol, execute, parseTokens } from '@eonian/upgradeable'
 import deployHealthCheck from '../deployment/deployHealthCheck'
 import deployVault from '../deployment/deployVault'
 import deployApeLendingStrategy from '../deployment/deployApeLendingStrategy'
@@ -37,38 +35,3 @@ export async function deployTaskAction(tokens: TokenSymbol[], hre: HardhatRuntim
   console.log('\nDeployment is done!\n')
 }
 
-async function execute<R extends DeployResult, T extends (...args: any) => Promise<R>>(fn: T, ...args: Parameters<T>): Promise<R> {
-  const fnArgs = Array.from(args).filter(arg => typeof arg !== 'object').join(', ').trim()
-  const contractName = (fnArgs ? `${fnArgs} ` : '') + (fn.name.startsWith('deploy') ? fn.name.substring(6) : fn.name)
-  console.log(`[${contractName}] Deploying contract via <${fn.name}>...`)
-
-  // eslint-disable-next-line prefer-spread
-  const result = await fn.apply(null, args)
-  switch (result.status) {
-    case DeployStatus.NONE:
-      console.log(`[${contractName} - SKIP] Proxy ${result.proxyAddress} is up-to-date`)
-      break
-    case DeployStatus.DEPLOYED:
-      console.log(`[${contractName} - NEW PROXY] Proxy ${result.proxyAddress} is deployed, verified: ${result.verified}.`)
-      break
-    case DeployStatus.UPGRADED:
-      console.log(`[${contractName} - UPGRADED] Proxy ${result.proxyAddress} is upgraded, verified: ${result.verified}.`)
-      break
-  }
-
-  return result
-}
-
-function parseTokens(args: unknown): TokenSymbol[] | null {
-  if (typeof args !== 'object' || !args) {
-    return null
-  }
-  if (!('tokens' in args)) {
-    return null
-  }
-  const tokens = args.tokens ? String(args.tokens) : null
-  if (!tokens) {
-    return null
-  }
-  return tokens.split(',') as TokenSymbol[]
-}

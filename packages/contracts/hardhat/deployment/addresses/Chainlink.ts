@@ -1,6 +1,5 @@
-import { Chain, TokenSymbol } from '../../types'
-import type { LookupMap } from './BaseAddresses'
-import { BaseAddresses } from './BaseAddresses'
+import { Chain, TokenSymbol, BaseAddresses } from '@eonian/upgradeable'
+import type { LookupMap } from '@eonian/upgradeable'
 
 export class Chainlink extends BaseAddresses {
   protected getLookupMap(): LookupMap {

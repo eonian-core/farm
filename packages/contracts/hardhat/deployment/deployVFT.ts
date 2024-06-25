@@ -1,8 +1,8 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
+import { type DeployResult, type TokenSymbol, DeployStatus } from '@eonian/upgradeable'
 import type { VaultFounderToken } from '../../typechain-types'
-import type { TokenSymbol } from '../types'
 import { Addresses } from './addresses'
-import { type DeployResult, DeployStatus } from './plugins/Deployer'
+
 
 export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)

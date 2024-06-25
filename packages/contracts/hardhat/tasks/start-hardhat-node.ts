@@ -6,7 +6,7 @@ import kill from 'tree-kill'
 import { task } from 'hardhat/config'
 import { TASK_TEST } from 'hardhat/builtin-tasks/task-names'
 import type { HardhatNetworkConfig, HardhatRuntimeEnvironment, HttpNetworkConfig, RunSuperFunction } from 'hardhat/types'
-import { Chain, getChainForFork } from '../types'
+import { Chain, getChainForFork } from '@eonian/upgradeable'
 
 enum ErrorReason {
   RESOURCE_NOT_AVAILABLE = 'RESOURCE_NOT_AVAILABLE',
