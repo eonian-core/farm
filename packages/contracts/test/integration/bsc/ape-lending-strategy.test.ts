@@ -9,7 +9,7 @@ import type {
   IERC20,
   Vault,
 } from '../../../typechain-types'
-import { TokenSymbol } from '../../../hardhat/types'
+import { TokenSymbol } from '../../../../upgradeable/src/availableNetworks'
 import { deployTaskAction } from '../../../hardhat/tasks'
 import { Addresses } from '../../../hardhat/deployment/addresses'
 import warp from '../helpers/warp'

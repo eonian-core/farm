@@ -3,7 +3,7 @@ import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import { expect } from 'chai'
 import { deleteErrorFile } from '../../../hardhat/tasks/deploy-error-catcher'
 import { clearDeployments } from '../../deploy/helpers'
-import { TokenSymbol } from '../../../hardhat/types'
+import { TokenSymbol } from '../../../../upgradeable/src/availableNetworks'
 import { type DeployResult, DeployStatus } from '../../../hardhat/deployment'
 
 describe('BSC Deploy Task', () => {

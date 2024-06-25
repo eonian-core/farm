@@ -1,7 +1,7 @@
 import { Etherscan } from '@nomicfoundation/hardhat-verify/etherscan'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
-import { NetworkEnvironment, resolveNetworkEnvironment } from '../../types'
+import { NetworkEnvironment, resolveNetworkEnvironment } from '../NetworkEnvironment'
 
 export class EtherscanVerifier {
   private log: debug.Debugger = debug(EtherscanVerifier.name)

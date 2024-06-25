@@ -1,8 +1,8 @@
-import { expect } from 'chai'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { LookupMap } from '../BaseAddresses'
 import { BaseAddresses } from '../BaseAddresses'
-import { type AvailableHardhatNetwork, Chain, NetworkEnvironment, TokenSymbol } from '../../../types'
+import { type AvailableHardhatNetwork, Chain, TokenSymbol } from '../../availableNetworks'
+import { NetworkEnvironment } from '../../NetworkEnvironment'
 
 describe(BaseAddresses.name, () => {
   it('Should provide single (default) address', async () => {
@@ -13,7 +13,7 @@ describe(BaseAddresses.name, () => {
       },
     })
     const address = await provider.getAddress()
-    expect(address).to.be.equal('some-address')
+    expect(address).toEqual('some-address')
   })
 
   it('Should provide single (default) address with fallback env', async () => {
@@ -24,7 +24,7 @@ describe(BaseAddresses.name, () => {
       },
     })
     const address = await provider.getAddress()
-    expect(address).to.be.equal('some-address')
+    expect(address).toEqual('some-address')
   })
 
   it('Should provide token addresses', async () => {
@@ -38,10 +38,10 @@ describe(BaseAddresses.name, () => {
       },
     })
     const addressBNB = await provider.getAddressForToken(TokenSymbol.BNB)
-    expect(addressBNB).to.be.equal('bnb-address')
+    expect(addressBNB).toEqual('bnb-address')
 
     const addressWETH = await provider.getAddressForToken(TokenSymbol.WETH)
-    expect(addressWETH).to.be.equal('weth-address')
+    expect(addressWETH).toEqual('weth-address')
   })
 
   it('Should provide token addresses with fallback env', async () => {
@@ -55,10 +55,10 @@ describe(BaseAddresses.name, () => {
       },
     })
     const addressBNB = await provider.getAddressForToken(TokenSymbol.BNB)
-    expect(addressBNB).to.be.equal('bnb-address')
+    expect(addressBNB).toEqual('bnb-address')
 
     const addressWETH = await provider.getAddressForToken(TokenSymbol.WETH)
-    expect(addressWETH).to.be.equal('weth-address')
+    expect(addressWETH).toEqual('weth-address')
   })
 
   it('Should throw when trying to get single address from token-based provider', async () => {
@@ -71,7 +71,7 @@ describe(BaseAddresses.name, () => {
         },
       },
     })
-    await expect(provider.getAddress()).to.be.rejectedWith(Error)
+    await expect(provider.getAddress()).rejects.toThrow()
   })
 
   it('Should throw when trying to get token address from single provider', async () => {
@@ -81,7 +81,7 @@ describe(BaseAddresses.name, () => {
         [NetworkEnvironment.DEV]: 'some-address',
       },
     })
-    await expect(provider.getAddressForToken(TokenSymbol.BNB)).to.be.rejectedWith(Error)
+    await expect(provider.getAddressForToken(TokenSymbol.BNB)).rejects.toThrow()
   })
 
   it('Should get value from ANY_NETWORK if specified one is missing (single provider)', async () => {
@@ -91,7 +91,7 @@ describe(BaseAddresses.name, () => {
         ANY_ENVIRONMENT: 'some-address',
       },
     })
-    expect(await provider.getAddress()).to.be.equal('some-address')
+    expect(await provider.getAddress()).toEqual('some-address')
   })
 
   it('Should get value from ANY_NETWORK if specified one is missing (token provider)', async () => {
@@ -103,7 +103,7 @@ describe(BaseAddresses.name, () => {
         },
       },
     })
-    expect(await provider.getAddressForToken(TokenSymbol.BNB)).to.be.equal('bnb-address')
+    expect(await provider.getAddressForToken(TokenSymbol.BNB)).toEqual('bnb-address')
   })
 
   it('Should throw if address is not found (single provider)', async () => {
@@ -113,7 +113,7 @@ describe(BaseAddresses.name, () => {
         [NetworkEnvironment.DEV]: 'some-address',
       },
     })
-    await expect(provider.getAddress()).to.be.rejectedWith(Error)
+    await expect(provider.getAddress()).rejects.toThrow()
   })
 
   it('Should throw if address is not found (token provider)', async () => {
@@ -125,7 +125,7 @@ describe(BaseAddresses.name, () => {
         },
       },
     })
-    await expect(provider.getAddressForToken(TokenSymbol.BNB)).to.be.rejectedWith(Error)
+    await expect(provider.getAddressForToken(TokenSymbol.BNB)).rejects.toThrow()
   })
 
   it('Should validate address (single provider)', async () => {
@@ -141,7 +141,7 @@ describe(BaseAddresses.name, () => {
         return address === 'some-address'
       },
     )
-    expect(await provider.getAddress()).to.be.equal('some-address')
+    expect(await provider.getAddress()).toEqual('some-address')
 
     provider = mockProvider(
       hre,
@@ -152,7 +152,7 @@ describe(BaseAddresses.name, () => {
       },
       () => false,
     )
-    await expect(provider.getAddress()).to.be.rejectedWith(Error)
+    await expect(provider.getAddress()).rejects.toThrow()
   })
 
   it('Should validate address (token provider)', async () => {
@@ -171,8 +171,8 @@ describe(BaseAddresses.name, () => {
         return token === TokenSymbol.BNB
       },
     )
-    expect(await provider.getAddressForToken(TokenSymbol.BNB)).to.be.equal('valid')
-    await expect(provider.getAddressForToken(TokenSymbol.WETH)).to.be.rejectedWith(Error)
+    expect(await provider.getAddressForToken(TokenSymbol.BNB)).toEqual('valid')
+    await expect(provider.getAddressForToken(TokenSymbol.WETH)).rejects.toThrow()
   })
 })
 

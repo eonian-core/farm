@@ -49,7 +49,6 @@
     "@types/lodash": "^4.17.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.30",
-    "@uniswap/token-lists": "^1.0.0-beta.34",
     "chai": "^4.3.7",
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
@@ -76,6 +75,7 @@
     "@types/sinon": "^10.0.15",
     "lodash": "^4.17.21",
     "sinon": "^15.1.0",
-    "tree-kill": "^1.2.2"
+    "tree-kill": "^1.2.2",
+    "@eonian/upgradeable": "0.2.0"
   }
 }
