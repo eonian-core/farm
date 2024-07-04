@@ -13,8 +13,9 @@
         "rebuild": "yarn clear && yarn build",
         "build": "microbundle --target=node",
         "build:watch": "microbundle watch",
-        "prepublish": "yarn build",
-        "lint": "eslint . --ext .ts,.js --fix"
+        "prepublish": "yarn clear && yarn build",
+        "lint": "eslint . --ext .ts,.js --fix",
+        "test:hardhat:deploy": "HARDHAT_FORK_NETWORK=false hardhat test test/deploy/*.test.*"
     },
     "source": "./src/index.ts",
     "exports": {
@@ -34,13 +35,8 @@
         "@types/jest": "^29.5.3",
         "@types/node": "^20.11.30",
         "concurrently": "^7.6.0",
-        "debug": "^4.3.4",
         "dotenv": "^16.4.5",
         "eslint": "^8.57.0",
-        "hardhat": "2.19.5",
-        "hardhat-docgen": "^1.3.0",
-        "hardhat-gas-reporter": "^2.0.2",
-        "hardhat-tracer": "^2.8.1",
         "jest": "^29.6.1",
         "microbundle": "^0.15.1",
         "prettier": "^3.0.2",
@@ -58,12 +54,18 @@
         "@openzeppelin/contracts": "^4.9.6",
         "@openzeppelin/contracts-upgradeable": "^4.9.6",
         "@openzeppelin/hardhat-upgrades": "^3.0.5",
+        "@openzeppelin/upgrades-core": "^1.32.0",
         "@types/sinon": "^10.0.15",
         "lodash": "^4.17.21",
         "sinon": "^15.1.0",
         "tree-kill": "^1.2.2",
         "ethers": "^6.11.1",
-        "@uniswap/token-lists": "^1.0.0-beta.34"
+        "@uniswap/token-lists": "^1.0.0-beta.34",
+        "hardhat": "2.19.5",
+        "hardhat-docgen": "^1.3.0",
+        "hardhat-gas-reporter": "^2.0.2",
+        "hardhat-tracer": "^2.8.1",
+        "debug": "^4.3.4"
     },
     "peerDependencies": {
         "@chainlink/contracts": "^0.8.0",
@@ -73,11 +75,16 @@
         "@openzeppelin/contracts": "^4.9.6",
         "@openzeppelin/contracts-upgradeable": "^4.9.6",
         "@openzeppelin/hardhat-upgrades": "^3.0.5",
+        "@openzeppelin/upgrades-core": "^1.32.0",
         "@types/sinon": "^10.0.15",
         "lodash": "^4.17.21",
         "sinon": "^15.1.0",
         "tree-kill": "^1.2.2",
         "ethers": "^6.11.1",
-        "@uniswap/token-lists": "^1.0.0-beta.34"
+        "@uniswap/token-lists": "^1.0.0-beta.34",
+        "hardhat": "2.19.5",
+        "hardhat-docgen": "^1.3.0",
+        "hardhat-gas-reporter": "^2.0.2",
+        "hardhat-tracer": "^2.8.1"
     }
 }
