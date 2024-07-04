@@ -14,7 +14,7 @@
     "./deploy",
     "./test",
     "./typechain-types",
-    "./hardhat", "../upgradeable/src/chains/Chain.ts", "../upgradeable/src/tokens/TokenSymbol.ts", "../upgradeable/src/availableNetworks.ts", "../upgradeable/src/addresses/BaseAddresses.ts", "../upgradeable/src/addresses/__tests__", "../upgradeable/src/chains/forks.ts", "../upgradeable/src/test-helpers", "../upgradeable/src/__tests__/deploy.test.ts", "../upgradeable/src/__tests__/asserts", "../upgradeable/src/__tests__/transactions.test.ts", "../upgradeable/src/__tests__/upgrade.test.ts", 
+    "./hardhat", 
   ],
   "exclude": [
     "./deployments"

@@ -1,6 +1,6 @@
 {
   "name": "@eonian/contracts",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "index.js",
   "license": "MIT",
   "files": [
@@ -10,11 +10,10 @@
   ],
   "scripts": {
     "build": "hardhat compile && forge build",
-    "test:tools": "yarn mocha 'hardhat/**/__tests__/*' -R spec", 
     "test:forge": "forge test -vvv",
     "test:forge:watch": "forge test -vvv -w",
     "test:hardhat": "HARDHAT_FORK_NETWORK=BSC hardhat test",
-    "test": "yarn clean && yarn build && yarn test:tools && yarn test:forge && yarn test:hardhat",
+    "test": "yarn clean && yarn build && yarn test:forge && yarn test:hardhat",
     "docgen": "hardhat docgen",
     "postinstall": "forge install",
     "clean": "forge clean && rm -rf ./artifacts && rm -rf ./cache_hardhat && rm -rf ./out && rm -rf ./typechain-types",
