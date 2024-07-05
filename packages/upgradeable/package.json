@@ -13,7 +13,7 @@
         "rebuild": "yarn clear && yarn build",
         "build": "microbundle --target=node",
         "build:watch": "microbundle watch",
-        "prepublish": "yarn clear && yarn build",
+        "prepublish": "yarn rebuild",
         "lint": "eslint . --ext .ts,.js --fix",
         "test:hardhat:deploy": "HARDHAT_FORK_NETWORK=false hardhat test test/deploy/*.test.*"
     },
