@@ -14,7 +14,7 @@
     "./deploy",
     "./test",
     "./typechain-types",
-    "./hardhat",
+    "./hardhat", 
   ],
   "exclude": [
     "./deployments"

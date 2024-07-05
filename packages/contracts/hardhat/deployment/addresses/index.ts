@@ -1,7 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { extendEnvironment } from 'hardhat/config'
-import type { TokenSymbol } from '../../types'
-import type { BaseAddresses } from './BaseAddresses'
+import type { TokenSymbol, BaseAddresses } from '@eonian/upgradeable'
 import { ApeSwap } from './ApeSwap'
 import { GelatoOps } from './GelatoOps'
 import { ERC20 } from './ERC20'

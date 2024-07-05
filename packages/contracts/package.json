@@ -1,6 +1,6 @@
 {
   "name": "@eonian/contracts",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "index.js",
   "license": "MIT",
   "files": [
@@ -10,13 +10,12 @@
   ],
   "scripts": {
     "build": "hardhat compile && forge build",
-    "test:tools": "yarn mocha 'hardhat/**/__tests__/*' -R spec", 
     "test:forge": "forge test -vvv",
     "test:forge:watch": "forge test -vvv -w",
     "test:hardhat:bsc": "HARDHAT_FORK_NETWORK=BSC hardhat test",
     "test:hardhat:deploy": "HARDHAT_FORK_NETWORK=false hardhat test test/deploy/*.test.*",
     "test:hardhat": "yarn test:hardhat:deploy && yarn test:hardhat:bsc",
-    "test": "yarn clean && yarn build && yarn test:tools && yarn test:forge && yarn test:hardhat",
+    "test": "yarn clean && yarn build && yarn test:forge && yarn test:hardhat",
     "docgen": "hardhat docgen",
     "postinstall": "forge install",
     "clean": "forge clean && rm -rf ./artifacts && rm -rf ./cache_hardhat && rm -rf ./out && rm -rf ./typechain-types",
@@ -49,7 +48,6 @@
     "@types/lodash": "^4.17.0",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.11.30",
-    "@uniswap/token-lists": "^1.0.0-beta.34",
     "chai": "^4.3.7",
     "debug": "^4.3.4",
     "dotenv": "^16.4.5",
@@ -76,6 +74,7 @@
     "@types/sinon": "^10.0.15",
     "lodash": "^4.17.21",
     "sinon": "^15.1.0",
-    "tree-kill": "^1.2.2"
+    "tree-kill": "^1.2.2",
+    "@eonian/upgradeable": "0.2.0"
   }
 }

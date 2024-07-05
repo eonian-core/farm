@@ -1,6 +1,5 @@
-import { TokenSymbol, resolveChain, resolveNetworkEnvironment } from '../../types'
-import type { LookupMap } from './BaseAddresses'
-import { BaseAddresses } from './BaseAddresses'
+import { TokenSymbol, resolveChain, resolveNetworkEnvironment, BaseAddresses } from '@eonian/upgradeable'
+import type { LookupMap } from '@eonian/upgradeable'
 
 export class EonianVault extends BaseAddresses {
   protected async getLookupMap(): Promise<LookupMap> {

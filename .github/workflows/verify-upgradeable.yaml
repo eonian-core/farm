@@ -1,0 +1,64 @@
+name: Verify Upgradeable
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - development
+
+  pull_request:
+    branches:
+      - main
+      - staging
+      - development
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  build:
+    name: Build Upgradeable
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Build
+        run: |-
+          cd packages/upgradeable
+          yarn build
+  
+  test:
+    name: Test Upgradeable
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Run tests
+        run: |-
+          cd packages/upgradeable
+          yarn test

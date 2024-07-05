@@ -4,12 +4,13 @@ import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 import { type BaseContract, ZeroAddress } from 'ethers'
 import type { ContractName } from 'hardhat/types'
+import { TokenSymbol } from '@eonian/upgradeable'
 import type {
   ApeLendingStrategy,
   IERC20,
   Vault,
 } from '../../../typechain-types'
-import { TokenSymbol } from '../../../hardhat/types'
+
 import { deployTaskAction } from '../../../hardhat/tasks'
 import { Addresses } from '../../../hardhat/deployment/addresses'
 import warp from '../helpers/warp'

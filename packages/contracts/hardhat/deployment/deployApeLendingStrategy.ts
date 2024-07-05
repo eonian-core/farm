@@ -1,7 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { TokenSymbol } from '../types'
+import { TokenSymbol } from '@eonian/upgradeable'
 import { type ApeLendingStrategy } from '../../typechain-types'
-import { type DeployResult, DeployStatus } from './plugins/Deployer'
+import { type DeployResult, DeployStatus } from '@eonian/upgradeable'
 import { Addresses } from './addresses'
 
 export default async function deployApeLendingStrategy(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {

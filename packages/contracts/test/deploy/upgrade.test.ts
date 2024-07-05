@@ -1,7 +1,7 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
 import { ethers } from 'ethers'
-import { DeployStatus } from '../../hardhat/deployment/plugins/Deployer'
+import { DeployStatus } from '@eonian/upgradeable'
 import { expectImplementationMatch } from './asserts'
 import { clearDeployments, deployContract, getDeploymentEvents, manageArtifacts } from './helpers'
 
