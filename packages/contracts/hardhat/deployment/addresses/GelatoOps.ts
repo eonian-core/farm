@@ -1,6 +1,5 @@
-import { Chain } from '../../types'
-import type { LookupMap } from './BaseAddresses'
-import { BaseAddresses } from './BaseAddresses'
+import { Chain, BaseAddresses } from '@eonian/upgradeable'
+import type { LookupMap } from '@eonian/upgradeable'
 
 // More contract addresses at https://docs.gelato.network/developer-products/gelato-ops-smart-contract-automation-hub/contract-addresses
 export class GelatoOps extends BaseAddresses {

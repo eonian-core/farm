@@ -1,6 +1,5 @@
-import { resolveChain, resolveNetworkEnvironment } from '../../types'
-import type { LookupMap } from './BaseAddresses'
-import { BaseAddresses } from './BaseAddresses'
+import { resolveChain, resolveNetworkEnvironment, BaseAddresses} from '@eonian/upgradeable'
+import type { LookupMap } from '@eonian/upgradeable'
 
 export class EonianHealthCheck extends BaseAddresses {
   protected async getLookupMap(): Promise<LookupMap> {

@@ -1,6 +1,5 @@
-import { Chain, TokenSymbol, getTokenAddress } from '../../types'
-import type { LookupMap } from './BaseAddresses'
-import { BaseAddresses } from './BaseAddresses'
+import { Chain, TokenSymbol, getTokenAddress, BaseAddresses } from '@eonian/upgradeable'
+import type { LookupMap } from '@eonian/upgradeable'
 
 export class ERC20 extends BaseAddresses {
   protected getLookupMap(): LookupMap {

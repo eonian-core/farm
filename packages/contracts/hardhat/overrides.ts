@@ -1,7 +1,7 @@
 import * as hardhatTypechain from '@typechain/ethers-v6/dist/codegen/hardhat'
 import { extendEnvironment } from 'hardhat/config'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { type AvailableHardhatNetwork, Chain, getChainForFork } from './types'
+import { type AvailableHardhatNetwork, Chain, getChainForFork } from '@eonian/upgradeable'
 
 const generateHardhatHelper = hardhatTypechain.generateHardhatHelper
 

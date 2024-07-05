@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Chain, getChainForFork, getChainId, resolveChain } from '../Chain'
 
@@ -10,20 +9,20 @@ describe(getChainForFork.name, () => {
       process.env.HARDHAT_FORK_NETWORK = chain
       const chainForFor = getChainForFork()
 
-      expect(chainForFor).to.be.equal(chain)
+      expect(chainForFor).toEqual(chain)
     }
   })
 
   it('Should provide "UNKNOWN" if ENV is not specified', () => {
     delete process.env.HARDHAT_FORK_NETWORK
     const result = getChainForFork()
-    expect(result).to.be.equal(Chain.UNKNOWN)
+    expect(result).toEqual(Chain.UNKNOWN)
   })
 
   it('Should provide "UNKNOWN" if fork is disabled', () => {
     process.env.HARDHAT_FORK_NETWORK = 'false'
     const result = getChainForFork()
-    expect(result).to.be.equal(Chain.UNKNOWN)
+    expect(result).toEqual(Chain.UNKNOWN)
   })
 })
 
@@ -34,7 +33,7 @@ describe(resolveChain.name, () => {
         name: 'ganache',
       },
     } as HardhatRuntimeEnvironment)
-    expect(result).to.be.equal(Chain.UNKNOWN)
+    expect(result).toEqual(Chain.UNKNOWN)
   })
 
   it('Should resolve fork chain if network is hardhat', () => {
@@ -44,7 +43,7 @@ describe(resolveChain.name, () => {
         name: 'hardhat',
       },
     } as HardhatRuntimeEnvironment)
-    expect(result).to.be.equal(Chain.BSC)
+    expect(result).toEqual(Chain.BSC)
   })
 
   it('Should resolve chain from network name', () => {
@@ -53,13 +52,13 @@ describe(resolveChain.name, () => {
         name: 'bsc_abc_local',
       },
     } as HardhatRuntimeEnvironment)
-    expect(result).to.be.equal(Chain.BSC)
+    expect(result).toEqual(Chain.BSC)
   })
 })
 
 describe(getChainId.name, () => {
   it('Should provide id of the chain', () => {
     const result = getChainId(Chain.BSC)
-    expect(result).to.be.equal(56)
+    expect(result).toEqual(56)
   })
 })
