@@ -1,13 +1,14 @@
 import hre, { ethers } from 'hardhat'
+import { expect } from 'chai'
 import { uniq } from 'lodash'
-import { clearDeployments, deployContract, manageArtifacts } from '../test-helpers'
+import { clearDeployments, deployContract, manageArtifacts } from './helpers'
 
 interface TransactionInfo { hash: string; from: string; to: string | null; isDeployment: boolean; deployedAddress: string | null }
 
 describe('Transactions', () => {
-  const { replaceArtifacts } = manageArtifacts(hre, {beforeEach, afterEach})
+  const { replaceArtifacts } = manageArtifacts(hre)
 
-  clearDeployments(hre, {beforeEach, afterEach})
+  clearDeployments(hre)
 
   const args = [ethers.toBigInt(100), '0xB8c77482e45F1F44dE1745F52C74426C631bDD52']
 
@@ -20,15 +21,15 @@ describe('Transactions', () => {
     const { proxyAddress, implementationAddress } = await deployContract(contractName, args, hre)
 
     const transactions = await getAllTransactions()
-    expect(transactions.length).toEqual(2)
+    expect(transactions.length).to.be.equal(2)
 
     // Deploy proxy
-    expect(transactions[0].isDeployment).toEqual(true)
-    expect(transactions[0].deployedAddress).toEqual(implementationAddress)
+    expect(transactions[0].isDeployment).to.be.equal(true)
+    expect(transactions[0].deployedAddress).to.be.equal(implementationAddress)
 
     // Deploy implementation
-    expect(transactions[1].isDeployment).toEqual(true)
-    expect(transactions[1].deployedAddress).toEqual(proxyAddress)
+    expect(transactions[1].isDeployment).to.be.equal(true)
+    expect(transactions[1].deployedAddress).to.be.equal(proxyAddress)
   })
 
   it('Should send 4 transactions for deploy & upgrade', async () => {
@@ -39,23 +40,23 @@ describe('Transactions', () => {
     const { proxyAddress, implementationAddress: implementationB } = await deployContract(contractName, args, hre)
 
     const transactions = await getAllTransactions()
-    expect(transactions.length).toEqual(4)
+    expect(transactions.length).to.be.equal(4)
 
     // Deploy proxy
-    expect(transactions[0].isDeployment).toEqual(true)
-    expect(transactions[0].deployedAddress).toEqual(implementationA)
+    expect(transactions[0].isDeployment).to.be.equal(true)
+    expect(transactions[0].deployedAddress).to.be.equal(implementationA)
 
     // Deploy #1 implementation
-    expect(transactions[1].isDeployment).toEqual(true)
-    expect(transactions[1].deployedAddress).toEqual(proxyAddress)
+    expect(transactions[1].isDeployment).to.be.equal(true)
+    expect(transactions[1].deployedAddress).to.be.equal(proxyAddress)
 
     // Deploy #2 implementation
-    expect(transactions[2].isDeployment).toEqual(true)
-    expect(transactions[2].deployedAddress).toEqual(implementationB)
+    expect(transactions[2].isDeployment).to.be.equal(true)
+    expect(transactions[2].deployedAddress).to.be.equal(implementationB)
 
     // Set proxy implementation address to implementation #2
-    expect(transactions[3].isDeployment).toEqual(false)
-    expect(transactions[3].to).toEqual(proxyAddress)
+    expect(transactions[3].isDeployment).to.be.equal(false)
+    expect(transactions[3].to).to.be.equal(proxyAddress)
   })
 
   it('Should not set implementation if contract is already deployed', async () => {
@@ -66,13 +67,13 @@ describe('Transactions', () => {
     }
 
     const transactions = await getAllTransactions()
-    expect(transactions.length).toEqual(2)
+    expect(transactions.length).to.be.equal(2)
 
     // Deploy proxy
-    expect(transactions[0].isDeployment).toEqual(true)
+    expect(transactions[0].isDeployment).to.be.equal(true)
 
     // Deploy implementation
-    expect(transactions[1].isDeployment).toEqual(true)
+    expect(transactions[1].isDeployment).to.be.equal(true)
   })
 
   it('Should not set implementation if contract is already upgraded', async () => {
@@ -87,19 +88,19 @@ describe('Transactions', () => {
     }
 
     const transactions = await getAllTransactions()
-    expect(transactions.length).toEqual(4)
+    expect(transactions.length).to.be.equal(4)
 
     // Deploy proxy
-    expect(transactions[0].isDeployment).toEqual(true)
+    expect(transactions[0].isDeployment).to.be.equal(true)
 
     // Deploy #1 implementation
-    expect(transactions[1].isDeployment).toEqual(true)
+    expect(transactions[1].isDeployment).to.be.equal(true)
 
     // Deploy #2 implementation
-    expect(transactions[2].isDeployment).toEqual(true)
+    expect(transactions[2].isDeployment).to.be.equal(true)
 
     // Set proxy implementation address to implementation #2
-    expect(transactions[3].isDeployment).toEqual(false)
+    expect(transactions[3].isDeployment).to.be.equal(false)
   })
 
   it('Should reuse existing implementation for multiple proxies', async () => {
@@ -115,23 +116,23 @@ describe('Transactions', () => {
     // Check that we have 5 different proxies
     const proxyRecords = await hre.proxyRegister.getAll()
     const proxyIds = proxyRecords.map(record => record.id)
-    expect(proxyIds).toEqual(['A', 'B', 'C', 'D', 'E'])
+    expect(proxyIds).to.be.deep.equal(['A', 'B', 'C', 'D', 'E'])
 
     // All implementation address are the same
     const implementationAddresses = uniq(proxyRecords.map(record => record.implementationAddress))
-    expect(implementationAddresses.length).toEqual(1)
+    expect(implementationAddresses.length).to.be.equal(1)
 
     const implementationAddress = implementationAddresses[0]
 
     // Check that 6 txs were sent (5 proxy deploymentss & 1 impl.)
     const transactions = await getAllTransactions()
-    expect(transactions.length).toEqual(6)
+    expect(transactions.length).to.be.equal(6)
 
     // First transaction is implementation deployment
-    expect(transactions[0].deployedAddress).toEqual(implementationAddress)
+    expect(transactions[0].deployedAddress).to.be.equal(implementationAddress)
 
     const expectDeployedProxyAddress = async (addressFromTX: string, proxyId: string) => {
-      expect(addressFromTX).toEqual(await hre.proxyRegister.getProxyAddress(contractName, proxyId))
+      expect(addressFromTX).to.be.equal(await hre.proxyRegister.getProxyAddress(contractName, proxyId))
     }
     await expectDeployedProxyAddress(transactions[1].deployedAddress!, 'A')
     await expectDeployedProxyAddress(transactions[2].deployedAddress!, 'B')
@@ -161,10 +162,10 @@ describe('Transactions', () => {
 
     // Check that only 2 transaction were made to upgrade proxies "B" and "C" (only "set impl" calls)
     const transactions = await getAllTransactions(blockNumber + 1)
-    expect(transactions.length).toEqual(2)
-    expect(transactions.every(tx => !tx.isDeployment)).toEqual(true)
-    expect(transactions[0].to).toEqual(proxyB)
-    expect(transactions[1].to).toEqual(proxyC)
+    expect(transactions.length).to.be.equal(2)
+    expect(transactions.every(tx => !tx.isDeployment)).to.be.equal(true)
+    expect(transactions[0].to).to.be.equal(proxyB)
+    expect(transactions[1].to).to.be.equal(proxyC)
   })
 })
 

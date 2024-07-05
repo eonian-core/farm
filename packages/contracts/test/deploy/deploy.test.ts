@@ -1,10 +1,11 @@
 import hre from 'hardhat'
+import { expect } from 'chai'
 import { ethers } from 'ethers'
 import { expectImplementationMatch } from './asserts'
-import { clearDeployments, deployContract } from '../test-helpers'
+import { clearDeployments, deployContract } from './helpers'
 
 describe('Deploy', () => {
-  clearDeployments(hre, {beforeEach, afterEach})
+  clearDeployments(hre)
 
   it('Should deploy proxy and implementation', async () => {
     const contractName = 'Stub_Contract'
@@ -22,8 +23,8 @@ describe('Deploy', () => {
     const integerA = await contract.integerA()
     const addressA = await contract.addressA()
 
-    expect(options.get('integerA')).toEqual(integerA)
-    expect(options.get('addressA')).toEqual(addressA)
+    expect(options.get('integerA')).to.be.equal(integerA)
+    expect(options.get('addressA')).to.be.equal(addressA)
   })
 
   it('Should deploy proxy and implementation (with inheritance)', async () => {
@@ -45,9 +46,9 @@ describe('Deploy', () => {
     const integerB = await contract.integerB()
     const addressB = await contract.addressB()
 
-    expect(options.get('integerA')).toEqual(integerA)
-    expect(options.get('addressA')).toEqual(addressA)
-    expect(options.get('integerB')).toEqual(integerB)
-    expect(options.get('addressB')).toEqual(addressB)
+    expect(options.get('integerA')).to.be.equal(integerA)
+    expect(options.get('addressA')).to.be.equal(addressA)
+    expect(options.get('integerB')).to.be.equal(integerB)
+    expect(options.get('addressB')).to.be.equal(addressB)
   })
 })

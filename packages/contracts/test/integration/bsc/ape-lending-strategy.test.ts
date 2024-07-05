@@ -4,7 +4,7 @@ import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
 import { type BaseContract, ZeroAddress } from 'ethers'
 import type { ContractName } from 'hardhat/types'
-import { TokenSymbol, test } from '@eonian/upgradeable'
+import { TokenSymbol } from '@eonian/upgradeable'
 import type {
   ApeLendingStrategy,
   IERC20,
@@ -15,9 +15,10 @@ import { deployTaskAction } from '../../../hardhat/tasks'
 import { Addresses } from '../../../hardhat/deployment/addresses'
 import warp from '../helpers/warp'
 import resetBalance from '../helpers/reset-balance'
+import { clearDeployments } from '../../deploy/helpers'
 
 describe('Ape Lending Strategy', () => {
-  test.clearDeployments(hre, { beforeEach, afterEach })
+  clearDeployments(hre)
 
   const { ethers } = hre
 

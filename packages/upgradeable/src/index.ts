@@ -1,4 +1,4 @@
-export * from './NetworkEnvironment'
+export * from './environment'
 
 export * from './plugins'
 
@@ -8,5 +8,4 @@ export * from './availableNetworks'
 export * from './addresses/BaseAddresses'
 export * from './execute'
 
-export * as test from './test-helpers'
 

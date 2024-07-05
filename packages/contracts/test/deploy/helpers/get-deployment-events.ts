@@ -18,7 +18,5 @@ export async function getDeploymentEvents(contractAddress: string, eventName: st
 async function getContractNameByAddress(contractAddress: string, hre: HardhatRuntimeEnvironment): Promise<string> {
   const proxies = await hre.proxyRegister.read()
   const contractNames = Object.keys(proxies)
-  return contractNames
-    .find(contractName => Object.values(proxies[contractName]!)
-    .includes(contractAddress))!
+  return contractNames.find(contractName => Object.values(proxies[contractName]!).includes(contractAddress))!
 }

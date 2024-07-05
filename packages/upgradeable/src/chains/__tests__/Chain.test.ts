@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { Chain, getChainForFork, getChainId, resolveChain } from './Chain'
+import { Chain, getChainForFork, getChainId, resolveChain } from '../Chain'
 
 describe(getChainForFork.name, () => {
   it('Should resolve fork chain using ENV', () => {

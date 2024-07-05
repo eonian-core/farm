@@ -3,23 +3,10 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
 import { Manifest } from '@openzeppelin/upgrades-core'
 
-
-export type AsyncFunction = (...args: Array<any>) => Promise<any>
-export type HookFunction = (callback: AsyncFunction) => void
-
-/** Allows to keep interface test fraemwork agnostic */
-export interface ClearDeploymentsOptions {
-  beforeEach: HookFunction, 
-  afterEach: HookFunction
-}
-
 /**
  * Testing hooks which are needed to clear deployments data between tests
  */
-export function clearDeployments(
-  hre: HardhatRuntimeEnvironment, 
-  {beforeEach, afterEach}: ClearDeploymentsOptions
-) {
+export function clearDeployments(hre: HardhatRuntimeEnvironment) {
   let manifest!: Manifest
 
   beforeEach(async () => {

@@ -1,10 +1,7 @@
 import "hardhat/types/config";
 
-import type { Chain } from './chains/Chain'
-import { NetworkEnvironment } from './NetworkEnvironment'
-
-export * from './chains/Chain'
-export * from './tokens/TokenSymbol'
+import type { Chain } from './chains'
+import { NetworkEnvironment } from './environment'
 
 export type AvailableHardhatNetwork = 'hardhat' | 'ganache' | `${Lowercase<Exclude<Chain, Chain.UNKNOWN>>}_${string}_${Lowercase<Exclude<NetworkEnvironment, NetworkEnvironment.LOCAL>>}`
 

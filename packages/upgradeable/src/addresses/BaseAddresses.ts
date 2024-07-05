@@ -1,7 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { Chain, TokenSymbol } from '../availableNetworks'
-import { resolveChain } from '../availableNetworks'
-import { NetworkEnvironment, resolveNetworkEnvironment } from '../NetworkEnvironment'
+import { NetworkEnvironment, resolveNetworkEnvironment } from '../environment/NetworkEnvironment'
+import { Chain, resolveChain } from '../chains'
+import { TokenSymbol } from '../tokens/TokenSymbol'
 
 type Lookup<T> = Partial<Record<Chain, Partial<Record<NetworkEnvironment | 'ANY_ENVIRONMENT', T>>>>
 export type LookupMap = Lookup<string> | Lookup<Partial<Record<TokenSymbol, string>>>

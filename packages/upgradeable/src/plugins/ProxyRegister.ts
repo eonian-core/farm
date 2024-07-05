@@ -4,7 +4,7 @@ import path from 'node:path'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
 import { merge } from 'lodash'
-import { resolveNetworkEnvironment, NetworkEnvironment } from '../NetworkEnvironment'
+import { resolveNetworkEnvironment, NetworkEnvironment } from '../environment/NetworkEnvironment'
 
 /**
  * Due to the fact that the OpenZeppelin manifest file does not contain information about

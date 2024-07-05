@@ -1,7 +1,6 @@
 import type { Artifact, HardhatRuntimeEnvironment } from 'hardhat/types'
-import { ClearDeploymentsOptions } from './clear-deployments'
 
-export function manageArtifacts(hre: HardhatRuntimeEnvironment, {afterEach}: ClearDeploymentsOptions) {
+export function manageArtifacts(hre: HardhatRuntimeEnvironment) {
   const replacedArtifacts: Artifact[] = []
 
   const resetArtifacts = async () => {

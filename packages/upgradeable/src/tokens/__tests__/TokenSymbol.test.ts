@@ -1,5 +1,5 @@
-import { Chain } from '../chains/Chain'
-import { TokenSymbol, getTokenAddress } from './TokenSymbol'
+import { Chain } from '../../chains/Chain'
+import { TokenSymbol, getTokenAddress } from '../TokenSymbol'
 
 describe(getTokenAddress.name, () => {
   it('Should provide address of the token', () => {

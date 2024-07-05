@@ -1,8 +1,10 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import type { LookupMap } from '../BaseAddresses'
 import { BaseAddresses } from '../BaseAddresses'
-import { type AvailableHardhatNetwork, Chain, TokenSymbol } from '../../availableNetworks'
-import { NetworkEnvironment } from '../../NetworkEnvironment'
+import { type AvailableHardhatNetwork } from '../../availableNetworks'
+import { NetworkEnvironment } from '../../environment/NetworkEnvironment'
+import { Chain } from '../../chains'
+import { TokenSymbol } from '../../tokens/TokenSymbol'
 
 describe(BaseAddresses.name, () => {
   it('Should provide single (default) address', async () => {

@@ -2,10 +2,11 @@ import hre from 'hardhat'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import { expect } from 'chai'
 import { deleteErrorFile } from '../../../hardhat/tasks/deploy-error-catcher'
-import { type DeployResult, DeployStatus, TokenSymbol, test } from '@eonian/upgradeable'
+import { type DeployResult, DeployStatus, TokenSymbol } from '@eonian/upgradeable'
+import { clearDeployments } from '../../deploy/helpers'
 
 describe('BSC Deploy Task', () => {
-  test.clearDeployments(hre, {beforeEach, afterEach})
+  clearDeployments(hre)
 
   let tempLog: () => void
 
