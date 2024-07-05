@@ -1,5 +1,4 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { expect } from 'chai'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../NetworkEnvironment'
 
 describe(resolveNetworkEnvironment.name, () => {
@@ -22,7 +21,7 @@ describe(resolveNetworkEnvironment.name, () => {
           name: given[i],
         },
       } as HardhatRuntimeEnvironment)
-      expect(result).to.be.equal(expected[i])
+      expect(result).toEqual(expected[i])
     }
   })
 })

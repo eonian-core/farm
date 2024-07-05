@@ -1,5 +1,5 @@
 import type { HardhatNetworkUserConfig } from 'hardhat/types'
-import { Chain, getChainForFork } from './types'
+import { Chain, getChainForFork } from './Chain'
 
 const chainToURL: Record<Chain, string | undefined> = {
   [Chain.UNKNOWN]: 'http://127.0.0.1:8545/',

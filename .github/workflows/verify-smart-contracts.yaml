@@ -48,8 +48,8 @@ jobs:
           cd packages/contracts
           yarn lint:license
 
-  test:
-    name: Test contracts
+  check-vulnerabilities:
+    name: Check vulnerabilities
     runs-on: ubuntu-latest
 
     steps:
@@ -79,24 +79,103 @@ jobs:
           cat slither-result.json
           echo "Static analyzer check finished"
 
+  unit-test:
+    name: Unti Test Contracts
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
       # Need for hardhat scripts
       - name: Link packages
         run: yarn
-
-      - name: Run tests (tools)
-        run: |-
-          cd packages/contracts
-          yarn test:tools
 
       - name: Run tests (foundry)
         run: |-
           cd packages/contracts
           FOUNDRY_FUZZ_RUNS=1000 forge test -vvv --gas-report
 
-      - name: Run tests (hardhat)
+  integration-test:
+    name: Integration Test Contracts
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn
+
+      - name: Run tests
         env:
           SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
         run: |-
           cd packages/contracts
-          USE_BSC_FORK=true yarn test:hardhat
+          USE_BSC_FORK=true yarn test:hardhat:bsc
+
+  deploy-test:
+    name: Integration Test Deploy Logic
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly-e15e33a07c0920189fc336391f538c3dad53da73 # https://github.com/foundry-rs/foundry/releases/tag/nightly-e15e33a07c0920189fc336391f538c3dad53da73
+
+      # Need for hardhat scripts
+      - name: Link packages
+        run: yarn
+
+      - name: Run tests
+        env:
+          SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
+        run: |-
+          cd packages/contracts
+          yarn test:hardhat:deploy
 
