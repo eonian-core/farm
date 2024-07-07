@@ -1,4 +1,4 @@
-name: Generate Subgraphs Configurations and Schemas
+name: Generate Subgraphs
 
 on:
   pull_request:
@@ -7,7 +7,6 @@ on:
     types:
       - opened
       - labeled
-      - unlabeled
     paths:
       - "packages/subgraph/**"
 
@@ -52,7 +51,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20"
           cache: "yarn"
 
       - name: Install dependencies
@@ -64,7 +63,7 @@ jobs:
           yarn gen:configs
 
       # TODO: add step that load contracts ABIs before generating schema
-      
+
       - name: Generate subgraph schema code
         run: |-
           cd packages/subgraph
