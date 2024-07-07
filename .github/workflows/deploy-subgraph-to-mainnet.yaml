@@ -22,7 +22,12 @@ jobs:
           # fix for EndBug/add-and-commit
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
-
+      
+      - name: Read version from package.json and set version variables
+        run: |
+          VER=$(grep version packages/subgraph/package.json | cut -d ':' -f 2 | cut -d '"' -f 2)
+          echo "VERSION=$VER" >> $GITHUB_ENV
+      
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
@@ -39,10 +44,12 @@ jobs:
 
       - name: Deploy subgraph
         env:
-          SUBGRAPH_ACCESS_TOKEN: ${{ secrets.SUBGRAPH_ACCESS_TOKEN }}
-          SUBGRAPH_ENVIRONMENT: ${{ vars.SUBGRAPH_ENVIRONMENT }} # eonian-bsc-development or eonian-bsc-staging
+          VERSION: ${{ env.VERSION }}
+          SUBGRAPH_DEPLOY_KEY: ${{ secrets.SUBGRAPH_DEPLOY_KEY }}
+          SUBGRAPH_ENVIRONMENT: ${{ vars.SUBGRAPH_ENVIRONMENT }} # eonian-sepolia-testnet
         # Use warapper for yarn deploy command to highlight step failure
         run: |-
           cd packages/subgraph
-          output=$(yarn graph deploy --product hosted-service eonian-core/$SUBGRAPH_ENVIRONMENT ./deploy/environments/$SUBGRAPH_ENVIRONMENT.yaml --access-token $SUBGRAPH_ACCESS_TOKEN 2>&1); echo "$output"; if echo "$output" | grep -q "UNCAUGHT EXCEPTION"; then exit 1; fi
-
+          ./deploy.sh
+  
+  

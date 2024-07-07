@@ -1,10 +1,9 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.23.0",
+  "version": "0.23.3",
   "scripts": {
-    "gen:code": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml",
-    "dev": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml --watch",
-    "build": "graph build ./deploy/environments/eonian-sepolia-testnet.yaml",
+    "dev": "graph codegen ./deploy/environments//eonian-bsc-development.yaml --watch",
+    "build": "graph build ./deploy/environments/eonian-bsc-development.yaml",
     "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet ./deploy/environments/eonian-sepolia-testnet.yaml --version-label=$VERSION",
     "deploy:bsc-dev": "graph deploy --product hosted-service eonian-core/eonian-bsc-development ./deploy/environments/eonian-bsc-development.yaml",
     "deploy": "yarn build && yarn deploy:studio",
@@ -19,11 +18,12 @@
     "test:docker": "graph test -d",
     "test:watch": "nodemon",
     "lint": "eslint . --ext .ts --fix",
-    "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments"
+    "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments",
+    "gen:code": "graph codegen ./deploy/environments/eonian-bsc-development.yaml"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.51.0",
-    "@graphprotocol/graph-ts": "0.30.0",
+    "@graphprotocol/graph-cli": "0.78.0",
+    "@graphprotocol/graph-ts": "0.35.1",
     "source-map-support": "^0.5.21"
   },
   "devDependencies": {
@@ -36,6 +36,6 @@
     "yaml": "^2.3.1"
   },
   "resolutions": {
-    "**/matchstick-as/@graphprotocol/graph-ts": "0.30.0"
+    "**/matchstick-as/@graphprotocol/graph-ts": "0.35.1"
   }
 }
