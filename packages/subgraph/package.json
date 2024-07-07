@@ -1,6 +1,6 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "scripts": {
     "dev": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml --watch",
     "build": "graph build ./deploy/environments/eonian-sepolia-testnet.yaml",
