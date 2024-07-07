@@ -53,6 +53,21 @@
   },
   {
     "inputs": [],
+    "name": "GivenAssetsResultIsZeroShares",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GivenReceiverIsZeroAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GivenSharesResultIsZeroAssets",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "InappropriateStrategy",
     "type": "error"
   },
@@ -101,12 +116,32 @@
   },
   {
     "inputs": [],
+    "name": "LossIsGreaterThanDebt",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotEnoughAssetsForPayment",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "StrategiesLenderMustBeOwned",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "StrategyAlreadyExists",
     "type": "error"
   },
   {
     "inputs": [],
     "name": "StrategyNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferFromTriggeredNotByBorrower",
     "type": "error"
   },
   {
@@ -202,6 +237,31 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "newDebt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newTotalDebt",
+        "type": "uint256"
+      }
+    ],
+    "name": "BorrowerDebtChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "debtPayment",
         "type": "uint256"
       },
@@ -231,6 +291,37 @@
       }
     ],
     "name": "BorrowerDebtManagementReported",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newDebtRatio",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newTotalDebtRatio",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "loss",
+        "type": "uint256"
+      }
+    ],
+    "name": "BorrowerDebtRatioChanged",
     "type": "event"
   },
   {
@@ -579,6 +670,37 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requiredAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "withdrawnAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "loss",
+        "type": "uint256"
+      }
+    ],
+    "name": "WinthdrawnFromStrategy",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "caller",
         "type": "address"
       },
@@ -909,6 +1031,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      }
+    ],
+    "name": "currentDebtRatio",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "debtRatio",
     "outputs": [
@@ -991,6 +1132,51 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositHooks",
+    "outputs": [
+      {
+        "internalType": "contract IVaultHook",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "founders",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "foundersFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "fundAssets",
     "outputs": [
@@ -1006,25 +1192,6 @@
   {
     "inputs": [],
     "name": "getQueueSize",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "borrower",
-        "type": "address"
-      }
-    ],
-    "name": "getUtilisationRate",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1084,6 +1251,11 @@
         "internalType": "address[]",
         "name": "_defaultOperators",
         "type": "address[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_foundersFee",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -1757,12 +1929,56 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "borrowerDebtRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "setBorrowerDebtRatio",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bool",
         "name": "shutdown",
         "type": "bool"
       }
     ],
     "name": "setEmergencyShutdown",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_founders",
+        "type": "address"
+      }
+    ],
+    "name": "setFounders",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_foundersFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setFoundersFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1804,44 +2020,6 @@
     "name": "setRewards",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "name": "strategyDebt",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "strategy",
-        "type": "address"
-      }
-    ],
-    "name": "strategyRatio",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1965,6 +2143,25 @@
   {
     "inputs": [
       {
+        "internalType": "contract IVaultHook",
+        "name": "hook",
+        "type": "address"
+      }
+    ],
+    "name": "unregisterLifecycleHook",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "newImplementation",
         "type": "address"
@@ -1991,6 +2188,25 @@
     "name": "upgradeToAndCall",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "borrower",
+        "type": "address"
+      }
+    ],
+    "name": "utilizationRate",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -2052,6 +2268,25 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawHooks",
+    "outputs": [
+      {
+        "internalType": "contract IVaultHook",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
