@@ -12,7 +12,7 @@ on:
 
 jobs:
   generate: 
-    name: Generate Subgraphs
+    name: Generate Schemas and Configs
     runs-on: ubuntu-latest
     environment: preview
     
@@ -57,6 +57,7 @@ jobs:
       - name: Install dependencies
         run: yarn --ignore-scripts
       
+      # TODO: split schema and code generation from version bump. Currently impossuble due to github commit limitations in jobs
       - name: Generate subgraph environments configurations
         run: |-
           cd packages/subgraph
