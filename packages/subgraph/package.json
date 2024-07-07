@@ -2,7 +2,6 @@
   "name": "@eonian/subgraph",
   "version": "0.23.0",
   "scripts": {
-    "gen:code": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml",
     "dev": "graph codegen ./deploy/environments/eonian-sepolia-testnet.yaml --watch",
     "build": "graph build ./deploy/environments/eonian-sepolia-testnet.yaml",
     "deploy:studio": "export VERSION=$(jq -r .version package.json) && graph deploy --studio eonian-sepolia-testnet ./deploy/environments/eonian-sepolia-testnet.yaml --version-label=$VERSION",
@@ -19,7 +18,8 @@
     "test:docker": "graph test -d",
     "test:watch": "nodemon",
     "lint": "eslint . --ext .ts --fix",
-    "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments"
+    "gen:configs": "node bin/generate-yaml-configs.js ./deploy ./deploy/environments",
+    "gen:code": "graph codegen ./deploy/environments/eonian-bsc-development.yaml"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.51.0",
