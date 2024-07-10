@@ -9,6 +9,7 @@ export class EtherscanVerifier {
   constructor(private hre: HardhatRuntimeEnvironment) {}
 
   public async verifyIfNeeded(proxyAddress: string, constructorArgs?: unknown[]): Promise<boolean> {
+    this.log(`Will verify proxy if need for address: "${proxyAddress}" on etherscan...`)
     const networkEnvironment = resolveNetworkEnvironment(this.hre)
     if (networkEnvironment === NetworkEnvironment.LOCAL) {
       this.log(`Verification is disabled on "${networkEnvironment}" environment!`)

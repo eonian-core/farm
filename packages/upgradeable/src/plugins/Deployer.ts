@@ -57,23 +57,34 @@ export class Deployer {
     await this.executePreDeployHook()
 
     const proxyAddress = await this.getOrCreateProxy()
+    this.log(`Proxy retrived: ${proxyAddress}`)
+    const oldImplAddress = await this.getImplementation(proxyAddress)
+    this.log(`Existing implemntation retrived: ${oldImplAddress}`)
+    const newImplAddress = await this.deployImplementationIfNeeded(proxyAddress)
+    this.log(`New implementation retrived: ${newImplAddress}`)
 
-    const proxyImplementationAddress = await this.getImplementation(proxyAddress)
-    const implementationAddress = await this.deployImplementationIfNeeded(proxyAddress)
-
-    const sameImplementationCode = await this.haveSameBytecode(proxyImplementationAddress, implementationAddress)
+    const sameImplementationCode = await this.haveSameBytecode(oldImplAddress, newImplAddress)
     if (!sameImplementationCode) {
-      this.log(`Implementation changed: ${implementationAddress} (new) != ${proxyImplementationAddress} (old)!`)
+      this.log(`Implementation changed:\n new:${newImplAddress}\nold:${oldImplAddress}`)
       await this.upgradeProxy(proxyAddress)
+    } else {
+      this.log('Implementation has not been changed...')
+    }
+
+    const verified = await this.hre.etherscanVerifier.verifyIfNeeded(proxyAddress, this.upgradeOptions.constructorArgs)
+    if (verified) {
+      this.log(`Contract ${proxyAddress} have been verified on etherscan!`)
+    } else {
+      this.log(`Contract ${proxyAddress} have not been verified on etherscan!`)
     }
 
     return (this.hre.lastDeployments[proxyAddress] = {
       proxyAddress,
-      implementationAddress,
+      implementationAddress: newImplAddress,
       contractName: this.contractName,
       deploymentId: this.deploymentId,
       status: this.deployStatus,
-      verified: await this.hre.etherscanVerifier.verifyIfNeeded(proxyAddress, this.upgradeOptions.constructorArgs),
+      verified,
     })
   }
 
@@ -103,10 +114,12 @@ export class Deployer {
   private async deployProxy(): Promise<string> {
     this.log('Starting proxy deployment...')
     const contract = await this.hre.upgrades.deployProxy(await this.getContractFactory(), this.initArgs, this.upgradeOptions)
+    await contract.waitForDeployment()
     const address = await contract.getAddress()
 
-    this.log(`Saving proxy address "${address}" to the deployment data file...`)
+    this.log(`Succesfully deployed proxy to "${address}"`)
     await this.hre.proxyRegister.saveProxy(this.contractName, this.deploymentId, address)
+    this.log(`Proxy with address "${address}" saved to the deployment data file...`)
 
     this.changeDeployStatus(DeployStatus.DEPLOYED)
 
@@ -122,6 +135,7 @@ export class Deployer {
     await this.hre.upgrades.upgradeProxy(proxyAddress, await this.getContractFactory(), this.upgradeOptions)
 
     this.changeDeployStatus(DeployStatus.UPGRADED)
+    this.log(`Proxy "${proxyAddress}" has been upgraded...`)
   }
 
   /**
@@ -131,6 +145,7 @@ export class Deployer {
    * @returns Implementation address. Returns the current implementation of the proxy if no deployment has been made.
    */
   private async deployImplementationIfNeeded(proxyAddress: string): Promise<string> {
+    this.log('Checking and deploy new implementation if needed...')
     const contractFactory = await this.hre.ethers.getContractFactory(this.contractName)
     const response = await this.hre.upgrades.prepareUpgrade(proxyAddress, contractFactory, this.upgradeOptions)
     if (typeof response !== 'string') {
@@ -178,6 +193,7 @@ export class Deployer {
   }
 
   private async haveSameBytecode(implementationA: string, implementationB: string): Promise<boolean> {
+    this.log(`Checking if implementation has been changed...\nnew:${implementationA}\nold:${implementationB}`)
     if (implementationA === implementationB) {
       return true
     }
@@ -189,4 +205,5 @@ export class Deployer {
       return addresses.includes(implementationA) && addresses.includes(implementationB)
     })
   }
+
 }
