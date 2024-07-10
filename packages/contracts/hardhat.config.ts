@@ -30,6 +30,9 @@ const bscMainnet: NetworkUserConfig = {
   gasMultiplier: 1.1,
 }
 
+console.log('OPENZEPPLIN_DEFENDER_DEPLOY', process.env.OPENZEPPLIN_DEFENDER_DEPLOY)
+console.log('HARDHAT_NETWORK', process.env.HARDHAT_NETWORK)
+
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   solidity: {
@@ -74,6 +77,13 @@ const config: HardhatUserConfig = {
   mocha: {
     timeout: 2 * 60 * 1000,
   },
+  defender: {
+    apiKey: process.env.OPENZEPPLIN_DEFENDER_API_KEY!,
+    apiSecret: process.env.OPENZEPPLIN_DEFENDER_API_SECRET!,
+    network: process.env.OPENZEPPLIN_DEFENDER_NETWORK || "binance-bsc",
+    // OPENZEPPLIN_DEFENDER_DEPLOY also used directly in the code to avoid fallback to ethers.js
+    useDefenderDeploy: process.env.OPENZEPPLIN_DEFENDER_DEPLOY === 'true',
+  }
 }
 
 function getPathForTests(root = './test') {

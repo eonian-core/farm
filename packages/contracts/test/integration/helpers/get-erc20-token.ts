@@ -1,4 +1,4 @@
-import type { Signer } from 'ethers'
+import type { Signer } from '../../../node_modules/ethers/src.ts2'
 import { ethers } from 'hardhat'
 import type { IERC20 } from '../../../typechain-types'
 

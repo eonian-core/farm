@@ -3,7 +3,8 @@ const { readdir, readFile } = require('node:fs').promises
 
 const dir = 'src'
 const ext = '.sol'
-const license = 'AGPL-3.0'
+// SMART_CONTRACTS_LICENSE_TYPE also used in @eonian/upgradable library
+const license = process.env.SMART_CONTRACTS_LICENSE_TYPE || 'AGPL-3.0'
 const requiredFirstLine = `// SPDX-License-Identifier: ${license}`
 
 async function getFiles(dir) {

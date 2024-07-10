@@ -9,6 +9,7 @@ export enum NetworkEnvironment {
 
 export function resolveNetworkEnvironment(hre: HardhatRuntimeEnvironment): NetworkEnvironment {
   const hardhatNetwork = hre.network.name
+  console.log('Will resolve environment from network:', hardhatNetwork)
   if (hardhatNetwork === 'ganache' || hardhatNetwork === 'hardhat') {
     return NetworkEnvironment.LOCAL
   }

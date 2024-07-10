@@ -2,7 +2,7 @@ import hre from 'hardhat'
 import { expect } from 'chai'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
-import { type BaseContract, ZeroAddress } from 'ethers'
+import { type BaseContract, ZeroAddress } from '../../../node_modules/ethers/src.ts2'
 import type { ContractName } from 'hardhat/types'
 import { TokenSymbol } from '@eonian/upgradeable'
 import type {

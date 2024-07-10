@@ -1,6 +1,6 @@
 import hre from 'hardhat'
 import { expect } from 'chai'
-import { ethers } from 'ethers'
+import { ethers } from '../../node_modules/ethers/src.ts2'
 import { DeployStatus } from '@eonian/upgradeable'
 import { expectImplementationMatch } from './asserts'
 import { clearDeployments, deployContract, getDeploymentEvents, manageArtifacts } from './helpers'

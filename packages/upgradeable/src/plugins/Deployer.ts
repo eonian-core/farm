@@ -1,8 +1,14 @@
 import debug from 'debug'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Manifest } from '@openzeppelin/upgrades-core'
-import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
+import type { UpgradeOptions, DefenderDeployOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
+import type { ApprovalProcess } from '@openzeppelin/hardhat-upgrades/dist/defender/get-approval-process'
+import type { UpgradeProposalResponse } from '@openzeppelin/hardhat-upgrades/dist/defender/propose-upgrade-with-approval'
+
+export const needUseDefender = () => process.env.OPENZEPPLIN_DEFENDER_DEPLOY === 'true'
+
+export type DeployerOptions = UpgradeOptions & DefenderDeployOptions;
 
 export enum DeployStatus {
   DEPLOYED = 'DEPLOYED',
@@ -14,7 +20,7 @@ export interface DeployResult {
   contractName: string
   deploymentId: string | null
   proxyAddress: string
-  implementationAddress: string
+  implementationAddress?: string
   status: DeployStatus
   verified: boolean
 }
@@ -33,12 +39,16 @@ export class Deployer {
     private contractName: string,
     private deploymentId: string | null,
     private initArgs: unknown[],
-    private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
+    private options: DeployerOptions = { constructorArgs: [true] }, // Disable initializers
   ) {
-    this.upgradeOptions = {
+    this.options = {
       kind: 'uups',
       redeployImplementation: 'onchange',
-      ...this.upgradeOptions,
+      useDefenderDeploy: needUseDefender(),
+      verifySourceCode: true,
+      // SMART_CONTRACTS_LICENSE_TYPE also used in contracts/check-license.js script
+      licenseType: process.env.SMART_CONTRACTS_LICENSE_TYPE || 'AGPL-3.0' as any,
+      ...this.options,
     }
   }
 
@@ -61,10 +71,13 @@ export class Deployer {
     const proxyImplementationAddress = await this.getImplementation(proxyAddress)
     const implementationAddress = await this.deployImplementationIfNeeded(proxyAddress)
 
-    const sameImplementationCode = await this.haveSameBytecode(proxyImplementationAddress, implementationAddress)
-    if (!sameImplementationCode) {
-      this.log(`Implementation changed: ${implementationAddress} (new) != ${proxyImplementationAddress} (old)!`)
-      await this.upgradeProxy(proxyAddress)
+    if(!this.options.useDefenderDeploy) {
+      // the rest of deploy process will be handled by OpenZeppelin Defender
+      const sameImplementationCode = await this.haveSameBytecode(proxyImplementationAddress, implementationAddress as string)
+      if (!sameImplementationCode) {
+        this.log(`Implementation changed: ${implementationAddress} (new) != ${proxyImplementationAddress} (old)!`)
+        await this.upgradeProxy(proxyAddress)
+      }
     }
 
     return (this.hre.lastDeployments[proxyAddress] = {
@@ -73,7 +86,7 @@ export class Deployer {
       contractName: this.contractName,
       deploymentId: this.deploymentId,
       status: this.deployStatus,
-      verified: await this.hre.etherscanVerifier.verifyIfNeeded(proxyAddress, this.upgradeOptions.constructorArgs),
+      verified: await this.hre.etherscanVerifier.verifyIfNeeded(proxyAddress, this.options.constructorArgs),
     })
   }
 
@@ -102,14 +115,39 @@ export class Deployer {
    */
   private async deployProxy(): Promise<string> {
     this.log('Starting proxy deployment...')
-    const contract = await this.hre.upgrades.deployProxy(await this.getContractFactory(), this.initArgs, this.upgradeOptions)
+    
+    const {useDefenderDeploy} = this.options;
+    let defenderProcess: ApprovalProcess | undefined;
+    if (useDefenderDeploy) {
+      this.log('Will try to deploy using OpenZeppelin Defender...')
+      defenderProcess = await this.hre.defender.getUpgradeApprovalProcess();
+      if(!defenderProcess.address) {
+        throw new Error(`OpenZepplin Defender upgrade approval process with id ${defenderProcess.approvalProcessId} has no assigned address`)
+      }
+      this.log(`Resolved OpenZeppelin Defender approval process address: ${defenderProcess.address}`)
+    }
+
+    const factory = await this.getContractFactory()
+    this.log(`Constructor types ${JSON.stringify(factory.interface.deploy.inputs)} and args ${JSON.stringify(this.options.constructorArgs)}`)
+
+    const contract = await this.hre.upgrades.deployProxy(factory, this.initArgs, this.options)
     const address = await contract.getAddress()
 
     this.log(`Saving proxy address "${address}" to the deployment data file...`)
     await this.hre.proxyRegister.saveProxy(this.contractName, this.deploymentId, address)
-
     this.changeDeployStatus(DeployStatus.DEPLOYED)
 
+    if (defenderProcess) {
+      this.log("Transfer ownership to the OpenZepplin Defender approval process...")
+      const proxy = await this.hre.ethers.getContractAt(this.contractName, address)
+      // expect that the contract implements Ownable interface
+      if(!proxy.transferOwnership) {
+        throw new Error(`Contract ${this.contractName} at address ${address} does not implement transferOwnership method, usally defined in Ownable base contract`)
+      }
+      const tx = await proxy.transferOwnership(defenderProcess.address!)  
+      await tx.wait()
+    }
+    
     return address
   }
 
@@ -119,7 +157,7 @@ export class Deployer {
    */
   private async upgradeProxy(proxyAddress: string): Promise<void> {
     this.log(`Going to upgrade proxy "${proxyAddress}"...`)
-    await this.hre.upgrades.upgradeProxy(proxyAddress, await this.getContractFactory(), this.upgradeOptions)
+    await this.hre.upgrades.upgradeProxy(proxyAddress, await this.getContractFactory(), this.options)
 
     this.changeDeployStatus(DeployStatus.UPGRADED)
   }
@@ -130,9 +168,16 @@ export class Deployer {
    * @param proxyAddress The proxy address to get the current implementation from.
    * @returns Implementation address. Returns the current implementation of the proxy if no deployment has been made.
    */
-  private async deployImplementationIfNeeded(proxyAddress: string): Promise<string> {
+  private async deployImplementationIfNeeded(proxyAddress: string): Promise<string | undefined> {
     const contractFactory = await this.hre.ethers.getContractFactory(this.contractName)
-    const response = await this.hre.upgrades.prepareUpgrade(proxyAddress, contractFactory, this.upgradeOptions)
+
+    if(this.options.useDefenderDeploy) {
+      const proposal = await this.hre.defender.proposeUpgradeWithApproval(proxyAddress, contractFactory, this.options)
+      this.log(`Upgrade proposed with URL: ${proposal.url}`)
+      return
+    }
+
+    const response = await this.hre.upgrades.prepareUpgrade(proxyAddress, contractFactory, this.options)
     if (typeof response !== 'string') {
       throw new TypeError(`Expected "string" address, but got ${JSON.stringify(response)}`)
     }
