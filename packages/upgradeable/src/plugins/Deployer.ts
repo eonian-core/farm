@@ -74,9 +74,7 @@ export class Deployer {
     const verified = await this.hre.etherscanVerifier.verifyIfNeeded(proxyAddress, this.upgradeOptions.constructorArgs)
     if (verified) {
       this.log(`Contract ${proxyAddress} have been verified on etherscan!`)
-    } else {
-      this.log(`Contract ${proxyAddress} have not been verified on etherscan!`)
-    }
+    } 
 
     return (this.hre.lastDeployments[proxyAddress] = {
       proxyAddress,

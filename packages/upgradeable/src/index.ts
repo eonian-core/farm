@@ -8,4 +8,4 @@ export * from './availableNetworks'
 export * from './addresses/BaseAddresses'
 export * from './execute'
 
-
+export * from './sendTxWithRetry'

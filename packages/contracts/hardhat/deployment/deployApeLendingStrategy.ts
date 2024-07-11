@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { TokenSymbol } from '@eonian/upgradeable'
+import { TokenSymbol, sendTxWithRetry } from '@eonian/upgradeable'
 import { type ApeLendingStrategy } from '../../typechain-types'
 import { type DeployResult, DeployStatus } from '@eonian/upgradeable'
 import { Addresses } from './addresses'
@@ -29,9 +29,12 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
 }
 
 async function attachToVault(strategyAddress: string, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
+  console.log(`Attaching strategy to vault:\nStrategy:${strategyAddress}\nVault:${vaultAddress}`)
+
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
-  const tx = await vault.addStrategy(strategyAddress, 10000) // Allocate 100%
-  await tx.wait()
+  await sendTxWithRetry(() => vault.addStrategy(strategyAddress, 10000)) // Allocate 100%
+
+  console.log(`Strategy attached successfully:\nStrategy:${strategyAddress}\nVault:${vaultAddress}`)
 }
 
 async function getAddresses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {

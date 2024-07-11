@@ -2,11 +2,15 @@ import { Etherscan } from '@nomicfoundation/hardhat-verify/etherscan'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../environment/NetworkEnvironment'
+import { timeout } from '../sendTxWithRetry'
 
 export class EtherscanVerifier {
   private log: debug.Debugger = debug(EtherscanVerifier.name)
 
-  constructor(private hre: HardhatRuntimeEnvironment) {}
+  constructor(
+    private hre: HardhatRuntimeEnvironment,
+    private safetyDelay: number = 5000
+  ) {}
 
   public async verifyIfNeeded(proxyAddress: string, constructorArgs?: unknown[]): Promise<boolean> {
     this.log(`Will verify proxy if need for address: "${proxyAddress}" on etherscan...`)
@@ -22,20 +26,24 @@ export class EtherscanVerifier {
       return false
     }
 
-    this.log('Starting to verify deployed (or upgraded) contracts...')
+    this.log(`Starting to verify deployed (or upgraded) contracts: ${proxyAddress}`)
     let message = ''
     try {
+      this.log(`Will wait for ${this.safetyDelay}ms in case contact is not yet available for etherscan`)
+      await timeout(this.safetyDelay)
       message = await this.interceptOutput(async () => {
         await this.hre.run('verify:verify', {
           address: proxyAddress,
           constructorArguments: constructorArgs,
         })
       })
-      await new Promise(resolve => setTimeout(resolve, 5000))
-    }
-    catch (e) {
+
+      this.log(`Will wait fro ${this.safetyDelay}ms till verification is tracked by etherscan!`)
+      await timeout(this.safetyDelay)
+    } catch (e) {
       console.error(`Error during proxy verification: ${e instanceof Error ? e.message : String(e)}`)
     }
+    
     const success = await this.isContractVerified(proxyAddress)
     if (!success) {
       console.log('Verification was not successful!', message)

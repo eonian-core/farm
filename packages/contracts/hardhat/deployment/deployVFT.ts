@@ -1,5 +1,5 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { type DeployResult, type TokenSymbol, DeployStatus } from '@eonian/upgradeable'
+import { type DeployResult, type TokenSymbol, DeployStatus, sendTxWithRetry } from '@eonian/upgradeable'
 import type { VaultFounderToken } from '../../typechain-types'
 import { Addresses } from './addresses'
 
@@ -24,9 +24,12 @@ export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeE
 }
 
 async function attachToVault(vftAddress: string, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
+  console.log(`Attaching Vault Founder Token to vault:\nVFT:${vftAddress}\nVault:${vaultAddress}`)
+
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
-  const tx = await vault.setFounders(vftAddress)
-  await tx.wait()
+  await sendTxWithRetry(() => vault.setFounders(vftAddress))
+
+  console.log(`VFT attached successfully:\nVFT:${vftAddress}\nVault:${vaultAddress}`)
 }
 
 async function getAddreses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {
