@@ -23,6 +23,9 @@ import './hardhat/deployment'
 import './hardhat/tasks'
 import './hardhat/overrides'
 
+console.log('OPENZEPPLIN_DEFENDER_DEPLOY', process.env.OPENZEPPLIN_DEFENDER_DEPLOY)
+console.log('HARDHAT_NETWORK', process.env.HARDHAT_NETWORK)
+
 const bscMainnet: NetworkUserConfig = {
   url: 'https://bsc-dataseed.binance.org/',
   chainId: 56,
@@ -74,6 +77,13 @@ const config: HardhatUserConfig = {
   mocha: {
     timeout: 2 * 60 * 1000,
   },
+  defender: {
+    apiKey: process.env.OPENZEPPLIN_DEFENDER_API_KEY!,
+    apiSecret: process.env.OPENZEPPLIN_DEFENDER_API_SECRET!,
+    network: process.env.OPENZEPPLIN_DEFENDER_NETWORK || "bsc",
+    // OPENZEPPLIN_DEFENDER_DEPLOY also used directly in the code to avoid fallback to ethers.js
+    useDefenderDeploy: process.env.OPENZEPPLIN_DEFENDER_DEPLOY === 'true',
+  }
 }
 
 function getPathForTests(root = './test') {
