@@ -67,7 +67,7 @@ jobs:
           BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
-          yarn hardhat deploy
+          yarn hardhat deploy --network ${{ vars.HARDHAT_NETWORK }}
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
