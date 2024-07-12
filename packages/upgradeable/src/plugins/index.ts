@@ -1,4 +1,5 @@
 
+export * from './DeployState'
 export * from './Deployer'
 export * from './ProxyRegister'
 export * from './ProxyValidator'

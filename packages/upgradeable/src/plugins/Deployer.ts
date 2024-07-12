@@ -3,12 +3,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
-
-export enum DeployStatus {
-  DEPLOYED = 'DEPLOYED',
-  UPGRADED = 'UPGRADED',
-  NONE = 'NONE',
-}
+import { DeployState, DeployStatus } from './DeployState'
 
 export interface DeployResult {
   contractName: string
@@ -26,7 +21,7 @@ export class Deployer {
   private logger: debug.Debugger = debug(Deployer.name)
 
   private contractFactory: ContractFactory | null = null
-  private deployStatus: DeployStatus = DeployStatus.NONE
+  private state = new DeployState()
 
   constructor(
     private hre: HardhatRuntimeEnvironment,
@@ -81,7 +76,7 @@ export class Deployer {
       implementationAddress: newImplAddress,
       contractName: this.contractName,
       deploymentId: this.deploymentId,
-      status: this.deployStatus,
+      status: this.state.status,
       verified,
     })
   }
@@ -111,15 +106,16 @@ export class Deployer {
    */
   private async deployProxy(): Promise<string> {
     this.log('Starting proxy deployment...')
+    
     const contract = await this.hre.upgrades.deployProxy(await this.getContractFactory(), this.initArgs, this.upgradeOptions)
     await contract.waitForDeployment()
     const address = await contract.getAddress()
-
     this.log(`Succesfully deployed proxy to "${address}"`)
+
     await this.hre.proxyRegister.saveProxy(this.contractName, this.deploymentId, address)
     this.log(`Proxy with address "${address}" saved to the deployment data file...`)
 
-    this.changeDeployStatus(DeployStatus.DEPLOYED)
+    this.state.switchTo(DeployStatus.DEPLOYED)
 
     return address
   }
@@ -132,7 +128,7 @@ export class Deployer {
     this.log(`Going to upgrade proxy "${proxyAddress}"...`)
     await this.hre.upgrades.upgradeProxy(proxyAddress, await this.getContractFactory(), this.upgradeOptions)
 
-    this.changeDeployStatus(DeployStatus.UPGRADED)
+    this.state.switchTo(DeployStatus.UPGRADED)
     this.log(`Proxy "${proxyAddress}" has been upgraded...`)
   }
 
@@ -166,21 +162,6 @@ export class Deployer {
    */
   private async getContractFactory(): Promise<ContractFactory> {
     return this.contractFactory ??= await this.hre.ethers.getContractFactory(this.contractName)
-  }
-
-  /**
-   * Changes and validates the current deployment status.
-   */
-  private changeDeployStatus(newStatus: DeployStatus) {
-    const allowedTransitions: Record<DeployStatus, DeployStatus[]> = {
-      [DeployStatus.DEPLOYED]: [DeployStatus.NONE],
-      [DeployStatus.UPGRADED]: [DeployStatus.NONE, DeployStatus.DEPLOYED],
-      [DeployStatus.NONE]: [],
-    }
-    if (!allowedTransitions[newStatus].includes(this.deployStatus)) {
-      throw new Error(`Illegal deploy status transition (new: ${newStatus}, current: ${this.deployStatus})!`)
-    }
-    this.deployStatus = newStatus
   }
 
   /**
