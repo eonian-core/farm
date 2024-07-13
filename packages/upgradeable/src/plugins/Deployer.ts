@@ -4,41 +4,31 @@ import { Manifest } from '@openzeppelin/upgrades-core'
 import type { UpgradeOptions } from '@openzeppelin/hardhat-upgrades/dist/utils'
 import type { ContractFactory } from 'ethers'
 import { DeployState, DeployStatus } from './DeployState'
+import { BaseDeployer } from './BaseDeployer'
 
 export interface DeployResult {
   contractName: string
   deploymentId: string | null
   proxyAddress: string
-  implementationAddress: string
+  implementationAddress?: string
   status: DeployStatus
-  verified: boolean
+  verified?: boolean
 }
 
-type Tail<T extends any[]> = T extends [infer _A, ...infer R] ? R : never
-export type DeployFunction = (...args: Tail<ConstructorParameters<typeof Deployer>>) => Promise<DeployResult>
-
-export class Deployer {
-  private logger: debug.Debugger = debug(Deployer.name)
-
-  private contractFactory: ContractFactory | null = null
-  private state = new DeployState()
-
+export class Deployer extends BaseDeployer {
   constructor(
-    private hre: HardhatRuntimeEnvironment,
-    private contractName: string,
-    private deploymentId: string | null,
+    hre: HardhatRuntimeEnvironment,
+    contractName: string,
+    deploymentId: string | null,
     private initArgs: unknown[],
     private upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
   ) {
+    super(debug(Deployer.name), hre, contractName, deploymentId)
     this.upgradeOptions = {
       kind: 'uups',
       redeployImplementation: 'onchange',
       ...this.upgradeOptions,
     }
-  }
-
-  public static createDeployer = (hre: HardhatRuntimeEnvironment): DeployFunction => {
-    return (...args: Parameters<DeployFunction>) => new Deployer(hre, ...args).deploy()
   }
 
   /**
@@ -51,10 +41,11 @@ export class Deployer {
   public async deploy(): Promise<DeployResult> {
     await this.executePreDeployHook()
 
-    const proxyAddress = await this.getOrCreateProxy()
+    // Returns the proxy address from the cache (deployment data file) or deploys a new proxy first.
+    const proxyAddress = (await this.findProxyInCache()) ?? await this.deployProxy();
     this.log(`Proxy retrived: ${proxyAddress}`)
+
     const oldImplAddress = await this.getImplementation(proxyAddress)
-    this.log(`Existing implemntation retrived: ${oldImplAddress}`)
     const newImplAddress = await this.deployImplementationIfNeeded(proxyAddress)
     this.log(`New implementation retrived: ${newImplAddress}`)
 
@@ -79,25 +70,6 @@ export class Deployer {
       status: this.state.status,
       verified,
     })
-  }
-
-  private async executePreDeployHook(): Promise<void> {
-    const onBeforeDeploy = this.hre.onBeforeDeploy
-    if (onBeforeDeploy) {
-      await onBeforeDeploy(this.contractName, this.deploymentId)
-    }
-  }
-
-  /**
-   * Returns the proxy address from the cache (deployment data file) or deploys a new proxy first.
-   */
-  private async getOrCreateProxy(): Promise<string> {
-    const proxyAddressFromCache = await this.hre.proxyRegister.getProxyAddress(this.contractName, this.deploymentId)
-    if (proxyAddressFromCache) {
-      this.log(`Proxy address "${proxyAddressFromCache} was found in the deployment file (deploy is skipped)`)
-      return proxyAddressFromCache
-    }
-    return await this.deployProxy()
   }
 
   /**
@@ -140,35 +112,12 @@ export class Deployer {
    */
   private async deployImplementationIfNeeded(proxyAddress: string): Promise<string> {
     this.log('Checking and deploy new implementation if needed...')
-    const contractFactory = await this.hre.ethers.getContractFactory(this.contractName)
+    const contractFactory = await this.getContractFactory()
     const response = await this.hre.upgrades.prepareUpgrade(proxyAddress, contractFactory, this.upgradeOptions)
     if (typeof response !== 'string') {
       throw new TypeError(`Expected "string" address, but got ${JSON.stringify(response)}`)
     }
     return response
-  }
-
-  /**
-   * Returns the address of the current proxy implementation.
-   * @param proxyAddress The address of the proxy.
-   * @returns The implementation address.
-   */
-  private async getImplementation(proxyAddress: string): Promise<string> {
-    return await this.hre.upgrades.erc1967.getImplementationAddress(proxyAddress)
-  }
-
-  /**
-   * Returns the contract factory.
-   */
-  private async getContractFactory(): Promise<ContractFactory> {
-    return this.contractFactory ??= await this.hre.ethers.getContractFactory(this.contractName)
-  }
-
-  /**
-   * Prints the debug message using specified logger.
-   */
-  private log(message: string, logger: debug.Debugger = this.logger) {
-    logger(`[${this.contractName}.${this.deploymentId}] - ${message}`)
   }
 
   private async haveSameBytecode(implementationA: string, implementationB: string): Promise<boolean> {
