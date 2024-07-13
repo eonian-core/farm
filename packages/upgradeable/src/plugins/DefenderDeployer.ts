@@ -64,7 +64,9 @@ export class DefenderDeployer extends BaseDeployer {
     }
 
     /**
-     * Deploys a new proxy and implementation contract. Saves the proxy address to the deployment data file.
+     * Deploys a new proxy and implementation contract. 
+     * Will deploy regular way and then transfer ownership to the defender process.
+     * Saves the proxy address to the deployment data file.
      * @returns The address of the proxy contract.
      */
     private async deployProxy(): Promise<string> {
@@ -76,7 +78,8 @@ export class DefenderDeployer extends BaseDeployer {
         }
         this.log(`Resolved OpenZeppelin Defender approval process address: ${defenderProcess.address}`)
 
-        const deployment = await this.hre.defender.deployProxy(await this.getContractFactory(), this.initArgs, this.deployOptions);
+        this.log(`Starting proxy deployment without Defender...`)
+        const deployment = await this.hre.upgrades.deployProxy(await this.getContractFactory(), this.initArgs, {useDefenderDeploy: false, ...this.upgradeOptions});
         await deployment.waitForDeployment()
         const address = await deployment.getAddress()
         this.log(`Succesfully deployed proxy to "${address}"`)
