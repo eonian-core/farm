@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: GNU AGPLv3
 pragma solidity ^0.8.26;
 
 /// @notice Interest related CToken methods of Compound-like market (or vault in common terms), that allows current APY/APR related meth.
