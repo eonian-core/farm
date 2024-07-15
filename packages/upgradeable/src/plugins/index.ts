@@ -6,5 +6,5 @@ export * from './BaseDeployer'
 export * from './DefenderDeployer'
 export * from './ProxyRegister'
 export * from './ProxyValidator'
-export * from './EtherscanVerifier'
+export * from './EtherscanVerifierAdapter'
 

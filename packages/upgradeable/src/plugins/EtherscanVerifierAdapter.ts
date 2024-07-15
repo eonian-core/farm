@@ -4,72 +4,84 @@ import debug from 'debug'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../environment/NetworkEnvironment'
 import { timeout } from '../sendTxWithRetry'
 
-export class EtherscanVerifier {
-  private log: debug.Debugger = debug(EtherscanVerifier.name)
+export class EtherscanVerifierAdapter {
+  private log: debug.Debugger = debug(EtherscanVerifierAdapter.name)
 
   constructor(
     private hre: HardhatRuntimeEnvironment,
-    private safetyDelay: number = 5000
+    public safetyDelay: number = 5000
   ) {}
 
-  public async verifyIfNeeded(proxyAddress: string, constructorArgs?: unknown[]): Promise<boolean> {
-    this.log(`Will verify proxy if need for address: "${proxyAddress}" on etherscan...`)
+  public isVerificationDisabled(){
     const networkEnvironment = resolveNetworkEnvironment(this.hre)
     if (networkEnvironment === NetworkEnvironment.LOCAL) {
       this.log(`Verification is disabled on "${networkEnvironment}" environment!`)
+      return true
+    }
+
+    return false
+  }
+
+  /** Will verify contract if it not verified, can accidentally verify proxy impleemention also */
+  public async verifyIfNeeded(address: string, constructorArgs?: unknown[]): Promise<boolean | undefined> {
+    this.log(`Will verify contract if need for address: "${address}" on etherscan...`)
+    if (this.isVerificationDisabled()) {
       return false
     }
 
-    const isVerified = await this.isContractVerified(proxyAddress)
-    if (isVerified) {
-      this.log('No need to verify, proxy and implementation contracts are already verified!')
+    if (await this.isContractVerified(address)) {
+      this.log('No need to verify, contract are already verified!')
       return false
     }
 
-    this.log(`Starting to verify deployed (or upgraded) contracts: ${proxyAddress}`)
-    let message = ''
+    return await this.verifyAndCheck(address, constructorArgs)
+  }
+
+  public async verifyAndCheck(address: string, constructorArgs?: unknown[]) {
+    const message = await this.tryToVerify(address, constructorArgs)
+
+    this.log(`Will wait for ${this.safetyDelay}ms till verification is tracked by etherscan, and check if it was successful...`)
+    await timeout(this.safetyDelay)
+    if (!(await this.isContractVerified(address))) {
+      console.log('Verification was not successful!', message)
+      return false
+    }
+
+    this.log(`Contract "${address}" have been verified on etherscan!`)
+    return true
+  }
+
+  /** Will attempt to verify contract even if it was verified before, can accidentialy verify proxy implementation */
+  public async tryToVerify(address: string, constructorArgs?: unknown[]): Promise<string | undefined> {
+    this.log(`Starting to verify deployed (or upgraded) contracts: ${address}`)
+
     try {
       this.log(`Will wait for ${this.safetyDelay}ms in case contact is not yet available for etherscan`)
       await timeout(this.safetyDelay)
-      message = await this.interceptOutput(async () => {
+      return await this.interceptOutput(async () => {
         await this.hre.run('verify:verify', {
-          address: proxyAddress,
+          address: address,
           constructorArguments: constructorArgs,
         })
       })
-
-      this.log(`Will wait fro ${this.safetyDelay}ms till verification is tracked by etherscan!`)
-      await timeout(this.safetyDelay)
     } catch (e) {
-      console.error(`Error during proxy verification: ${e instanceof Error ? e.message : String(e)}`)
-    }
-    
-    const success = await this.isContractVerified(proxyAddress)
-    if (!success) {
-      console.log('Verification was not successful!', message)
-    }
-    return success
+      console.warn(`Error during contract verification: ${e instanceof Error ? e.message : String(e)}`)
+    }    
   }
 
-  private async isContractVerified(proxyAddress: string): Promise<boolean> {
+  public async isContractVerified(address: string): Promise<boolean | undefined> {
     try {
       const { network, config } = this.hre
       const chainConfig = await Etherscan.getCurrentChainConfig(network.name, network.provider, config.etherscan.customChains)
       const etherscan = Etherscan.fromChainConfig(config.etherscan.apiKey, chainConfig)
 
-      this.log('Checking if the proxy contract is verified...')
-      const isProxyVerified = await etherscan.isVerified(proxyAddress)
-      if (!isProxyVerified) {
-        return false
-      }
-
-      this.log('Checking if the implementation contract is verified...')
-      const implementationAddress = await this.hre.upgrades.erc1967.getImplementationAddress(proxyAddress)
-      return await etherscan.isVerified(implementationAddress)
+      this.log(`Checking if the contract ${address} is verified...`)
+      const isProxyVerified = await etherscan.isVerified(address)
+      return isProxyVerified
     }
     catch (e) {
-      console.error('Error during verification check', e)
-      return false
+      console.warn('Error during verification check', e)
+      return undefined
     }
   }
 
