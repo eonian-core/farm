@@ -9,20 +9,31 @@ import { ProxyCiService } from '../plugins/ProxyCiService';
 import { ProxyVerifier } from '../plugins/ProxyVerifier';
 import { ImplementationService } from '../plugins/ImplementationService';
 
-type Tail<T extends any[]> = T extends [infer _A, ...infer R] ? R : never
-export type DeployFunction = (        
-  hre: HardhatRuntimeEnvironment,
+export const deploy = (hre: HardhatRuntimeEnvironment) => async (
   contractName: string,
   deploymentId: string | null,
   initArgs: unknown[],
   upgradeOptions: UpgradeOptions
-) => Promise<DeployResult>
+): Promise<DeployResult> => {
+  const ctx = new Context(hre, contractName, deploymentId)
+  const etherscan = new EtherscanVerifierAdapter(hre)
+
+  const proxy = needUseSafe() 
+    ? await SafeProxyCiService.initSafe(ctx, initArgs, upgradeOptions, etherscan) 
+    : await ProxyCiService.init(ctx, initArgs, upgradeOptions);
+
+  const verifier = new ProxyVerifier(ctx, proxy, etherscan)
+  const impl = new ImplementationService(ctx, proxy)
+  const deployer = new Deployer(ctx, proxy, impl, verifier)
+
+  return await deployer.deploy()
+}
 
 declare module 'hardhat/types/runtime' {
     export interface HardhatRuntimeEnvironment {
       lastDeployments: Record<string, DeployResult>
       onBeforeDeploy?: (contractName: string, deploymentId: string | null) => Promise<void> // For testing purposes
-      deploy: DeployFunction
+      deploy: ReturnType<typeof deploy>
       proxyRegister: ProxyRegister
       proxyValidator: ProxyValidator
     }
@@ -30,22 +41,7 @@ declare module 'hardhat/types/runtime' {
   
   extendEnvironment((hre) => {
     hre.lastDeployments = {}
-    hre.deploy = async (hre,contractName, deploymentId, initArgs, upgradeOptions) => {
-      const ctx = new Context(hre, contractName, deploymentId)
-      
-      const proxy = await ProxyCiService.init(ctx, initArgs, upgradeOptions)
-      const etherscan = new EtherscanVerifierAdapter(hre)
-      const verifier = new ProxyVerifier(ctx, proxy, etherscan)
-      const impl = new ImplementationService(ctx, proxy)
-
-      const proxyCiService = needUseSafe() 
-        ? await SafeProxyCiService.initSafe(ctx, initArgs, upgradeOptions, verifier) 
-        : proxy;
-      const deployer = new Deployer(ctx, proxyCiService, impl, verifier)
-
-      return await deployer.deploy()
-    }
-    
+    hre.deploy = deploy(hre)
     hre.proxyRegister = new ProxyRegister(hre)
     hre.proxyValidator = new ProxyValidator(hre)
   })

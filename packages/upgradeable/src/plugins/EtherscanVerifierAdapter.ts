@@ -23,7 +23,7 @@ export class EtherscanVerifierAdapter {
   }
 
   /** Will verify contract if it not verified, can accidentally verify proxy impleemention also */
-  public async verifyIfNeeded(address: string, constructorArgs?: unknown[]): Promise<boolean | undefined> {
+  public async verifyIfNeeded(address: string, constructorArgs: unknown[]): Promise<boolean | undefined> {
     this.log(`Will verify contract if need for address: "${address}" on etherscan...`)
     if (this.isVerificationDisabled()) {
       return false
@@ -37,7 +37,7 @@ export class EtherscanVerifierAdapter {
     return await this.verifyAndCheck(address, constructorArgs)
   }
 
-  public async verifyAndCheck(address: string, constructorArgs?: unknown[]) {
+  public async verifyAndCheck(address: string, constructorArgs: unknown[]) {
     const message = await this.tryToVerify(address, constructorArgs)
 
     this.log(`Will wait for ${this.safetyDelay}ms till verification is tracked by etherscan, and check if it was successful...`)
@@ -52,7 +52,7 @@ export class EtherscanVerifierAdapter {
   }
 
   /** Will attempt to verify contract even if it was verified before, can accidentialy verify proxy implementation */
-  public async tryToVerify(address: string, constructorArgs?: unknown[]): Promise<string | undefined> {
+  public async tryToVerify(address: string, constructorArgs: unknown[]): Promise<string | undefined> {
     this.log(`Starting to verify deployed (or upgraded) contracts: ${address}`)
 
     try {

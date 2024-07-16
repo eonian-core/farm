@@ -1,16 +1,15 @@
 import SafeApiKit from '@safe-global/api-kit'
-import Safe, { SafeFactory } from '@safe-global/protocol-kit'
-import { ContractAddressOrInstance, UpgradeProxyOptions, getContractAddress, deployProxyImpl, getSigner, attach, attachITransparentUpgradeableProxyV5, attachITransparentUpgradeableProxyV4, UpgradeOptions } from "@openzeppelin/hardhat-upgrades/dist/utils";
-import { Contract, ContractFactory, Signer } from "ethers";
+import Safe from '@safe-global/protocol-kit'
+import { UpgradeProxyOptions, deployProxyImpl, getSigner, attachITransparentUpgradeableProxyV5, attachITransparentUpgradeableProxyV4, UpgradeOptions } from "@openzeppelin/hardhat-upgrades/dist/utils";
+import { ContractFactory, Signer } from "ethers";
 import { getUpgradeInterfaceVersion } from "@openzeppelin/upgrades-core";
 import debug from 'debug';
-import { HardhatRuntimeEnvironment } from 'hardhat/types';
 
-import { Context, WithLogger } from "./Context";
-import { SafeTransaction } from '@safe-global/safe-core-sdk-types';
+import { Context } from "./Context";
 import { required, requiredEnv } from '../configuration';
 import { ProxyCiService } from './ProxyCiService';
 import { ProxyVerifier } from './ProxyVerifier';
+import { EtherscanVerifierAdapter } from './EtherscanVerifierAdapter';
 
 export const needUseSafe = () => process.env.SAFE_WALLET_DEPLOY === 'true'
 
@@ -31,7 +30,7 @@ export class SafeProxyCiService extends ProxyCiService {
         initArgs: unknown[],
         upgradeOptions: UpgradeOptions,
         contractFactory: ContractFactory,
-        private verifier: ProxyVerifier,
+        private verifier: EtherscanVerifierAdapter,
         logger: debug.Debugger = debug(SafeProxyCiService.name)
     ) {
         super(ctx, initArgs, upgradeOptions, contractFactory, logger)
@@ -49,7 +48,7 @@ export class SafeProxyCiService extends ProxyCiService {
         ctx: Context,
         initArgs: unknown[],
         upgradeOptions: UpgradeOptions,
-        verifier: ProxyVerifier
+        verifier: EtherscanVerifierAdapter
     ) {
         return new SafeProxyCiService(
             ctx,
@@ -78,7 +77,7 @@ export class SafeProxyCiService extends ProxyCiService {
 
         const { impl: nextImpl } = await deployProxyImpl(this.hre, this.contractFactory, this.upgradeOptions, proxyAddress);
         // Till transaction approve, this implementaion not will be ferified, so will do it in advance
-        this.verifier.verifyImplementationIfNeed(nextImpl) 
+        this.verifier.verifyIfNeeded(nextImpl, this.upgradeOptions.constructorArgs || []) 
 
         const signer = getSigner(this.contractFactory.runner)
         // upgrade kind is inferred above

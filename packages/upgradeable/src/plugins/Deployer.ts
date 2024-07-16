@@ -59,7 +59,7 @@ export class Deployer extends WithLogger {
       contractName: this.contractName,
       deploymentId: this.deploymentId,
       status: this.proxy.state.status,
-      verified: await this.verifier.verifyProxyAndImplIfNeeded(proxyAddress),
+      verified: await this.verifier.verifyProxyAndImplIfNeeded(proxyAddress, this.proxy.upgradeOptions.constructorArgs || []),
     })
   }
 }

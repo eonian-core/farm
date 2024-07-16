@@ -20,7 +20,7 @@ export class ProxyVerifier extends WithLogger {
      * Do not throw exception if failed, only return false
      * @returns boolean, will be true if successful
      * */
-    public async verifyProxyAndImplIfNeeded(proxyAddress: string, constructorArgs?: unknown[]): Promise<boolean | undefined> {
+    public async verifyProxyAndImplIfNeeded(proxyAddress: string, constructorArgs: unknown[]): Promise<boolean | undefined> {
         this.log(`Will try to deploy source code and license data to Etherscan for proxy "${proxyAddress}" and connected implementation...`)
         if (this.etherscan.isVerificationDisabled()) {
             return false
@@ -42,11 +42,6 @@ export class ProxyVerifier extends WithLogger {
 
         this.log(`Proxy and implementation for "${proxyAddress}" have been verified on etherscan!`)
         return true
-    }
-
-    /** Will attemt to verify implementation contract only, if it wasn't verified before */
-    public async verifyImplementationIfNeed(address: string, constructorArgs?: unknown[]): Promise<boolean | undefined> {
-        return this.etherscan.verifyIfNeeded(address, constructorArgs)
     }
 
     private async isProxyAndImplVerified(proxyAddress: string): Promise<boolean | undefined> {
