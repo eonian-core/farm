@@ -48,7 +48,7 @@ contract LossRatioHealthCheck is SafeUUPSUpgradeable, IHealthCheck {
 
     /// @inheritdoc IVersionable
     function version() external virtual pure override returns (string memory) {
-        return "1.0.0";
+        return "1.0.1";
     }
 
     /// @notice Sets the ratio of the loss that will used to stop strategy.

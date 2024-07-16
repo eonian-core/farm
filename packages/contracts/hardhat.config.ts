@@ -23,7 +23,7 @@ import './hardhat/deployment'
 import './hardhat/tasks'
 import './hardhat/overrides'
 
-console.log('OPENZEPPLIN_DEFENDER_DEPLOY', process.env.OPENZEPPLIN_DEFENDER_DEPLOY)
+console.log('SAFE_WALLET_DEPLOY', process.env.SAFE_WALLET_DEPLOY)
 console.log('HARDHAT_NETWORK', process.env.HARDHAT_NETWORK)
 
 const bscMainnet: NetworkUserConfig = {

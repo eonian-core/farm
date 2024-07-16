@@ -8,8 +8,8 @@ import debug from 'debug';
 import { Context } from "./Context";
 import { required, requiredEnv } from '../configuration';
 import { ProxyCiService } from './ProxyCiService';
-import { ProxyVerifier } from './ProxyVerifier';
 import { EtherscanVerifierAdapter } from './EtherscanVerifierAdapter';
+import { sendTxWithRetry } from '../sendTxWithRetry';
 
 export const needUseSafe = () => process.env.SAFE_WALLET_DEPLOY === 'true'
 
@@ -59,18 +59,33 @@ export class SafeProxyCiService extends ProxyCiService {
         )
     }
 
-    private async getSafeWallet(signer?: Signer): Promise<{ signerAddress: string, wallet: Safe }> {
+    private async getSafeWallet(signer: Signer): Promise<{ signerAddress: string, wallet: Safe }> {
         // TODO: switch to abstract names, without prefix BSC 
         // currently hard to do, because hardhat automaically use them for wrong network configuration
-        const signerAddress = (await signer?.getAddress()) ?? requiredEnv('BSC_MAINNET_PRIVATE_KEY')
+
         return {
-            signerAddress,
+            signerAddress: await signer.getAddress(),
             wallet: await Safe.init({
                 provider: requiredEnv('BSC_MAINNET_RPC_URL'),
-                signer: signerAddress,
+                signer: requiredEnv('BSC_MAINNET_PRIVATE_KEY'),
                 safeAddress: this.safeAddress
             })
         }
+    }
+
+    public async deployProxy(): Promise<string> {
+        const address = await super.deployProxy()
+        
+        this.log(`Transfer ownership to the Safe Wallet ${this.safeAddress}...`)
+        const proxy = await this.hre.ethers.getContractAt(this.contractName, address)
+        // expect that the contract implements Ownable interface
+        if (!proxy.transferOwnership) {
+            throw new Error(`Contract ${this.contractName} at address ${address} does not implement transferOwnership method, usally defined in Ownable base contract`)
+        }
+        await sendTxWithRetry(async () => await proxy.transferOwnership(this.safeAddress!))
+        this.log(`Ownership transfered to ${this.safeAddress}`)
+
+        return address
     }
 
     async upgradeProxy(proxyAddress: string): Promise<void> {
@@ -83,6 +98,9 @@ export class SafeProxyCiService extends ProxyCiService {
         // upgrade kind is inferred above
         const txData = await this.encodeUpgradeCall(proxyAddress, nextImpl, this.upgradeOptions, signer);
 
+        if(!signer) 
+            throw new Error(`Signer for contract of proxy "${proxyAddress}" is undefined not defined`)
+        
         const {signerAddress, wallet} = await this.getSafeWallet(signer)
         this.log(`Retrived Safe wallet with address ${await wallet.getAddress()} and signer: "${signerAddress}"`)
 
