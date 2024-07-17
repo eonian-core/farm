@@ -13,13 +13,13 @@ export const deploy = (hre: HardhatRuntimeEnvironment) => async (
   contractName: string,
   deploymentId: string | null,
   initArgs: unknown[],
-  upgradeOptions: UpgradeOptions
+  upgradeOptions?: UpgradeOptions
 ): Promise<DeployResult> => {
   const ctx = new Context(hre, contractName, deploymentId)
   const etherscan = new EtherscanVerifierAdapter(hre)
 
   const proxy = needUseSafe() 
-    ? await SafeProxyCiService.initSafe(ctx, initArgs, upgradeOptions, etherscan) 
+    ? await SafeProxyCiService.initSafe(ctx, initArgs, etherscan, upgradeOptions) 
     : await ProxyCiService.init(ctx, initArgs, upgradeOptions);
 
   const verifier = new ProxyVerifier(ctx, proxy, etherscan)

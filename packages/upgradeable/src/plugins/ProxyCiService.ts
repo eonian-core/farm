@@ -1,4 +1,3 @@
-import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { Context, WithLogger } from "./Context";
 import { DeployState, DeployStatus } from "./DeployState";
 import type { ContractFactory } from "ethers";
@@ -12,8 +11,8 @@ export class ProxyCiService extends WithLogger {
     constructor(
         ctx: Context,
         public initArgs: unknown[],
-        public upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
         public contractFactory: ContractFactory,
+        public upgradeOptions: UpgradeOptions = { constructorArgs: [true] }, // Disable initializers
         logger: debug.Debugger = debug(ProxyCiService.name)
     ) {
         super(ctx, logger)
@@ -28,13 +27,13 @@ export class ProxyCiService extends WithLogger {
     static async init(
         ctx: Context,
         initArgs: unknown[],
-        upgradeOptions: UpgradeOptions,
+        upgradeOptions?: UpgradeOptions,
     ) {
         return new ProxyCiService(
             ctx,
             initArgs,
-            upgradeOptions,
-            await ctx.hre.ethers.getContractFactory(ctx.contractName)
+            await ctx.hre.ethers.getContractFactory(ctx.contractName),
+            upgradeOptions
         )
     }
 

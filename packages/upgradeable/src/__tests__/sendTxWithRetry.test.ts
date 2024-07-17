@@ -1,5 +1,12 @@
 import { retryOnFailure } from '../sendTxWithRetry';
 
+const mockLogger: Console = {
+  log: jest.fn(),
+  error: jest.fn(),
+  warn: jest.fn(),
+  info: jest.fn(),
+} as any
+
 describe('retryOnFailure', () => {
   it('should retry the action and eventually throw an error', async () => {
     const mockAction = jest.fn();
@@ -7,7 +14,7 @@ describe('retryOnFailure', () => {
       throw new Error('Test error');
     });
 
-    await expect(retryOnFailure(3, 1000, mockAction)).rejects.toThrow('Test error');
+    await expect(retryOnFailure({retries: 3, delay: 1000, logger: mockLogger}, mockAction)).rejects.toThrow('Test error');
     expect(mockAction).toHaveBeenCalledTimes(3);
   });
 
@@ -15,7 +22,7 @@ describe('retryOnFailure', () => {
     const mockAction = jest.fn();
     mockAction.mockImplementation(() => 'Test result');
 
-    const result = await retryOnFailure(3, 1000, mockAction);
+    const result = await retryOnFailure({retries: 3, delay: 1000, logger: mockLogger}, mockAction);
     expect(result).toBe('Test result');
     expect(mockAction).toHaveBeenCalledTimes(1);
   });
@@ -31,7 +38,7 @@ describe('retryOnFailure', () => {
       }
     });
 
-    const result = await retryOnFailure(3, 1000, mockAction);
+    const result = await retryOnFailure({retries: 3, delay: 1000, logger: mockLogger}, mockAction);
     expect(result).toBe('Test result');
     expect(mockAction).toHaveBeenCalledTimes(3);
   });
@@ -47,7 +54,7 @@ describe('retryOnFailure', () => {
       }
     });
 
-    const result = await retryOnFailure(5, 1000, mockAction);
+    const result = await retryOnFailure({retries: 5, delay: 1000, logger: mockLogger}, mockAction);
     expect(result).toBe('Test result');
     expect(mockAction).toHaveBeenCalledTimes(3);
   });
@@ -63,7 +70,7 @@ describe('retryOnFailure', () => {
       }
     });
 
-    await expect(retryOnFailure(4, 1000, mockAction)).rejects.toThrow('Test error');
+    await expect(retryOnFailure({retries: 4, delay: 1000, logger: mockLogger}, mockAction)).rejects.toThrow('Test error');
     expect(mockAction).toHaveBeenCalledTimes(4);
   });
 });

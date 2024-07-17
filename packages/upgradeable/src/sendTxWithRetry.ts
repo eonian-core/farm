@@ -12,13 +12,20 @@ export const sendTxWithRetry = async (
   txProducer: () => Promise<ContractTransactionResponse>,
   retries: number = 5,
   delay: number = 5000
-): Promise<TransactionResult> => retryOnFailure(retries, delay, async () => {
+): Promise<TransactionResult> => retryOnFailure({retries, delay}, async () => {
     const tx = await txProducer();
     const receipt = await tx.wait();
     return { tx, receipt };
 })
 
-export const retryOnFailure = async <T>(retries: number, delay: number, action: () => Promise<T>): Promise<T> => {
+export interface RetryOnFailureOptions {
+    retries: number,
+    delay: number,
+    /** Logger for errors and info messages */
+    logger?: Console
+}
+
+export async function retryOnFailure<T>({retries, delay, logger = console}: RetryOnFailureOptions, action: () => Promise<T>): Promise<T> {
     // save to rethrow at the end if fail after all retries
     let error: any;
 
@@ -29,14 +36,14 @@ export const retryOnFailure = async <T>(retries: number, delay: number, action: 
         } catch (e) {
             error = e
             if(i + 1 < retries) {
-                console.warn(`Failed to send transaction with error`, error);
-                console.log(`Will retry after ${delay}ms...`);
+                logger.warn(`Failed to send transaction with error`, error);
+                logger.log(`Will retry after ${delay}ms...`);
                 await timeout(delay)
             } 
         }
     }
 
-    console.error(`Failed to send transaction after ${retries} retries`);
+    logger.error(`Failed to send transaction after ${retries} retries`);
     throw error;
 }
 

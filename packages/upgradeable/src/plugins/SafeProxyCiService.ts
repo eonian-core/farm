@@ -28,12 +28,12 @@ export class SafeProxyCiService extends ProxyCiService {
     constructor(
         ctx: Context,
         initArgs: unknown[],
-        upgradeOptions: UpgradeOptions,
         contractFactory: ContractFactory,
         private verifier: EtherscanVerifierAdapter,
+        upgradeOptions?: UpgradeOptions,
         logger: debug.Debugger = debug(SafeProxyCiService.name)
     ) {
-        super(ctx, initArgs, upgradeOptions, contractFactory, logger)
+        super(ctx, initArgs, contractFactory, upgradeOptions, logger)
 
         this.api = new SafeApiKit({
             chainId: BigInt(required(
@@ -47,15 +47,15 @@ export class SafeProxyCiService extends ProxyCiService {
     static async initSafe(
         ctx: Context,
         initArgs: unknown[],
-        upgradeOptions: UpgradeOptions,
-        verifier: EtherscanVerifierAdapter
+        verifier: EtherscanVerifierAdapter,
+        upgradeOptions?: UpgradeOptions,
     ) {
         return new SafeProxyCiService(
             ctx,
             initArgs,
-            upgradeOptions,
             await ctx.hre.ethers.getContractFactory(ctx.contractName),
-            verifier
+            verifier,
+            upgradeOptions,
         )
     }
 
@@ -91,8 +91,8 @@ export class SafeProxyCiService extends ProxyCiService {
     async upgradeProxy(proxyAddress: string): Promise<void> {
 
         const { impl: nextImpl } = await deployProxyImpl(this.hre, this.contractFactory, this.upgradeOptions, proxyAddress);
-        // Till transaction approve, this implementaion not will be ferified, so will do it in advance
-        this.verifier.verifyIfNeeded(nextImpl, this.upgradeOptions.constructorArgs || []) 
+        this.log(`Deployed new implementation contract at address ${nextImpl}. Till transaction approve, this implementaion not will be verified, so will do it in advance`)
+        await this.verifier.verifyIfNeeded(nextImpl, this.upgradeOptions.constructorArgs || []) 
 
         const signer = getSigner(this.contractFactory.runner)
         // upgrade kind is inferred above

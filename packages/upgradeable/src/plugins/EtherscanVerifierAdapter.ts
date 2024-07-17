@@ -2,7 +2,7 @@ import { Etherscan } from '@nomicfoundation/hardhat-verify/etherscan'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../environment/NetworkEnvironment'
-import { timeout } from '../sendTxWithRetry'
+import { RetryOnFailureOptions, retryOnFailure, timeout } from '../sendTxWithRetry'
 
 export class EtherscanVerifierAdapter {
   private log: debug.Debugger = debug(EtherscanVerifierAdapter.name)
@@ -10,9 +10,9 @@ export class EtherscanVerifierAdapter {
   constructor(
     private hre: HardhatRuntimeEnvironment,
     public safetyDelay: number = 5000
-  ) {}
+  ) { }
 
-  public isVerificationDisabled(){
+  public isVerificationDisabled() {
     const networkEnvironment = resolveNetworkEnvironment(this.hre)
     if (networkEnvironment === NetworkEnvironment.LOCAL) {
       this.log(`Verification is disabled on "${networkEnvironment}" environment!`)
@@ -38,11 +38,15 @@ export class EtherscanVerifierAdapter {
   }
 
   public async verifyAndCheck(address: string, constructorArgs: unknown[]) {
-    const message = await this.tryToVerify(address, constructorArgs)
 
-    this.log(`Will wait for ${this.safetyDelay}ms till verification is tracked by etherscan, and check if it was successful...`)
-    await timeout(this.safetyDelay)
-    if (!(await this.isContractVerified(address))) {
+    const isVerified = async (): Promise<boolean> => {
+      this.log(`Will wait for ${this.safetyDelay}ms till verification is tracked by etherscan, and check if it was successful...`)
+      await timeout(this.safetyDelay)
+      return await this.isContractVerified(address) ?? false
+    }
+
+    const message = await this.verifyWithRetry(address, constructorArgs, isVerified)
+    if (!(await isVerified())) {
       console.log('Verification was not successful!', message)
       return false
     }
@@ -51,22 +55,44 @@ export class EtherscanVerifierAdapter {
     return true
   }
 
-  /** Will attempt to verify contract even if it was verified before, can accidentialy verify proxy implementation */
-  public async tryToVerify(address: string, constructorArgs: unknown[]): Promise<string | undefined> {
+  /** 
+   * Will attempt to verify contract even if it was verified before, can accidentialy verify proxy implementation,
+   * will retry verification in case of failure.
+   * */
+  public async verifyWithRetry(
+    address: string,
+    constructorArguments: unknown[],
+    isSuccesfull: () => Promise<boolean>,
+    retryOptions: RetryOnFailureOptions = { retries: 3, delay: 1000 }
+  ): Promise<string | undefined> {
     this.log(`Starting to verify deployed (or upgraded) contracts: ${address}`)
 
     try {
       this.log(`Will wait for ${this.safetyDelay}ms in case contact is not yet available for etherscan`)
       await timeout(this.safetyDelay)
-      return await this.interceptOutput(async () => {
-        await this.hre.run('verify:verify', {
-          address: address,
-          constructorArguments: constructorArgs,
-        })
+
+      return await retryOnFailure(retryOptions, async () => {
+        const message = await this.tryToVerify(address, constructorArguments)
+
+        if (!(await isSuccesfull())) {
+          console.warn(`Verification for ${address} failed!`, message)
+          // trigger retry of verification
+          throw new Error(`Verification for ${address} failed!`)
+        }
+
+        return message
       })
     } catch (e) {
       console.warn(`Error during contract verification: ${e instanceof Error ? e.message : String(e)}`)
-    }    
+    }
+  }
+
+  public async tryToVerify(address: string, constructorArguments: unknown[],): Promise<string> {
+    this.log(`Attempt to verify ${address}...`)
+
+    return await this.interceptOutput(async () => {
+      await this.hre.run('verify:verify', { address, constructorArguments })
+    })
   }
 
   public async isContractVerified(address: string): Promise<boolean | undefined> {

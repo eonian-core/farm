@@ -31,11 +31,15 @@ export class ProxyVerifier extends WithLogger {
             return false
         }
 
-        const message = await this.etherscan.tryToVerify(proxyAddress, constructorArgs)
+        const isVerified = async () => {
+            this.log(`Will wait for ${this.etherscan.safetyDelay}ms till verification is tracked by etherscan, and check if it was successful...`)
+            await timeout(this.etherscan.safetyDelay)
+            return await this.isProxyAndImplVerified(proxyAddress) ?? false
+        }
 
-        this.log(`Will wait for ${this.etherscan.safetyDelay}ms till verification is tracked by etherscan, and check if it was successful...`)
-        await timeout(this.etherscan.safetyDelay)
-        if (!(await this.isProxyAndImplVerified(proxyAddress))) {
+        const message = await this.etherscan.verifyWithRetry(proxyAddress, constructorArgs, isVerified)
+
+        if (!(await isVerified())) {
             console.log('Verification was not successful!', message)
             return false
         }
