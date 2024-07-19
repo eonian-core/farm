@@ -1,15 +1,13 @@
-import SafeApiKit from '@safe-global/api-kit'
-import Safe from '@safe-global/protocol-kit'
 import { UpgradeProxyOptions, deployProxyImpl, getSigner, attachITransparentUpgradeableProxyV5, attachITransparentUpgradeableProxyV4, UpgradeOptions } from "@openzeppelin/hardhat-upgrades/dist/utils";
-import { ContractFactory, Signer } from "ethers";
+import { Contract, ContractFactory, FunctionFragment, Signer } from "ethers";
 import { getUpgradeInterfaceVersion } from "@openzeppelin/upgrades-core";
 import debug from 'debug';
 
 import { Context } from "./Context";
-import { required, requiredEnv } from '../configuration';
-import { ProxyCiService } from './ProxyCiService';
+import { ProxyCiService, retryOnProviderError } from './ProxyCiService';
 import { EtherscanVerifierAdapter } from './EtherscanVerifierAdapter';
 import { sendTxWithRetry } from '../sendTxWithRetry';
+import { SafeAdapter } from "./SafeAdapter";
 
 export const needUseSafe = () => process.env.SAFE_WALLET_DEPLOY === 'true'
 
@@ -21,33 +19,23 @@ export const needUseSafe = () => process.env.SAFE_WALLET_DEPLOY === 'true'
  */
 export class SafeProxyCiService extends ProxyCiService {
 
-    private api: SafeApiKit
-    
-    private safeAddress: string = requiredEnv('SAFE_WALLET_ADDRESS')
-
     constructor(
         ctx: Context,
         initArgs: unknown[],
         contractFactory: ContractFactory,
         private verifier: EtherscanVerifierAdapter,
+        private safe: SafeAdapter,
         upgradeOptions?: UpgradeOptions,
         logger: debug.Debugger = debug(SafeProxyCiService.name)
     ) {
         super(ctx, initArgs, contractFactory, upgradeOptions, logger)
-
-        this.api = new SafeApiKit({
-            chainId: BigInt(required(
-                this.ctx.hre.network.config.chainId,
-                `Provided hardnat network "${this.ctx.hre.network.name}" configuration missing chainId`
-            )),
-            txServiceUrl: process.env.SAFE_TX_SERVICE_URL, // optional
-        })
     }
 
     static async initSafe(
         ctx: Context,
         initArgs: unknown[],
         verifier: EtherscanVerifierAdapter,
+        safe: SafeAdapter,
         upgradeOptions?: UpgradeOptions,
     ) {
         return new SafeProxyCiService(
@@ -55,82 +43,45 @@ export class SafeProxyCiService extends ProxyCiService {
             initArgs,
             await ctx.hre.ethers.getContractFactory(ctx.contractName),
             verifier,
+            safe,
             upgradeOptions,
         )
-    }
-
-    private async getSafeWallet(signer: Signer): Promise<{ signerAddress: string, wallet: Safe }> {
-        // TODO: switch to abstract names, without prefix BSC 
-        // currently hard to do, because hardhat automaically use them for wrong network configuration
-
-        return {
-            signerAddress: await signer.getAddress(),
-            wallet: await Safe.init({
-                provider: requiredEnv('BSC_MAINNET_RPC_URL'),
-                signer: requiredEnv('BSC_MAINNET_PRIVATE_KEY'),
-                safeAddress: this.safeAddress
-            })
-        }
     }
 
     public async deployProxy(): Promise<string> {
         const address = await super.deployProxy()
         
-        this.log(`Transfer ownership to the Safe Wallet ${this.safeAddress}...`)
+        this.log(`Transfer ownership to the Safe Wallet ${this.safe.walletAddress}...`)
         const proxy = await this.hre.ethers.getContractAt(this.contractName, address)
         // expect that the contract implements Ownable interface
         if (!proxy.transferOwnership) {
             throw new Error(`Contract ${this.contractName} at address ${address} does not implement transferOwnership method, usally defined in Ownable base contract`)
         }
-        await sendTxWithRetry(async () => await proxy.transferOwnership(this.safeAddress!))
-        this.log(`Ownership transfered to ${this.safeAddress}`)
+        await sendTxWithRetry(async () => await proxy.transferOwnership(this.safe.walletAddress))
+        this.log(`Ownership transfered to ${this.safe.walletAddress}`)
 
         return address
     }
 
     async upgradeProxy(proxyAddress: string): Promise<void> {
 
-        const { impl: nextImpl } = await deployProxyImpl(this.hre, this.contractFactory, this.upgradeOptions, proxyAddress);
+        const { impl: nextImpl } = await retryOnProviderError(async () => 
+            await deployProxyImpl(this.hre, this.contractFactory, this.upgradeOptions, proxyAddress)
+        );
         this.log(`Deployed new implementation contract at address ${nextImpl}. Till transaction approve, this implementaion not will be verified, so will do it in advance`)
         await this.verifier.verifyIfNeeded(nextImpl, this.upgradeOptions.constructorArgs || []) 
 
         const signer = getSigner(this.contractFactory.runner)
-        // upgrade kind is inferred above
-        const txData = await this.encodeUpgradeCall(proxyAddress, nextImpl, this.upgradeOptions, signer);
-
         if(!signer) 
-            throw new Error(`Signer for contract of proxy "${proxyAddress}" is undefined not defined`)
-        
-        const {signerAddress, wallet} = await this.getSafeWallet(signer)
-        this.log(`Retrived Safe wallet with address ${await wallet.getAddress()} and signer: "${signerAddress}"`)
+            throw new Error(`Signer for proxy contract "${proxyAddress}" is not defined`)
 
-        const tx = await wallet.createTransaction({
-            transactions: [{
-                to: proxyAddress,
-                value: '0',
-                data: txData
-            }]
-        })
+        // upgrade kind is inferred above
+        const {proxy, functionName, args} = await this.chooseUpgradeCall(proxyAddress, nextImpl, this.upgradeOptions, signer);
 
-        // Deterministic hash based on transaction parameters
-        const txHash = await wallet.getTransactionHash(tx)
-        this.log(`Prepared upgrade transaction with hash ${txHash}`)
-
-        // Sign transaction to verify that the transaction is coming from current owner
-        const sign = await wallet.signHash(txHash)
-
-        await this.api.proposeTransaction({
-            safeAddress: this.safeAddress,
-            safeTransactionData: tx.data,
-            safeTxHash: txHash,
-            senderAddress: signerAddress,
-            senderSignature: sign.data,
-        })
-
-        console.log(`Upgrade proposal transaction for proxy ${proxyAddress} has been created`)
+        await this.safe.proposeTransaction(proxyAddress, proxy, functionName, args, signer)
     }
 
-    async encodeUpgradeCall(proxyAddress: string, nextImpl: string, opts: UpgradeProxyOptions, signer?: Signer) {
+    async chooseUpgradeCall(proxyAddress: string, nextImpl: string, opts: UpgradeProxyOptions, signer?: Signer): Promise<{ proxy: Contract, functionName: string, args: Array<any>}> {
         const { provider } = this.hre.network;
         const upgradeInterfaceVersion = await getUpgradeInterfaceVersion(provider, proxyAddress, this.logger);
 
@@ -139,8 +90,12 @@ export class SafeProxyCiService extends ProxyCiService {
         switch (upgradeInterfaceVersion) {
             case '5.0.0': {
                 const proxy = await attachITransparentUpgradeableProxyV5(this.hre, proxyAddress, signer);
-                // 0x for call fallback
-                return proxy.interface.encodeFunctionData('upgradeToAndCall', [nextImpl, '0x', ...overrides]);
+                return {
+                    proxy,
+                    functionName: 'upgradeToAndCall',
+                    // 0x for call fallback
+                    args: [nextImpl, '0x', ...overrides]
+                }
             }
             default: {
                 if (upgradeInterfaceVersion !== undefined) {
@@ -151,8 +106,14 @@ export class SafeProxyCiService extends ProxyCiService {
                     );
                 }
                 const proxy = await attachITransparentUpgradeableProxyV4(this.hre, proxyAddress, signer);
-                return proxy.interface.encodeFunctionData('upgradeTo', [nextImpl, ...overrides]);
+                return {
+                    proxy,
+                    functionName: 'upgradeTo',
+                    args: [nextImpl, ...overrides]
+                }
             }
         }
     }
+
+
 }

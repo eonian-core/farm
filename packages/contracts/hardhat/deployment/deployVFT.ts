@@ -1,8 +1,10 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { type DeployResult, type TokenSymbol, DeployStatus, sendTxWithRetry } from '@eonian/upgradeable'
+import { type DeployResult, type TokenSymbol, DeployStatus, sendTxWithRetry, needUseSafe } from '@eonian/upgradeable'
 import type { VaultFounderToken } from '../../typechain-types'
 import { Addresses } from './addresses'
+import { BaseContract } from 'ethers'
 
+const contractName = 'VaultFounderToken'
 
 export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)
@@ -14,20 +16,32 @@ export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeE
     `VFT.eon${token}`, // symbol
     addresses.vault, // vault
   ]
-  const deployResult = await hre.deploy('VaultFounderToken', token, initializeArguments)
+  const deployResult = await hre.deploy(contractName, token, initializeArguments)
 
   if (deployResult.status === DeployStatus.DEPLOYED) {
-    await attachToVault(deployResult.proxyAddress, addresses.vault, hre)
+    await attachToVault(deployResult.proxyAddress, token, addresses.vault, hre)
   }
 
   return deployResult
 }
 
-async function attachToVault(vftAddress: string, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
+async function attachToVault(vftAddress: string, token: TokenSymbol, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
   console.log(`Attaching Vault Founder Token to vault:\nVFT:${vftAddress}\nVault:${vaultAddress}`)
 
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
-  await sendTxWithRetry(() => vault.setFounders(vftAddress))
+
+  if(needUseSafe()) {
+    await hre.proposeSafeTransaction({
+      sourceContractName: contractName,
+      deploymentId: token,
+      address: vaultAddress,
+      contract: vault as BaseContract,
+      functionName: 'setFounders',
+      args: [vftAddress],
+    })
+  } else {
+    await sendTxWithRetry(() => vault.setFounders(vftAddress))
+  }
 
   console.log(`VFT attached successfully:\nVFT:${vftAddress}\nVault:${vaultAddress}`)
 }

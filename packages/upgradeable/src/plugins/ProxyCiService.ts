@@ -3,6 +3,8 @@ import { DeployState, DeployStatus } from "./DeployState";
 import type { ContractFactory } from "ethers";
 import debug from "debug";
 import { UpgradeOptions } from "@openzeppelin/hardhat-upgrades";
+import { retryOnFailureWithDelay } from "../sendTxWithRetry";
+import {ProviderError} from 'hardhat/internal/core/providers/errors'
 
 /** Proxy continus integration service, responsibe for deploy and upgrate of proxy */
 export class ProxyCiService extends WithLogger {
@@ -44,8 +46,11 @@ export class ProxyCiService extends WithLogger {
     public async deployProxy(): Promise<string> {
         this.log('Starting proxy deployment...')
 
-        const contract = await this.hre.upgrades.deployProxy(this.contractFactory, this.initArgs, this.upgradeOptions)
-        await contract.waitForDeployment()
+        const contract = await retryOnProviderError(async () => {
+            const ct = await this.hre.upgrades.deployProxy(this.contractFactory, this.initArgs, this.upgradeOptions)
+            await ct.waitForDeployment()
+            return ct
+        }) 
         const address = await contract.getAddress()
         this.log(`Succesfully deployed proxy to "${address}"`)
 
@@ -63,7 +68,9 @@ export class ProxyCiService extends WithLogger {
      */
     public async upgradeProxy(proxyAddress: string): Promise<void> {
         this.log(`Going to upgrade proxy "${proxyAddress}"...`)
-        await this.hre.upgrades.upgradeProxy(proxyAddress, this.contractFactory, this.upgradeOptions)
+        await retryOnProviderError(async () => 
+            await this.hre.upgrades.upgradeProxy(proxyAddress, this.contractFactory, this.upgradeOptions)
+        )
 
         this.state.switchTo(DeployStatus.UPGRADED)
         this.log(`Proxy "${proxyAddress}" has been upgraded...`)
@@ -107,3 +114,10 @@ export class ProxyCiService extends WithLogger {
         return implAddres
     }
 }
+
+/** Provider error due to underpriced transaction usally can be fixed by retry, so will do it automatically */
+export const retryOnProviderError = async <T>(action: () => Promise<T>): Promise<T> => await retryOnFailureWithDelay({
+    retries: 3, 
+    delay: 3000,
+    isNeedRetry: async (error) => error?.message?.includes('transaction underpriced')
+}, action)

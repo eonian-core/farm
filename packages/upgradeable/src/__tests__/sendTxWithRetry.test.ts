@@ -1,4 +1,4 @@
-import { retryOnFailure } from '../sendTxWithRetry';
+import { retryOnFailureWithDelay } from '../sendTxWithRetry';
 
 const mockLogger: Console = {
   log: jest.fn(),
@@ -7,14 +7,14 @@ const mockLogger: Console = {
   info: jest.fn(),
 } as any
 
-describe('retryOnFailure', () => {
+describe('retryOnFailureWithDelay', () => {
   it('should retry the action and eventually throw an error', async () => {
     const mockAction = jest.fn();
     mockAction.mockImplementation(() => {
       throw new Error('Test error');
     });
 
-    await expect(retryOnFailure({retries: 3, delay: 1000, logger: mockLogger}, mockAction)).rejects.toThrow('Test error');
+    await expect(retryOnFailureWithDelay({retries: 3, delay: 1000, logger: mockLogger}, mockAction)).rejects.toThrow('Test error');
     expect(mockAction).toHaveBeenCalledTimes(3);
   });
 
@@ -22,7 +22,7 @@ describe('retryOnFailure', () => {
     const mockAction = jest.fn();
     mockAction.mockImplementation(() => 'Test result');
 
-    const result = await retryOnFailure({retries: 3, delay: 1000, logger: mockLogger}, mockAction);
+    const result = await retryOnFailureWithDelay({retries: 3, delay: 1000, logger: mockLogger}, mockAction);
     expect(result).toBe('Test result');
     expect(mockAction).toHaveBeenCalledTimes(1);
   });
@@ -38,7 +38,7 @@ describe('retryOnFailure', () => {
       }
     });
 
-    const result = await retryOnFailure({retries: 3, delay: 1000, logger: mockLogger}, mockAction);
+    const result = await retryOnFailureWithDelay({retries: 3, delay: 1000, logger: mockLogger}, mockAction);
     expect(result).toBe('Test result');
     expect(mockAction).toHaveBeenCalledTimes(3);
   });
@@ -54,7 +54,7 @@ describe('retryOnFailure', () => {
       }
     });
 
-    const result = await retryOnFailure({retries: 5, delay: 1000, logger: mockLogger}, mockAction);
+    const result = await retryOnFailureWithDelay({retries: 5, delay: 1000, logger: mockLogger}, mockAction);
     expect(result).toBe('Test result');
     expect(mockAction).toHaveBeenCalledTimes(3);
   });
@@ -70,7 +70,20 @@ describe('retryOnFailure', () => {
       }
     });
 
-    await expect(retryOnFailure({retries: 4, delay: 1000, logger: mockLogger}, mockAction)).rejects.toThrow('Test error');
+    await expect(retryOnFailureWithDelay({retries: 4, delay: 1000, logger: mockLogger}, mockAction)).rejects.toThrow('Test error');
     expect(mockAction).toHaveBeenCalledTimes(4);
+  });
+
+  it('should stop retrying if isNeedRetry returns false', async () => {
+    let callCount = 0;
+    const mockAction = jest.fn().mockImplementation(() => {
+      callCount++;
+      throw new Error('Test error');
+    });
+  
+    const isNeedRetry = async (error: any, attempt: number) => attempt < 2;
+  
+    await expect(retryOnFailureWithDelay({retries: 5, delay: 1000, logger: mockLogger, isNeedRetry}, mockAction)).rejects.toThrow('Test error');
+    expect(mockAction).toHaveBeenCalledTimes(3);
   });
 });

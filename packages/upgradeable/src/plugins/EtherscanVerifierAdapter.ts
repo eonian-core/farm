@@ -2,7 +2,7 @@ import { Etherscan } from '@nomicfoundation/hardhat-verify/etherscan'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import debug from 'debug'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '../environment/NetworkEnvironment'
-import { RetryOnFailureOptions, retryOnFailure, timeout } from '../sendTxWithRetry'
+import { RetryOnFailureOptions, retryOnFailureWithDelay, timeout } from '../sendTxWithRetry'
 
 export class EtherscanVerifierAdapter {
   private log: debug.Debugger = debug(EtherscanVerifierAdapter.name)
@@ -71,7 +71,7 @@ export class EtherscanVerifierAdapter {
       this.log(`Will wait for ${this.safetyDelay}ms in case contact is not yet available for etherscan`)
       await timeout(this.safetyDelay)
 
-      return await retryOnFailure(retryOptions, async () => {
+      return await retryOnFailureWithDelay(retryOptions, async () => {
         const message = await this.tryToVerify(address, constructorArguments)
 
         if (!(await isSuccesfull())) {
