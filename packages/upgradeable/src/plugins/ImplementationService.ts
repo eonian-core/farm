@@ -17,7 +17,7 @@ export class ImplementationService extends WithLogger {
      * If changed, will deploy new implementation, save it in deploy manifest and return address of it
      * New implementation automaticaly will be used during next proxy upgrade call
      * */
-    public async isImplementationlChanged(proxyAddress: string){
+    public async isImplementationChanged(proxyAddress: string){
         const oldImplAddress = await this.proxy.getImplementation(proxyAddress)
         const newImplAddress = await this.proxy.deployImplementationIfNeeded(proxyAddress)
         this.log(`New implementation retrived: ${newImplAddress}`)

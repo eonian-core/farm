@@ -47,7 +47,7 @@ export class Deployer extends WithLogger {
     this.log(`Proxy retrived: ${proxyAddress}`)
 
     this.log(`Checking if implementation for proxy "${proxyAddress}" in codebase has been changed, will deploy new if changed...`)
-    const { isChanged, implementationAddress } = await this.impl.isImplementationlChanged(proxyAddress)
+    const { isChanged, implementationAddress } = await this.impl.isImplementationChanged(proxyAddress)
     if (isChanged) {
       this.log(`Implementation for proxy "${proxyAddress}" has been changed, will upgrade...`)
       await this.proxy.upgradeProxy(proxyAddress)
