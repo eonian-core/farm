@@ -3,7 +3,7 @@ import { Manifest } from '@openzeppelin/upgrades-core'
 import { ZeroAddress, ZeroHash } from 'ethers'
 import _ from 'lodash'
 import { ProxyValidator } from '../ProxyValidator'
-import { DeployStatus } from '../Deployer'
+import { DeployStatus } from '../DeployState'
 
 const addressA = '0x0000000000000000000000000000000000000001'
 const addressB = '0x0000000000000000000000000000000000000002'

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: GNU AGPLv3
 pragma solidity ^0.8.26;
 
 import { ITaskTreasuryUpgradable } from "./ITaskTreasuryUpgradable.sol";

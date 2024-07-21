@@ -4,17 +4,24 @@ import type { TokenSymbol, DeployResult } from '@eonian/upgradeable'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '@eonian/upgradeable'
 import { Addresses } from './addresses'
 
+const checkIsProduction = (hre: HardhatRuntimeEnvironment) => {
+  const environment = resolveNetworkEnvironment(hre)
+  return environment === NetworkEnvironment.PRODUCTION
+}
+
 export default async function deployVault(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddreses(token, hre)
 
-  const environment = resolveNetworkEnvironment(hre)
+  const isProduction = checkIsProduction(hre)
+  console.log(`Deploying vault for ${token} in ${isProduction ? 'production' : 'dev'} mode`)
+
   const initializeArguments: Parameters<Vault['initialize']> = [
     addresses.asset, // Token address
     addresses.treasury, // Address for rewards
-    environment === NetworkEnvironment.PRODUCTION ? 2000 : 1500, // 20% fee for production versions, 15% for dev.
+    isProduction ? 3000 : 1500, // 30% fee for production versions, 15% for dev.
     10n ** 18n / 3600n, // 6 hours for locked profit release
-    `Eonian ${token} Vault Shares`, // Vault name
-    `eon${token}`, // Vault share symbol
+    isProduction ? `Insured ${token} Vault Shares` : `Eonian ${token} Vault Shares`, // Vault name
+    isProduction ? `Insured${token}` : `eon${token}`, // Vault share symbol
     [], // Parameter: "defaultOperators"
     100, // Vault founder tokens fee (1%)
   ]

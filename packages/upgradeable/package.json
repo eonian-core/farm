@@ -1,6 +1,6 @@
 {
     "name": "@eonian/upgradeable",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "license": "MIT",
     "engines": {
         "node": ">=20.0.0"
@@ -12,7 +12,7 @@
         "dev": "concurrently -c \"auto\" \"yarn:test:watch\" \"yarn:build:watch\"",
         "rebuild": "yarn clear && yarn build",
         "build": "microbundle --target=node",
-        "build:watch": "microbundle watch",
+        "build:watch": "microbundle watch --target=node",
         "prepublish": "yarn rebuild",
         "lint": "eslint . --ext .ts,.js --fix",
         "test:hardhat:deploy": "HARDHAT_FORK_NETWORK=false hardhat test test/deploy/*.test.*"
@@ -48,43 +48,43 @@
     },
     "dependencies": {
         "@chainlink/contracts": "^0.8.0",
+        "@nomicfoundation/hardhat-ethers": "^3.0.6",
         "@nomicfoundation/hardhat-foundry": "^1.1.1",
-        "@nomicfoundation/hardhat-ethers": "^3.0.5",
         "@nomicfoundation/hardhat-verify": "^2.0.5",
         "@openzeppelin/contracts": "^4.9.6",
         "@openzeppelin/contracts-upgradeable": "^4.9.6",
-        "@openzeppelin/hardhat-upgrades": "^3.0.5",
+        "@openzeppelin/hardhat-upgrades": "^3.2.0",
         "@openzeppelin/upgrades-core": "^1.32.0",
+        "@safe-global/api-kit": "^2.4.2",
+        "@safe-global/protocol-kit": "^4.0.2",
+        "@safe-global/safe-core-sdk-types": "^5.0.2",
         "@types/sinon": "^10.0.15",
+        "@uniswap/token-lists": "^1.0.0-beta.34",
+        "debug": "^4.3.4",
+        "ethers": "^6.13.1",
+        "hardhat": "2.19.5",
+        "hardhat-docgen": "^1.3.0",
+        "hardhat-gas-reporter": "^2.0.2",
+        "hardhat-tracer": "^2.8.1",
         "lodash": "^4.17.21",
         "sinon": "^15.1.0",
-        "tree-kill": "^1.2.2",
-        "ethers": "^6.11.1",
+        "tree-kill": "^1.2.2"
+    },
+    "peerDependencies": {
+        "@chainlink/contracts": "^0.8.0",
+        "@nomicfoundation/hardhat-foundry": "^1.1.1",
+        "@nomicfoundation/hardhat-verify": "^2.0.5",
+        "@openzeppelin/contracts": "^4.9.6",
+        "@openzeppelin/contracts-upgradeable": "^4.9.6",
+        "@openzeppelin/upgrades-core": "^1.32.0",
+        "@types/sinon": "^10.0.15",
         "@uniswap/token-lists": "^1.0.0-beta.34",
         "hardhat": "2.19.5",
         "hardhat-docgen": "^1.3.0",
         "hardhat-gas-reporter": "^2.0.2",
         "hardhat-tracer": "^2.8.1",
-        "debug": "^4.3.4"
-    },
-    "peerDependencies": {
-        "@chainlink/contracts": "^0.8.0",
-        "@nomicfoundation/hardhat-foundry": "^1.1.1",
-        "@nomicfoundation/hardhat-ethers": "^3.0.5",
-        "@nomicfoundation/hardhat-verify": "^2.0.5",
-        "@openzeppelin/contracts": "^4.9.6",
-        "@openzeppelin/contracts-upgradeable": "^4.9.6",
-        "@openzeppelin/hardhat-upgrades": "^3.0.5",
-        "@openzeppelin/upgrades-core": "^1.32.0",
-        "@types/sinon": "^10.0.15",
         "lodash": "^4.17.21",
         "sinon": "^15.1.0",
-        "tree-kill": "^1.2.2",
-        "ethers": "^6.11.1",
-        "@uniswap/token-lists": "^1.0.0-beta.34",
-        "hardhat": "2.19.5",
-        "hardhat-docgen": "^1.3.0",
-        "hardhat-gas-reporter": "^2.0.2",
-        "hardhat-tracer": "^2.8.1"
+        "tree-kill": "^1.2.2"
     }
 }

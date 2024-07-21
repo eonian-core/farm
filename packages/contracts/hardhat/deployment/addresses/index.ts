@@ -9,6 +9,9 @@ import { EonianHealthCheck } from './EonianHealthCheck'
 import { EonianTreasury } from './EonianTreasury'
 import { Chainlink } from './Chainlink'
 
+/** Allow to execute attach transactions without deployments */
+export const forceAttachTransactions = () => process.env.FORCE_ATTACH_TRANSACTIONS === 'true'
+
 export enum Addresses {
   APESWAP = 'APESWAP',
   CHAINLINK = 'CHAINLINK',

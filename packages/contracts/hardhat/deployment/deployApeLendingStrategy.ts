@@ -1,8 +1,11 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { TokenSymbol, sendTxWithRetry } from '@eonian/upgradeable'
+import { TokenSymbol, needUseSafe, sendTxWithRetry } from '@eonian/upgradeable'
 import { type ApeLendingStrategy } from '../../typechain-types'
 import { type DeployResult, DeployStatus } from '@eonian/upgradeable'
-import { Addresses } from './addresses'
+import { Addresses, forceAttachTransactions } from './addresses'
+import { BaseContract } from 'ethers'
+
+const contractName = 'ApeLendingStrategy'
 
 export default async function deployApeLendingStrategy(token: TokenSymbol, hre: HardhatRuntimeEnvironment): Promise<DeployResult> {
   const addresses = await getAddresses(token, hre)
@@ -19,21 +22,33 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
     addresses.healthCheck,
   ]
 
-  const deployResult = await hre.deploy('ApeLendingStrategy', token, initializeArguments)
+  const deployResult = await hre.deploy(contractName, token, initializeArguments)
 
-  if (deployResult.status === DeployStatus.DEPLOYED) {
-    await attachToVault(deployResult.proxyAddress, addresses.vault, hre)
+  if (deployResult.status === DeployStatus.DEPLOYED || forceAttachTransactions()) {
+    await attachToVault(deployResult.proxyAddress, token, addresses.vault, hre)
   }
 
   return deployResult
 }
 
-async function attachToVault(strategyAddress: string, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
+async function attachToVault(strategyAddress: string, token: TokenSymbol, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
   console.log(`Attaching strategy to vault:\nStrategy:${strategyAddress}\nVault:${vaultAddress}`)
 
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
-  await sendTxWithRetry(() => vault.addStrategy(strategyAddress, 10000)) // Allocate 100%
+  const addStrategyArgs: [string, number] = [strategyAddress, 10000]  // Allocate 100%
 
+  if(needUseSafe()) {
+    await hre.proposeSafeTransaction({
+      sourceContractName: contractName,
+      deploymentId: token,
+      address: vaultAddress,
+      contract: vault as BaseContract,
+      functionName: 'addStrategy',
+      args: addStrategyArgs,
+    })
+  } else {
+    await sendTxWithRetry(() => vault.addStrategy(...addStrategyArgs)) 
+  }
   console.log(`Strategy attached successfully:\nStrategy:${strategyAddress}\nVault:${vaultAddress}`)
 }
 

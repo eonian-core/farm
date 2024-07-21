@@ -3,7 +3,7 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import _ from 'lodash'
 import { Manifest } from '@openzeppelin/upgrades-core'
 import type { DeployResult } from './Deployer'
-import { DeployStatus } from './Deployer'
+import { DeployStatus } from './DeployState'
 
 interface ProxyToValidate extends DeployResult {
   label: string
