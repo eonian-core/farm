@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: GNU AGPLv3
 pragma solidity ^0.8.26;
 
 import {SafeERC4626Upgradeable} from "./SafeERC4626Upgradeable.sol";
@@ -22,9 +22,17 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
     /// See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
     uint256[50] private __gap;
 
+    /// @dev Will be happend when new deposit hook added
+    event DepositHookAdded(address hook);
+
+    /// @dev Will be happend when deposit hook removed
+    event DepositHookRemoved(address hook);
+
     /// @dev Adds hook to the list of deposit hooks
     function addDepositHook(IVaultHook hook) internal {
         depositHooks.push(hook);
+
+        emit DepositHookAdded(address(hook));
     }
 
     /// @dev Removes hook from the list of deposit hooks
@@ -37,6 +45,8 @@ abstract contract ERC4626Lifecycle is SafeERC4626Upgradeable {
                 // remove hook
                 depositHooks[i] = depositHooks[depositHooks.length - 1];
                 depositHooks.pop();
+
+                emit DepositHookRemoved(address(hook));
                 return true;
             }
         }

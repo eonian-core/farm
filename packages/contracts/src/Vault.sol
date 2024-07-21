@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0
+// SPDX-License-Identifier: GNU AGPLv3
 pragma solidity ^0.8.26;
 
 import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
@@ -62,9 +62,21 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     /// @notice Event that should happen when the locked-in profit release rate changed.
     event LockedProfitReleaseRateChanged(uint256 rate);
 
+    /// @notice Event that should happen when the founder token contract is set.
+    event FoundersTokenSet(address oldFounders, address newFounders);
+
+    /// @notice Event that should happen when the founder token reward fee is set.
+    event FoundersTokenFeeSet(uint256 oldFee, uint256 newFee);
+
+    /// @notice Event that should happen when the rewards address is set.
+    event RewardsHolderSet(address oldHolder, address newHolder);
+
+    /// @notice Event that should happen when the management fee is set.
+    event ManagementFeeSet(uint256 oldFee, uint256 newFee);
+
     /// @inheritdoc IVersionable
     function version() external pure override returns (string memory) {
-        return "0.2.2";
+        return "0.2.3";
     }
 
     // ------------------------------------------ Constructors ------------------------------------------
@@ -146,6 +158,9 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
     /// @notice Sets the vault rewards address.
     /// @param _rewards a new rewards address.
     function setRewards(address _rewards) public onlyOwner {
+        // trigger before action to emit event with old value
+        emit RewardsHolderSet(rewards, _rewards);
+
         rewards = _rewards;
     }
 
@@ -156,12 +171,18 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
             revert ExceededMaximumFeeValue();
         }
 
+        // trigger before action to emit event with old value
+        emit ManagementFeeSet(managementFee, _managementFee);
+
         managementFee = _managementFee;
     }
 
     /// @notice Sets the vault founder token contract;
     /// @param _founders a new founder token contract address.
     function setFounders(address _founders) external onlyOwner {
+        // trigger before action to emit event with old value
+        emit FoundersTokenSet(founders, _founders);
+
         founders = _founders;
         addDepositHook(IVaultHook(founders));
     }
@@ -172,6 +193,10 @@ contract Vault is IVault, SafeUUPSUpgradeable, SafeERC4626Upgradeable, Strategie
         if (_foundersFee + managementFee > MAX_BPS) {
             revert ExceededMaximumFeeValue();
         }
+
+        // trigger before action to emit event with old value
+        emit FoundersTokenFeeSet(foundersFee, _foundersFee);
+
         foundersFee = _foundersFee;
     }
 
