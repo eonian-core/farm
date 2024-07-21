@@ -10,6 +10,7 @@ on:
 
   push:
     branches:
+      - main
       - staging
       - development
     paths:
@@ -26,8 +27,10 @@ jobs:
       name: ${{ github.ref_name }}
 
     env:
-      HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging
+      HARDHAT_NETWORK: ${{ vars.HARDHAT_NETWORK }} # bsc_mainnet_dev or bsc_mainnet_staging or bsc_mainnet_prod
       BSCSCAN_API_KEY: ${{ secrets.BSCSCAN_API_KEY }} # Setting ETHERSCAN_API_KEY can cause issues
+      SAFE_WALLET_DEPLOY: ${{ vars.SAFE_WALLET_DEPLOY }}
+      SAFE_WALLET_ADDRESS: ${{ vars.SAFE_WALLET_ADDRESS }}
 
     steps:
       - uses: actions/checkout@v3
@@ -67,7 +70,7 @@ jobs:
           BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
-          yarn hardhat deploy
+          yarn hardhat deploy --network ${{ vars.HARDHAT_NETWORK }}
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9

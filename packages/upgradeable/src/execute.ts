@@ -1,4 +1,5 @@
-import { DeployResult, DeployStatus } from "./plugins/Deployer"
+import { DeployStatus } from "./plugins"
+import { DeployResult } from "./plugins/Deployer"
 
 export async function execute<R extends DeployResult, T extends (...args: any) => Promise<R>>(fn: T, ...args: Parameters<T>): Promise<R> {
     const fnArgs = Array.from(args).filter(arg => typeof arg !== 'object').join(', ').trim()
