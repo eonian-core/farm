@@ -47,12 +47,20 @@ export class SafeAdapter extends WithLogger {
         const {signerAddress, wallet} = await this.getSafeWallet(signer)
         this.log(`Retrived Safe wallet with address ${await wallet.getAddress()} and signer: "${signerAddress}"`)
 
+        const nextNonce = await this.api.getNextNonce(this.walletAddress)
+        this.log(`Will propose new transaction with nonce ${nextNonce}`)
+
         const tx = await wallet.createTransaction({
             transactions: [{
                 to: address,
                 value: '0',
                 data: txData
-            }]
+            }],
+            options: {
+                // by default api proposes transactions without checking for transaction in the queue
+                // as a result all transactions will have same nonce and only one can be executed
+                nonce: nextNonce
+            }
         })
 
         // Deterministic hash based on transaction parameters

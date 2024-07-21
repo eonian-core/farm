@@ -1,7 +1,7 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { type DeployResult, type TokenSymbol, DeployStatus, sendTxWithRetry, needUseSafe } from '@eonian/upgradeable'
 import type { VaultFounderToken } from '../../typechain-types'
-import { Addresses } from './addresses'
+import { Addresses, forceAttachTransactions } from './addresses'
 import { BaseContract } from 'ethers'
 
 const contractName = 'VaultFounderToken'
@@ -18,7 +18,7 @@ export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeE
   ]
   const deployResult = await hre.deploy(contractName, token, initializeArguments)
 
-  if (deployResult.status === DeployStatus.DEPLOYED) {
+  if (deployResult.status === DeployStatus.DEPLOYED || forceAttachTransactions()) {
     await attachToVault(deployResult.proxyAddress, token, addresses.vault, hre)
   }
 

@@ -2,8 +2,8 @@ import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { TokenSymbol, needUseSafe, sendTxWithRetry } from '@eonian/upgradeable'
 import { type ApeLendingStrategy } from '../../typechain-types'
 import { type DeployResult, DeployStatus } from '@eonian/upgradeable'
-import { Addresses } from './addresses'
-import { BaseContract, Contract } from 'ethers'
+import { Addresses, forceAttachTransactions } from './addresses'
+import { BaseContract } from 'ethers'
 
 const contractName = 'ApeLendingStrategy'
 
@@ -24,7 +24,7 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
 
   const deployResult = await hre.deploy(contractName, token, initializeArguments)
 
-  if (deployResult.status === DeployStatus.DEPLOYED) {
+  if (deployResult.status === DeployStatus.DEPLOYED || forceAttachTransactions()) {
     await attachToVault(deployResult.proxyAddress, token, addresses.vault, hre)
   }
 
