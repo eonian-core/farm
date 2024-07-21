@@ -3,6 +3,7 @@ name: Deploy Subgraph to Mainnet
 on:
   push:
     branches:
+      - main
       - staging
       - development
     paths:
