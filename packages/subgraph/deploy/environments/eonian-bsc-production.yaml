@@ -1,5 +1,5 @@
 specVersion: 1.0.0
-description: The production subgraph of Eonian yield aggregator protocol for
+description: The production subgraph of Eonian savings account protocol for
   Binance Smart Chain
 repository: https://github.com/eonian-core/farm
 indexerHints:

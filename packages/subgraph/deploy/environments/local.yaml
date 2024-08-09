@@ -1,5 +1,5 @@
 specVersion: 1.0.0
-description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+description: The subgraph of Eonian savings account protocol for Sepolia testnet
 repository: https://github.com/eonian-core/farm
 indexerHints:
   prune: auto

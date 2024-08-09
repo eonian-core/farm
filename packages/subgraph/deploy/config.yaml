@@ -2,7 +2,7 @@ files:
   - output: eonian-sepolia-testnet.yaml
     data:
       network: sepolia
-      description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      description: The subgraph of Eonian savings account protocol for Sepolia testnet
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -27,7 +27,7 @@ files:
   - output: eonian-bsc-development.yaml
     data:
       network: bsc
-      description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
+      description: The subgraph of Eonian savings account protocol for Binance Smart Chain development environment
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -52,7 +52,7 @@ files:
   - output: eonian-bsc-staging.yaml
     data:
       network: bsc
-      description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain staging environment
+      description: The subgraph of Eonian savings account protocol for Binance Smart Chain staging environment
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -77,7 +77,7 @@ files:
   - output: eonian-bsc-production.yaml
     data:
       network: bsc
-      description: The production subgraph of Eonian yield aggregator protocol for Binance Smart Chain
+      description: The production subgraph of Eonian savings account protocol for Binance Smart Chain
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -104,7 +104,7 @@ files:
   - output: local.yaml 
     data:
       network: sepolia
-      description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      description: The subgraph of Eonian savings account protocol for Sepolia testnet
       schema: ./schema.graphql
       vaults:
         - name: "USDT Vault"
