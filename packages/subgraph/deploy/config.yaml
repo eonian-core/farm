@@ -2,7 +2,7 @@ files:
   - output: eonian-sepolia-testnet.yaml
     data:
       network: sepolia
-      description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      description: The subgraph of Eonian savings account protocol for Sepolia testnet
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -27,7 +27,7 @@ files:
   - output: eonian-bsc-development.yaml
     data:
       network: bsc
-      description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain development environment
+      description: The subgraph of Eonian savings account protocol for Binance Smart Chain development environment
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -52,7 +52,7 @@ files:
   - output: eonian-bsc-staging.yaml
     data:
       network: bsc
-      description: The subgraph of Eonian yield aggregator protocol for Binance Smart Chain staging environment
+      description: The subgraph of Eonian savings account protocol for Binance Smart Chain staging environment
       schema: ../../schema.graphql
       vaults:
         - name: "USDT Vault"
@@ -74,12 +74,37 @@ files:
       eventHandlers:
         file: ../../src/event-handlers.ts
 
+  - output: eonian-bsc-production.yaml
+    data:
+      network: bsc
+      description: The production subgraph of Eonian savings account protocol for Binance Smart Chain
+      schema: ../../schema.graphql
+      vaults:
+        - name: "USDT Vault"
+          address: "0xaBfCaA1c65d78C2f1D51fd796290029f976192B3"
+          startBlock: 40594939
+        - name: "USDC Vault"
+          address: "0x5340f5a1B7b847Ae71865D2D7B200dc8a06a9ffC" 
+          startBlock: 40594891
+        - name: "WETH Vault"
+          address: "0x03A49bc893bBBEec9181b02C2D6abD6eb8e10311"
+          startBlock: 40595023
+        - name: "BTCB Vault"
+          address: "0x33C29951844aAa19524F51177cF725D6A0D720d4"
+          startBlock: 40594975
+      abis:
+        Vault: ../../abis/VaultImplementation.json
+        ERC20: ../../abis/ERC20.json
+        ChainLinkPriceFeed: ../../abis/ChainLinkPriceFeed.json
+      eventHandlers:
+        file: ../../src/event-handlers.ts
+
   # used primarly for testing
   # matchstick framework doesn't allow to pass the path to the schema
   - output: local.yaml 
     data:
       network: sepolia
-      description: The subgraph of Eonian yield aggregator protocol for Sepolia testnet
+      description: The subgraph of Eonian savings account protocol for Sepolia testnet
       schema: ./schema.graphql
       vaults:
         - name: "USDT Vault"

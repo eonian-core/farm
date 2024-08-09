@@ -1,6 +1,6 @@
 specVersion: 1.0.0
-description: The subgraph of Eonian savings account protocol for Binance Smart
-  Chain staging environment
+description: The production subgraph of Eonian savings account protocol for
+  Binance Smart Chain
 repository: https://github.com/eonian-core/farm
 indexerHints:
   prune: auto
@@ -11,9 +11,9 @@ dataSources:
     name: USDT Vault
     network: bsc
     source:
-      address: "0x2c5BC0e128a3543bfb6F05eEA78506Fa5F952bE2"
+      address: "0xaBfCaA1c65d78C2f1D51fd796290029f976192B3"
       abi: Vault
-      startBlock: 29619484
+      startBlock: 40594939
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -100,9 +100,9 @@ dataSources:
     name: USDC Vault
     network: bsc
     source:
-      address: "0x1b4A1Db22168A9eE828Dbb713FB81655556751E4"
+      address: "0x5340f5a1B7b847Ae71865D2D7B200dc8a06a9ffC"
       abi: Vault
-      startBlock: 30459052
+      startBlock: 40594891
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -189,9 +189,9 @@ dataSources:
     name: WETH Vault
     network: bsc
     source:
-      address: "0x4222Cf49AB74f7f16318e899fd9131569897B566"
+      address: "0x03A49bc893bBBEec9181b02C2D6abD6eb8e10311"
       abi: Vault
-      startBlock: 34028878
+      startBlock: 40595023
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -278,9 +278,9 @@ dataSources:
     name: BTCB Vault
     network: bsc
     source:
-      address: "0xf914E528acA360f748A1A644151d6F5A299Fb5E5"
+      address: "0x33C29951844aAa19524F51177cF725D6A0D720d4"
       abi: Vault
-      startBlock: 34028890
+      startBlock: 40594975
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
