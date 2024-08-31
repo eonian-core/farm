@@ -1,6 +1,6 @@
 {
   "name": "@eonian/subgraph",
-  "version": "0.23.3",
+  "version": "0.24.0",
   "scripts": {
     "dev": "graph codegen ./deploy/environments//eonian-bsc-development.yaml --watch",
     "build": "graph build ./deploy/environments/eonian-bsc-development.yaml",
