@@ -1,13 +1,16 @@
 {
   "name": "@eonian/contracts",
   "version": "0.2.0",
-  "main": "index.js",
   "license": "MIT",
+  "main": "index.js",
   "files": [
     "typechain/**/*",
     "artifacts/**/*",
     "deployments/**/*"
   ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "hardhat compile && forge build",
     "test:forge": "forge test -vvv",
@@ -31,8 +34,17 @@
     "gas-usage:report": "forge snapshot",
     "gas-usage:diff": "forge snapshot --diff"
   },
-  "engines": {
-    "node": ">=20.0.0"
+
+  "dependencies": {
+    "@chainlink/contracts": "^0.8.0",
+    "@eonian/upgradeable": "0.2.1",
+    "@nomicfoundation/hardhat-foundry": "^1.1.1",
+    "@openzeppelin/contracts": "^4.9.6",
+    "@openzeppelin/contracts-upgradeable": "^4.9.6",
+    "@types/sinon": "^10.0.15",
+    "lodash": "^4.17.21",
+    "sinon": "^15.1.0",
+    "tree-kill": "^1.2.2"
   },
   "devDependencies": {
     "@eonian/eslint-config": "^0.0.7",
@@ -65,16 +77,5 @@
     "ts-node": "^10.9.2",
     "typechain": "^8.3.2",
     "typescript": "^5.4.2"
-  },
-  "dependencies": {
-    "@chainlink/contracts": "^0.8.0",
-    "@nomicfoundation/hardhat-foundry": "^1.1.1",
-    "@openzeppelin/contracts": "^4.9.6",
-    "@openzeppelin/contracts-upgradeable": "^4.9.6",
-    "@types/sinon": "^10.0.15",
-    "lodash": "^4.17.21",
-    "sinon": "^15.1.0",
-    "tree-kill": "^1.2.2",
-    "@eonian/upgradeable": "0.2.1"
   }
 }
