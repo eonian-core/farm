@@ -70,15 +70,15 @@ contract AaveSupplyStrategyTest is TestWithERC1820Registry {
   function test_should_not_set_seconds_per_block_if_not_owner() public {
     vm.expectRevert(bytes('Ownable: caller is not the owner'));
     vm.prank(culprit);
-    strategy.setSecondsPerBlock(10);
+    strategy.setMillisecondsPerBlock(10);
   }
 
   function test_should_set_seconds_per_block() public {
-    strategy.setSecondsPerBlock(10);
-    assertEq(strategy.secondsPerBlock(), 10);
+    strategy.setMillisecondsPerBlock(10);
+    assertEq(strategy.millisecondsPerBlock(), 10);
 
-    strategy.setSecondsPerBlock(25);
-    assertEq(strategy.secondsPerBlock(), 25);
+    strategy.setMillisecondsPerBlock(25);
+    assertEq(strategy.millisecondsPerBlock(), 25);
   }
 
   function test_should_allow_vault_to_withdraw_funds(uint256 amountToWithdraw) public {

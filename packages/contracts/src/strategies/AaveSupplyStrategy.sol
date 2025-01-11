@@ -11,7 +11,7 @@ import {IStrategy} from './IStrategy.sol';
 import {IStrategiesLender} from '../lending/IStrategiesLender.sol';
 import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
 import {SafeUUPSUpgradeable} from '../upgradeable/SafeUUPSUpgradeable.sol';
-import {IPool} from './protocols/aave/IPool.sol';
+import {IAavePool} from './protocols/aave/IAavePool.sol';
 import {DataTypes} from './protocols/aave/DataTypes.sol';
 
 error UnsupportedAssetByPool();
@@ -20,9 +20,9 @@ error IncompatibleDecimals();
 contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
   uint256 public constant RAY = 10 ** 27;
 
-  IPool public pool;
+  IAavePool public pool;
   IERC20Upgradeable public aToken;
-  uint256 public secondsPerBlock;
+  uint256 public millisecondsPerBlock;
 
   uint256[50] private __gap;
 
@@ -35,14 +35,14 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
   function initialize(
     IStrategiesLender _lender,
     IERC20Upgradeable _asset,
-    IPool _pool,
+    IAavePool _pool,
     IOps _ops,
     uint256 _minReportInterval,
     bool _isPrepaid,
     AggregatorV3Interface _nativeTokenPriceFeed,
     AggregatorV3Interface _assetPriceFeed,
     address _healthCheck,
-    uint256 _secondsPerBlock
+    uint256 _millisecondsPerBlock
   ) public initializer {
     __SafeUUPSUpgradeable_init_direct();
     __BaseStrategy_init(
@@ -55,12 +55,12 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
       _assetPriceFeed,
       _healthCheck
     ); // Ownable is under the hood
-    __AaveSupplyStrategy_init_unchained(_pool, _secondsPerBlock);
+    __AaveSupplyStrategy_init_unchained(_pool, _millisecondsPerBlock);
   }
 
-  function __AaveSupplyStrategy_init_unchained(IPool _pool, uint256 _secondsPerBlock) internal onlyInitializing {
+  function __AaveSupplyStrategy_init_unchained(IAavePool _pool, uint256 _millisecondsPerBlock) internal onlyInitializing {
     pool = _pool;
-    secondsPerBlock = _secondsPerBlock;
+    millisecondsPerBlock = _millisecondsPerBlock;
 
     address aTokenAddress = _getReserveData().aTokenAddress;
     if (aTokenAddress == address(0)) {
@@ -190,7 +190,7 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
   /// @inheritdoc IStrategy
   function interestRatePerBlock() public view returns (uint256) {
-    return (_getReserveData().currentLiquidityRate / RAY) * secondsPerBlock;
+    return _getReserveData().currentLiquidityRate * millisecondsPerBlock / RAY / 1000;
   }
 
   /// @inheritdoc IStrategy
@@ -202,8 +202,8 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
     return '0.0.1';
   }
 
-  function setSecondsPerBlock(uint256 _secondsPerBlock) public onlyOwner {
-    secondsPerBlock = _secondsPerBlock;
+  function setMillisecondsPerBlock(uint256 _millisecondsPerBlock) public onlyOwner {
+    millisecondsPerBlock = _millisecondsPerBlock;
   }
 
   function _getReserveData() private view returns (DataTypes.ReserveData memory) {

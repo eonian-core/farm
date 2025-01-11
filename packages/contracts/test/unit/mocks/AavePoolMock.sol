@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity >=0.8.0;
 
-import 'contracts/strategies/protocols/aave/IPool.sol';
+import 'contracts/strategies/protocols/aave/IAavePool.sol';
 
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
 import {ERC20Mock} from './ERC20Mock.sol';
 
-contract AavePoolMock is IPool {
+contract AavePoolMock is IAavePool {
   ERC20Mock private aToken;
 
   constructor(ERC20Mock _aToken) {

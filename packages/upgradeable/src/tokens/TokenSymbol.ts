@@ -30,17 +30,14 @@ function getTokenInfo(chain: Chain, symbol: TokenSymbol): TokenInfo {
   return tokenInfo
 }
 
-export function parseTokens(args: unknown): TokenSymbol[] | null {
+export function parseList<T extends string>(args: unknown, name: string): T[] | null {
   if (typeof args !== 'object' || !args) {
     return null
   }
-  if (!('tokens' in args)) {
+  const value = name in args ? String((args as any)[name]) : null
+  if (!value) {
     return null
   }
-  const tokens = args.tokens ? String(args.tokens) : null
-  if (!tokens) {
-    return null
-  }
-  return tokens.split(',') as TokenSymbol[]
+  return value.split(',') as T[] 
 }
 

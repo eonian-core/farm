@@ -4,6 +4,7 @@ import chains from './chains.json'
 
 export enum Chain {
   UNKNOWN = 'UNKNOWN',
+  ETH = 'ETH',
   BSC = 'BSC',
 }
 

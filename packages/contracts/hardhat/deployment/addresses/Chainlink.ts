@@ -1,4 +1,4 @@
-import { Chain, TokenSymbol, BaseAddresses } from '@eonian/upgradeable'
+import { BaseAddresses, Chain, TokenSymbol } from '@eonian/upgradeable'
 import type { LookupMap } from '@eonian/upgradeable'
 
 export class Chainlink extends BaseAddresses {
@@ -12,6 +12,11 @@ export class Chainlink extends BaseAddresses {
           [TokenSymbol.BUSD]: '0xcbb98864ef56e9042e7d2efef76141f15731b82f', // [DECOMMISSIONED] https://data.chain.link/bsc/mainnet/crypto-usd/busd-usd
           [TokenSymbol.WETH]: '0x9ef1B8c0E4F7dc8bF5719Ea496883DC6401d5b2e', // https://data.chain.link/bsc/mainnet/crypto-usd/eth-usd
           [TokenSymbol.BTCB]: '0x264990fbd0A4796A3E3d8E37C4d5F87a3aCa5Ebf', // https://data.chain.link/bsc/mainnet/crypto-usd/btc-usd
+        },
+      },
+      [Chain.ETH]: {
+        ANY_ENVIRONMENT: {
+          [TokenSymbol.USDC]: '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6', // https://data.chain.link/feeds/ethereum/mainnet/usdc-usd
         },
       },
     }

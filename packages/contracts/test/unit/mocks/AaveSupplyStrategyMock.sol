@@ -7,7 +7,7 @@ contract AaveSupplyStrategyMock is AaveSupplyStrategy {
   constructor(
     IStrategiesLender _vault,
     IERC20Upgradeable _asset,
-    IPool _pool,
+    IAavePool _pool,
     IOps _ops,
     AggregatorV3Interface _nativeTokenPriceFeed,
     AggregatorV3Interface _assetPriceFeed
@@ -35,7 +35,7 @@ contract AaveSupplyStrategyMock is AaveSupplyStrategy {
     return super._liquidateAllPositions();
   }
 
-  function freeAssets() public returns (uint256) {
+  function freeAssets() public view returns (uint256) {
     return super._freeAssets();
   }
 

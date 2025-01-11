@@ -38,7 +38,7 @@ describe('Ape Lending Strategy', () => {
   let rewardsAddress: string
 
   async function setup() {
-    await deployTaskAction([token], hre)
+    await deployTaskAction({ strategies: [Addresses.APESWAP], tokens: [token] }, hre)
 
     vault = await getContractAt<Vault>('Vault')
     vaultAddress = await vault.getAddress()
@@ -201,7 +201,7 @@ describe('Ape Lending Strategy', () => {
     // Make N deposits and reports
     for (let i = 0; i < 5; i++) {
       await logSnapshot(`[${i + 1}] Before deposit:`)
-    
+
       const depositAmount = 300n * 10n ** 18n
       await deposit(holderA, depositAmount)
 
@@ -211,13 +211,13 @@ describe('Ape Lending Strategy', () => {
       await warp(minReportInterval)
     }
 
-    await logSnapshot(`Before work:`)
+    await logSnapshot('Before work:')
 
     // Wait 6h to accumulate the interest
     await warp(6 * 60 * 60)
     await strategy.work()
 
-    await logSnapshot(`After work:`)
+    await logSnapshot('After work:')
 
     // Rewards address should have some vault shares
     expect(await assetToken.balanceOf(holderA.address)).to.be.greaterThan(0)
@@ -317,12 +317,12 @@ describe('Ape Lending Strategy', () => {
   }
 
   async function logSnapshot(prefix: string) {
-    if(process.env.ENABLE_TEST_LOGS !== 'true') {
+    if (process.env.ENABLE_TEST_LOGS !== 'true') {
       return
     }
-    
+
     console.log(prefix, {
-      holder: await assetToken.balanceOf(holderA.address), 
+      holder: await assetToken.balanceOf(holderA.address),
       vault: await assetToken.balanceOf(vaultAddress),
       strategy: await assetToken.balanceOf(strategyAddress),
       balanceInCToken: await strategy.depositedBalanceSnapshot(),
