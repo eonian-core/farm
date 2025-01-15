@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GNU AGPLv3
 pragma solidity ^0.8.26;
 
-import {AggregatorV3Interface} from '@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol';
-import {IDiaOracle} from './IDiaOracle.sol';
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {IDiaOracle} from "./IDiaOracle.sol";
 
 /**
  * This adapter makes DIA Oracle compatible with Chainlink's aggregator interface.
@@ -31,7 +31,7 @@ contract DiaOracleAdapter is AggregatorV3Interface {
   }
 
   function description() external view returns (string memory) {
-    return string.concat('DiaOracleAdapter: ', pair);
+    return string.concat("DiaOracleAdapter: ", pair);
   }
 
   function version() external pure returns (uint256) {

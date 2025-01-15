@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: GNU AGPLv3
 pragma solidity ^0.8.26;
 
-import {MathUpgradeable} from '@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol';
-import {AggregatorV3Interface} from '@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol';
-import {IERC20Upgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol';
-import {IERC20MetadataUpgradeable} from '@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol';
+import {MathUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
+import {IERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import {IERC20MetadataUpgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 
-import {BaseStrategy, IOps} from './BaseStrategy.sol';
-import {IStrategy} from './IStrategy.sol';
-import {IStrategiesLender} from '../lending/IStrategiesLender.sol';
-import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
-import {SafeUUPSUpgradeable} from '../upgradeable/SafeUUPSUpgradeable.sol';
-import {IAavePool, IAaveV2Pool, IAaveV3Pool} from './protocols/aave/IAavePool.sol';
-import {DataTypes} from './protocols/aave/DataTypes.sol';
+import {BaseStrategy, IOps} from "./BaseStrategy.sol";
+import {IStrategy} from "./IStrategy.sol";
+import {IStrategiesLender} from "../lending/IStrategiesLender.sol";
+import {SafeInitializable} from "../upgradeable/SafeInitializable.sol";
+import {SafeUUPSUpgradeable} from "../upgradeable/SafeUUPSUpgradeable.sol";
+import {IAavePool, IAaveV2Pool, IAaveV3Pool} from "./protocols/aave/IAavePool.sol";
 
 error UnsupportedAssetByPool();
 error IncompatibleDecimals();
@@ -212,11 +211,11 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
   /// @inheritdoc IStrategy
   function name() external view returns (string memory) {
-    return string.concat(IERC20MetadataUpgradeable(address(asset)).symbol(), ' Aave Supply Strategy');
+    return string.concat(IERC20MetadataUpgradeable(address(asset)).symbol(), " Aave Supply Strategy");
   }
 
   function version() external pure override returns (string memory) {
-    return '0.0.1';
+    return "0.0.1";
   }
 
   function setMillisecondsPerBlock(uint256 _millisecondsPerBlock) public onlyOwner {
