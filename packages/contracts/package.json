@@ -38,7 +38,7 @@
 
   "dependencies": {
     "@chainlink/contracts": "^0.8.0",
-    "@eonian/upgradeable": "0.2.1",
+    "@eonian/upgradeable": "0.2.2",
     "@nomicfoundation/hardhat-foundry": "^1.1.1",
     "@openzeppelin/contracts": "^4.9.6",
     "@openzeppelin/contracts-upgradeable": "^4.9.6",
