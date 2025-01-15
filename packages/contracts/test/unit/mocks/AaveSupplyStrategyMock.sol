@@ -12,7 +12,7 @@ contract AaveSupplyStrategyMock is AaveSupplyStrategy {
     AggregatorV3Interface _nativeTokenPriceFeed,
     AggregatorV3Interface _assetPriceFeed
   ) AaveSupplyStrategy(false) {
-    initialize(_vault, _asset, _pool, _ops, 60000, false, _nativeTokenPriceFeed, _assetPriceFeed, address(0), 3);
+    initialize(_vault, _asset, _pool, _ops, 60000, false, _nativeTokenPriceFeed, _assetPriceFeed, address(0), 10, 3);
   }
 
   function harvest(uint256 outstandingDebt) public returns (uint256 profit, uint256 loss, uint256 debtPayment) {

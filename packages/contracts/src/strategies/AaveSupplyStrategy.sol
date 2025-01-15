@@ -11,7 +11,7 @@ import {IStrategy} from './IStrategy.sol';
 import {IStrategiesLender} from '../lending/IStrategiesLender.sol';
 import {SafeInitializable} from '../upgradeable/SafeInitializable.sol';
 import {SafeUUPSUpgradeable} from '../upgradeable/SafeUUPSUpgradeable.sol';
-import {IAavePool} from './protocols/aave/IAavePool.sol';
+import {IAavePool, IAaveV2Pool, IAaveV3Pool} from './protocols/aave/IAavePool.sol';
 import {DataTypes} from './protocols/aave/DataTypes.sol';
 
 error UnsupportedAssetByPool();
@@ -23,6 +23,7 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
   IAavePool public pool;
   IERC20Upgradeable public aToken;
   uint256 public millisecondsPerBlock;
+  uint256 public aaveVersion;
 
   uint256[50] private __gap;
 
@@ -42,7 +43,8 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
     AggregatorV3Interface _nativeTokenPriceFeed,
     AggregatorV3Interface _assetPriceFeed,
     address _healthCheck,
-    uint256 _millisecondsPerBlock
+    uint256 _millisecondsPerBlock,
+    uint256 _aaveVersion
   ) public initializer {
     __SafeUUPSUpgradeable_init_direct();
     __BaseStrategy_init(
@@ -55,14 +57,29 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
       _assetPriceFeed,
       _healthCheck
     ); // Ownable is under the hood
-    __AaveSupplyStrategy_init_unchained(_pool, _millisecondsPerBlock);
+    __AaveSupplyStrategy_init_unchained(_pool, _millisecondsPerBlock, _aaveVersion);
   }
 
-  function __AaveSupplyStrategy_init_unchained(IAavePool _pool, uint256 _millisecondsPerBlock) internal onlyInitializing {
-    pool = _pool;
+  function __AaveSupplyStrategy_init_unchained(
+    IAavePool _pool,
+    uint256 _millisecondsPerBlock,
+    uint256 _aaveVersion
+  ) internal onlyInitializing {
+    pool = IAavePool(_pool);
     millisecondsPerBlock = _millisecondsPerBlock;
 
-    address aTokenAddress = _getReserveData().aTokenAddress;
+    aaveVersion = _aaveVersion;
+    address aTokenAddress = address(0);
+
+    address assetAddress = address(asset);
+    address poolAddress = address(_pool);
+
+    if (_aaveVersion == 3) {
+      aTokenAddress = IAaveV3Pool(poolAddress).getReserveData(assetAddress).aTokenAddress;
+    } else {
+      aTokenAddress = IAaveV2Pool(poolAddress).getReserveData(assetAddress).aTokenAddress;
+    }
+
     if (aTokenAddress == address(0)) {
       revert UnsupportedAssetByPool();
     }
@@ -190,7 +207,7 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
   /// @inheritdoc IStrategy
   function interestRatePerBlock() public view returns (uint256) {
-    return _getReserveData().currentLiquidityRate * millisecondsPerBlock / RAY / 1000;
+    return (_getCurrentLiquidityRate() * millisecondsPerBlock) / RAY / 1000;
   }
 
   /// @inheritdoc IStrategy
@@ -206,7 +223,11 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
     millisecondsPerBlock = _millisecondsPerBlock;
   }
 
-  function _getReserveData() private view returns (DataTypes.ReserveData memory) {
-    return pool.getReserveData(address(asset));
+  function _getCurrentLiquidityRate() private view returns (uint256 currentLiquidityRate) {
+    if (aaveVersion == 3) {
+      currentLiquidityRate = IAaveV3Pool(address(pool)).getReserveData(address(asset)).currentLiquidityRate;
+    } else {
+      currentLiquidityRate = IAaveV2Pool(address(pool)).getReserveData(address(asset)).currentLiquidityRate;
+    }
   }
 }

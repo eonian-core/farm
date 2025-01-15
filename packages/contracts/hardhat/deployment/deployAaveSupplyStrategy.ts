@@ -12,7 +12,7 @@ const contractName = 'AaveSupplyStrategy'
 
 export default async function deployAaveSupplyStrategy(
   token: TokenSymbol,
-  aaveVersion: 'v2' | 'v3',
+  aaveVersion: 2 | 3,
   hre: HardhatRuntimeEnvironment,
 ): Promise<DeployResult> {
   const addresses = await getAddresses(token, aaveVersion, hre)
@@ -27,7 +27,8 @@ export default async function deployAaveSupplyStrategy(
     addresses.nativePriceFeed, // native token price feed
     addresses.assetPriceFeed, // asset token price feed
     addresses.healthCheck,
-    getAverageBlockTimeInSeconds(hre) * 1000, // Average block time in ms
+    getAverageBlockTimeInSeconds(hre) * 1000, // Average block time in ms,
+    aaveVersion,
   ]
 
   const deployResult = await hre.deploy(contractName, token, initializeArguments)
@@ -41,10 +42,10 @@ export default async function deployAaveSupplyStrategy(
   return deployResult
 }
 
-async function getAddresses(token: TokenSymbol, aaveVersion: 'v2' | 'v3', hre: HardhatRuntimeEnvironment) {
+async function getAddresses(token: TokenSymbol, aaveVersion: 2 | 3, hre: HardhatRuntimeEnvironment) {
   return {
     asset: await hre.addresses.getForToken(Addresses.TOKEN, token),
-    pool: await hre.addresses.get(aaveVersion === 'v3' ? Addresses.AAVE_V3 : Addresses.AAVE_V2),
+    pool: await hre.addresses.get(aaveVersion === 3 ? Addresses.AAVE_V3 : Addresses.AAVE_V2),
     assetPriceFeed: await hre.addresses.getForToken(Addresses.CHAINLINK, token),
     gelato: await hre.addresses.get(Addresses.GELATO),
     vault: await hre.addresses.getForToken(Addresses.VAULT, token),

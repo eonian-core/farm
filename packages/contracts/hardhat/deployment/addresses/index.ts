@@ -9,6 +9,7 @@ import { EonianHealthCheck } from './EonianHealthCheck'
 import { EonianTreasury } from './EonianTreasury'
 import { Chainlink } from './Chainlink'
 import { AaveV3LikePool } from './AaveV3LikePool'
+import { AaveV2LikePool } from './AaveV2LikePool'
 
 /** Allow to execute attach transactions without deployments */
 export const forceAttachTransactions = () => process.env.FORCE_ATTACH_TRANSACTIONS === 'true'
@@ -53,7 +54,7 @@ function resolveProviders(hre: HardhatRuntimeEnvironment): Record<Addresses, Bas
     [Addresses.VAULT]: new EonianVault(hre),
     [Addresses.HEALTH_CHECK]: new EonianHealthCheck(hre),
     [Addresses.TREASURY]: new EonianTreasury(hre),
-    [Addresses.AAVE_V2]: new AaveV3LikePool(hre),
+    [Addresses.AAVE_V2]: new AaveV2LikePool(hre),
     [Addresses.AAVE_V3]: new AaveV3LikePool(hre),
   }
 }

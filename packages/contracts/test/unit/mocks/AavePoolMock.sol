@@ -7,7 +7,7 @@ import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 
 import {ERC20Mock} from './ERC20Mock.sol';
 
-contract AavePoolMock is IAavePool {
+contract AavePoolMock is IAaveV3Pool {
   ERC20Mock private aToken;
 
   constructor(ERC20Mock _aToken) {
@@ -24,9 +24,9 @@ contract AavePoolMock is IAavePool {
     aToken.burn(to, amount);
   }
 
-  function getReserveData(address) public view returns (DataTypes.ReserveData memory) {
+  function getReserveData(address) public view returns (DataTypes.ReserveDataV3 memory) {
     return
-      DataTypes.ReserveData({
+      DataTypes.ReserveDataV3({
         configuration: DataTypes.ReserveConfigurationMap(0),
         liquidityIndex: 0,
         currentLiquidityRate: 0,

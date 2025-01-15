@@ -8,8 +8,8 @@ import { Addresses } from '../../deployment'
 type StrategyDeployer = (token: TokenSymbol, hre: HardhatRuntimeEnvironment) => Promise<DeployResult>
 
 const strategyDeployers: Partial<Record<Addresses, StrategyDeployer>> = {
-  [Addresses.AAVE_V3]: (token, hre) => deployAaveSupplyStrategy(token, 'v3', hre),
-  [Addresses.AAVE_V2]: (token, hre) => deployAaveSupplyStrategy(token, 'v2', hre),
+  [Addresses.AAVE_V3]: (token, hre) => deployAaveSupplyStrategy(token, 3, hre),
+  [Addresses.AAVE_V2]: (token, hre) => deployAaveSupplyStrategy(token, 2, hre),
   [Addresses.APESWAP]: deployApeLendingStrategy,
 }
 

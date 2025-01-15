@@ -3,20 +3,20 @@ import type { LookupMap } from '@eonian/upgradeable'
 import { ZeroAddress } from 'ethers'
 import { ERC20 } from './ERC20'
 
-export class AaveV3LikePool extends BaseAddresses {
+export class AaveV2LikePool extends BaseAddresses {
   /**
-   * Aave: https://aave.com/docs/resources/addresses
+   * Aave: https://aave.com/docs/resources/addresses (v2)
    */
   protected getLookupMap(): LookupMap {
     return {
       [Chain.ETH]: {
-        ANY_ENVIRONMENT: '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
+        ANY_ENVIRONMENT: '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9',
       },
     }
   }
 
   protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
-    const contract = await this.hre.ethers.getContractAt('IAaveV3Pool', address)
+    const contract = await this.hre.ethers.getContractAt('IAaveV2Pool', address)
     const usdcAddress = await new ERC20(this.hre).getAddressForToken(token ?? TokenSymbol.USDC)
     const data = await contract.getReserveData(usdcAddress)
     return data.aTokenAddress !== ZeroAddress

@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import { TokenSymbol } from '@eonian/upgradeable'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
-import { ZeroAddress } from 'ethers/constants'
 import { clearDeployments } from '../../deploy/helpers'
 import { deployTaskAction } from '../../../hardhat/tasks'
 import { Addresses } from '../../../hardhat/deployment'
@@ -14,7 +13,10 @@ import resetBalance from '../helpers/reset-balance'
 import { depositToVault, withdrawFromVault } from '../helpers/vault-deposit-withdraw'
 import warp from '../helpers/warp'
 
-describe('Aave Supply Strategy', () => {
+describe('Aave Supply Strategy V2', () => suite(Addresses.AAVE_V2))
+describe('Aave Supply Strategy V3', () => suite(Addresses.AAVE_V3))
+
+function suite(aaveStrategy: Addresses.AAVE_V3 | Addresses.AAVE_V2) {
   clearDeployments(hre)
 
   const { ethers } = hre
@@ -37,7 +39,7 @@ describe('Aave Supply Strategy', () => {
   async function setup() {
     process.env.TEST_STRATEGY_MIN_REPORT_INTERVAL = String(minReportInterval)
 
-    await deployTaskAction({ strategies: [Addresses.AAVE_V3], tokens: [token] }, hre)
+    await deployTaskAction({ strategies: [aaveStrategy], tokens: [token] }, hre)
 
     vault = await getContractAt<Vault>('Vault', token)
     vaultAddress = await vault.getAddress()
@@ -188,4 +190,4 @@ describe('Aave Supply Strategy', () => {
     // Return est. work gas value back
     await strategy.setEstimatedWorkGas(workGas)
   })
-})
+}
