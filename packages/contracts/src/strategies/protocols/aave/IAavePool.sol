@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GNU AGPLv3
+// solhint-disable one-contract-per-file
 pragma solidity ^0.8.26;
 
 import {DataTypes} from "./DataTypes.sol";
