@@ -17,6 +17,7 @@ export class Chainlink extends BaseAddresses {
       [Chain.ETH]: {
         ANY_ENVIRONMENT: {
           [TokenSymbol.USDC]: '0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6', // https://data.chain.link/feeds/ethereum/mainnet/usdc-usd
+          [TokenSymbol.WETH]: '0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419', // https://data.chain.link/feeds/ethereum/mainnet/eth-usd
         },
       },
     }

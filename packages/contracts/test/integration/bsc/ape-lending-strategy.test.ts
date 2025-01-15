@@ -2,8 +2,7 @@ import hre from 'hardhat'
 import { expect } from 'chai'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import type { HardhatEthersSigner } from '@nomicfoundation/hardhat-ethers/signers'
-import { type BaseContract, ZeroAddress } from 'ethers'
-import type { ContractName } from 'hardhat/types'
+import { ZeroAddress } from 'ethers'
 import { TokenSymbol } from '@eonian/upgradeable'
 import type {
   ApeLendingStrategy,
@@ -16,6 +15,9 @@ import { Addresses } from '../../../hardhat/deployment/addresses'
 import warp from '../helpers/warp'
 import resetBalance from '../helpers/reset-balance'
 import { clearDeployments } from '../../deploy/helpers'
+import { getContractAt } from '../helpers/get-contract-at'
+import { getAddress } from '../helpers/get-address'
+import { depositToVault, withdrawFromVault } from '../helpers/vault-deposit-withdraw'
 
 describe('Ape Lending Strategy', () => {
   clearDeployments(hre)
@@ -38,9 +40,11 @@ describe('Ape Lending Strategy', () => {
   let rewardsAddress: string
 
   async function setup() {
+    process.env.TEST_STRATEGY_MIN_REPORT_INTERVAL = String(minReportInterval)
+
     await deployTaskAction({ strategies: [Addresses.APESWAP], tokens: [token] }, hre)
 
-    vault = await getContractAt<Vault>('Vault')
+    vault = await getContractAt<Vault>('Vault', token)
     vaultAddress = await vault.getAddress()
     // hre.tracer.nameTags[vaultAddress] = 'Vault'
 
@@ -56,11 +60,11 @@ describe('Ape Lending Strategy', () => {
     await helpers.impersonateAccount(gelatoAddress)
     // hre.tracer.nameTags[gelatoAddress] = 'Gelato Ops'
 
-    strategy = await getContractAt<ApeLendingStrategy>('ApeLendingStrategy')
+    strategy = await getContractAt<ApeLendingStrategy>('ApeLendingStrategy', token)
     strategyAddress = await strategy.getAddress()
     // hre.tracer.nameTags[strategyAddress] = 'Strategy'
 
-    const assetAddress = await getAddress(Addresses.TOKEN)
+    const assetAddress = await getAddress(Addresses.TOKEN, token)
     assetToken = await hre.ethers.getContractAt('IERC20', assetAddress)
     // hre.tracer.nameTags[assetAddress] = 'BUSD'
 
@@ -87,11 +91,11 @@ describe('Ape Lending Strategy', () => {
 
     // Approve and deposit 30 BUSD in the vault on behalf of the holder
     const depositAmount = 30n * 10n ** 18n
-    await deposit(holderA, depositAmount)
+    await depositToVault(holderA, depositAmount, vault)
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
-    await withdraw(holderA, withdrawalAmount)
+    await withdrawFromVault(holderA, withdrawalAmount, vault)
 
     // Check the deposits of the Vault
     expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount - withdrawalAmount)
@@ -108,16 +112,16 @@ describe('Ape Lending Strategy', () => {
 
     // Approve and deposit 30 BUSD in the vault on behalf of the holders
     const depositAmount = 30n * 10n ** 18n
-    await deposit(holderA, depositAmount)
-    await deposit(holderB, depositAmount)
+    await depositToVault(holderA, depositAmount, vault)
+    await depositToVault(holderB, depositAmount, vault)
 
     // Check the deposits of the Vault
     expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount * 2n)
 
     // Withdraw some BUSD from the vault on behalf of the holders
     const withdrawalAmount = 15n * 10n ** 18n
-    await withdraw(holderA, withdrawalAmount)
-    await withdraw(holderB, withdrawalAmount)
+    await withdrawFromVault(holderA, withdrawalAmount, vault)
+    await withdrawFromVault(holderB, withdrawalAmount, vault)
 
     // Check the deposits of the Vault
     expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount * 2n - withdrawalAmount * 2n)
@@ -132,7 +136,7 @@ describe('Ape Lending Strategy', () => {
 
     // Approve and deposit 30 BUSD in the vault on behalf of the holder
     const depositAmount = 30n * 10n ** 18n
-    await deposit(holderA, depositAmount)
+    await depositToVault(holderA, depositAmount, vault)
 
     // Transfer deposited amount of BUSD from the vault to the strategy
     // Track is: Vault -> Strategy -> ApeSwap's cToken contract
@@ -144,7 +148,7 @@ describe('Ape Lending Strategy', () => {
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
-    await withdraw(holderA, withdrawalAmount, {
+    await withdrawFromVault(holderA, withdrawalAmount, vault, {
       addresses: [vaultAddress, strategyAddress, cTokenAddress, holderA.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
@@ -161,8 +165,8 @@ describe('Ape Lending Strategy', () => {
 
     // Approve and deposit 30 BUSD in the vault on behalf of the holders
     const depositAmount = 30n * 10n ** 18n
-    await deposit(holderA, depositAmount)
-    await deposit(holderB, depositAmount)
+    await depositToVault(holderA, depositAmount, vault)
+    await depositToVault(holderB, depositAmount, vault)
 
     // Check the deposits of the Vault
     expect(await assetToken.balanceOf(vaultAddress)).to.be.equal(depositAmount * 2n)
@@ -177,11 +181,11 @@ describe('Ape Lending Strategy', () => {
 
     // Withdraw 15 BUSD from the vault
     const withdrawalAmount = 15n * 10n ** 18n
-    await withdraw(holderA, withdrawalAmount, {
+    await withdrawFromVault(holderA, withdrawalAmount, vault, {
       addresses: [vaultAddress, strategyAddress, cTokenAddress, holderA.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
-    await withdraw(holderB, withdrawalAmount, {
+    await withdrawFromVault(holderB, withdrawalAmount, vault, {
       addresses: [vaultAddress, strategyAddress, cTokenAddress, holderB.address],
       balanceChanges: [0, 0, -withdrawalAmount, withdrawalAmount],
     })
@@ -203,12 +207,12 @@ describe('Ape Lending Strategy', () => {
       await logSnapshot(`[${i + 1}] Before deposit:`)
 
       const depositAmount = 300n * 10n ** 18n
-      await deposit(holderA, depositAmount)
+      await depositToVault(holderA, depositAmount, vault)
 
       await logSnapshot(`[${i + 1}] After deposit:`)
 
       await strategy.work()
-      await warp(minReportInterval)
+      await warp(minReportInterval + 60)
     }
 
     await logSnapshot('Before work:')
@@ -241,80 +245,6 @@ describe('Ape Lending Strategy', () => {
     // Some rewards (vault shares) were accumulated in treasury
     expect(await vault.balanceOf(treasuryAddress)).to.be.greaterThan(1)
   })
-
-  /**
-   * Approve and deposit some BUSDs in the vault on behalf of the specified holder
-   * @param holder A signer of the transaction
-   * @param amount Amount of tokens to deposit
-   * @param changeTokenBalances Params for "changeTokenBalances" check
-   */
-  async function deposit(
-    holder: HardhatEthersSigner,
-    amount: bigint,
-    changeTokenBalances?: { addresses: any[]; balanceChanges: any[] },
-  ) {
-    assetToken = assetToken.connect(holder)
-    vault = vault.connect(holder)
-    await assetToken.approve(vaultAddress, amount)
-    await expect(await vault['deposit(uint256)'](amount)).changeTokenBalances(
-      assetToken,
-      changeTokenBalances?.addresses ?? [vaultAddress, holder.address],
-      changeTokenBalances?.balanceChanges ?? [amount, -amount],
-    )
-  }
-
-  /**
-   * Withdraw some BUSDs from the vault on behalf of the specified holder
-   * @param holder A signer of the transaction
-   * @param amount Amount of tokens to withdraw
-   * @param changeTokenBalances Params for "changeTokenBalances" check
-   */
-  async function withdraw(
-    holder: HardhatEthersSigner,
-    amount: bigint,
-    changeTokenBalances?: { addresses: any[]; balanceChanges: any[] },
-  ) {
-    assetToken = assetToken.connect(holder)
-    vault = vault.connect(holder)
-    await expect(await vault['withdraw(uint256)'](amount)).changeTokenBalances(
-      assetToken,
-      changeTokenBalances?.addresses ?? [vaultAddress, holder.address],
-      changeTokenBalances?.balanceChanges ?? [-amount, amount],
-    )
-  }
-
-  async function getAddress(source: ContractName | Addresses) {
-    const isPartOfAddresses = isInAddresses(source)
-    if (isPartOfAddresses) {
-      try {
-        return await hre.addresses.getForToken(source, token)
-      }
-      catch (_e) {
-        try {
-          return await hre.addresses.get(source)
-        }
-        catch (_e) {
-          // Ignore
-        }
-      }
-    }
-    else {
-      const address = await hre.proxyRegister.getProxyAddress(source, token)
-      if (address) {
-        return address
-      }
-    }
-    throw new Error(`No address found for: ${source} (token: ${token})`)
-  }
-
-  async function getContractAt<R extends BaseContract>(contractName: ContractName) {
-    const address = await getAddress(contractName)
-    return await hre.ethers.getContractAt(contractName, address) as unknown as R
-  }
-
-  function isInAddresses(value: string): value is Addresses {
-    return Object.values(Addresses).includes(value as Addresses)
-  }
 
   async function logSnapshot(prefix: string) {
     if (process.env.ENABLE_TEST_LOGS !== 'true') {

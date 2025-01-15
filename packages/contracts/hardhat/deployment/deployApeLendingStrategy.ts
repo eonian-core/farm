@@ -4,6 +4,8 @@ import { type DeployResult, DeployStatus } from '@eonian/upgradeable'
 import { type ApeLendingStrategy } from '../../typechain-types'
 import { Addresses, forceAttachTransactions } from './addresses'
 import { attachToVault } from './helpers/attach-to-vault'
+import { getMinReportInterval } from './helpers/get-min-report-interval'
+import { setDefaultWorkGas } from './helpers/set-default-work-gas'
 
 const contractName = 'ApeLendingStrategy'
 
@@ -17,7 +19,7 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
     addresses.gelato, // gelato coordination contract
     addresses.nativePriceFeed, // native token price feed
     addresses.assetPriceFeed, // asset token price feed
-    6 * 60 * 60, // 6 hours - min report interval in seconds
+    getMinReportInterval(hre, 6 * 60 * 60), // 6 hours - min report interval in seconds
     true, // Job is prepaid
     addresses.healthCheck,
   ]
@@ -27,6 +29,8 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
   if (deployResult.status === DeployStatus.DEPLOYED || forceAttachTransactions()) {
     await attachToVault(contractName, deployResult.proxyAddress, token, addresses.vault, hre)
   }
+
+  await setDefaultWorkGas(hre, deployResult.proxyAddress)
 
   return deployResult
 }
