@@ -71,6 +71,7 @@ jobs:
       - name: Compile contracts
         run: |-
           cd packages/contracts
+          node ./link-node-modules.js
           forge build
           npx hardhat compile
 
