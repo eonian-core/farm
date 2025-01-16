@@ -75,6 +75,7 @@ jobs:
         with:
           fail-on: high
           target: packages/contracts/src
+          slither-args: "--solc-remaps @openzeppelin=../../node_modules/@openzeppelin"
 
   unit-test:
     name: Unti Test Contracts
