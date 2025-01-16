@@ -84,7 +84,7 @@ jobs:
           fail-on: high
           # ignore-compile: true
           target: packages/contracts/src
-          slither-args: --solc-remaps "@openzeppelin=node_modules/@openzeppelin solmate=lib/solmate/src"
+          slither-args: --solc-remaps "@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
 
   unit-test:
     name: Unit Test Contracts
