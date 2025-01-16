@@ -71,7 +71,10 @@ jobs:
       - name: Compile contracts
         run: |-
           cd packages/contracts
-          forge build && npx hardhat compile && echo 'Done'
+          forge build && echo 'Done'
+
+      - name: Remove hardhat.config.ts
+        run: rm ./hardhat.config.ts
 
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
