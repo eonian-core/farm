@@ -19,7 +19,7 @@ on:
 jobs:
   test:
     name: Test subgraph
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22
 
     steps:
       - uses: actions/checkout@v3

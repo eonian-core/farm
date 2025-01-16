@@ -1,15 +1,20 @@
 const { existsSync, lstatSync, symlink } = require('node:fs')
 const { dirname, join, resolve } = require('node:path')
 
-const symlinkPath = join(findHardhatProjectRoot(), 'node_modules')
-const targetPath = findMonorepoRootNodeModules()
-
 /**
  * There is no 'nohoist' option in npm workspaces configuration,
  * but Hardhat requires to have modules installed in the project directory,
  * so we can create a symlink to the monorepo's root node_modules to fix the issue.
  * RFCS is online for several years, but still nothing: https://github.com/npm/rfcs/issues/287.
  */
+
+const symlinkPath = join(findHardhatProjectRoot(), 'node_modules')
+const targetPath = findMonorepoRootNodeModules()
+
+if (symlinkPath === null || targetPath === null) {
+  return
+}
+
 symlink(targetPath, symlinkPath, 'dir', (error) => {
   if (error) {
     console.error('Failed to create symlink!', error)
