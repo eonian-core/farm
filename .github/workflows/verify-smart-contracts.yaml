@@ -63,7 +63,7 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
-        run: npm install --ignore-scripts
+        run: npm install
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -71,7 +71,7 @@ jobs:
       - name: Compile contracts
         run: |-
           cd packages/contracts
-          node ./link-node-modules.js && forge build && npx hardhat compile && echo 'Done'
+          forge build && npx hardhat compile && echo 'Done'
 
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
