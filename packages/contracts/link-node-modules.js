@@ -1,4 +1,4 @@
-const { existsSync, lstatSync, symlink } = require('node:fs')
+const { existsSync, lstatSync, statSync, symlink, unlinkSync } = require('node:fs')
 const { dirname, join, resolve } = require('node:path')
 
 /**
@@ -14,6 +14,14 @@ const targetPath = findMonorepoRootNodeModules()
 if (symlinkPath === null || targetPath === null) {
   return
 }
+
+try {
+  const stat = statSync(symlinkPath)
+  if (stat.isFile() || stat.isSymbolicLink()) {
+    unlinkSync(symlinkPath)
+  }
+}
+catch (e) {}
 
 symlink(targetPath, symlinkPath, 'dir', (error) => {
   if (error) {

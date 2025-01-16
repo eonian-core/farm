@@ -83,8 +83,8 @@ jobs:
         with:
           fail-on: high
           # ignore-compile: true
-          target: packages/contracts
-          slither-args: "--compile-force-framework foundry"
+          target: packages/contracts/src
+          slither-args: "--solc-remaps @openzeppelin=node_modules/@openzeppelin"
 
   unit-test:
     name: Unit Test Contracts
