@@ -84,6 +84,7 @@ jobs:
           fail-on: high
           ignore-compile: true
           target: packages/contracts
+          slither-args: "--compile-force-framework foundry"
 
   unit-test:
     name: Unti Test Contracts
