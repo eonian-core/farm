@@ -69,7 +69,9 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Compile contracts
-        run: forge build
+        run: |-
+          cd packages/contracts
+          forge build
 
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
