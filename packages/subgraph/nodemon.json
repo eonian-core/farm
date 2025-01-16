@@ -1,6 +1,5 @@
 {
-    "watch": ["src", "tests"],
-    "ext": "ts",
-    "exec": "yarn test:local"
-  }
-  
+  "watch": ["src", "tests"],
+  "ext": "ts",
+  "exec": "npm run test:local"
+}

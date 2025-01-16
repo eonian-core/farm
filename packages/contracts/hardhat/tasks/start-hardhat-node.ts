@@ -113,7 +113,7 @@ async function startNode(hre: HardhatRuntimeEnvironment): Promise<ChildProcessWi
     throw new Error('Fork is disabled')
   }
 
-  const childProcess = spawn('yarn', ['hardhat', 'node'])
+  const childProcess = spawn('npx', ['hardhat', 'node'])
 
   // We should kill the node process when the main process has been stopped.
   process.on('exit', () => {

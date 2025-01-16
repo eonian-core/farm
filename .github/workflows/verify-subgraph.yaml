@@ -27,28 +27,27 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Copy local schema
         run: |-
           cd packages/subgraph
-          yarn copy:local-schema
+          npm run copy:local-schema
 
       - name: Generate code
         run: |-
           cd packages/subgraph
-          yarn gen:code
+          npm run gen:code
 
       - name: Run tests 
         run: |-
           cd packages/subgraph
-          yarn test:only
+          npm run test:only
 
 
 

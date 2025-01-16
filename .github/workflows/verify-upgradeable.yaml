@@ -27,18 +27,17 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Build
         run: |-
           cd packages/upgradeable
-          yarn build
+          npm run build
   
   test:
     name: Test Upgradeable
@@ -50,15 +49,14 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Run tests
         run: |-
           cd packages/upgradeable
-          yarn test
+          npm run test

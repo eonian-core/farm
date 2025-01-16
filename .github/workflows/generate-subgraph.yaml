@@ -49,31 +49,30 @@ jobs:
           sed -i -E 's/"version": "(.*)",/"version": "${{ steps.next_version.outputs.version }}",/g' package.json
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
       
       # TODO: split schema and code generation from version bump. Currently impossuble due to github commit limitations in jobs
       - name: Generate subgraph environments configurations
         run: |-
           cd packages/subgraph
-          yarn gen:configs
+          npm install gen:configs
 
       # TODO: add step that load contracts ABIs before generating schema
 
       - name: Generate subgraph schema code
         run: |-
           cd packages/subgraph
-          yarn gen:code
+          npm install gen:code
 
       - name: Build subgraph
         run: |-
           cd packages/subgraph
-          yarn build
+          npm install build
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9

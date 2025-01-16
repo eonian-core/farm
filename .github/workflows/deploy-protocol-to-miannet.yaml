@@ -42,13 +42,12 @@ jobs:
           token: ${{ secrets.CI_GITHUB_TOKEN }}
           
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -57,12 +56,12 @@ jobs:
 
       # Need for hardhat scripts
       - name: Link packages
-        run: yarn
+        run: npm install
 
       - name: Build contracts
         run: |-
           cd packages/contracts
-          yarn build
+          npm run build
 
       - name: Deploy Protocol
         env:
@@ -70,7 +69,7 @@ jobs:
           BSC_MAINNET_PRIVATE_KEY: ${{ secrets.BSC_MAINNET_PRIVATE_KEY }}
         run: |-
           cd packages/contracts
-          yarn hardhat deploy --network ${{ vars.HARDHAT_NETWORK }}
+          npx hardhat deploy --network ${{ vars.HARDHAT_NETWORK }}
 
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
@@ -85,4 +84,4 @@ jobs:
       - name: Verify deployment result
         run: |-
           cd packages/contracts
-          yarn hardhat check-deploy-error
+          npx hardhat check-deploy-error

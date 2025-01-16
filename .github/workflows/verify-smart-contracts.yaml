@@ -31,23 +31,22 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Lint code
         run: |-
           cd packages/contracts
-          yarn solhint 'src/**/*.sol' -w 0
+          npx solhint 'src/**/*.sol' -w 0
 
       - name: Check license type
         run: |-
           cd packages/contracts
-          yarn lint:license
+          npm run lint:license
 
   check-vulnerabilities:
     name: Check vulnerabilities
@@ -59,13 +58,12 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -88,13 +86,12 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -103,7 +100,7 @@ jobs:
 
       # Need for hardhat scripts
       - name: Link packages
-        run: yarn
+        run: npm install
 
       - name: Run tests (foundry)
         run: |-
@@ -120,13 +117,12 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -135,14 +131,14 @@ jobs:
 
       # Need for hardhat scripts
       - name: Link packages
-        run: yarn
+        run: npm install
 
       - name: Run tests
         env:
           SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
         run: |-
           cd packages/contracts
-          USE_BSC_FORK=true yarn test:hardhat:bsc
+          USE_BSC_FORK=true npm run test:hardhat:bsc
 
   deploy-test:
     name: Integration Test Deploy Logic
@@ -154,13 +150,12 @@ jobs:
           submodules: recursive
 
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -169,12 +164,12 @@ jobs:
 
       # Need for hardhat scripts
       - name: Link packages
-        run: yarn
+        run: npm install
 
       - name: Run tests
         env:
           SEPOLIA_RPC_URL: ${{ secrets.SEPOLIA_RPC_URL }}
         run: |-
           cd packages/contracts
-          yarn test:hardhat:deploy
+          npm run test:hardhat:deploy
 

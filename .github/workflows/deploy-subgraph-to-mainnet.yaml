@@ -29,18 +29,17 @@ jobs:
           echo "VERSION=$VER" >> $GITHUB_ENV
       
       - name: Setup NodeJS
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "yarn"
+          node-version: "22"
 
       - name: Install dependencies
-        run: yarn --ignore-scripts
+        run: npm install --ignore-scripts
       
       - name: Build subgraph
         run: |-
           cd packages/subgraph
-          yarn build
+          npm run build
 
       - name: Deploy subgraph
         env:
