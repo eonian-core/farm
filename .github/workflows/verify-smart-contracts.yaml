@@ -71,9 +71,7 @@ jobs:
       - name: Compile contracts
         run: |-
           cd packages/contracts
-          node ./link-node-modules.js
-          forge build
-          npx hardhat compile
+          node ./link-node-modules.js && forge build && npx hardhat compile && echo 'Done'
 
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
