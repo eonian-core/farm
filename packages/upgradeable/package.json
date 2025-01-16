@@ -2,18 +2,15 @@
     "name": "@eonian/upgradeable",
     "version": "0.2.1",
     "license": "MIT",
-    "engines": {
-        "node": ">=20.0.0"
-    },
     "scripts": {
         "test": "jest",
         "test:watch": "jest --watch",
         "clear": "rm -rf dist",
-        "dev": "concurrently -c \"auto\" \"yarn:test:watch\" \"yarn:build:watch\"",
-        "rebuild": "yarn clear && yarn build",
+        "dev": "concurrently -c \"auto\" \"npm run test:watch\" \"npm run build:watch\"",
+        "rebuild": "npm run clear && npm run build",
         "build": "microbundle --target=node",
         "build:watch": "microbundle watch --target=node",
-        "prepublish": "yarn rebuild",
+        "postinstall": "npm run rebuild",
         "lint": "eslint . --ext .ts,.js --fix",
         "test:hardhat:deploy": "HARDHAT_FORK_NETWORK=false hardhat test test/deploy/*.test.*"
     },

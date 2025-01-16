@@ -3,55 +3,12 @@
   "private": true,
   "scripts": {
     "clean": "rimraf packages/**/lib",
-    "graph": "nx graph",
-    "start": "lerna exec --parallel -- yarn start",
-    "dev": "lerna exec --parallel -- yarn dev",
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "postinstall": "git submodule update --init --recursive && lerna exec --scope='@eonian/contracts' -- yarn postinstall",
-    "build:contracts": "lerna run build --scope='@eonian/contracts'",
-    "test:contracts": "lerna run test --scope='@eonian/contracts'",
-    "dev:contracts": "lerna run dev --scope='@eonian/contracts'",
-    "serve:contracts": "lerna run serve --scope='@eonian/contracts'",
-    "prepublish": "lerna exec --scope='@eonian/upgradeable' -- yarn prepublish"
+    "postinstall": "git submodule update --init --recursive"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/typechain",
-      "**/typechain/**",
-      "**/@typechain",
-      "**/@typechain/**",
-      "**/@openzeppelin",
-      "**/@openzeppelin/**",
-      "**/@chainlink",
-      "**/@chainlink/**",
-      "**/@nomicfoundation",
-      "**/@nomicfoundation/**",
-      "**/hardhat",
-      "**/hardhat/**",
-      "**/hardhat-*",
-      "**/hardhat-*/**",
-      "**/matchstick-as/**",
-      "**/matchstick-as",
-      "**/@graphprotocol/**",
-      "**/@graphprotocol"
-    ]
-  },
-  "devDependencies": {
-    "lerna": "^8.1.3",
-    "nx": "^19.2.2"
-  },
-  "dependencies": {
-    "glob": "^8.0.1",
-    "yargs": "^17.6.2"
-  },
-  "resolutions": {
-    "**/matchstick-as/@graphprotocol/graph-ts": "0.30.0"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

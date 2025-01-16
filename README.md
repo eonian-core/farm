@@ -13,6 +13,7 @@ For a list of known development issues related to Lerna monorepo, see [developme
 * `packages/contracts` - Protocol contracts.
 * `packages/subgraph` - GraphQl API for protocol.
 * `packages/eslint-config` - Shared JS code linting config.
+* `packages/upgradeable` - Framework for contract deployment.
 
 ### Requirements
 
@@ -26,7 +27,7 @@ Install required tools for development
 1) Install packages from npm and forge
 
 ```bash
-yarn
+npm install
 ```
 
 2) Open the package which you want to start
