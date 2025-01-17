@@ -96,7 +96,7 @@ jobs:
             await script({ github, context, header, body })
 
   unit-test:
-    name: Unti Test Contracts
+    name: Unit Test Contracts
     runs-on: ubuntu-latest
 
     steps:
