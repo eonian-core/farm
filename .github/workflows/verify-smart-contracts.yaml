@@ -84,7 +84,7 @@ jobs:
           fail-on: high
           # ignore-compile: true
           target: packages/contracts/src
-          slither-args: --json="-" --exclude-informational=true --exclude-low=true --exclude-medium=true --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
+          slither-args: --json="-" --exclude-informational --exclude-low --exclude-medium --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
 
   unit-test:
     name: Unit Test Contracts
