@@ -85,7 +85,7 @@ jobs:
           fail-on: none
           # ignore-compile: true
           target: packages/contracts/src
-          slither-args: --filter-paths=(node_modules/|lib/) --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/ --exclude-dependencies --exclude-informational --exclude-low --exclude-medium --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
+          slither-args: --include-paths=src/ --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/ --exclude-dependencies --exclude-informational --exclude-low --exclude-medium --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
       
       - name: Create/update checklist as PR comment
         uses: actions/github-script@v7
