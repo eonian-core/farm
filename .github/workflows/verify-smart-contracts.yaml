@@ -62,6 +62,9 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
         id: slither
