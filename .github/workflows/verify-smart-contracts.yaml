@@ -63,12 +63,17 @@ jobs:
         with:
           node-version: "20"
           cache: "yarn"
-
-      - name: Install dependencies & execute postinstall scripts
-        run: yarn
-
+      
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run forge install
+        run: |-
+          cd packages/contracts
+          forge install
+
+      - name: Install dependencies
+        run: yarn --ignore-scripts
 
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
