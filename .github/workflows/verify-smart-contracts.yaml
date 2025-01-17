@@ -80,11 +80,24 @@ jobs:
 
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
+        id: slither
         with:
-          fail-on: high
+          fail-on: none
           # ignore-compile: true
           target: packages/contracts/src
-          slither-args: --print="human-summary" --exclude-dependencies --exclude-informational --exclude-low --exclude-medium --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
+          slither-args: --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/ --exclude-dependencies --exclude-informational --exclude-low --exclude-medium --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
+      
+      - name: Create/update checklist as PR comment
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          REPORT: ${{ steps.slither.outputs.stdout }}
+        with:
+          script: |
+            const script = require('.github/scripts/comment')
+            const header = '# Slither report'
+            const body = process.env.REPORT
+            await script({ github, context, header, body })
 
   unit-test:
     name: Unit Test Contracts
