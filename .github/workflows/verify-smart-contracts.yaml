@@ -62,28 +62,11 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Compile contracts
-        run: |-
-          cd packages/contracts
-          forge build && echo 'Done'
-
-      - name: Remove hardhat.config.ts
-        run: |-
-          cd packages/contracts
-          rm ./hardhat.config.ts
-
       - name: Check for vulnerabilities
         uses: crytic/slither-action@v0.4.0
         id: slither
         with:
           fail-on: none
-          # ignore-compile: true
           target: packages/contracts/src
           slither-args: --include-paths=src/ --checklist --markdown-root ${{ github.server_url }}/${{ github.repository }}/blob/${{ github.sha }}/ --exclude-dependencies --exclude-informational --exclude-low --exclude-medium --solc-remaps="@openzeppelin=node_modules/@openzeppelin solmate=packages/contracts/lib/solmate/src"
       
