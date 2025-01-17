@@ -7,7 +7,7 @@ import {
   Entity,
   Bytes,
   Address,
-  BigInt
+  BigInt,
 } from "@graphprotocol/graph-ts";
 
 export class AnswerUpdated extends ethereum.Event {
@@ -118,7 +118,7 @@ export class ChainLinkPriceFeed__getRoundDataResult {
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -170,7 +170,7 @@ export class ChainLinkPriceFeed__latestRoundDataResult {
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -222,7 +222,7 @@ export class ChainLinkPriceFeed__proposedGetRoundDataResult {
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -274,7 +274,7 @@ export class ChainLinkPriceFeed__proposedLatestRoundDataResult {
     value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt
+    value4: BigInt,
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -323,7 +323,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "accessController",
       "accessController():(address)",
-      []
+      [],
     );
 
     return result[0].toAddress();
@@ -333,7 +333,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.tryCall(
       "accessController",
       "accessController():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -389,7 +389,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
 
   getAnswer(_roundId: BigInt): BigInt {
     let result = super.call("getAnswer", "getAnswer(uint256):(int256)", [
-      ethereum.Value.fromUnsignedBigInt(_roundId)
+      ethereum.Value.fromUnsignedBigInt(_roundId),
     ]);
 
     return result[0].toBigInt();
@@ -397,7 +397,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
 
   try_getAnswer(_roundId: BigInt): ethereum.CallResult<BigInt> {
     let result = super.tryCall("getAnswer", "getAnswer(uint256):(int256)", [
-      ethereum.Value.fromUnsignedBigInt(_roundId)
+      ethereum.Value.fromUnsignedBigInt(_roundId),
     ]);
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -410,7 +410,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "getRoundData",
       "getRoundData(uint80):(uint80,int256,uint256,uint256,uint80)",
-      [ethereum.Value.fromUnsignedBigInt(_roundId)]
+      [ethereum.Value.fromUnsignedBigInt(_roundId)],
     );
 
     return new ChainLinkPriceFeed__getRoundDataResult(
@@ -418,17 +418,17 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
     );
   }
 
   try_getRoundData(
-    _roundId: BigInt
+    _roundId: BigInt,
   ): ethereum.CallResult<ChainLinkPriceFeed__getRoundDataResult> {
     let result = super.tryCall(
       "getRoundData",
       "getRoundData(uint80):(uint80,int256,uint256,uint256,uint80)",
-      [ethereum.Value.fromUnsignedBigInt(_roundId)]
+      [ethereum.Value.fromUnsignedBigInt(_roundId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -440,14 +440,14 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBigInt()
-      )
+        value[4].toBigInt(),
+      ),
     );
   }
 
   getTimestamp(_roundId: BigInt): BigInt {
     let result = super.call("getTimestamp", "getTimestamp(uint256):(uint256)", [
-      ethereum.Value.fromUnsignedBigInt(_roundId)
+      ethereum.Value.fromUnsignedBigInt(_roundId),
     ]);
 
     return result[0].toBigInt();
@@ -457,7 +457,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.tryCall(
       "getTimestamp",
       "getTimestamp(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(_roundId)]
+      [ethereum.Value.fromUnsignedBigInt(_roundId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -500,7 +500,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "latestRoundData",
       "latestRoundData():(uint80,int256,uint256,uint256,uint80)",
-      []
+      [],
     );
 
     return new ChainLinkPriceFeed__latestRoundDataResult(
@@ -508,17 +508,15 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
     );
   }
 
-  try_latestRoundData(): ethereum.CallResult<
-    ChainLinkPriceFeed__latestRoundDataResult
-  > {
+  try_latestRoundData(): ethereum.CallResult<ChainLinkPriceFeed__latestRoundDataResult> {
     let result = super.tryCall(
       "latestRoundData",
       "latestRoundData():(uint80,int256,uint256,uint256,uint80)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -530,8 +528,8 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBigInt()
-      )
+        value[4].toBigInt(),
+      ),
     );
   }
 
@@ -539,7 +537,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "latestTimestamp",
       "latestTimestamp():(uint256)",
-      []
+      [],
     );
 
     return result[0].toBigInt();
@@ -549,7 +547,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.tryCall(
       "latestTimestamp",
       "latestTimestamp():(uint256)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -577,7 +575,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "phaseAggregators",
       "phaseAggregators(uint16):(address)",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))],
     );
 
     return result[0].toAddress();
@@ -587,7 +585,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.tryCall(
       "phaseAggregators",
       "phaseAggregators(uint16):(address)",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))]
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(param0))],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -615,7 +613,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "proposedAggregator",
       "proposedAggregator():(address)",
-      []
+      [],
     );
 
     return result[0].toAddress();
@@ -625,7 +623,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.tryCall(
       "proposedAggregator",
       "proposedAggregator():(address)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -635,12 +633,12 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
   }
 
   proposedGetRoundData(
-    _roundId: BigInt
+    _roundId: BigInt,
   ): ChainLinkPriceFeed__proposedGetRoundDataResult {
     let result = super.call(
       "proposedGetRoundData",
       "proposedGetRoundData(uint80):(uint80,int256,uint256,uint256,uint80)",
-      [ethereum.Value.fromUnsignedBigInt(_roundId)]
+      [ethereum.Value.fromUnsignedBigInt(_roundId)],
     );
 
     return new ChainLinkPriceFeed__proposedGetRoundDataResult(
@@ -648,17 +646,17 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
     );
   }
 
   try_proposedGetRoundData(
-    _roundId: BigInt
+    _roundId: BigInt,
   ): ethereum.CallResult<ChainLinkPriceFeed__proposedGetRoundDataResult> {
     let result = super.tryCall(
       "proposedGetRoundData",
       "proposedGetRoundData(uint80):(uint80,int256,uint256,uint256,uint80)",
-      [ethereum.Value.fromUnsignedBigInt(_roundId)]
+      [ethereum.Value.fromUnsignedBigInt(_roundId)],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -670,8 +668,8 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBigInt()
-      )
+        value[4].toBigInt(),
+      ),
     );
   }
 
@@ -679,7 +677,7 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
     let result = super.call(
       "proposedLatestRoundData",
       "proposedLatestRoundData():(uint80,int256,uint256,uint256,uint80)",
-      []
+      [],
     );
 
     return new ChainLinkPriceFeed__proposedLatestRoundDataResult(
@@ -687,17 +685,15 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toBigInt(),
-      result[4].toBigInt()
+      result[4].toBigInt(),
     );
   }
 
-  try_proposedLatestRoundData(): ethereum.CallResult<
-    ChainLinkPriceFeed__proposedLatestRoundDataResult
-  > {
+  try_proposedLatestRoundData(): ethereum.CallResult<ChainLinkPriceFeed__proposedLatestRoundDataResult> {
     let result = super.tryCall(
       "proposedLatestRoundData",
       "proposedLatestRoundData():(uint80,int256,uint256,uint256,uint80)",
-      []
+      [],
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -709,8 +705,8 @@ export class ChainLinkPriceFeed extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toBigInt(),
-        value[4].toBigInt()
-      )
+        value[4].toBigInt(),
+      ),
     );
   }
 
