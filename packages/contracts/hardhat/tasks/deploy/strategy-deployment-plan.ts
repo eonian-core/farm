@@ -4,7 +4,7 @@ import deployAaveSupplyStrategy from '../../deployment/deployAaveSupplyStrategy'
 import deployApeLendingStrategy from '../../deployment/deployApeLendingStrategy';
 
 export enum Strategy {
-  APESWAP = 'ApeLendingStrategy',
+  APESWAP = 'APESWAP',
   AAVE_V2 = 'AAVE_V2',
   AAVE_V3 = 'AAVE_V3',
 }
