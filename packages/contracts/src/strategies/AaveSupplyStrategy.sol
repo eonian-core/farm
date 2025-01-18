@@ -24,6 +24,8 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
   uint256 public millisecondsPerBlock;
   uint256 public aaveVersion;
 
+  // slither-disable-next-line shadowing-state
+  // slither-disable-next-line unused-state
   uint256[50] private __gap;
 
   event WithdrawnFromProtocol(uint256 amountToWithdraw, uint256 computedAmount, uint256 withdrawnAmount);
@@ -31,6 +33,15 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
 
   /// @custom:oz-upgrades-unsafe-allow constructor
   constructor(bool needDisableInitializers) SafeInitializable(needDisableInitializers) {} // solhint-disable-line no-empty-blocks
+
+  /// @inheritdoc IStrategy
+  function name() external view returns (string memory) {
+    return string.concat(IERC20MetadataUpgradeable(address(asset)).symbol(), " Aave Supply Strategy");
+  }
+
+  function version() external pure override returns (string memory) {
+    return "0.0.1";
+  }
 
   function initialize(
     IStrategiesLender _lender,
@@ -207,15 +218,6 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
   /// @inheritdoc IStrategy
   function interestRatePerBlock() public view returns (uint256) {
     return (_getCurrentLiquidityRate() * millisecondsPerBlock) / RAY / 1000;
-  }
-
-  /// @inheritdoc IStrategy
-  function name() external view returns (string memory) {
-    return string.concat(IERC20MetadataUpgradeable(address(asset)).symbol(), " Aave Supply Strategy");
-  }
-
-  function version() external pure override returns (string memory) {
-    return "0.0.1";
   }
 
   function setMillisecondsPerBlock(uint256 _millisecondsPerBlock) public onlyOwner {
