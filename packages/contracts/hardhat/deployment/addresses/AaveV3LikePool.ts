@@ -15,9 +15,9 @@ export class AaveV3LikePool extends BaseAddresses {
     }
   }
 
-  protected override async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
+  protected override async validateAddress(address: string): Promise<boolean> {
     const contract = await this.hre.ethers.getContractAt('IAaveV3Pool', address)
-    const usdcAddress = await new ERC20(this.hre).getAddressForToken(token ?? TokenSymbol.USDC)
+    const usdcAddress = await new ERC20(this.hre).getAddressForToken(TokenSymbol.USDC)
     const data = await contract.getReserveData(usdcAddress)
     return data.aTokenAddress !== ZeroAddress
   }

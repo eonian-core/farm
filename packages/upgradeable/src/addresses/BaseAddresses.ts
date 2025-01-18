@@ -41,28 +41,6 @@ export abstract class BaseAddresses {
     }
     return address
   }
-  
-  /**
-   * Filters the list of passed tokens, returning only those that are compatible with the declared contracts.
-   */
-  public async checkCompatibilityForTokens(tokens: TokenSymbol[]): Promise<TokenSymbol[]> {
-    const lookupValue = await this.resolveLookupValue()
-    const compatibleTokens: TokenSymbol[] = []
-    if (typeof lookupValue === 'string') {
-      for (const token of tokens) {
-        const isValid = await this.validateAddress(lookupValue, token) 
-        isValid && compatibleTokens.push(token)
-      }
-      return compatibleTokens
-    }
-    for (const token of tokens) {
-      try {
-        const isValid = !!this.getAddressForToken(token)
-        isValid && compatibleTokens.push(token)
-      } catch (_) {}
-    }
-    return compatibleTokens
-  }
 
   // eslint-disable-next-line unused-imports/no-unused-vars
   protected async validateAddress(address: string, token: TokenSymbol | null): Promise<boolean> {
