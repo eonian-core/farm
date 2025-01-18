@@ -85,7 +85,8 @@ async function runTask(env: HardhatRuntimeEnvironment, runSuper: RunSuperFunctio
   }
   catch (error: unknown) {
     // Retry to start if there was a network error.
-    if (isCustomError(error) && error.reason === ErrorReason.RESOURCE_NOT_AVAILABLE) {
+    const retryableError = isResourceError(error) || isQuantityError(error)
+    if (retryableError) {
       if (++attempt >= MAX_RESTART_ATTEMPTS) {
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw error
@@ -201,6 +202,14 @@ function resolveErrorCode(errorReason: ErrorReason | null): number | null {
     default:
       return null
   }
+}
+
+function isResourceError(error: any): error is CustomError {
+  return isCustomError(error) && error.reason === ErrorReason.RESOURCE_NOT_AVAILABLE
+}
+
+function isQuantityError(error: any): error is CustomError {
+  return isCustomError(error) && error.reason === ErrorReason.OTHER && !!error.message?.includes('totalDifficulty: QUANTITY')
 }
 
 function isCustomError(error: any): error is CustomError {

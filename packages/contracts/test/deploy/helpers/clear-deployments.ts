@@ -26,6 +26,7 @@ export function clearDeployments(hre: HardhatRuntimeEnvironment) {
   afterEach(async () => {
     await hre.proxyRegister.deleteFile()
     await deleteOZManifestFile()
+    hre.lastDeployments = {}
   })
 
   async function deleteOZManifestFile(): Promise<void> {
