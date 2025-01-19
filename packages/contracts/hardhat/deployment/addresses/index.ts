@@ -1,6 +1,6 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { extendEnvironment } from 'hardhat/config'
-import type { TokenSymbol, BaseAddresses } from '@eonian/upgradeable'
+import type { BaseAddresses, TokenSymbol } from '@eonian/upgradeable'
 import { ApeSwap } from './ApeSwap'
 import { GelatoOps } from './GelatoOps'
 import { ERC20 } from './ERC20'
@@ -8,6 +8,8 @@ import { EonianVault } from './EonianVault'
 import { EonianHealthCheck } from './EonianHealthCheck'
 import { EonianTreasury } from './EonianTreasury'
 import { Chainlink } from './Chainlink'
+import { AaveV3LikePool } from './AaveV3LikePool'
+import { AaveV2LikePool } from './AaveV2LikePool'
 
 /** Allow to execute attach transactions without deployments */
 export const forceAttachTransactions = () => process.env.FORCE_ATTACH_TRANSACTIONS === 'true'
@@ -20,6 +22,8 @@ export enum Addresses {
   VAULT = 'VAULT',
   TOKEN = 'TOKEN',
   GELATO = 'GELATO',
+  AAVE_V2 = 'AAVE_V2',
+  AAVE_V3 = 'AAVE_V3',
 }
 
 declare module 'hardhat/types/runtime' {
@@ -27,6 +31,7 @@ declare module 'hardhat/types/runtime' {
     addresses: {
       get: (addresses: Addresses) => Promise<string>
       getForToken: (addresses: Addresses, token: TokenSymbol) => Promise<string>
+      getProvider: (addresses: Addresses) => BaseAddresses
     }
   }
 }
@@ -36,6 +41,7 @@ extendEnvironment((hre) => {
   hre.addresses = {
     get: addresses => providers[addresses].getAddress(),
     getForToken: (addresses, token) => providers[addresses].getAddressForToken(token),
+    getProvider: addresses => providers[addresses],
   }
 })
 
@@ -48,5 +54,7 @@ function resolveProviders(hre: HardhatRuntimeEnvironment): Record<Addresses, Bas
     [Addresses.VAULT]: new EonianVault(hre),
     [Addresses.HEALTH_CHECK]: new EonianHealthCheck(hre),
     [Addresses.TREASURY]: new EonianTreasury(hre),
+    [Addresses.AAVE_V2]: new AaveV2LikePool(hre),
+    [Addresses.AAVE_V3]: new AaveV3LikePool(hre),
   }
 }

@@ -1,4 +1,4 @@
-import { resolveChain, resolveNetworkEnvironment, BaseAddresses} from '@eonian/upgradeable'
+import { BaseAddresses, resolveChain, resolveNetworkEnvironment } from '@eonian/upgradeable'
 import type { LookupMap } from '@eonian/upgradeable'
 
 export class EonianTreasury extends BaseAddresses {

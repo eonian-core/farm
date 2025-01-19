@@ -255,6 +255,12 @@ abstract contract BaseStrategy is
         emit UpdatedProfitFactor(_profitFactor);
     }
 
+    /// Sets the automation contract that is allowed to trigger the harvest.
+    /// @param _ops New gelato ops contract address.
+    function setGelatoOps(IOps _ops) external onlyOwner {
+      _setOps(_ops);
+    }
+
     /// @notice Frees up as much funds of the base protocol as possible.
     /// @dev This function is called on harvest if the strategy was shutted down.
     /// @param outstandingDebt The outstanding debt of the strategy.
@@ -349,6 +355,7 @@ abstract contract BaseStrategy is
     function _freeAssets()
         internal
         virtual
+        view
         returns(uint256)
     {
         return asset.balanceOf(address(this));
