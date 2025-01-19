@@ -1,4 +1,4 @@
-import { Chain, TokenSymbol, getTokenAddress, BaseAddresses } from '@eonian/upgradeable'
+import { BaseAddresses, Chain, TokenSymbol, getTokenAddress } from '@eonian/upgradeable'
 import type { LookupMap } from '@eonian/upgradeable'
 
 export class ERC20 extends BaseAddresses {
@@ -11,6 +11,11 @@ export class ERC20 extends BaseAddresses {
           [TokenSymbol.BUSD]: getTokenAddress(Chain.BSC, TokenSymbol.BUSD),
           [TokenSymbol.WETH]: getTokenAddress(Chain.BSC, TokenSymbol.WETH),
           [TokenSymbol.BTCB]: '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c',
+        },
+      },
+      [Chain.ETH]: {
+        ANY_ENVIRONMENT: {
+          [TokenSymbol.USDC]: getTokenAddress(Chain.ETH, TokenSymbol.USDC),
         },
       },
     }

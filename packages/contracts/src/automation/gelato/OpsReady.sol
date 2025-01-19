@@ -31,6 +31,8 @@ abstract contract OpsReady is SafeInitializable {
     using BackCombatibleTransfer for address payable;
     using SafeERC20 for IERC20;
 
+    event OpsChanged(IOps ops);
+
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new
      * variables without shifting down storage in the inheritance chain.
@@ -75,5 +77,10 @@ abstract contract OpsReady is SafeInitializable {
 
     function _getFeeDetails() internal view returns (uint256 fee, address feeToken) {
         (fee, feeToken) = ops.getFeeDetails();
+    }
+
+    function _setOps(IOps _ops) internal {
+      ops = _ops;
+      emit OpsChanged(_ops);
     }
 }

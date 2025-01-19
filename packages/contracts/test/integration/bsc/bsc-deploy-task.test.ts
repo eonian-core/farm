@@ -1,20 +1,21 @@
 import hre from 'hardhat'
 import * as helpers from '@nomicfoundation/hardhat-network-helpers'
 import { expect } from 'chai'
-import { deleteErrorFile } from '../../../hardhat/tasks/deploy-error-catcher'
 import { type DeployResult, DeployStatus, TokenSymbol } from '@eonian/upgradeable'
+import { deleteErrorFile } from '../../../hardhat/tasks/deploy-error-catcher'
 import { clearDeployments } from '../../deploy/helpers'
+import { Addresses } from '../../../hardhat/deployment'
 
 describe('BSC Deploy Task', () => {
   clearDeployments(hre)
 
   let tempLog: () => void
 
-  async function setup() {}
+  async function setup() { }
 
   beforeEach(async () => {
     tempLog = console.log
-    console.log = () => {}
+    console.log = () => { }
     await helpers.loadFixture(setup)
   })
 
@@ -40,7 +41,7 @@ describe('BSC Deploy Task', () => {
       }
     }
 
-    await hre.run('deploy', { tokens: [TokenSymbol.USDC].join() })
+    await hre.run('deploy', { tokens: [TokenSymbol.USDC].join(), strategies: [Addresses.APESWAP].join() })
 
     await expect(hre.run('check-deploy-error')).to.be.rejectedWith(Error, 'sender doesn\'t have enough funds to send tx')
   })
@@ -56,7 +57,7 @@ describe('BSC Deploy Task', () => {
     }
 
     // First deploy. Only the first proxy should be deployed.
-    await hre.run('deploy', { tokens: [TokenSymbol.USDC].join() })
+    await hre.run('deploy', { tokens: [TokenSymbol.USDC].join(), strategies: [Addresses.APESWAP].join() })
     const [firstDeployedProxy, ...restProxies] = getDeployments(TokenSymbol.USDC)
     expect(firstDeployedProxy.status).to.be.equal(DeployStatus.DEPLOYED)
     expect(restProxies.length).to.be.equal(0)
@@ -65,7 +66,7 @@ describe('BSC Deploy Task', () => {
 
     // Second deploy. The first proxy should be skipped, but the rest ones are deployed.
     await setDeployerBalance(100n * 10n ** 18n)
-    await hre.run('deploy', { tokens: [TokenSymbol.USDC].join() })
+    await hre.run('deploy', { tokens: [TokenSymbol.USDC].join(), strategies: [Addresses.APESWAP].join() })
     const [firstProxy, ...restDeployedProxies] = getDeployments(TokenSymbol.USDC)
     expect(firstProxy.status).to.be.equal(DeployStatus.NONE)
     expect(restDeployedProxies.every(deployment => deployment.status === DeployStatus.DEPLOYED)).to.be.equal(true)

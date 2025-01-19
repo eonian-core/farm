@@ -110,7 +110,7 @@ contract ApeLendingStrategyMock is ApeLendingStrategy {
         return super._liquidateAllPositions();
     }
 
-    function freeAssets() public returns (uint256) {
+    function freeAssets() public view returns (uint256) {
         return _freeAssets();
     }
 }

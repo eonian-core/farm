@@ -1,4 +1,4 @@
-import { Chain, TokenSymbol, BaseAddresses } from '@eonian/upgradeable'
+import { BaseAddresses, Chain, TokenSymbol } from '@eonian/upgradeable'
 import type { LookupMap } from '@eonian/upgradeable'
 
 export class ApeSwap extends BaseAddresses {

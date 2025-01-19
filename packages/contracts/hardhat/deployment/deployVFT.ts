@@ -1,8 +1,8 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { type DeployResult, type TokenSymbol, DeployStatus, sendTxWithRetry, needUseSafe } from '@eonian/upgradeable'
+import { type DeployResult, DeployStatus, type TokenSymbol, needUseSafe, sendTxWithRetry } from '@eonian/upgradeable'
+import type { BaseContract } from 'ethers'
 import type { VaultFounderToken } from '../../typechain-types'
 import { Addresses, forceAttachTransactions } from './addresses'
-import { BaseContract } from 'ethers'
 
 const contractName = 'VaultFounderToken'
 
@@ -26,11 +26,11 @@ export default async function deployVFT(token: TokenSymbol, hre: HardhatRuntimeE
 }
 
 async function attachToVault(vftAddress: string, token: TokenSymbol, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
-  console.log(`Attaching Vault Founder Token to vault:\nVFT:${vftAddress}\nVault:${vaultAddress}`)
+  console.log(`Attaching Vault Founder Token to vault:\n\tVFT:${vftAddress}\n\tVault:${vaultAddress}`)
 
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
 
-  if(needUseSafe()) {
+  if (needUseSafe()) {
     await hre.proposeSafeTransaction({
       sourceContractName: contractName,
       deploymentId: token,
@@ -39,11 +39,12 @@ async function attachToVault(vftAddress: string, token: TokenSymbol, vaultAddres
       functionName: 'setFounders',
       args: [vftAddress],
     })
-  } else {
+  }
+  else {
     await sendTxWithRetry(() => vault.setFounders(vftAddress))
   }
 
-  console.log(`VFT attached successfully:\nVFT:${vftAddress}\nVault:${vaultAddress}`)
+  console.log('VFT attached successfully!')
 }
 
 async function getAddreses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {

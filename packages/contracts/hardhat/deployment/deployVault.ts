@@ -1,10 +1,10 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import type { Vault } from '../../typechain-types'
-import type { TokenSymbol, DeployResult } from '@eonian/upgradeable'
+import type { DeployResult, TokenSymbol } from '@eonian/upgradeable'
 import { NetworkEnvironment, resolveNetworkEnvironment } from '@eonian/upgradeable'
+import type { Vault } from '../../typechain-types'
 import { Addresses } from './addresses'
 
-const checkIsProduction = (hre: HardhatRuntimeEnvironment) => {
+function checkIsProduction(hre: HardhatRuntimeEnvironment) {
   const environment = resolveNetworkEnvironment(hre)
   return environment === NetworkEnvironment.PRODUCTION
 }

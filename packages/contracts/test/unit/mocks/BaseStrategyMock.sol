@@ -168,7 +168,7 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         return _liquidateAllPositionsReturn;
     }
 
-    function freeAssets() public returns (uint256) {
+    function freeAssets() public view returns (uint256) {
         return _freeAssets();
     }
 }
