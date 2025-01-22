@@ -18,6 +18,11 @@ export class ERC20 extends BaseAddresses {
           [TokenSymbol.USDC]: getTokenAddress(Chain.ETH, TokenSymbol.USDC),
         },
       },
+      [Chain.CROSSFI_TESTNET]: {
+        ANY_ENVIRONMENT: {
+          [TokenSymbol.XFT]: '0xdb5c548684221ce2f55f16456ec5cf43a028d8e9',
+        },
+      },
     }
   }
 

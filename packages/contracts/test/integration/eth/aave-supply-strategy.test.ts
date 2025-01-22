@@ -12,7 +12,7 @@ import { getAddress } from '../helpers/get-address'
 import resetBalance from '../helpers/reset-balance'
 import { depositToVault, withdrawFromVault } from '../helpers/vault-deposit-withdraw'
 import warp from '../helpers/warp'
-import { Strategy } from '../../../hardhat/tasks/deploy/strategy-deployment-plan'
+import { Strategy } from '../../../hardhat/tasks/deploy/deployment-plan'
 
 describe('Aave Supply Strategy V2', () => suite(Strategy.AAVE_V2))
 describe('Aave Supply Strategy V3', () => suite(Strategy.AAVE_V3))
@@ -40,7 +40,8 @@ function suite(aaveStrategy: Strategy.AAVE_V3 | Strategy.AAVE_V2) {
   async function setup() {
     process.env.TEST_STRATEGY_MIN_REPORT_INTERVAL = String(minReportInterval)
 
-    await deployTaskAction(hre, { [aaveStrategy]: [token] })
+    const tokens = [token]
+    await deployTaskAction(hre, tokens, { [aaveStrategy]: tokens })
 
     vault = await getContractAt<Vault>('Vault', token)
     vaultAddress = await vault.getAddress()

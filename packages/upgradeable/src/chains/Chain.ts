@@ -6,6 +6,8 @@ export enum Chain {
   UNKNOWN = 'UNKNOWN',
   ETH = 'ETH',
   BSC = 'BSC',
+  CROSSFI = 'CROSSFI',
+  CROSSFI_TESTNET = 'CROSSFI_TESTNET',
 }
 
 export function resolveChain(hre: HardhatRuntimeEnvironment): Chain {

@@ -18,7 +18,7 @@ import { clearDeployments } from '../../deploy/helpers'
 import { getContractAt } from '../helpers/get-contract-at'
 import { getAddress } from '../helpers/get-address'
 import { depositToVault, withdrawFromVault } from '../helpers/vault-deposit-withdraw'
-import { Strategy } from '../../../hardhat/tasks/deploy/strategy-deployment-plan'
+import { Strategy } from '../../../hardhat/tasks/deploy/deployment-plan'
 
 describe('Ape Lending Strategy', () => {
   clearDeployments(hre)
@@ -43,7 +43,8 @@ describe('Ape Lending Strategy', () => {
   async function setup() {
     process.env.TEST_STRATEGY_MIN_REPORT_INTERVAL = String(minReportInterval)
 
-    await deployTaskAction(hre, { [Strategy.APESWAP]: [token] })
+    const tokens = [token]
+    await deployTaskAction(hre, tokens, { [Strategy.APESWAP]: tokens })
 
     vault = await getContractAt<Vault>('Vault', token)
     vaultAddress = await vault.getAddress()

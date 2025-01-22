@@ -31,6 +31,14 @@ const bscMainnet: NetworkUserConfig = {
   gasMultiplier: 1.1,
 }
 
+const crossFiMainnet: NetworkUserConfig = {
+  url: 'https://rpc.mainnet.ms/',
+  chainId: 4158,
+  accounts: [process.env.CROSSFI_MAINNET_PRIVATE_KEY].filter(Boolean) as Array<string>,
+  // explorer: https://xfiscan.com/
+  // symbol: XFI
+}
+
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   solidity: {
@@ -53,6 +61,22 @@ const config: HardhatUserConfig = {
     bsc_mainnet_prod: {
       ...bscMainnet,
     },
+    crossfi_mainnet_dev: {
+      ...crossFiMainnet,
+    },
+    crossfi_mainnet_staging: {
+      ...crossFiMainnet,
+    },
+    crossfi_mainnet_prod: {
+      ...crossFiMainnet,
+    },
+    crossfi_testnet_dev: {
+      url: 'https://rpc.testnet.ms/', // https://tendermint-rpc.testnet.ms/
+      chainId: 4157,
+      accounts: [process.env.CROSSFI_TESTNET_PRIVATE_KEY].filter(Boolean) as Array<string>,
+      // explorer: https://test.xfiscan.com/
+      // symbol: XFI
+    }
   },
   etherscan: {
     apiKey: {
