@@ -2,6 +2,28 @@
 
 Decentralized savings account protocol and subgraph. More info in [docs](docs.eonian.finance).
 
+## Archutecture
+
+In readme explained only upper level architecture. For more details see [How Eonian Works docs](https://docs.eonian.finance/basics/how-eonian-works).
+
+### Savings Account Money Flow
+
+![Decentralized Savings Account Money Flow](./docs/images/deposit-money-flow.webp)
+
+### Investments Process
+
+![Investments Process](./docs/images/investments-process.webp)
+
+### Recovery Process
+
+![Recovery Process](./docs/images/recovery-process.webp)
+
+## Audits
+
+All audits and security reviews are available in [audits](https://docs.eonian.finance/security/protocol-audits) section.
+
+In this repo you can find only [main audits](./audits).
+
 ## Development
 
 This mono-repository contains protocol contracts and dApp code, as well as all related packages.
