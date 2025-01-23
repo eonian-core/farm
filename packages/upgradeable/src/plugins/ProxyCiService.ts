@@ -119,5 +119,5 @@ export class ProxyCiService extends WithLogger {
 export const retryOnProviderError = async <T>(action: () => Promise<T>): Promise<T> => await retryOnFailureWithDelay({
     retries: 3, 
     delay: 3000,
-    isNeedRetry: async (error) => error?.message?.includes('transaction underpriced')
+    isNeedRetry: async (error) => error?.message?.includes('transaction underpriced') || error.message?.includes('rpc error')
 }, action)

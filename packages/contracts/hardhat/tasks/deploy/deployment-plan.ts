@@ -7,17 +7,11 @@ export type VaultsDeploymentPlan = TokenSymbol[]
 
 const vaultsDeploymentPlans: Partial<Record<Chain, VaultsDeploymentPlan>> = {
   [Chain.BSC]: [TokenSymbol.USDC, TokenSymbol.USDT, TokenSymbol.BTCB, TokenSymbol.WETH],
-  [Chain.CROSSFI_TESTNET]: [TokenSymbol.XFT],
+  [Chain.CROSSFI_TESTNET]: [TokenSymbol.USDT],
 }
 
-export function getVaultsDeploymentPlan(hre: HardhatRuntimeEnvironment): VaultsDeploymentPlan {
-  const chain = resolveChain(hre);
-  const tokens = vaultsDeploymentPlans[chain];
-  if (!tokens) {
-    throw new Error(`No vaults to deploy for "${chain}" chain!`);
-  } 
-  return tokens
-}
+export const getVaultsDeploymentPlan = (hre: HardhatRuntimeEnvironment): VaultsDeploymentPlan => 
+  resolvePlan(hre, vaultsDeploymentPlans);
 
 export enum Strategy {
   APESWAP = 'APESWAP',
@@ -52,11 +46,15 @@ export function getStrategyDeployer(strategy: Strategy, token: TokenSymbol) {
   return (hre: HardhatRuntimeEnvironment) => deployers[strategy](token, hre)
 }
 
-export function getStrategyDeploymentPlan(hre: HardhatRuntimeEnvironment): StreategiesDeploymentPlan {
+export const getStrategyDeploymentPlan = (hre: HardhatRuntimeEnvironment): StreategiesDeploymentPlan =>
+  resolvePlan(hre, strategyDeploymentPlans);
+
+export function resolvePlan<T>(hre: HardhatRuntimeEnvironment, plans: Partial<Record<Chain, T>>): T {
   const chain = resolveChain(hre);
-  const strategies = strategyDeploymentPlans[chain];
-  if (!strategies) {
-    throw new Error(`No strategies to deploy for "${chain}" chain!`);
+  const plan = plans[chain];
+  if (!plan) {
+    throw new Error(`Deploy plan for "${chain}" chain not found!`);
   } 
-  return strategies
+
+  return plan
 }

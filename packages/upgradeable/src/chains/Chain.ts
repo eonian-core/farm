@@ -23,10 +23,19 @@ export function resolveChain(hre: HardhatRuntimeEnvironment): Chain {
     return getChainForFork()
   }
 
-  const chainString = hardhatNetwork.split('_').at(0)
-  const chain = Object.values(Chain).find(chain => chain.toLowerCase() === chainString)
+  const [chainName, chainType] = hardhatNetwork.split('_')
+  const chainString = `${chainName}_${chainType}`
+  // try find full name
+  let chain = Object.values(Chain).find(chain => chain.toLowerCase() === chainString)
+  if(chain) {
+    return chain
+  }
+
+  console.log(`Unable to resolve chain full name ${chainString}, will try short name ${chainName}`)
+  // try find short name
+  chain = Object.values(Chain).find(chain => chain.toLowerCase() === chainName)
   if (!chain) {
-    throw new Error(`Unable to resolve chain from: ${hardhatNetwork}, got: ${chainString}!`)
+    throw new Error(`Unable to resolve chain from: ${hardhatNetwork}, got: ${chainName}!`)
   }
   return chain
 }
