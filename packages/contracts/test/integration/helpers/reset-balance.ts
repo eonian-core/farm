@@ -17,9 +17,8 @@ export default async function resetBalance(
 
   await provider.send('hardhat_setBalance', [address, ethers.toBeHex(ethers.parseEther('10'))])
 
-  const signer = await ethers.getSigner(address)
   for (const tokenAddress of tokens) {
-    const token = await getToken(tokenAddress, signer)
+    const token = await getToken(tokenAddress)
     const balance = await token.balanceOf(address)
     await token.transfer('0x000000000000000000000000000000000000dEaD', balance)
   }
