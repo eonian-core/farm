@@ -8,6 +8,7 @@ export type VaultsDeploymentPlan = TokenSymbol[]
 const vaultsDeploymentPlans: Partial<Record<Chain, VaultsDeploymentPlan>> = {
   [Chain.BSC]: [TokenSymbol.USDC, TokenSymbol.USDT, TokenSymbol.BTCB, TokenSymbol.WETH],
   [Chain.CROSSFI_TESTNET]: [TokenSymbol.USDT],
+  [Chain.CROSSFI]: [TokenSymbol.WXFI],
 }
 
 export const getVaultsDeploymentPlan = (hre: HardhatRuntimeEnvironment): VaultsDeploymentPlan => 
@@ -29,6 +30,9 @@ const strategyDeploymentPlans: Partial<Record<Chain, StreategiesDeploymentPlan>>
     [Strategy.APESWAP]: [TokenSymbol.USDC, TokenSymbol.USDT, TokenSymbol.BTCB, TokenSymbol.WETH],
   },
   [Chain.CROSSFI_TESTNET]: {
+    // intentiannly skipped
+  },
+  [Chain.CROSSFI]: {
     // intentiannly skipped
   }
 };

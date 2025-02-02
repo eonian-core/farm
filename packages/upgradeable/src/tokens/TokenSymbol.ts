@@ -10,6 +10,8 @@ export enum TokenSymbol {
   USDC = 'USDC',
   BTCB = 'BTCB',
   WETH = 'WETH',
+  XFT = 'XFT',
+  WXFI = 'WXFI'
 }
 
 const tokenLookupMap = tokens.reduce((map, token) => {

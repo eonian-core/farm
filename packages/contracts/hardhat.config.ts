@@ -71,8 +71,7 @@ const config: HardhatUserConfig = {
       ...crossFiMainnet,
     },
     crossfi_testnet_dev: {
-      url: 'https://rpc.testnet.ms/', 
-      // url: 'https://tendermint-rpc.testnet.ms/',
+      url: process.env.CROSSFI_TESTNET_RPC || 'https://rpc.testnet.ms/', 
       chainId: 4157,
       accounts: [process.env.CROSSFI_TESTNET_PRIVATE_KEY].filter(Boolean) as Array<string>,
       // explorer: https://test.xfiscan.com/
@@ -83,6 +82,7 @@ const config: HardhatUserConfig = {
     apiKey: {
       bsc: process.env.BSCSCAN_API_KEY!,
       crossfi_testnet: process.env.XFISCAN_TESTNET_API_KEY!,
+      crossfi_mainnet_dev: process.env.XFISCAN_API_KEY!,
     },
     customChains: [
       {
@@ -99,6 +99,22 @@ const config: HardhatUserConfig = {
         urls: {
           apiURL: 'https://test.xfiscan.com/api/1.0/',
           browserURL: 'https://test.xfiscan.com/',
+        },
+      },
+      {
+        network: 'crossfi_mainnet',
+        chainId: 4158,
+        urls: {
+          apiURL: 'https://xfiscan.com/api/1.0/',
+          browserURL: 'https://xfiscan.com/',
+        },
+      },
+      {
+        network: 'crossfi_mainnet_dev',
+        chainId: 4158,
+        urls: {
+          apiURL: 'https://xfiscan.com/api/1.0/',
+          browserURL: 'https://xfiscan.com/',
         },
       }
     ]
