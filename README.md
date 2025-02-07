@@ -4,9 +4,9 @@ Decentralized savings account protocol and subgraph. More info in [docs](docs.eo
 
 ## Audits
 
-[Audits](./audits/) folder containts all audit reports for the protocol.
+[Audits](./audits/) folder contains all audit reports for the protocol.
 
-For additional code analysis and audts summary check [docs Audit page](https://docs.eonian.finance/security/protocol-audits).
+For the additional code analysis and audit summaries check [docs Audit page](https://docs.eonian.finance/security/protocol-audits).
 
 ## Development
 
