@@ -20,8 +20,8 @@ export class ERC20 extends BaseAddresses {
       },
       [Chain.CROSSFI_TESTNET]: {
         ANY_ENVIRONMENT: {
-          [TokenSymbol.XFT]: '0xdb5c548684221ce2f55f16456ec5cf43a028d8e9',
-          [TokenSymbol.USDT]: '0x83e9a41c38d71f7a06632de275877fca48827870',
+          [TokenSymbol.XFT]: '0xDb5C548684221Ce2f55F16456Ec5Cf43a028D8e9',
+          [TokenSymbol.USDT]: '0x83E9A41c38D71f7a06632dE275877FcA48827870',
         },
       },
       [Chain.CROSSFI]: {
