@@ -54,7 +54,7 @@ function suite(startegy: Strategy, contractName: ContractName) {
     holderA = await ethers.getSigner('0x8894e0a0c962cb723c1976a4421c95949be2d4e3') // Binance Hot Wallet #6
     await helpers.impersonateAccount(holderA.address)
 
-    holderB = await ethers.getSigner('0xF977814e90dA44bFA03b6295A0616a897441aceC') // Binance Hot Wallet #20
+    holderB = await ethers.getSigner('0xe2fc31F816A9b94326492132018C3aEcC4a93aE1') // Binance Hot Wallet #7
     await helpers.impersonateAccount(holderB.address)
 
     const gelatoAddress = await getAddress(Addresses.GELATO)

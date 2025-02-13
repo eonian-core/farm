@@ -45,7 +45,7 @@ function suite(aaveStrategy: Strategy.AAVE_V3 | Strategy.AAVE_V2) {
     vault = await getContractAt<Vault>('Vault', token)
     vaultAddress = await vault.getAddress()
 
-    holderA = await ethers.getSigner('0xF977814e90dA44bFA03b6295A0616a897441aceC') // Binance Hot Wallet #20
+    holderA = await ethers.getSigner('0xf89d7b9c864f589bbF53a82105107622B35EaA40') // Bybit wallet
     await helpers.impersonateAccount(holderA.address)
 
     holderB = await ethers.getSigner('0x28C6c06298d514Db089934071355E5743bf21d60') // Binance Hot Wallet #14
