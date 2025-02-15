@@ -36,6 +36,6 @@ export async function attachToVault(
 
   console.log(`Strategy attached successfully with ratio: ${debtRatio}!`)
   if (debtRatio === 0n) {
-    console.warn('Debt ratio of the strategy is 0, so it\'s not active. You should adjust it manually!')
+    console.log('Debt ratio of the strategy is 0, so it\'s not active. You should adjust it manually!')
   }
 }

@@ -12,6 +12,9 @@ export class AaveV3LikePool extends BaseAddresses {
       [Chain.ETH]: {
         ANY_ENVIRONMENT: '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
       },
+      [Chain.BSC]: {
+        ANY_ENVIRONMENT: '0x6807dc923806fE8Fd134338EABCA509979a7e0cB',
+      },
     }
   }
 
