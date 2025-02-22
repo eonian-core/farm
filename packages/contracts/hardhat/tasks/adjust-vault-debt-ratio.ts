@@ -63,6 +63,7 @@ task('adjust-vault-debt-ratio', 'Changes debt ratio for the vault strategies')
 
     if (Object.keys(ratio).length === 0) {
       console.warn('Param --ratio is not set, exiting...')
+      return
     }
 
     const newStructure = applyRatioToStructure(ratio, currentStructure)
@@ -78,7 +79,11 @@ task('adjust-vault-debt-ratio', 'Changes debt ratio for the vault strategies')
     printStructure(updatedStructure, 'Updated vault structure')
   })
 
-async function updateDebtRatio(structure: Structure, tokenSymbols: TokenSymbol[], hre: HardhatRuntimeEnvironment): Promise<Structure> {
+async function updateDebtRatio(
+  structure: Structure,
+  tokenSymbols: TokenSymbol[],
+  hre: HardhatRuntimeEnvironment,
+): Promise<Structure> {
   const accounts = await hre.ethers.getSigners()
   const signer = accounts[0]
 
@@ -243,7 +248,11 @@ async function getStructure(hre: HardhatRuntimeEnvironment, tokens: TokenSymbol[
   return result
 }
 
-async function currentDebtRatio(hre: HardhatRuntimeEnvironment, vaultAddress: string, strategyAddress: string): Promise<number> {
+async function currentDebtRatio(
+  hre: HardhatRuntimeEnvironment,
+  vaultAddress: string,
+  strategyAddress: string,
+): Promise<number> {
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
   const debtRatio = await vault['currentDebtRatio(address)'](strategyAddress)
   return Number(debtRatio)
