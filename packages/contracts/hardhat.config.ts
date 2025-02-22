@@ -89,6 +89,11 @@ function getPathForTests(root = './test') {
   return chain === Chain.UNKNOWN ? root : `${root}/integration/${chain.toLowerCase()}`
 }
 
-config.networks = config.availableNetworks
+config.networks = {
+  ...config.availableNetworks,
+  localhost: {
+    url: 'http://127.0.0.1:8545',
+  },
+}
 
 export default config
