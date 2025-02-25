@@ -17,7 +17,7 @@ export function resolveChain(hre: HardhatRuntimeEnvironment): Chain {
   }
 
   // "Hardhat" is a local running node that can be a fork of a real node.
-  if (hardhatNetwork === 'hardhat') {
+  if (hardhatNetwork === 'hardhat' || hardhatNetwork === 'localhost') {
     return getChainForFork()
   }
 
