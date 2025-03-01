@@ -70,9 +70,9 @@ abstract contract BaseStrategy is
 
     event UpdatedProfitFactor(uint256 profitFactor);
 
-    event NativeTokenPriceFeedUpdated(address old, address new);
+    event NativeTokenPriceFeedUpdated(AggregatorV3Interface prevPriceFeed, AggregatorV3Interface newPriceFeed);
 
-    event AssetPriceFeedUpdated(address old, address new);
+    event AssetPriceFeedUpdated(AggregatorV3Interface prevPriceFeed, AggregatorV3Interface newPriceFeed);
 
     modifier onlyLender() {
         if (msg.sender != address(lender)) {
