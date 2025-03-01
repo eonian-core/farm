@@ -70,6 +70,10 @@ abstract contract BaseStrategy is
 
     event UpdatedProfitFactor(uint256 profitFactor);
 
+    event NativeTokenPriceFeedUpdated(address old, address new);
+
+    event AssetPriceFeedUpdated(address old, address new);
+
     modifier onlyLender() {
         if (msg.sender != address(lender)) {
             revert CallerIsNotALender();
@@ -359,5 +363,38 @@ abstract contract BaseStrategy is
         returns(uint256)
     {
         return asset.balanceOf(address(this));
+    }
+
+    function setNativeTokenPriceFeed(AggregatorV3Interface priceFeed) public onlyOwner {
+      emit NativeTokenPriceFeedUpdated(_nativeTokenPriceFeed, priceFeed);
+      _nativeTokenPriceFeed = priceFeed;
+    }
+
+    function setAssetPriceFeed(AggregatorV3Interface priceFeed) public onlyOwner {
+      emit AssetPriceFeedUpdated(_assetPriceFeed, priceFeed);
+      _assetPriceFeed = priceFeed;
+    }
+
+    function nativeTokenPriceFeed() external view returns (AggregatorV3Interface) {
+      return _nativeTokenPriceFeed;
+    }
+    
+    function assetPriceFeed() external view returns (AggregatorV3Interface) {
+      return _assetPriceFeed;
+    }
+
+    function currentlyAvailableCredit() external view returns (uint256 availableCredit, uint256 availableCreditInUSD) {
+      availableCredit = lender.availableCredit();
+      availableCreditInUSD = _convertAmountToUSD(availableCredit); 
+    }
+
+    function currentOutstandingDebt() external view returns (uint256 outstandingDebt, uint256 outstandingDebtInUSD) {
+      outstandingDebt = lender.outstandingDebt();
+      outstandingDebtInUSD = _convertAmountToUSD(outstandingDebt);
+    }
+
+    function currentAmountOfFreeAssets() external view returns (uint256 freeAssets, uint256 freeAssetsInUSD) {
+      freeAssets = _freeAssets();
+      freeAssetsInUSD = _convertAmountToUSD(freeAssets);
     }
 }
