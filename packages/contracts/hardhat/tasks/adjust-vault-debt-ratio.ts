@@ -49,6 +49,10 @@ task('adjust-vault-debt-ratio', 'Changes debt ratio for the vault strategies')
     console.log('Ratio is:', ratio)
     console.log('Tokens (vaults) are:', tokenSymbols)
 
+    const accounts = await hre.ethers.getSigners()
+    const signer = accounts[0]
+    console.log('Signer is:', signer.address)
+
     const env = resolveNetworkEnvironment(hre)
     if (env === NetworkEnvironment.LOCAL) {
       const temp = console.log
