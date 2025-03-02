@@ -70,9 +70,9 @@ abstract contract BaseStrategy is
 
     event UpdatedProfitFactor(uint256 profitFactor);
 
-    event NativeTokenPriceFeedUpdated(AggregatorV3Interface prevPriceFeed, AggregatorV3Interface newPriceFeed);
+    event NativeTokenPriceFeedUpdated(AggregatorV3Interface priceFeed);
 
-    event AssetPriceFeedUpdated(AggregatorV3Interface prevPriceFeed, AggregatorV3Interface newPriceFeed);
+    event AssetPriceFeedUpdated(AggregatorV3Interface priceFeed);
 
     modifier onlyLender() {
         if (msg.sender != address(lender)) {
@@ -365,14 +365,14 @@ abstract contract BaseStrategy is
         return asset.balanceOf(address(this));
     }
 
-    function setNativeTokenPriceFeed(AggregatorV3Interface priceFeed) public onlyOwner {
-      emit NativeTokenPriceFeedUpdated(_nativeTokenPriceFeed, priceFeed);
+    function setNativeTokenPriceFeed(AggregatorV3Interface priceFeed) external onlyOwner {
       _nativeTokenPriceFeed = priceFeed;
+      emit NativeTokenPriceFeedUpdated(priceFeed);
     }
 
-    function setAssetPriceFeed(AggregatorV3Interface priceFeed) public onlyOwner {
-      emit AssetPriceFeedUpdated(_assetPriceFeed, priceFeed);
+    function setAssetPriceFeed(AggregatorV3Interface priceFeed) external onlyOwner {
       _assetPriceFeed = priceFeed;
+      emit AssetPriceFeedUpdated(priceFeed);
     }
 
     function nativeTokenPriceFeed() external view returns (AggregatorV3Interface) {

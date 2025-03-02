@@ -312,6 +312,38 @@ contract BaseStrategyTest is TestWithERC1820Registry {
     assertEq(baseStrategy.estimatedWorkGas(), estimatedWorkGas);
   }
 
+  function testRevertOnSetNativeTokenPriceFeedIfCallerIsNotAnOwner(AggregatorV3Interface priceFeed) public {
+    vm.expectRevert(bytes('Ownable: caller is not the owner'));
+
+    vm.prank(address(culprit));
+    baseStrategy.setNativeTokenPriceFeed(priceFeed);
+  }
+  
+  function testRevertOnSetAssetPriceFeedFeedIfCallerIsNotAnOwner(AggregatorV3Interface priceFeed) public {
+    vm.expectRevert(bytes('Ownable: caller is not the owner'));
+
+    vm.prank(address(culprit));
+    baseStrategy.setAssetPriceFeed(priceFeed);
+  }
+
+  function testShouldSetNativeTokenPriceFeed(AggregatorV3Interface priceFeed) public {
+    vm.expectEmit(true, true, true, true);
+    baseStrategy.emitNativeTokenPriceFeedUpdated(priceFeed);
+
+    baseStrategy.setNativeTokenPriceFeed(priceFeed);
+
+    assertEq(address(baseStrategy.get_nativeTokenPriceFeed()), address(priceFeed));
+  }
+  
+  function testShouldSetAssetPriceFeedFeed(AggregatorV3Interface priceFeed) public {
+    vm.expectEmit(true, true, true, true);
+    baseStrategy.emitAssetPriceFeedUpdated(priceFeed);
+
+    baseStrategy.setAssetPriceFeed(priceFeed);
+
+    assertEq(address(baseStrategy.get_assetPriceFeed()), address(priceFeed));
+  }
+
   function testRevertOnSetProfitFactorIfCallerIsNotAnOwner(uint256 profitFactor) public {
     vm.expectRevert(bytes('Ownable: caller is not the owner'));
 
