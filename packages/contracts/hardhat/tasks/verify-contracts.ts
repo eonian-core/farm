@@ -15,8 +15,7 @@ task('verify-contracts', 'Verifes implementation contracts on etherscan-like exp
   .addOptionalParam('contracts', 'Comma-separated contract names to verify', '')
   .setAction(async (taskArgs, hre) => {
     const proxies = await hre.proxyRegister.getAll()
-    const rawContractNames = String(taskArgs.contracts) || _.chain(proxies).map('contractName').uniq().join().value()
-    const contractNames = rawContractNames.split(',')
+    const contractNames = getContractNames(taskArgs, proxies)
     for (const proxy of proxies) {
       if (!contractNames.includes(proxy.contractName)) {
         continue
@@ -33,4 +32,11 @@ async function verify(hre: HardhatRuntimeEnvironment, proxy: ProxyRecord) {
   } as unknown as ProxyCiService
   const verifier = new ProxyVerifier(context, proxyService, etherscan)
   await verifier.verifyProxyAndImplIfNeeded(proxy.address, [true])
+}
+
+function getContractNames(taskArgs: any, proxies: ProxyRecord[]): string[] {
+  if (taskArgs.contracts) {
+    return String(taskArgs.contracts).split(',')
+  }
+  return _.chain(proxies).map('contractName').uniq().value()
 }
