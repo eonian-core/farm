@@ -74,6 +74,14 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
         return _estimatedTotalAssets;
     }
 
+    function get_nativeTokenPriceFeed() public view returns (AggregatorV3Interface) {
+        return _nativeTokenPriceFeed;
+    }
+    
+    function get_assetPriceFeed() public view returns (AggregatorV3Interface) {
+        return _assetPriceFeed;
+    }
+
     function emitHarvestCalled() public {
         emit HarvestCalled();
     }
@@ -100,6 +108,14 @@ contract BaseStrategyMock is BaseStrategy, SafeInitializableMock {
 
     function emitUpdatedProfitFactor(uint256 profitFactor) public {
         emit UpdatedProfitFactor(profitFactor);
+    }
+
+    function emitNativeTokenPriceFeedUpdated(AggregatorV3Interface priceFeed) public {
+        emit NativeTokenPriceFeedUpdated(priceFeed);
+    }
+
+    function emitAssetPriceFeedUpdated(AggregatorV3Interface priceFeed) public {
+        emit AssetPriceFeedUpdated(priceFeed);
     }
 
     function emitHealthCheckTriggered(uint8 result) public {

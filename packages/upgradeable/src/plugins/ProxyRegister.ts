@@ -22,7 +22,7 @@ export type ProxyRegisterFileContent = Partial<Record<string, Record<string, str
 const DATA_DIR = '.proxies'
 const DEFAULT_PROXY_ID = 'default'
 
-interface ProxyRecord {
+export interface ProxyRecord {
   address: string
   contractName: string
   id: string
