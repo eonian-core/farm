@@ -1,9 +1,11 @@
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
-import { TokenSymbol, needUseSafe, sendTxWithRetry } from '@eonian/upgradeable'
-import { type ApeLendingStrategy } from '../../typechain-types'
+import { TokenSymbol } from '@eonian/upgradeable'
 import { type DeployResult, DeployStatus } from '@eonian/upgradeable'
+import { type ApeLendingStrategy } from '../../typechain-types'
 import { Addresses, forceAttachTransactions } from './addresses'
-import { BaseContract } from 'ethers'
+import { attachToVault } from './helpers/attach-to-vault'
+import { getMinReportInterval } from './helpers/get-min-report-interval'
+import { setDefaultWorkGas } from './helpers/set-default-work-gas'
 
 const contractName = 'ApeLendingStrategy'
 
@@ -17,7 +19,7 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
     addresses.gelato, // gelato coordination contract
     addresses.nativePriceFeed, // native token price feed
     addresses.assetPriceFeed, // asset token price feed
-    6 * 60 * 60, // 6 hours - min report interval in seconds
+    getMinReportInterval(hre, 6 * 60 * 60), // 6 hours - min report interval in seconds
     true, // Job is prepaid
     addresses.healthCheck,
   ]
@@ -25,31 +27,12 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
   const deployResult = await hre.deploy(contractName, token, initializeArguments)
 
   if (deployResult.status === DeployStatus.DEPLOYED || forceAttachTransactions()) {
-    await attachToVault(deployResult.proxyAddress, token, addresses.vault, hre)
+    await attachToVault(contractName, deployResult.proxyAddress, token, addresses.vault, hre)
   }
+
+  await setDefaultWorkGas(hre, deployResult.proxyAddress)
 
   return deployResult
-}
-
-async function attachToVault(strategyAddress: string, token: TokenSymbol, vaultAddress: string, hre: HardhatRuntimeEnvironment) {
-  console.log(`Attaching strategy to vault:\nStrategy:${strategyAddress}\nVault:${vaultAddress}`)
-
-  const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
-  const addStrategyArgs: [string, number] = [strategyAddress, 10000]  // Allocate 100%
-
-  if(needUseSafe()) {
-    await hre.proposeSafeTransaction({
-      sourceContractName: contractName,
-      deploymentId: token,
-      address: vaultAddress,
-      contract: vault as BaseContract,
-      functionName: 'addStrategy',
-      args: addStrategyArgs,
-    })
-  } else {
-    await sendTxWithRetry(() => vault.addStrategy(...addStrategyArgs)) 
-  }
-  console.log(`Strategy attached successfully:\nStrategy:${strategyAddress}\nVault:${vaultAddress}`)
 }
 
 async function getAddresses(token: TokenSymbol, hre: HardhatRuntimeEnvironment) {

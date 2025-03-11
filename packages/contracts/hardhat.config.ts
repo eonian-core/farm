@@ -16,8 +16,6 @@ import 'hardhat-docgen'
 import '@nomicfoundation/hardhat-chai-matchers'
 import '@nomicfoundation/hardhat-foundry'
 
-import '@eonian/upgradeable'
-
 import { Chain, getChainForFork, resolveHardhatForkConfig } from '@eonian/upgradeable'
 import './hardhat/deployment'
 import './hardhat/tasks'
@@ -80,10 +78,10 @@ const config: HardhatUserConfig = {
   defender: {
     apiKey: process.env.OPENZEPPLIN_DEFENDER_API_KEY!,
     apiSecret: process.env.OPENZEPPLIN_DEFENDER_API_SECRET!,
-    network: process.env.OPENZEPPLIN_DEFENDER_NETWORK || "bsc",
+    network: process.env.OPENZEPPLIN_DEFENDER_NETWORK || 'bsc',
     // OPENZEPPLIN_DEFENDER_DEPLOY also used directly in the code to avoid fallback to ethers.js
     useDefenderDeploy: process.env.OPENZEPPLIN_DEFENDER_DEPLOY === 'true',
-  }
+  },
 }
 
 function getPathForTests(root = './test') {
@@ -91,6 +89,11 @@ function getPathForTests(root = './test') {
   return chain === Chain.UNKNOWN ? root : `${root}/integration/${chain.toLowerCase()}`
 }
 
-config.networks = config.availableNetworks
+config.networks = {
+  ...config.availableNetworks,
+  localhost: {
+    url: 'http://127.0.0.1:8545',
+  },
+}
 
 export default config

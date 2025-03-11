@@ -4,6 +4,7 @@ import { Chain, getChainForFork } from './Chain'
 const chainToURL: Record<Chain, string | undefined> = {
   [Chain.UNKNOWN]: 'http://127.0.0.1:8545/',
   [Chain.BSC]: process.env.BSC_MAINNET_RPC_URL,
+  [Chain.ETH]: process.env.ETH_MAINNET_RPC_URL,
 }
 
 export function resolveHardhatForkConfig() {

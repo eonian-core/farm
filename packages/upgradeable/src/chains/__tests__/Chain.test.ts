@@ -58,7 +58,7 @@ describe(resolveChain.name, () => {
 
 describe(getChainId.name, () => {
   it('Should provide id of the chain', () => {
-    const result = getChainId(Chain.BSC)
-    expect(result).toEqual(56)
+    expect(getChainId(Chain.BSC)).toEqual(56)
+    expect(getChainId(Chain.ETH)).toEqual(1)
   })
 })

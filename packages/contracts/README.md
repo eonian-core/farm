@@ -42,12 +42,10 @@ yarn test
 
 #### Verify Contracts Locally
 
-In case of failure to verify during deployment, the contract is possible to verify this way locally
+If a verification error occurred during deployment, the contract can be verified in this way locally:
 
 ```shell
-npx hardhat console --network bsc_mainnet_dev
-await hre.etherscanVerifier.verifyIfNeeded('<address>', [true]) 
-# Second parameter is array of arguments used during initialization
+npx hardhat verify-contracts --network bsc_mainnet_dev --contracts ApeLendingStrategy,AaveSupplyStrategy
 ```
 
 #### Rest of commands
