@@ -1,4 +1,4 @@
-# Protocol contracts
+# Protocol Contracts
 
 It is a contracts package of Eonian Farm protocol.
 It contains Vaults, Strategies, and all contracts on which they depend.

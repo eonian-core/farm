@@ -1,6 +1,7 @@
-# Eonian Farm
+# Eonian Savings Account Protocol
 
 Decentralized savings account protocol and subgraph. More info in [docs](docs.eonian.finance).
+Previously named Eonian Farm.
 
 ## Development
 
