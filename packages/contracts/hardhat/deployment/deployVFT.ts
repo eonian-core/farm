@@ -30,19 +30,14 @@ async function attachToVault(vftAddress: string, token: TokenSymbol, vaultAddres
 
   const vault = await hre.ethers.getContractAt('Vault', vaultAddress)
 
-  if (needUseSafe()) {
-    await hre.proposeSafeTransaction({
-      sourceContractName: contractName,
-      deploymentId: token,
-      address: vaultAddress,
-      contract: vault as BaseContract,
-      functionName: 'setFounders',
-      args: [vftAddress],
-    })
-  }
-  else {
-    await sendTxWithRetry(() => vault.setFounders(vftAddress))
-  }
+  await hre.proposeOrSendTx({
+    sourceContractName: contractName,
+    deploymentId: token,
+    address: vaultAddress,
+    contract: vault as BaseContract,
+    functionName: 'setFounders',
+    args: [vftAddress],
+  })
 
   console.log('VFT attached successfully!')
 }

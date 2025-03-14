@@ -40,7 +40,7 @@ contract AaveSupplyStrategy is SafeUUPSUpgradeable, BaseStrategy {
   }
 
   function version() external pure override returns (string memory) {
-    return "0.0.1";
+    return "0.1.0";
   }
 
   function initialize(

@@ -30,7 +30,7 @@ export default async function deployApeLendingStrategy(token: TokenSymbol, hre: 
     await attachToVault(contractName, deployResult.proxyAddress, token, addresses.vault, hre)
   }
 
-  await setDefaultWorkGas(hre, deployResult.proxyAddress)
+  await setDefaultWorkGas(hre, contractName, deployResult.proxyAddress, token)
 
   return deployResult
 }
