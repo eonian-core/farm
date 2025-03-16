@@ -1,5 +1,4 @@
 import type { TokenSymbol } from '@eonian/upgradeable'
-import { needUseSafe, sendTxWithRetry } from '@eonian/upgradeable'
 import type { BaseContract } from 'ethers'
 import type { HardhatRuntimeEnvironment } from 'hardhat/types'
 
@@ -18,21 +17,15 @@ export async function attachToVault(
 
   const vaultDebtRatio = await vault.debtRatio()
   const debtRatio = MAX_DEBT_RATIO_IN_BPS - vaultDebtRatio
-  const addStrategyArgs: [string, bigint] = [strategyAddress, debtRatio]
 
-  if (needUseSafe()) {
-    await hre.proposeSafeTransaction({
-      sourceContractName: contractName,
-      deploymentId: token,
-      address: vaultAddress,
-      contract: vault as BaseContract,
-      functionName: 'addStrategy',
-      args: addStrategyArgs,
-    })
-  }
-  else {
-    await sendTxWithRetry(() => vault.addStrategy(...addStrategyArgs))
-  }
+  await hre.proposeOrSendTx({
+    sourceContractName: contractName,
+    deploymentId: token,
+    address: vaultAddress,
+    contract: vault as BaseContract,
+    functionName: 'addStrategy',
+    args: [strategyAddress, debtRatio],
+  })
 
   console.log(`Strategy attached successfully with ratio: ${debtRatio}!`)
   if (debtRatio === 0n) {
