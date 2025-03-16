@@ -3,6 +3,12 @@
 Decentralized savings account protocol and subgraph. More info in [docs](docs.eonian.finance).
 Previously named Eonian Farm.
 
+## Audits
+
+[Audits](./audits/) folder contains all audit reports for the protocol.
+
+For the additional code analysis and audit summaries check [docs Audit page](https://docs.eonian.finance/security/protocol-audits).
+
 ## Development
 
 This mono-repository contains protocol contracts and dApp code, as well as all related packages.
