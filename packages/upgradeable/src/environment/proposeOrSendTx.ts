@@ -5,12 +5,12 @@ import { SafeTransactionOptions } from "./proposeSafeTransaction"
 
 export const proposeOrSendTx = (hre: HardhatRuntimeEnvironment) => async (options: SafeTransactionOptions) => {
     if(needUseSafe()) {
-        console.log("Proposing Safe transaction:", pretifySafeOptions(options))
+        console.log("Proposing Safe transaction:", prettifySafeOptions(options))
         await hre.proposeSafeTransaction(options)
         return
     }
 
-    console.log("Sending transaction:", pretifySafeOptions(options))
+    console.log("Sending transaction:", prettifySafeOptions(options))
 
     const { contract, functionName, args } = options
     await sendTxWithRetry(async () => 
@@ -23,7 +23,7 @@ export const proposeOrSendTx = (hre: HardhatRuntimeEnvironment) => async (option
     )
 }
 
-function pretifySafeOptions({sourceContractName, deploymentId, address, contract, functionName, args}: SafeTransactionOptions) {
+function prettifySafeOptions({sourceContractName, deploymentId, address, contract, functionName, args}: SafeTransactionOptions) {
     let contractName = "Cannot pretify contract name"
     try {
         contractName = (contract as any).constructor.name
