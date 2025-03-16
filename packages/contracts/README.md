@@ -1,4 +1,4 @@
-# Protocol contracts
+# Protocol Contracts
 
 It is a contracts package of Eonian Farm protocol.
 It contains Vaults, Strategies, and all contracts on which they depend.
@@ -11,7 +11,7 @@ It creates some complexities in the setup, but it simplifies and speedup testing
 * Hardhat tests are a threat as integration tests. They use RPC calls and uses JS. They are slower but required to test complex cases like investment strategies, which depend on contracts on the blockchain.
 * Forge tests are a threat as unit tests. They are faster and actively use fuzz testing to increase test case coverage.
 
-## First Start Guide
+### First Start Guide
 
 1) Install dependencies in the root of the repository
 
