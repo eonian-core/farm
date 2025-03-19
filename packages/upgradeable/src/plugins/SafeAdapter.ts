@@ -54,7 +54,7 @@ export class SafeAdapter extends WithLogger {
         this.generateWallet = walletContainer.getWallet
     }
 
-    private async getSafeWallet(signer: Signer): Promise<{ signerAddress: string, wallet: Safe }> {
+    public async getSafeWallet(signer: Signer): Promise<{ signerAddress: string, wallet: Safe }> {
         const [signerAddress, wallet] = await Promise.all([
             signer.getAddress(),
             this.generateWallet()
