@@ -1,6 +1,6 @@
 import { HardhatRuntimeEnvironment } from 'hardhat/types/runtime';
 
-import { SafeAdapter } from '../plugins/SafeAdapter';
+import { makeSafeApiKit, makeSafeWalletProvider, SafeAdapter } from '../plugins/SafeAdapter';
 import { BaseContract, FunctionFragment, Signer } from 'ethers';
 import { getSigner } from '@openzeppelin/hardhat-upgrades/dist/utils';
 import { Context } from '../plugins';
@@ -31,7 +31,7 @@ export const proposeSafeTransaction = (hre: HardhatRuntimeEnvironment) => async 
     args
 }: SafeTransactionOptions) => {
     const ctx = new Context(hre, sourceContractName, deploymentId)
-    const safe = new SafeAdapter(ctx)
+    const safe = new SafeAdapter(ctx, makeSafeApiKit(ctx), makeSafeWalletProvider())
 
     const contractFactory = await hre.ethers.getContractFactory(sourceContractName)
     signer = signer ?? getSigner(contractFactory.runner)
