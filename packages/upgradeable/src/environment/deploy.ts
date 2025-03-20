@@ -5,7 +5,7 @@ import { ProxyVerifier } from '../plugins/ProxyVerifier';
 import { ImplementationService } from '../plugins/ImplementationService';
 import { SafeProxyCiService, needUseSafe } from '../plugins/SafeProxyCiService';
 import { Context, DeployResult, Deployer, EtherscanVerifierAdapter } from '../plugins';
-import { SafeAdapter } from '../plugins/SafeAdapter';
+import { makeSafeApiKit, makeSafeWalletProvider, SafeAdapter } from '../plugins/SafeAdapter';
 
 export const deploy = (hre: HardhatRuntimeEnvironment) => async (
     contractName: string,
@@ -18,7 +18,7 @@ export const deploy = (hre: HardhatRuntimeEnvironment) => async (
 
     let proxy = await ProxyCiService.init(ctx, initArgs, upgradeOptions);
     if (needUseSafe()) {
-        const safe = new SafeAdapter(ctx)
+        const safe = new SafeAdapter(ctx, makeSafeApiKit(ctx), makeSafeWalletProvider())
         proxy = await SafeProxyCiService.initSafe(ctx, initArgs, etherscan, safe, upgradeOptions)
     }
 
