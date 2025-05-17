@@ -19,20 +19,7 @@ In some cases, this also will not work. You can try to install dependency by usi
 Examples:
 
 * `yarn lerna add [package-name] --scope=@eonian/contracts` - add to contracts package
-* `yarn lerna add [package-name] --scope=@eonian/subgraph` - add to subgraph package
 * `yarn lerna add [package-name] --scope=@eonian/upgradeable` - add to upgradable package
-
-## Graphql types code generation
-
-Fail during code generation of graphql types.
-Example:
-
-```bash
-Cannot use GraphQLScalarType "BigDecimal" from another module or realm.
-Ensure that there is only one instance of "graphql" in the node_modules
-```
-
-Remove `nohoist` from the root `package.json`, delete node_modules in root and all packages, and run `yarn` again. Be aware, removing `nohoist` can cause failures in contracts package.
 
 ## Jest is not working properly with ESM modules
 
