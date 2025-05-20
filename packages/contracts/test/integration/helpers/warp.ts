@@ -3,7 +3,7 @@ import { getAverageBlockTimeInSeconds } from '../../../hardhat/deployment/helper
 
 export default async function warp(time: number) {
   const { ethers } = hre
-  const blockTime = getAverageBlockTimeInSeconds(hre)
+  const blockTime = await getAverageBlockTimeInSeconds(hre)
   const blockTimeInt = Math.round(blockTime)
   const blocks = Math.ceil(time / blockTimeInt)
   // https://hardhat.org/hardhat-network/docs/reference#hardhat_mine
