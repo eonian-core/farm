@@ -47,11 +47,13 @@ function getDifferenceFactor(a: number, b: number): number {
 
 /**
  * Returns the seconds per block from the predefined constant.
+ * Do not use this function directly, use `getAverageBlockTimeInSeconds` instead.
+ * This function is used to get the seconds per block for the chain that is being forked (e.g. in tests).
  *
  * @param hre - Hardhat runtime environment.
  * @returns The seconds per block.
  */
-function getPredefinedSecondsPerBlock(hre: HardhatRuntimeEnvironment): number {
+export function getPredefinedSecondsPerBlock(hre: HardhatRuntimeEnvironment): number {
   const chain = resolveChain(hre)
   const secondsPerBlock = SECONDS_PER_BLOCK[chain]
   if (secondsPerBlock === undefined) {
