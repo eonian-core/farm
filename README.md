@@ -1,7 +1,13 @@
 # Eonian Savings Account Protocol
 
-Decentralized savings account protocol and subgraph. More info in [docs](docs.eonian.finance).
+Decentralized savings account protocol. More info in [docs](docs.eonian.finance).
 Previously named Eonian Farm.
+
+## Audits
+
+[Audits](./audits/) folder contains all audit reports for the protocol.
+
+For the additional code analysis and audit summaries check [docs Audit page](https://docs.eonian.finance/security/protocol-audits).
 
 ## Development
 
@@ -12,7 +18,6 @@ For a list of known development issues related to Lerna monorepo, see [developme
 ### Structure
 
 * `packages/contracts` - Protocol contracts.
-* `packages/subgraph` - GraphQl API for protocol.
 * `packages/eslint-config` - Shared JS code linting config.
 
 ### Requirements
