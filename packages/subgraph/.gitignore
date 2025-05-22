@@ -1,4 +1,0 @@
-build/
-tests/.bin/
-tests/.docker/
-subgraph.yaml
