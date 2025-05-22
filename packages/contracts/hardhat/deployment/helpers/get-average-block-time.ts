@@ -27,7 +27,7 @@ export async function getAverageBlockTimeInSeconds(hre: HardhatRuntimeEnvironmen
     throw new Error(`Seconds per block difference is too high: ${differenceFactor} (predifined: ${predefinedSecondsPerBlock}, on blockchain: ${secondsPerBlock})! Was block rate changed on the blockchain? Please update the "SECONDS_PER_BLOCK" constant.`)
   }
 
-  cache[cacheKey] = secondsPerBlock
+  cache[cacheKey] = predefinedSecondsPerBlock
 
   return cache[cacheKey]
 }

@@ -74,5 +74,5 @@ async function setMillisecondsPerBlock(hre: HardhatRuntimeEnvironment, strategyA
     functionName: 'setMillisecondsPerBlock',
     args: [millisecondsPerBlock],
   })
-  console.log(`[!] "millisecondsPerBlock" was set to ${millisecondsPerBlock} for the "${contractName}"`)
+  console.log(`[!] "millisecondsPerBlock" was set to ${millisecondsPerBlock} (from ${Number(currentMillisecondsPerBlock)}) for the "${contractName}"`)
 }
